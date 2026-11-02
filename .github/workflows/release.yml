@@ -1,0 +1,122 @@
+# On every push to main: typecheck, engine test and build.
+# If package.json's version has no published GitHub Release yet, build
+# installers on macOS, Windows and Linux and publish release v<version>.
+# To ship a new release: bump "version" in package.json and push.
+name: CI / Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 24
+
+jobs:
+  check:
+    name: Kontroller
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:engine
+      - run: npm run build
+
+  prepare:
+    name: Sürüm kontrolü
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      release: ${{ steps.v.outputs.release }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: v
+        name: Bu sürüm için release var mı?
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          STATE=$(gh release list --limit 200 --json tagName,isDraft \
+            --jq ".[] | select(.tagName == \"v$VERSION\") | if .isDraft then \"draft\" else \"published\" end" | head -1)
+          echo "v$VERSION: ${STATE:-yok}"
+          if [ "$STATE" = "published" ]; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            if [ -z "$STATE" ]; then
+              gh release create "v$VERSION" --draft --target "$GITHUB_SHA" \
+                --title "AstroFree v$VERSION" --generate-notes
+            fi
+          fi
+
+  build:
+    name: Paket (${{ matrix.name }})
+    needs: prepare
+    if: needs.prepare.outputs.release == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS
+            os: macos-latest
+            args: --mac -c.mac.identity=- -c.mac.hardenedRuntime=false
+          - name: Windows
+            os: windows-latest
+            args: --win
+          - name: Linux
+            os: ubuntu-latest
+            args: --linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: electron-builder
+        run: npx electron-builder ${{ matrix.args }} --publish always
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # No Apple Developer ID on CI: the app is ad-hoc signed, not notarized.
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+  publish:
+    name: Release'i yayınla
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Taslağı yayınla
+        run: |
+          VERSION=${{ needs.prepare.outputs.version }}
+          NOTES=$(mktemp)
+          {
+            gh release view "v$VERSION" --json body --jq .body
+            echo
+            echo "### Kurulum"
+            echo "- **macOS:** Apple Silicon için \`arm64\`, Intel için \`x64\` .dmg. Uygulama notarize edilmediği için ilk açılışta sağ tık → **Aç** deyin."
+            echo "  \"Hasarlı\" uyarısı alırsanız: \`xattr -cr /Applications/AstroFree.app\`"
+            echo "- **Windows:** \`Setup\` kurulum dosyası ya da kurulumsuz \`portable\` .exe. SmartScreen uyarısında **Ek bilgi → Yine de çalıştır**."
+            echo "- **Linux:** \`.AppImage\` (çalıştırılabilir yapın) ya da \`.deb\`."
+          } > "$NOTES"
+          gh release edit "v$VERSION" --draft=false --latest --notes-file "$NOTES"

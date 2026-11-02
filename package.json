@@ -4,7 +4,18 @@
   "version": "0.1.0",
   "description": "Doğum haritası, transit ve progresyon analizi; Claude Code / Codex / Gemini / DeepSeek ile yorum ve sohbet.",
   "main": "./out/main/index.js",
-  "author": "Caner Köroğlu",
+  "author": {
+    "name": "Caner Köroğlu",
+    "email": "ckoroglu@ymail.com"
+  },
+  "homepage": "https://github.com/canerkoroglu/astrofree",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canerkoroglu/astrofree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/canerkoroglu/astrofree/issues"
+  },
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {

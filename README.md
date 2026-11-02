@@ -23,6 +23,20 @@ npm run dist:win    # NSIS kurulum + portable .exe
 npm run dist:linux  # AppImage + .deb
 ```
 
+## Sürüm yayınlama (GitHub Actions)
+
+`main`'e her push'ta `.github/workflows/release.yml` tip denetimi, efemeris testi ve derlemeyi çalıştırır.
+`package.json`'daki `version` için henüz yayınlanmış bir release yoksa macOS (arm64 + x64), Windows ve
+Linux paketleri derlenip `v<sürüm>` adıyla GitHub Release olarak yayınlanır. Yeni sürüm için:
+
+```bash
+npm version patch   # 0.1.0 → 0.1.1 (minor / major da olur)
+git push
+```
+
+Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırır. CI'daki macOS paketi ad-hoc imzalıdır
+(notarize edilmez); ilk açılışta sağ tık → Aç gerekir.
+
 ## Özellikler
 
 - **Swiss Ephemeris (WASM)**: 1800–2400 arası ark-saniye doğruluğunda gezegenler, Chiron, asteroitler,
@@ -96,5 +110,9 @@ Haritalar, ayarlar ve sohbetler kullanıcı veri klasöründe JSON olarak tutulu
 
 ## Lisans
 
-Swiss Ephemeris, GPL ya da Astrodienst ticari lisansıyla dağıtılır; bu proje GPL-3.0-or-later'dır.
-Ticari dağıtım için Astrodienst'ten lisans gerekir.
+Bu proje **GPL-3.0-or-later** lisanslıdır (bkz. `LICENSE`).
+
+Gezegen hesapları için kullanılan [Swiss Ephemeris](https://www.astro.com/swisseph/) (Astrodienst AG, sürüm 2.10)
+AGPL-3.0 ya da ücretli "Swiss Ephemeris Professional License" ile dağıtılır. Açık kaynak olarak dağıtılan bu
+proje için ücretsizdir; uygulamanın kapalı kaynak/ticari bir sürümünü dağıtmak isterseniz Astrodienst'ten
+profesyonel lisans almanız gerekir. Diğer veriler: GeoNames (CC-BY 4.0), Natural Earth ve tz-lookup (kamu malı).
