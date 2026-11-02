@@ -28,7 +28,7 @@ export default function ChartEditor({
 
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
+      <div className="modal wide">
         <h2>{initial.createdAt ? 'Haritayı düzenle' : 'Yeni harita'}</h2>
         <label>
           İsim

@@ -1188,3 +1188,34 @@ table.cal td {
 .modal label.coord {
   flex: 1 1 140px;
 }
+.wm-border {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-linejoin: round;
+}
+.wm-province {
+  fill: none;
+  stroke: var(--muted);
+  stroke-opacity: 0.75;
+  stroke-dasharray: 3 2;
+}
+.wm-land,
+.wm-grid,
+.wm-border,
+.wm-province {
+  vector-effect: non-scaling-stroke;
+}
+.wm-label {
+  fill: var(--ink);
+  stroke: var(--panel);
+  paint-order: stroke;
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
+}
+.wm-plabel {
+  fill: var(--muted);
+  font-weight: 400;
+}

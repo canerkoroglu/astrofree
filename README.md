@@ -69,7 +69,8 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
 - **Sabit yıldızlar**: 33 parlak yıldızın natal gezegen/köşelere 1° içindeki kavuşumları (Swiss Ephemeris kataloğu).
 - **Gökyüzü paneli**: boşluktaki Ay (void of course) ve gezegen günü/saatleri (24 saatlik liste).
 - **Doğum yeri**: şehir/ilçe arama, `38n15`, `85w46`, `38°15'K`, `41K01` gibi biçimlerde koordinat,
-  ya da çevrimdışı dünya haritasından tıklayarak seçim (en yakın yerleşim ve saat dilimi otomatik).
+  ya da çevrimdışı dünya haritasından tıklayarak seçim (en yakın yerleşim ve saat dilimi otomatik). Harita ülke
+  ve il/eyalet sınırlarını, yakınlaştıkça Türkçe ülke ve il adlarını gösterir (Natural Earth).
 - **Yorum arşivi**: sohbetteki yanıtlar "Yoruma kaydet" ile kişinin "Yorumlar" sekmesine kaydedilir,
   düzenlenebilir. Kişilere etiket ve not eklenip listede etikete göre süzülebilir.
 - **Dışa aktarma**: çarkı PNG, ya da çark + natal bilgiler + kayıtlı yorumlarla PDF rapor.
@@ -101,7 +102,7 @@ değiştirilebilir; Codex modelleri `~/.codex/models_cache.json` dosyasından ot
 node scripts/build-cities.mjs cities5000.txt admin1CodesASCII.txt TR.txt
 ```
 
-Şehir verisi: GeoNames (geonames.org), CC-BY 4.0. Dünya haritası: Natural Earth (kamu malı), `node scripts/build-worldmap.mjs`.
+Şehir verisi: GeoNames (geonames.org), CC-BY 4.0. Dünya haritası, ülke ve il sınırları: Natural Earth (kamu malı), `node scripts/build-worldmap.mjs ne_50m_admin_0_countries.geojson ne_10m_admin_1_states_provinces.geojson`.
 
 ## Veriler
 

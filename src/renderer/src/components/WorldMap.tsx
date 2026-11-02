@@ -1,9 +1,36 @@
-import { useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { WORLD_PATH } from '../assets/world'
 import { fmtDms } from '../lib/coords'
 
 type Box = [number, number, number, number]
 const FULL: Box = [0, 0, 360, 180]
+
+type Detail = typeof import('../assets/world-detail')
+let detailPromise: Promise<Detail> | null = null
+// Borders and names are a separate ~3 MB chunk, loaded the first time a map opens.
+const loadDetail = () => (detailPromise ??= import('../assets/world-detail'))
+
+/** Highest Natural Earth min-zoom rank of country names shown at a view width. */
+const countryRankFor = (w: number) => (w >= 240 ? 2.5 : w >= 120 ? 3.5 : w >= 60 ? 5 : w >= 25 ? 7 : 11)
+const PROVINCE_ZOOM = 70 // show province borders below this view width (degrees)
+const PROVINCE_LABEL_ZOOM = 28
+const COUNTRY_PX = 11
+const PROVINCE_PX = 10
+
+/** Keep labels whose screen boxes do not collide (greedy, in priority order). */
+function declutter<T extends [number, number, string, ...unknown[]]>(items: T[], box: Box, pxPerUnit: number, fontPx: number, taken: { x0: number; y0: number; x1: number; y1: number }[]): T[] {
+  const out: T[] = []
+  for (const it of items) {
+    const sx = (it[0] + 180 - box[0]) * pxPerUnit
+    const sy = (90 - it[1] - box[1]) * pxPerUnit
+    const half = (it[2].length * fontPx * 0.55) / 2 + 3
+    const r = { x0: sx - half, x1: sx + half, y0: sy - fontPx * 0.7, y1: sy + fontPx * 0.7 }
+    if (taken.some((t) => r.x0 < t.x1 && r.x1 > t.x0 && r.y0 < t.y1 && r.y1 > t.y0)) continue
+    taken.push(r)
+    out.push(it)
+  }
+  return out
+}
 
 /** Offline equirectangular world map: wheel to zoom, drag to pan, click to pick. */
 export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: number; onPick: (lat: number, lon: number) => void }) {
@@ -11,6 +38,48 @@ export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: numbe
   const [hover, setHover] = useState<[number, number] | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const drag = useRef<{ x: number; y: number; box: Box; moved: boolean } | null>(null)
+  const [detail, setDetail] = useState<Detail | null>(null)
+  const [widthPx, setWidthPx] = useState(600)
+
+  useEffect(() => {
+    const el = svgRef.current
+    if (!el) return
+    const ro = new ResizeObserver(() => setWidthPx(el.getBoundingClientRect().width || 600))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  useEffect(() => {
+    let alive = true
+    void loadDetail().then((d) => alive && setDetail(d))
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const inView = (x: number, y: number) => x >= box[0] && x <= box[0] + box[2] && y >= box[1] && y <= box[1] + box[3]
+  const provinces = useMemo(() => {
+    if (!detail || box[2] > PROVINCE_ZOOM) return []
+    const [bx, by, bw, bh] = box
+    return detail.PROVINCES.filter(({ b }) => b[2] >= bx && b[0] <= bx + bw && b[3] >= by && b[1] <= by + bh)
+  }, [detail, box])
+  const pxPerUnit = widthPx / box[2]
+  const labels = useMemo(() => {
+    if (!detail) return { countries: [], provinces: [] }
+    const taken: { x0: number; y0: number; x1: number; y1: number }[] = []
+    const maxRank = countryRankFor(box[2])
+    const countries = declutter(
+      detail.COUNTRY_LABELS.filter(([lo, la, , rank]) => rank <= maxRank && inView(lo + 180, 90 - la)).sort((a, b) => a[3] - b[3]),
+      box,
+      pxPerUnit,
+      COUNTRY_PX,
+      taken
+    )
+    const provinces =
+      box[2] > PROVINCE_LABEL_ZOOM ? [] : declutter(detail.PROVINCE_LABELS.filter(([lo, la]) => inView(lo + 180, 90 - la)), box, pxPerUnit, PROVINCE_PX, taken)
+    return { countries, provinces }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, box, pxPerUnit])
 
   const toMap = (e: { clientX: number; clientY: number }, b = box): [number, number] => {
     const r = svgRef.current!.getBoundingClientRect()
@@ -74,14 +143,28 @@ export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: numbe
       >
         <rect x={0} y={0} width={360} height={180} className="wm-sea" />
         {grid.map((v) => (
-          <line key={`x${v}`} x1={v} y1={0} x2={v} y2={180} className="wm-grid" strokeWidth={0.4 * k} />
+          <line key={`x${v}`} x1={v} y1={0} x2={v} y2={180} className="wm-grid" strokeWidth={0.6} />
         ))}
         {grid
           .filter((v) => v <= 180)
           .map((v) => (
-            <line key={`y${v}`} x1={0} y1={v} x2={360} y2={v} className={v === 90 ? 'wm-grid wm-eq' : 'wm-grid'} strokeWidth={0.4 * k} />
+            <line key={`y${v}`} x1={0} y1={v} x2={360} y2={v} className={v === 90 ? 'wm-grid wm-eq' : 'wm-grid'} strokeWidth={0.6} />
           ))}
-        <path d={WORLD_PATH} className="wm-land" strokeWidth={0.3 * k} />
+        <path d={WORLD_PATH} className="wm-land" strokeWidth={0.6} />
+        {provinces.map((p, i) => (
+          <path key={i} d={p.d} className="wm-province" strokeWidth={0.8} />
+        ))}
+        {detail && <path d={detail.COUNTRY_BORDERS} className="wm-border" strokeWidth={1} />}
+        {labels.provinces.map(([lo, la, name], i) => (
+          <text key={`p${i}`} x={lo + 180} y={90 - la} className="wm-label wm-plabel" fontSize={PROVINCE_PX / pxPerUnit} strokeWidth={2.5 / pxPerUnit}>
+            {name}
+          </text>
+        ))}
+        {labels.countries.map(([lo, la, name], i) => (
+          <text key={`c${i}`} x={lo + 180} y={90 - la} className="wm-label" fontSize={COUNTRY_PX / pxPerUnit} strokeWidth={3 / pxPerUnit}>
+            {name}
+          </text>
+        ))}
         <circle cx={mx} cy={my} r={2.2 * k} className="wm-marker" strokeWidth={0.8 * k} />
         <line x1={mx - 5 * k} y1={my} x2={mx + 5 * k} y2={my} className="wm-cross" strokeWidth={0.5 * k} />
         <line x1={mx} y1={my - 5 * k} x2={mx} y2={my + 5 * k} className="wm-cross" strokeWidth={0.5 * k} />
