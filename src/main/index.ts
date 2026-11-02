@@ -139,6 +139,28 @@ function registerIpc(): void {
   ipcMain.on('ai:start', (e, req: AiChatRequest) => void startChat(req, e.sender))
   ipcMain.on('ai:cancel', (_e, id: string) => cancelChat(id))
 
+  // Newer GitHub release than the running version, if any (silent when offline).
+  ipcMain.handle('app:checkUpdate', async () => {
+    try {
+      const res = await fetch('https://api.github.com/repos/canerkoroglu/astrofree/releases/latest', {
+        headers: { accept: 'application/vnd.github+json' },
+        signal: AbortSignal.timeout(8000)
+      })
+      if (!res.ok) return null
+      const r = (await res.json()) as { tag_name?: string; html_url?: string }
+      const latest = (r.tag_name ?? '').replace(/^v/, '')
+      const newer = (a: string, b: string) => {
+        const pa = a.split('.').map(Number)
+        const pb = b.split('.').map(Number)
+        for (let i = 0; i < 3; i++) if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) > (pb[i] ?? 0)
+        return false
+      }
+      return latest && newer(latest, app.getVersion()) ? { version: latest, url: r.html_url ?? '' } : null
+    } catch {
+      return null
+    }
+  })
+
   ipcMain.handle('app:info', () => ({
     version: app.getVersion(),
     platform: process.platform,

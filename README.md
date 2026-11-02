@@ -44,7 +44,9 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
 - **Çarklar**: natal + en fazla iki dış halka (Transit, Progresyon, Solar Ark, Sinastri).
   Glif çakışma önleme, açı çizgileri (sıkı orb = kalın çizgi), üzerine gelince ayrıntı balonu.
 - **Zaman kontrolü**: ±dakika/saat/gün/ay/yıl, seçilebilir adım, ← → tuşları (Shift ×10),
-  ↑ ↓ adım boyu, boşluk = animasyon, fare tekerleği ile ilerletme, "Canlı" mod (gerçek saat).
+  ↑ ↓ adım boyu, boşluk = animasyon, Alt (⌥) + fare tekerleği ile ilerletme (normal tekerlek sayfayı
+  kaydırır), "Canlı" mod (gerçek saat). Tarih alanına `17.01.1942 18:35` ya da `17 Ocak 1942` yazılabilir
+  veya 📅 Türkçe takvimden seçilebilir.
   "Doğum zamanı" seçilirse doğum saati oynatılır (rektifikasyon).
 - **Saat dilimi**: IANA bölgesi (tarihsel yaz saati dahil), sabit fark veya LMT. 1582 öncesi Jülyen takvimi.
 - **Çevrimdışı çalışma**: Efemeris, fontlar, saat dilimleri ve ~70.000 şehir + Türkiye ilçeleri uygulamanın
@@ -61,7 +63,8 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
   açı tablosu, evler ve yöneticileri.
 - **Transit takvimi**: seçilen tarihten itibaren 1–36 ay; her transitin orb'a giriş, tam isabet(ler) (retro
   geçişleri ℞ ile) ve çıkış tarihleri. Tarihe tıklamak haritayı o ana götürür; liste AI'a da gönderilir.
-- **Güneş / Ay dönüşü**: dış halka olarak veya "ayrı harita olarak aç" ile kendi evleriyle. Dönüş yeri:
+- **Güneş / Ay dönüşü** (doğum günü haritası): başlıktaki yıl alanı ve ◀ önceki / sonraki ▶ ile istenen
+  doğum günü veya Ay dönüşü seçilir; dış halka olarak ya da "ayrı harita olarak aç" ile kendi evleriyle. Dönüş yeri:
   doğum yeri veya varsayılan konum (Ayarlar).
 - **Açı kalıpları**: Büyük Üçgen, T-Kare, Büyük Haç, Yod, Uçurtma, Mistik Dikdörtgen, burç/ev stelyumları.
 - **Geleneksel teknikler**: tam esas asalet tablosu (Mısır sınırları, Dorotheus üçlüleri, Kalde yüzleri,
@@ -74,6 +77,8 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
 - **Yorum arşivi**: sohbetteki yanıtlar "Yoruma kaydet" ile kişinin "Yorumlar" sekmesine kaydedilir,
   düzenlenebilir. Kişilere etiket ve not eklenip listede etikete göre süzülebilir.
 - **Dışa aktarma**: çarkı PNG, ya da çark + natal bilgiler + kayıtlı yorumlarla PDF rapor.
+- **Tema**: araç çubuğundaki düğmeyle Sistem / Açık / Koyu.
+- **Güncelleme bildirimi**: GitHub'da daha yeni bir release varsa araç çubuğunda "Yeni sürüm · İndir" görünür.
 - **Otomatik yedek**: Ayarlar → Genel'de seçilen klasöre (iCloud Drive, Dropbox…) her değişiklikte günlük
   yedek; son 30 gün tutulur. Geri yükleme: Dosya → İçe aktar.
 

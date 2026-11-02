@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import type { LocalDateTime } from '@shared/types'
 import type { StepUnit } from '../lib/time'
+import DateTimeField from './DateTimeField'
 
 export const STEPS: { unit: StepUnit; n: number; label: string }[] = [
   { unit: 'min', n: 1, label: '1 dk' },
@@ -13,7 +13,6 @@ export const STEPS: { unit: StepUnit; n: number; label: string }[] = [
   { unit: 'year', n: 1, label: '1 yıl' }
 ]
 
-const p2 = (n: number) => String(n).padStart(2, '0')
 
 interface Props {
   local: LocalDateTime
@@ -35,11 +34,6 @@ interface Props {
 }
 
 export default function TimeControls(p: Props) {
-  const [draft, setDraft] = useState('')
-  const l = p.local
-  const value = `${String(l.y).padStart(4, '0')}-${p2(l.m)}-${p2(l.d)}T${p2(l.h)}:${p2(l.mi)}:${p2(l.s)}`
-  useEffect(() => setDraft(value), [value])
-
   const step = STEPS[p.stepIndex]
   return (
     <div className="timebar">
@@ -71,17 +65,7 @@ export default function TimeControls(p: Props) {
         <button className="big" onClick={() => p.onStep(-1)} title={`−${step.label} (←)`}>
           ◀
         </button>
-        <input
-          type="datetime-local"
-          step={1}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={() => {
-            const m = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d))?/.exec(draft)
-            if (m && draft !== value) p.onSetLocal({ y: +m[1], m: +m[2], d: +m[3], h: +m[4], mi: +m[5], s: +(m[6] ?? 0) })
-          }}
-          onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
-        />
+        <DateTimeField className="dtf-bar" seconds value={p.local} onChange={p.onSetLocal} />
         <button className="big" onClick={() => p.onStep(1)} title={`+${step.label} (→)`}>
           ▶
         </button>

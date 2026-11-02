@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import type { ChartRecord, TzSpec } from '@shared/types'
 import { fmtOffset, isValidZone, localToJd, offsetAt } from '../lib/time'
+import DateTimeField from './DateTimeField'
 import PlaceSearch from './PlaceSearch'
-
-const p2 = (n: number) => String(n).padStart(2, '0')
 
 export default function ChartEditor({
   initial,
@@ -17,8 +16,6 @@ export default function ChartEditor({
   const [rec, setRec] = useState<ChartRecord>(initial)
   const [zoneText, setZoneText] = useState(initial.tz.kind === 'zone' ? initial.tz.zone : initial.place.zone ?? '')
   const l = rec.local
-  const dateStr = `${String(l.y).padStart(4, '0')}-${p2(l.m)}-${p2(l.d)}`
-  const timeStr = `${p2(l.h)}:${p2(l.mi)}:${p2(l.s)}`
 
   const tzOk = rec.tz.kind !== 'zone' || isValidZone(rec.tz.zone)
   const jd = tzOk ? localToJd(rec.local, rec.tz, rec.place.lon) : NaN
@@ -34,31 +31,11 @@ export default function ChartEditor({
           İsim
           <input autoFocus value={rec.name} onChange={(e) => setRec({ ...rec, name: e.target.value })} />
         </label>
-        <div className="row">
-          <label>
-            Tarih
-            <input
-              type="date"
-              value={dateStr}
-              onChange={(e) => {
-                const [y, m, d] = e.target.value.split('-').map(Number)
-                if (y && m && d) setRec({ ...rec, local: { ...l, y, m, d } })
-              }}
-            />
-          </label>
-          <label>
-            Saat (yerel)
-            <input
-              type="time"
-              step={1}
-              value={timeStr}
-              onChange={(e) => {
-                const [h, mi, s] = e.target.value.split(':').map(Number)
-                setRec({ ...rec, local: { ...l, h: h || 0, mi: mi || 0, s: s || 0 } })
-              }}
-            />
-          </label>
-        </div>
+        <label>
+          Doğum tarihi ve saati (yerel)
+          <DateTimeField seconds value={l} onChange={(local) => setRec({ ...rec, local })} />
+          <span className="muted small">Yazabilirsiniz: 17.01.1942 18:35 · 17 Ocak 1942 18:35 — ya da 📅 takvimden seçin</span>
+        </label>
         <fieldset>
           <legend>Doğum yeri</legend>
           <PlaceSearch

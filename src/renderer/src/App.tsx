@@ -21,6 +21,17 @@ import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, tzL
 
 const NOW_ID = 'now'
 
+const THEME_NEXT = { system: 'light', light: 'dark', dark: 'system' } as const
+const THEME_LABEL = { system: '◐ Sistem', light: '☀ Açık', dark: '☾ Koyu' } as const
+const OUTER_HELP: Record<OuterKind, string> = {
+  transit: 'Seçili tarihteki gökyüzü, natal haritanın etrafında',
+  progressed: 'İkincil progresyonlar (bir gün = bir yıl)',
+  solarArc: 'Solar ark direksiyonları',
+  solarReturn: 'Doğum günü haritası: Güneş’in natal konumuna döndüğü an; yıl başlıktan seçilir',
+  lunarReturn: 'Ay dönüşü: Ay’ın natal konumuna döndüğü an (yaklaşık ayda bir)',
+  synastry: 'İki kişinin haritası (kayıtlı ikinci bir harita gerekir)'
+}
+
 function nowChart(s: AppSettings): ChartRecord {
   const tz: TzSpec = { kind: 'zone', zone: s.defaultZone }
   return {
@@ -73,6 +84,7 @@ export default function App() {
   const [calHits, setCalHits] = useState<TransitHit[]>([])
   const [printing, setPrinting] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
+  const [update, setUpdate] = useState<{ version: string; url: string } | null>(null)
 
   // ---- boot ----------------------------------------------------------------
   useEffect(() => {
@@ -82,6 +94,7 @@ export default function App() {
       setCharts(await window.astro.charts.list())
       setInterps(await window.astro.interp.list())
       setWorking(nowChart(s))
+      window.setTimeout(() => void window.astro.checkUpdate().then(setUpdate), 4000)
     })()
   }, [])
 
@@ -374,6 +387,23 @@ export default function App() {
     )
   }
 
+  const shiftReturn = (kind: 'solarReturn' | 'lunarReturn', dir: number) => {
+    const r = computed?.returns.find((x) => x.kind === kind)
+    if (!r) return
+    setLive(false)
+    setPlaying(false)
+    setTarget('event')
+    // The layer shows the last return at or before the event date.
+    setEventJd(dir < 0 ? r.jd - 1 : r.jd + (kind === 'solarReturn' ? 370 : 28.6))
+  }
+
+  const setReturnYear = (y: number) => {
+    if (!working || y < 1 || y > 3000) return
+    setLive(false)
+    setTarget('event')
+    setEventJd(localToJd({ ...working.local, y, d: Math.min(working.local.d, 28) }, working.tz, working.place.lon) + 3)
+  }
+
   const exportPng = async () => {
     if (view !== 'chart') setView('chart')
     await new Promise((r) => setTimeout(r, 150))
@@ -431,8 +461,11 @@ export default function App() {
               className={outers.includes(k) ? 'on' : ''}
               style={outers.includes(k) ? { borderColor: LAYER_COLOR[k], color: LAYER_COLOR[k] } : undefined}
               onClick={() => toggleOuter(k)}
-              disabled={k === 'synastry' && charts.filter((c) => c.id !== working.id).length === 0}
-              title={k === 'synastry' ? 'Kayıtlı ikinci bir harita gerekir' : undefined}
+              disabled={
+                (k === 'synastry' && charts.filter((c) => c.id !== working.id).length === 0) ||
+                ((k === 'solarReturn' || k === 'lunarReturn' || k === 'progressed' || k === 'solarArc') && working.id === NOW_ID)
+              }
+              title={OUTER_HELP[k] + (working.id === NOW_ID && k !== 'transit' && k !== 'synastry' ? ' — önce soldan bir kişi seçin' : '')}
             >
               {OUTER_LABEL[k]}
             </button>
@@ -461,6 +494,17 @@ export default function App() {
           ))}
         </select>
         <span className="grow" />
+        {update && (
+          <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title="GitHub'da yeni sürüm">
+            Yeni sürüm v{update.version} · İndir
+          </a>
+        )}
+        <button
+          onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+          title="Tema: sistem → açık → koyu"
+        >
+          {THEME_LABEL[settings.theme]}
+        </button>
         <button onClick={() => setShowChat(!showChat)}>{showChat ? 'Sohbeti gizle' : 'AI sohbet'}</button>
         <button onClick={() => setShowSettings(true)} title="Ayarlar">
           ⚙ Ayarlar
@@ -570,9 +614,26 @@ export default function App() {
                       })()
                     : `${fmtLocal(jdToLocal(eventJd, eventTz, settings.defaultPlace.lon))} ${tzLabel(eventTz)}`}
                 {(o.kind === 'solarReturn' || o.kind === 'lunarReturn') && (
-                  <button className="link small" onClick={() => openReturn(o.kind as 'solarReturn' | 'lunarReturn')}>
-                    ayrı harita olarak aç
-                  </button>
+                  <span className="ret-nav">
+                    <button className="link small" onClick={() => shiftReturn(o.kind as 'solarReturn' | 'lunarReturn', -1)}>
+                      ◀ önceki
+                    </button>
+                    {o.kind === 'solarReturn' && (
+                      <input
+                        type="number"
+                        className="ret-year"
+                        title="Doğum günü yılı"
+                        value={computed.returns.find((r) => r.kind === 'solarReturn') ? jdToLocal(computed.returns.find((r) => r.kind === 'solarReturn')!.jd, working.tz, working.place.lon).y : ''}
+                        onChange={(e) => e.target.value.length === 4 && setReturnYear(+e.target.value)}
+                      />
+                    )}
+                    <button className="link small" onClick={() => shiftReturn(o.kind as 'solarReturn' | 'lunarReturn', 1)}>
+                      sonraki ▶
+                    </button>
+                    <button className="link small" onClick={() => openReturn(o.kind as 'solarReturn' | 'lunarReturn')}>
+                      ayrı harita olarak aç
+                    </button>
+                  </span>
                 )}
                 {o.kind === 'progressed' && computed.progressedJd ? ` (progres tarih ${fmtLocal(jdToLocal(computed.progressedJd, working.tz, working.place.lon))})` : ''}
               </div>

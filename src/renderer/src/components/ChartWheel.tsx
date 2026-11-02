@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
   ASPECT,
@@ -100,6 +100,22 @@ function spread(points: ChartPoint[], minSep: number): Placed[] {
 }
 
 export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel }: Props) {
+  // Plain wheel scrolls the page; Alt/Option + wheel steps time. A native
+  // non-passive listener is needed so the scroll can be cancelled.
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const onWheelRef = useRef(onWheel)
+  onWheelRef.current = onWheel
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const h = (e: WheelEvent) => {
+      if (!e.altKey || !onWheelRef.current) return
+      e.preventDefault()
+      onWheelRef.current(e.deltaY || e.deltaX, e.shiftKey)
+    }
+    el.addEventListener('wheel', h, { passive: false })
+    return () => el.removeEventListener('wheel', h)
+  }, [])
   const [hover, setHover] = useState<{ ring: number; key: string; x: number; y: number } | null>(null)
 
   const rot = settings.orientation === 'asc' ? natal.asc : 0
@@ -148,7 +164,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
   const cuspLines = natal.cusps.length === 12
 
   return (
-    <div className="wheel-wrap" onWheel={(e) => onWheel?.(e.deltaY, e.shiftKey)}>
+    <div className="wheel-wrap" ref={wrapRef}>
       <svg viewBox="-90 -30 1180 1060" className="wheel" role="img" aria-label="Harita çarkı">
         {/* Zodiac band */}
         <circle cx={C} cy={C} r={rZ1} className="w-line w-strong" fill="none" />
@@ -268,6 +284,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
           />
         ))}
       </svg>
+      {onWheel && <div className="wheel-hint muted small">⌥ Alt + tekerlek: zamanı ilerlet · Shift ile ×10</div>}
       {hover && hoverPoint && hoverLayer && (
         <PointTooltip
           x={hover.x}

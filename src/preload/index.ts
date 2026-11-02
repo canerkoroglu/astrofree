@@ -96,6 +96,7 @@ const api = {
     return () => ipcRenderer.removeListener('menu', listener)
   },
 
+  checkUpdate: (): Promise<{ version: string; url: string } | null> => ipcRenderer.invoke('app:checkUpdate'),
   info: (): Promise<{ version: string; platform: string; userData: string }> => ipcRenderer.invoke('app:info')
 }
 

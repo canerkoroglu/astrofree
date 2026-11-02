@@ -1219,3 +1219,109 @@ table.cal td {
   fill: var(--muted);
   font-weight: 400;
 }
+
+/* ---- date/time field ---- */
+.dtf {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.modal .dtf {
+  display: flex;
+}
+.dtf > input {
+  font-variant-numeric: tabular-nums;
+  flex: 1;
+  min-width: 170px;
+}
+.dtf-bar > input {
+  width: 175px;
+  flex: none;
+}
+.dtf-btn {
+  padding: 3px 6px;
+}
+.dtf-pop {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 30;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+  padding: 8px;
+  width: 270px;
+  color: var(--ink);
+}
+.dtf-head {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.dtf-head select {
+  flex: 1;
+}
+.dtf-year {
+  width: 72px;
+}
+.dtf-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dtf-dow {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.dtf-grid button {
+  padding: 4px 0;
+  font-size: 12px;
+  border-color: transparent;
+}
+.dtf-grid button.on {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.dtf-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.dtf-time input {
+  width: 52px;
+  min-width: 0;
+  flex: none;
+}
+
+/* ---- misc ---- */
+.wheel-hint {
+  text-align: center;
+  margin-top: 2px;
+}
+.ret-nav {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 8px;
+}
+.ret-year {
+  width: 64px;
+  padding: 0 4px;
+  font-size: 12px;
+}
+.update-pill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, #1d8a55 18%, transparent);
+  color: #1d8a55;
+  text-decoration: none;
+  font-weight: 600;
+}
