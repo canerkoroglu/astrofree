@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import { useMemo } from 'react'
 import type { AppSettings, ChartRecord } from '@shared/types'
 import {
@@ -18,6 +19,7 @@ import {
 import { fmtLocal, fmtOffset, jdToLocal, offsetAt, tzLabel } from '../lib/time'
 import { fmtCoord, fmtOrb } from '../lib/astro'
 import type { Pattern } from '../lib/patterns'
+import { midpointHits } from '../lib/midpoints'
 import {
   almuten,
   currentFirdar,
@@ -119,7 +121,7 @@ export default function NatalInfo({
   const ascRuler = asc ? rulerOf(splitDeg(asc.lon).sign) : null
   const ascRulerPt = ascRuler ? pt(ascRuler) : undefined
   const dominant = (Object.entries(bal.elements) as [keyof typeof ELEMENT_TR, number][]).sort((a, b) => b[1] - a[1])[0]
-  const houseName = HOUSE_SYSTEMS.find((h) => h[0] === settings.houseSystem)?.[1] ?? settings.houseSystem
+  const houseName = t(HOUSE_SYSTEMS.find((h) => h[0] === settings.houseSystem)?.[1] ?? settings.houseSystem)
 
   const big3: [string, string, number | undefined][] = [
     ['Güneş', 'sun', sun?.lon],
@@ -139,14 +141,14 @@ export default function NatalInfo({
             {rec.place.name} · {fmtCoord(rec.place.lat, 'K', 'G')} {fmtCoord(rec.place.lon, 'D', 'B')}
           </div>
           <div className="muted small">
-            {houseName} · {settings.zodiac === 'tropical' ? 'Tropikal' : 'Sidereal'}
+            {houseName} · {settings.zodiac === 'tropical' ? t('Tropikal') : 'Sidereal'}
           </div>
         </div>
         <div className="ni-cards">
           {big3.map(([label, key, lon]) =>
             lon === undefined ? null : (
               <div key={key} className="ni-card">
-                <div className="muted small">{label}</div>
+                <div className="muted small">{t(label)}</div>
                 <div className="ni-big">
                   <span className="glyph" style={{ color: ELEMENT_COLOR[SIGNS[splitDeg(lon).sign].element] }}>
                     {signGlyph(splitDeg(lon).sign)}
@@ -155,54 +157,54 @@ export default function NatalInfo({
                 </div>
                 <div className="muted small">
                   {degMin(lon)}
-                  {key !== 'asc' && pt(key) ? ` · ${pt(key)!.house}. ev` : ''}
+                  {key !== 'asc' && pt(key) ? ` · ${pt(key)!.house}. ${t('ev')}` : ''}
                 </div>
               </div>
             )
           )}
           {ascRuler && ascRulerPt && (
             <div className="ni-card">
-              <div className="muted small">Harita yöneticisi</div>
+              <div className="muted small">{t('Harita yöneticisi')}</div>
               <div className="ni-big">
                 <span className="glyph">{glyph(ascRuler)}</span> {POINT[ascRuler].name}
               </div>
               <div className="muted small">
-                {SIGNS[splitDeg(ascRulerPt.lon).sign].name} · {ascRulerPt.house}. ev
+                {SIGNS[splitDeg(ascRulerPt.lon).sign].name} · {ascRulerPt.house}. {t('ev')}
               </div>
             </div>
           )}
           {sun && moon && (
             <div className="ni-card">
-              <div className="muted small">Ay fazı</div>
+              <div className="muted small">{t('Ay fazı')}</div>
               <div className="ni-big">{moonPhase(sun.lon, moon.lon).name}</div>
-              <div className="muted small">{sun.house >= 7 ? 'Gündüz' : 'Gece'} haritası</div>
+              <div className="muted small">{sun.house >= 7 ? t('Gündüz haritası') : t('Gece haritası')}</div>
             </div>
           )}
           <div className="ni-card">
-            <div className="muted small">Baskın element</div>
+            <div className="muted small">{t('Baskın element')}</div>
             <div className="ni-big" style={{ color: ELEMENT_COLOR[dominant[0]] }}>
-              {ELEMENT_TR[dominant[0]]}
+              {t(ELEMENT_TR[dominant[0]])}
             </div>
             <div className="muted small">
-              {(Object.entries(bal.elements) as [keyof typeof ELEMENT_TR, number][]).map(([k, v]) => `${ELEMENT_TR[k]} ${v}`).join(' · ')}
+              {(Object.entries(bal.elements) as [keyof typeof ELEMENT_TR, number][]).map(([k, v]) => `${t(ELEMENT_TR[k])} ${v}`).join(' · ')}
             </div>
             <div className="muted small">
-              {(Object.entries(bal.modes) as [keyof typeof MODE_TR, number][]).map(([k, v]) => `${MODE_TR[k]} ${v}`).join(' · ')}
+              {(Object.entries(bal.modes) as [keyof typeof MODE_TR, number][]).map(([k, v]) => `${t(MODE_TR[k])} ${v}`).join(' · ')}
             </div>
           </div>
         </div>
       </section>
 
       <details open>
-        <summary>Gezegenler</summary>
+        <summary>{t('Gezegenler')}</summary>
         <table className="data ni">
           <thead>
             <tr>
-              <th>Gezegen</th>
-              <th>Burç</th>
-              <th>Derece</th>
-              <th className="num">Ev</th>
-              <th className="num">Hız (günlük)</th>
+              <th>{t('Gezegen')}</th>
+              <th>{t('Burç')}</th>
+              <th>{t('Derece')}</th>
+              <th className="num">{t('Ev')}</th>
+              <th className="num">{t('Hız (günlük)')}</th>
             </tr>
           </thead>
           <tbody>
@@ -222,15 +224,15 @@ export default function NatalInfo({
       </details>
 
       <details open>
-        <summary>Açılar</summary>
+        <summary>{t('Açılar')}</summary>
         <table className="data ni">
           <thead>
             <tr>
-              <th>Gezegen</th>
-              <th>Açı</th>
-              <th>Gezegen</th>
-              <th className="num">Orb</th>
-              <th>Durum</th>
+              <th>{t('Gezegen')}</th>
+              <th>{t('Açı')}</th>
+              <th>{t('Gezegen')}</th>
+              <th className="num">{t('Orb')}</th>
+              <th>{t('Durum')}</th>
             </tr>
           </thead>
           <tbody>
@@ -256,7 +258,7 @@ export default function NatalInfo({
 
       {patterns.length > 0 && (
         <details open>
-          <summary>Açı kalıpları</summary>
+          <summary>{t('Açı kalıpları')}</summary>
           <ul className="ni-list">
             {patterns.map((p, i) => (
               <li key={i}>
@@ -268,22 +270,22 @@ export default function NatalInfo({
       )}
 
       <details open>
-        <summary>Asaletler (esas)</summary>
+        <summary>{t('Asaletler (esas)')}</summary>
         <p className="muted small ni-note">
           {sect.day ? 'Gündüz' : 'Gece'} haritası · Mısır sınırları, Dorotheus üçlüleri, Kalde yüzleri · Puan: yönetici +5, yücelim +4, üçlü +3, sınır +2, yüz +1, zarar −5, düşüş −4, peregrin −5
         </p>
         <table className="data ni">
           <thead>
             <tr>
-              <th>Gezegen</th>
-              <th>Burç</th>
-              <th>Ev sahibi</th>
-              <th>Yücelim</th>
-              <th>Üçlü (G/Ge/K)</th>
-              <th>Sınır</th>
-              <th>Yüz</th>
-              <th>Durum</th>
-              <th className="num">Puan</th>
+              <th>{t('Gezegen')}</th>
+              <th>{t('Burç')}</th>
+              <th>{t('Ev sahibi')}</th>
+              <th>{t('Yücelim')}</th>
+              <th>{t('Üçlü (G/Ge/K)')}</th>
+              <th>{t('Sınır')}</th>
+              <th>{t('Yüz')}</th>
+              <th>{t('Durum')}</th>
+              <th className="num">{t('Puan')}</th>
             </tr>
           </thead>
           <tbody>
@@ -318,9 +320,9 @@ export default function NatalInfo({
                   <td>{g(termRuler(p.lon))}</td>
                   <td>{g(faceRuler(p.lon))}</td>
                   <td>
-                    {tags.map((t) => (
-                      <span key={t} className={`tag ${DIGNITY_CLASS[t] ?? (t === 'Peregrin' ? 'bad' : 'good')}`}>
-                        {t}
+                    {tags.map((tag) => (
+                      <span key={tag} className={`tag ${DIGNITY_CLASS[tag] ?? (tag === 'Peregrin' ? 'bad' : 'good')}`}>
+                        {t(tag)}
                       </span>
                     ))}
                   </td>
@@ -336,10 +338,10 @@ export default function NatalInfo({
       </details>
 
       <details open>
-        <summary>Geleneksel</summary>
+        <summary>{t('Geleneksel')}</summary>
         <div className="ni-grid">
           <div>
-            <h4>Sekt</h4>
+            <h4>{t('Sekt')}</h4>
             <div>
               {sect.day ? 'Gündüz' : 'Gece'} haritası · Sekt ışığı {g(sect.luminary)} {POINT[sect.luminary].name}
             </div>
@@ -349,7 +351,7 @@ export default function NatalInfo({
             <div className="muted">
               Sekt dışı kötücül (en zorlayıcı): {g(sect.contraryMalefic)} {POINT[sect.contraryMalefic].name}
             </div>
-            <h4>Almuten</h4>
+            <h4>{t('Almuten')}</h4>
             {asc && (
               <div>
                 ASC: {g(almuten(asc.lon, sect.day).key)} {POINT[almuten(asc.lon, sect.day).key].name}
@@ -362,7 +364,7 @@ export default function NatalInfo({
             )}
           </div>
           <div>
-            <h4>Hermetik noktalar</h4>
+            <h4>{t('Hermetik noktalar')}</h4>
             <table className="data ni compact">
               <tbody>
                 {lots.map((l) => (
@@ -382,7 +384,7 @@ export default function NatalInfo({
         <summary>Zaman lordları — {dateOf(eventJd)}</summary>
         <div className="ni-grid">
           <div>
-            <h4>Yıllık profeksiyon</h4>
+            <h4>{t('Yıllık profeksiyon')}</h4>
             <div>
               {prof.age} yaş → <strong>{prof.house}. ev</strong> ({SIGNS[prof.sign].name})
             </div>
@@ -395,7 +397,7 @@ export default function NatalInfo({
             </div>
           </div>
           <div>
-            <h4>Firdaria</h4>
+            <h4>{t('Firdaria')}</h4>
             {curFirdar.major && (
               <div>
                 Şu an: <strong>{firdarName(curFirdar.major.lord)}</strong>
@@ -425,10 +427,30 @@ export default function NatalInfo({
         </div>
       </details>
 
+      <details>
+        <summary>{t('Orta noktalar')}</summary>
+        <p className="muted small ni-note">{t('Bir nokta, iki noktanın orta noktasına 0°, 45°, 90°, 135° veya 180° açıyla (±1,5°) değiyor. Ebertin gösterimi: C = A/B.')}</p>
+        <table className="data ni">
+          <tbody>
+            {midpointHits(natal.points)
+              .slice(0, 40)
+              .map((h, i) => (
+                <tr key={i}>
+                  <td>
+                    <Name k={h.c} /> <span className="muted">=</span> {g(h.a)}/{g(h.b)} <span className="muted small">{POINT[h.a].name} / {POINT[h.b].name}</span>
+                  </td>
+                  <td className="num muted">{h.angle}°</td>
+                  <td className="num">{fmtOrb(h.orb)}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </details>
+
       <details open>
-        <summary>Sabit yıldızlar</summary>
+        <summary>{t('Sabit yıldızlar')}</summary>
         {stars.length === 0 ? (
-          <p className="muted small ni-note">Gezegen veya köşelerle 1° içinde kavuşan parlak sabit yıldız yok.</p>
+          <p className="muted small ni-note">{t('Gezegen veya köşelerle 1° içinde kavuşan parlak sabit yıldız yok.')}</p>
         ) : (
           <table className="data ni">
             <tbody>
@@ -447,16 +469,16 @@ export default function NatalInfo({
       </details>
 
       <details open>
-        <summary>Evler</summary>
+        <summary>{t('Evler')}</summary>
         <table className="data ni">
           <thead>
             <tr>
-              <th className="num">Ev</th>
-              <th>Burç</th>
-              <th>Derece</th>
-              <th>Yönetici</th>
-              <th className="num">Yöneticinin evi</th>
-              <th>İçindekiler</th>
+              <th className="num">{t('Ev')}</th>
+              <th>{t('Burç')}</th>
+              <th>{t('Derece')}</th>
+              <th>{t('Yönetici')}</th>
+              <th className="num">{t('Yöneticinin evi')}</th>
+              <th>{t('İçindekiler')}</th>
             </tr>
           </thead>
           <tbody>

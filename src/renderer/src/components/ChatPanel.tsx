@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -11,6 +12,8 @@ interface Props {
   settings: AppSettings
   onSettings: (s: AppSettings) => void
   onSave?: (content: string, question: string, provider: string) => Promise<void>
+  /** A prompt sent from elsewhere in the app (chart click, map, calendar). */
+  inject?: { id: number; text: string } | null
 }
 
 const QUICK: { label: string; needs?: string; prompt: string }[] = [
@@ -52,7 +55,7 @@ function Markdown({ text }: { text: string }) {
   return <div className="md" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave }: Props) {
+export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject }: Props) {
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
   const [messages, setMessages] = useState<AiMessage[]>([])
   const [input, setInput] = useState('')
@@ -119,16 +122,16 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   }, [messages, status])
 
   const send = (text: string) => {
-    const t = text.trim()
-    if (!t || runId) return
-    const next: AiMessage[] = [...messages, { role: 'user', content: t }]
+    const msg = text.trim()
+    if (!msg || runId) return
+    const next: AiMessage[] = [...messages, { role: 'user', content: msg }]
     setMessages(next)
     setInput('')
     setError('')
     const id = crypto.randomUUID()
     runIdRef.current = id
     setRunId(id)
-    setStatus(`${info.label} yanıtlıyor…`)
+    setStatus(`${info.label} ${t('yanıtlıyor…')}`)
     const system = settings.ai.systemPrompt.trim() || (settings.ai.language === 'en' ? SYSTEM_PROMPT_EN : SYSTEM_PROMPT_TR)
     window.astro.ai.start({
       id,
@@ -139,6 +142,21 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
       messages: next
     })
   }
+
+  const sendRef = useRef(send)
+  sendRef.current = send
+  useEffect(() => {
+    if (!inject) return
+    // Wait until this chart's stored conversation has loaded, or it would
+    // overwrite the message we are about to send.
+    let timer = 0
+    const go = () => {
+      if (loadedKey.current === chatKey) sendRef.current(inject.text)
+      else timer = window.setTimeout(go, 80)
+    }
+    go()
+    return () => window.clearTimeout(timer)
+  }, [inject?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stop = () => {
     if (runId) window.astro.ai.cancel(runId)
@@ -162,19 +180,19 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             )
           })}
         </select>
-        <input list="models" value={cfg.model} placeholder="model (varsayılan)" onChange={(e) => setModel(e.target.value)} />
+        <input list="models" value={cfg.model} placeholder={t('model (varsayılan)')} onChange={(e) => setModel(e.target.value)} />
         <datalist id="models">
           {models.map((m) => (
             <option key={m} value={m} />
           ))}
         </datalist>
       </div>
-      <div className={st && !st.available ? 'chat-status warn' : 'chat-status'}>{st ? st.detail : 'Kontrol ediliyor…'}</div>
+      <div className={st && !st.available ? 'chat-status warn' : 'chat-status'}>{st ? st.detail : t('Kontrol ediliyor…')}</div>
 
       <div className="quick">
         {QUICK.filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
           <button key={q.label} disabled={!!runId} onClick={() => send(q.prompt)}>
-            {q.label}
+            {t(q.label)}
           </button>
         ))}
       </div>
@@ -182,8 +200,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
       <div className="messages" ref={listRef}>
         {messages.length === 0 && (
           <div className="muted pad">
-            Haritayı yorumlatmak için yukarıdaki kısayollardan birini seçin ya da soru yazın. Ekrandaki harita (ve zamanı ilerlettiğinizde güncel
-            transitler) her mesajla birlikte gönderilir.
+            {t('Haritayı yorumlatmak için yukarıdaki kısayollardan birini seçin ya da soru yazın. Ekrandaki harita (ve zamanı ilerlettiğinizde güncel transitler) her mesajla birlikte gönderilir.')}
           </div>
         )}
         {messages.map((m, i) => (
@@ -192,7 +209,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             {m.role === 'assistant' && (
               <div className="msg-actions">
                 <button className="link small" onClick={() => navigator.clipboard.writeText(m.content)}>
-                  Kopyala
+                  {t('Kopyala')}
                 </button>
                 {onSave && (
                   <button
@@ -204,7 +221,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
                       setSavedIdx((s) => new Set(s).add(i))
                     }}
                   >
-                    {savedIdx.has(i) ? '✓ Kaydedildi' : 'Yoruma kaydet'}
+                    {savedIdx.has(i) ? `✓ ${t('Kaydedildi')}` : t('Yoruma kaydet')}
                   </button>
                 )}
               </div>
@@ -219,7 +236,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
         <textarea
           rows={3}
           value={input}
-          placeholder="Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)"
+          placeholder={t('Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)')}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -230,10 +247,10 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
         />
         <div className="composer-row">
           <label className="inline small">
-            <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} /> Harita verisini ekle
+            <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} /> {t('Harita verisini ekle')}
           </label>
           <button className="link small" onClick={() => setShowCtx(!showCtx)}>
-            {showCtx ? 'Veriyi gizle' : 'Gönderilen veri'}
+            {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
           </button>
           <button
             className="link small"
@@ -243,14 +260,14 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
               setError('')
             }}
           >
-            Temizle
+            {t('Temizle')}
           </button>
           <span className="grow" />
           {runId ? (
-            <button onClick={stop}>■ Durdur</button>
+            <button onClick={stop}>{t('■ Durdur')}</button>
           ) : (
             <button className="primary" disabled={!input.trim()} onClick={() => send(input)}>
-              Gönder
+              {t('Gönder')}
             </button>
           )}
         </div>

@@ -34,6 +34,12 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:engine
       - run: npm run build
+      - name: Uçtan uca testler
+        run: |
+          npx electron --version
+          xvfb-run -a npx electron tests/e2e/run.cjs
+        env:
+          ELECTRON_DISABLE_SANDBOX: '1'
 
   prepare:
     name: Sürüm kontrolü

@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useState } from 'react'
@@ -25,7 +26,7 @@ export default function Interpretations({
   if (!items.length) {
     return (
       <div className="interp muted pad">
-        Henüz kaydedilmiş yorum yok. Sohbet panelindeki bir yanıtın altındaki <strong>“Yoruma kaydet”</strong> düğmesiyle buraya ekleyebilirsiniz.
+        Henüz kaydedilmiş yorum yok. Sohbet panelindeki bir yanıtın altındaki <strong>{t('“Yoruma kaydet”')}</strong> düğmesiyle buraya ekleyebilirsiniz.
       </div>
     )
   }
@@ -42,7 +43,7 @@ export default function Interpretations({
               </span>
               <span className="grow" />
               <button className="link small" onClick={() => navigator.clipboard.writeText(it.content)}>
-                Kopyala
+                {t('Kopyala')}
               </button>
               {editing === it.id ? (
                 <button
@@ -52,7 +53,7 @@ export default function Interpretations({
                     setEditing(null)
                   }}
                 >
-                  Bitti
+                  {t('Bitti')}
                 </button>
               ) : (
                 <button
@@ -62,11 +63,11 @@ export default function Interpretations({
                     setDraft(it.content)
                   }}
                 >
-                  Düzenle
+                  {t('Düzenle')}
                 </button>
               )}
               <button className="link small danger" onClick={() => confirm('Bu yorum silinsin mi?') && onRemove(it.id)}>
-                Sil
+                {t('Sil')}
               </button>
             </header>
             {editing === it.id ? <textarea rows={14} value={draft} onChange={(e) => setDraft(e.target.value)} /> : <MarkdownBlock text={it.content} />}

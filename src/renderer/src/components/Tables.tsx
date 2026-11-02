@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import { useMemo } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
@@ -29,9 +30,9 @@ export function PositionsTable({ natal, outers }: { natal: Layer; outers: Layer[
         <tr>
           <th />
           <th style={{ color: LAYER_COLOR.natal }}>{natal.label}</th>
-          <th>Ev</th>
-          <th>Hız</th>
-          <th>Dekl.</th>
+          <th>{t('Ev')}</th>
+          <th>{t('Hız')}</th>
+          <th>{t('Dekl.')}</th>
           {outers.map((o, i) => (
             <th key={i} colSpan={2} style={{ color: LAYER_COLOR[o.kind] }}>
               {o.label}
@@ -80,11 +81,11 @@ export function HousesTable({ natal }: { natal: Layer }) {
     <table className="data">
       <thead>
         <tr>
-          <th>Ev</th>
-          <th>Başlangıç</th>
-          <th>Yönetici</th>
-          <th>Yöneticinin evi</th>
-          <th>İçindekiler</th>
+          <th>{t('Ev')}</th>
+          <th>{t('Başlangıç')}</th>
+          <th>{t('Yönetici')}</th>
+          <th>{t('Yöneticinin evi')}</th>
+          <th>{t('İçindekiler')}</th>
         </tr>
       </thead>
       <tbody>
@@ -176,14 +177,14 @@ export function AspectGrid({ natal, outer, settings }: { natal: Layer; outer: La
 export function AspectList({ natal, outer, settings }: { natal: Layer; outer: Layer | null; settings: AppSettings }) {
   const aspects = useAspects(natal, outer, settings)
   const pre = outer ? { transit: 'T.', progressed: 'P.', solarArc: 'SA.', synastry: 'S.' }[outer.kind as string] ?? '' : ''
-  if (!aspects.length) return <p className="muted pad">Seçili orb sınırları içinde açı yok.</p>
+  if (!aspects.length) return <p className="muted pad">{t('Seçili orb sınırları içinde açı yok.')}</p>
   return (
     <table className="data">
       <thead>
         <tr>
-          <th>Açı</th>
-          <th>Orb</th>
-          <th>Durum</th>
+          <th>{t('Açı')}</th>
+          <th>{t('Orb')}</th>
+          <th>{t('Durum')}</th>
         </tr>
       </thead>
       <tbody>

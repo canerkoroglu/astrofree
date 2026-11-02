@@ -40,6 +40,8 @@ export interface ChartRecord {
   timeUnknown?: boolean
   /** Rodden rating of the time source: AA, A, B, C, DD, X. */
   rodden?: string
+  /** Composite chart of two saved charts (midpoints); local/place hold the Davison moment for display. */
+  composite?: { a: ChartRecord; b: ChartRecord }
   createdAt: number
   updatedAt: number
 }
@@ -143,6 +145,9 @@ export interface AppSettings {
   defaultZone: string
   theme: 'light' | 'dark' | 'system'
   backupDir: string
+  onboarded: boolean
+  uiLanguage: 'tr' | 'en'
+  notifications: { enabled: boolean; scope: 'all' | 'tagged'; tag: string }
   returnPlace: 'natal' | 'current'
   ai: AiSettings
 }
@@ -277,4 +282,31 @@ export interface Interpretation {
   content: string
   provider: string
   createdAt: number
+}
+
+// ---- Electional search -------------------------------------------------------
+
+export interface ElectionConditions {
+  moonSigns: number[] // empty = any
+  moonNotVoc: boolean
+  moonWaxing: boolean
+  notRetro: number[] // swiss ids
+  aspect: { a: number; b: number; aspects: number[]; orb: number } | null
+  angular: { body: number; orb: number } | null
+}
+
+export interface ElectionRequest {
+  start: number
+  end: number
+  stepMinutes: number
+  lat: number
+  lon: number
+  sidMode: number | null
+  cond: ElectionConditions
+}
+
+export interface ElectionWindow {
+  start: number
+  end: number
+  moonLon: number
 }

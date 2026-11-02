@@ -1,7 +1,10 @@
 // Wording for sky events, shared by the sky panel and the AI context.
 import type { SkyEvent, SkyReport, TzSpec } from '@shared/types'
 import { fmtPos, fmtPosText, glyph, moonPhase, POINTS, SIGNS, splitDeg } from './astro'
+import { getLang } from './i18n'
 import { fmtLocal, jdToLocal } from './time'
+
+const ECL_EN: Record<string, string> = { tam: 'total', halkalı: 'annular', parçalı: 'partial', yarıgölge: 'penumbral', hibrit: 'hybrid' }
 
 const KEY_BY_SWE = Object.fromEntries(POINTS.filter((p) => p.swe !== undefined).map((p) => [p.swe!, p.key]))
 export const bodyKey = (swe: number) => KEY_BY_SWE[swe] ?? 'sun'
@@ -9,6 +12,24 @@ const bodyName = (swe: number) => POINTS.find((p) => p.swe === swe)?.name ?? '?'
 
 export function eventText(e: SkyEvent): string {
   const name = bodyName(e.body)
+  if (getLang() === 'en') {
+    switch (e.kind) {
+      case 'station-r':
+        return `${name} stations retrograde`
+      case 'station-d':
+        return `${name} stations direct`
+      case 'ingress':
+        return `${name} enters ${SIGNS[splitDeg(e.lon).sign].name}`
+      case 'new-moon':
+        return 'New Moon'
+      case 'full-moon':
+        return 'Full Moon'
+      case 'solar-eclipse':
+        return `Solar eclipse${e.detail ? ` (${ECL_EN[e.detail] ?? e.detail})` : ''}`
+      case 'lunar-eclipse':
+        return `Lunar eclipse${e.detail ? ` (${ECL_EN[e.detail] ?? e.detail})` : ''}`
+    }
+  }
   switch (e.kind) {
     case 'station-r':
       return `${name} retro başlıyor`

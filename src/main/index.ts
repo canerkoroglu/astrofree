@@ -5,6 +5,7 @@ import type {
   AiChatRequest,
   AppSettings,
   ChartRecord,
+  ElectionRequest,
   EphemRequest,
   Interpretation,
   ProviderId,
@@ -16,8 +17,11 @@ import { ensureShellPath } from './ai/proc'
 import { computeMany } from './ephemeris'
 import { skyReport } from './events'
 import { nearestPlace, searchPlaces, zoneAt } from './geo'
+import { parseChartsFile } from './importers'
+import { startNotifier } from './notifier'
+import { startAutoUpdate } from './updater'
 import * as store from './store'
-import { findReturn, fixedStars, planetaryHours, transitSearch } from './tools'
+import { electionalSearch, ephemSeries, findReturn, fixedStars, planetaryHours, transitSearch } from './tools'
 
 let win: BrowserWindow | null = null
 
@@ -38,7 +42,10 @@ function createWindow(): void {
       sandbox: true
     }
   })
-  win.once('ready-to-show', () => win?.show())
+  win.once('ready-to-show', () => {
+    win?.show()
+    if (win) startAutoUpdate(win)
+  })
 
   // Links in AI answers open in the system browser, never inside the app.
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -78,15 +85,28 @@ function registerIpc(): void {
     const r = await dialog.showOpenDialog(win!, {
       title: 'Harita içe aktar',
       properties: ['openFile'],
-      filters: [{ name: 'JSON', extensions: ['json'] }]
+      filters: [
+        { name: 'Desteklenenler (AstroFree, AAF, CSV)', extensions: ['json', 'aaf', 'csv', 'tsv', 'txt'] },
+        { name: 'AstroFree / yedek (JSON)', extensions: ['json'] },
+        { name: 'AAF — astro.com, AstroGold, Solar Fire', extensions: ['aaf', 'txt'] },
+        { name: 'CSV', extensions: ['csv', 'tsv'] }
+      ]
     })
     if (r.canceled || !r.filePaths[0]) return null
-    const data = JSON.parse(await readFile(r.filePaths[0], 'utf8'))
-    return store.importData(data)
+    const path = r.filePaths[0]
+    const buf = await readFile(path)
+    // AAF files from older programs are often Latin-1.
+    let text = buf.toString('utf8')
+    if (text.includes('\uFFFD')) text = buf.toString('latin1')
+    return store.importData(parseChartsFile(path, text))
   })
 
   ipcMain.handle('tools:transits', (_e, req: TransitSearchRequest) => transitSearch(req))
   ipcMain.handle('tools:return', (_e, body: number, lon: number, jd: number, sid: number | null) => findReturn(body, lon, jd, sid))
+  ipcMain.handle('tools:series', (_e, start: number, days: number, step: number, bodies: number[], sid: number | null) =>
+    ephemSeries(start, days, step, bodies, sid)
+  )
+  ipcMain.handle('tools:election', (_e, req: ElectionRequest) => electionalSearch(req))
   ipcMain.handle('tools:stars', (_e, jd: number, sid: number | null) => fixedStars(jd, sid))
   ipcMain.handle('tools:hours', (_e, jd: number, lat: number, lon: number, tz: number) => planetaryHours(jd, lat, lon, tz))
 
@@ -198,7 +218,15 @@ function buildMenu(): void {
         { role: 'togglefullscreen', label: 'Tam ekran' }
       ]
     },
-    { role: 'windowMenu', label: 'Pencere' }
+    { role: 'windowMenu', label: 'Pencere' },
+    {
+      role: 'help',
+      label: 'Yardım',
+      submenu: [
+        { label: 'Klavye kısayolları   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
+        { label: 'GitHub sayfası', click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') }
+      ]
+    }
   ]
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
@@ -208,6 +236,7 @@ app.whenReady().then(() => {
   registerIpc()
   buildMenu()
   createWindow()
+  if (!process.env.ASTROFREE_NO_NOTIFY) startNotifier()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })

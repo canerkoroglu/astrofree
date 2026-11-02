@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
@@ -38,7 +39,7 @@ export default function SettingsDialog({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal wide">
-        <h2>Ayarlar</h2>
+        <h2>{t('Ayarlar')}</h2>
         <div className="tabs">
           {(
             [
@@ -57,74 +58,74 @@ export default function SettingsDialog({
         {tab === 'chart' && (
           <div className="form-grid">
             <label>
-              Ev sistemi
+              {t('Ev sistemi')}
               <select value={s.houseSystem} onChange={(e) => setS({ ...s, houseSystem: e.target.value })}>
                 {HOUSE_SYSTEMS.map(([k, n]) => (
                   <option key={k} value={k}>
-                    {n}
+                    {t(n)}
                   </option>
                 ))}
               </select>
             </label>
             <label>
-              Zodyak
+              {t('Zodyak')}
               <select value={s.zodiac} onChange={(e) => setS({ ...s, zodiac: e.target.value as AppSettings['zodiac'] })}>
-                <option value="tropical">Tropikal</option>
-                <option value="sidereal">Sidereal (Vedik)</option>
+                <option value="tropical">{t('Tropikal')}</option>
+                <option value="sidereal">{t('Sidereal (Vedik)')}</option>
               </select>
             </label>
             {s.zodiac === 'sidereal' && (
               <label>
-                Ayanamsa
+                {t('Ayanamsa')}
                 <select value={s.sidMode} onChange={(e) => setS({ ...s, sidMode: Number(e.target.value) })}>
                   {AYANAMSAS.map(([k, n]) => (
                     <option key={k} value={k}>
-                      {n}
+                      {t(n)}
                     </option>
                   ))}
                 </select>
               </label>
             )}
             <label>
-              Ay düğümü
+              {t('Ay düğümü')}
               <select value={s.nodeType} onChange={(e) => setS({ ...s, nodeType: e.target.value as 'mean' | 'true' })}>
-                <option value="mean">Ortalama</option>
-                <option value="true">Gerçek</option>
+                <option value="mean">{t('Ortalama')}</option>
+                <option value="true">{t('Gerçek')}</option>
               </select>
             </label>
             <label>
-              Lilith
+              {t('Lilith')}
               <select value={s.lilithType} onChange={(e) => setS({ ...s, lilithType: e.target.value as 'mean' | 'true' })}>
-                <option value="mean">Ortalama</option>
-                <option value="true">Oskülasyon (gerçek)</option>
+                <option value="mean">{t('Ortalama')}</option>
+                <option value="true">{t('Oskülasyon (gerçek)')}</option>
               </select>
             </label>
             <label>
-              Çark yönü
+              {t('Çark yönü')}
               <select value={s.orientation} onChange={(e) => setS({ ...s, orientation: e.target.value as 'asc' | 'aries' })}>
-                <option value="asc">Yükselen solda</option>
-                <option value="aries">0° Koç solda</option>
+                <option value="asc">{t('Yükselen solda')}</option>
+                <option value="aries">{t('0° Koç solda')}</option>
               </select>
             </label>
             <label>
-              Progres açılar (ASC/MC)
+              {t('Progres açılar (ASC/MC)')}
               <select
                 value={s.progressedAngles}
                 onChange={(e) => setS({ ...s, progressedAngles: e.target.value as AppSettings['progressedAngles'] })}
               >
-                <option value="naibod">Naibod (RA)</option>
-                <option value="solarArc">Solar ark</option>
+                <option value="naibod">{t('Naibod (RA)')}</option>
+                <option value="solarArc">{t('Solar ark')}</option>
               </select>
             </label>
             <label>
-              Dönüş haritası yeri
+              {t('Dönüş haritası yeri')}
               <select value={s.returnPlace} onChange={(e) => setS({ ...s, returnPlace: e.target.value as AppSettings['returnPlace'] })}>
-                <option value="natal">Doğum yeri</option>
-                <option value="current">Varsayılan konum (bulunduğunuz yer)</option>
+                <option value="natal">{t('Doğum yeri')}</option>
+                <option value="current">{t('Varsayılan konum (bulunduğunuz yer)')}</option>
               </select>
             </label>
             <fieldset className="span2">
-              <legend>Ek noktalar</legend>
+              <legend>{t('Ek noktalar')}</legend>
               <div className="checks">
                 {OPTIONAL_POINTS.map((k) => (
                   <label key={k} className="inline">
@@ -146,10 +147,10 @@ export default function SettingsDialog({
             <table className="data">
               <thead>
                 <tr>
-                  <th>Açı</th>
-                  <th>Açık</th>
-                  <th>Natal orb (°)</th>
-                  <th>Transit/progresyon orb (°)</th>
+                  <th>{t('Açı')}</th>
+                  <th>{t('Açık')}</th>
+                  <th>{t('Natal orb (°)')}</th>
+                  <th>{t('Transit/progresyon orb (°)')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -185,11 +186,11 @@ export default function SettingsDialog({
                   checked={s.showNatalAspectsInBiwheel}
                   onChange={(e) => setS({ ...s, showNatalAspectsInBiwheel: e.target.checked })}
                 />
-                Çift çarkta natal açıları da çiz
+                {t('Çift çarkta natal açıları da çiz')}
               </label>
-              <button onClick={() => setS({ ...s, aspects: structuredClone(DEFAULT_ASPECTS) })}>Varsayılan orb'lar</button>
+              <button onClick={() => setS({ ...s, aspects: structuredClone(DEFAULT_ASPECTS) })}>{t('Varsayılan orb\'lar')}</button>
             </div>
-            <p className="muted small">Güneş/Ay için orb ×1.15, düğümler/Chiron ×0.6, asteroitler ×0.5 uygulanır.</p>
+            <p className="muted small">{t('Güneş/Ay için orb ×1.15, düğümler/Chiron ×0.6, asteroitler ×0.5 uygulanır.')}</p>
           </>
         )}
 
@@ -197,10 +198,10 @@ export default function SettingsDialog({
           <div>
             <div className="form-grid">
               <label>
-                Yanıt dili
+                {t('Yanıt dili')}
                 <select value={s.ai.language} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value as 'tr' | 'en' } })}>
-                  <option value="tr">Türkçe</option>
-                  <option value="en">English</option>
+                  <option value="tr">{t('Türkçe')}</option>
+                  <option value="en">{t('English')}</option>
                 </select>
               </label>
             </div>
@@ -214,11 +215,11 @@ export default function SettingsDialog({
                     {p.kind === 'cli' ? (
                       <>
                         <label>
-                          Komut / yol
+                          {t('Komut / yol')}
                           <input value={c.command ?? ''} onChange={(e) => setProv(p.id, { command: e.target.value })} />
                         </label>
                         <label>
-                          Ek argümanlar
+                          {t('Ek argümanlar')}
                           <input value={c.extraArgs ?? ''} onChange={(e) => setProv(p.id, { extraArgs: e.target.value })} />
                         </label>
                       </>
@@ -234,21 +235,21 @@ export default function SettingsDialog({
                           />
                         </label>
                         <label>
-                          Base URL
+                          {t('Base URL')}
                           <input value={c.baseUrl ?? ''} onChange={(e) => setProv(p.id, { baseUrl: e.target.value })} />
                         </label>
                       </>
                     )}
                     <label className="narrow">
-                      Model
-                      <input value={c.model} placeholder="varsayılan" onChange={(e) => setProv(p.id, { model: e.target.value })} />
+                      {t('Model')}
+                      <input value={c.model} placeholder={t('varsayılan')} onChange={(e) => setProv(p.id, { model: e.target.value })} />
                     </label>
                   </div>
                 </fieldset>
               )
             })}
             <label>
-              Sistem talimatı (boş bırakılırsa varsayılan kullanılır)
+              {t('Sistem talimatı (boş bırakılırsa varsayılan kullanılır)')}
               <textarea
                 rows={6}
                 value={s.ai.systemPrompt}
@@ -256,24 +257,65 @@ export default function SettingsDialog({
                 onChange={(e) => setS({ ...s, ai: { ...s.ai, systemPrompt: e.target.value } })}
               />
             </label>
-            <p className="muted small">API anahtarları işletim sisteminin anahtar zinciriyle şifrelenip yerel olarak saklanır.</p>
+            <p className="muted small">{t('API anahtarları işletim sisteminin anahtar zinciriyle şifrelenip yerel olarak saklanır.')}</p>
           </div>
         )}
 
         {tab === 'general' && (
           <div>
             <label>
-              Tema
+              {t('Arayüz dili')}
+              <select
+                value={s.uiLanguage}
+                onChange={(e) => {
+                  const lang = e.target.value as 'tr' | 'en'
+                  setS({ ...s, uiLanguage: lang, ai: { ...s.ai, language: lang } })
+                }}
+              >
+                <option value="tr">{t('Türkçe')}</option>
+                <option value="en">{t('English')}</option>
+              </select>
+            </label>
+            <label>
+              {t('Tema')}
               <select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
-                <option value="system">Sistem</option>
-                <option value="light">Açık</option>
-                <option value="dark">Koyu</option>
+                <option value="system">{t('Sistem')}</option>
+                <option value="light">{t('Açık')}</option>
+                <option value="dark">{t('Koyu')}</option>
               </select>
             </label>
             <fieldset>
-              <legend>Otomatik yedek</legend>
+              <legend>{t('Bildirimler')}</legend>
+              <label className="inline">
+                <input
+                  type="checkbox"
+                  checked={s.notifications.enabled}
+                  onChange={(e) => setS({ ...s, notifications: { ...s.notifications, enabled: e.target.checked } })}
+                />
+                {t('Kayıtlı kişilere yaklaşan tam transitler için masaüstü bildirimi (Mars–Plüton, 3 gün önceden)')}
+              </label>
+              <div className="row">
+                <select
+                  value={s.notifications.scope}
+                  onChange={(e) => setS({ ...s, notifications: { ...s.notifications, scope: e.target.value as 'all' | 'tagged' } })}
+                >
+                  <option value="all">{t('Tüm kişiler')}</option>
+                  <option value="tagged">{t('Yalnızca etiketliler')}</option>
+                </select>
+                {s.notifications.scope === 'tagged' && (
+                  <input
+                    value={s.notifications.tag}
+                    onChange={(e) => setS({ ...s, notifications: { ...s.notifications, tag: e.target.value.replace(/^#/, '') } })}
+                    placeholder={t('takip')}
+                    title={t('Bu etiketi taşıyan kişiler')}
+                  />
+                )}
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>{t('Otomatik yedek')}</legend>
               <div className="muted small">
-                Haritalar ve kaydedilmiş yorumlar her değişiklikte seçilen klasöre günlük bir dosya olarak yazılır (son 30 gün tutulur).
+                {t('Haritalar ve kaydedilmiş yorumlar her değişiklikte seçilen klasöre günlük bir dosya olarak yazılır (son 30 gün tutulur).')}
                 iCloud Drive, Dropbox veya bir USB bellek klasörü seçebilirsiniz.
               </div>
               <div className="row">
@@ -284,9 +326,9 @@ export default function SettingsDialog({
                     if (d) setS({ ...s, backupDir: d })
                   }}
                 >
-                  Klasör seç
+                  {t('Klasör seç')}
                 </button>
-                {s.backupDir && <button onClick={() => setS({ ...s, backupDir: '' })}>Kapat</button>}
+                {s.backupDir && <button onClick={() => setS({ ...s, backupDir: '' })}>{t('Kapat')}</button>}
               </div>
               <div className="row">
                 <button
@@ -299,13 +341,13 @@ export default function SettingsDialog({
                     }
                   }}
                 >
-                  Şimdi yedekle
+                  {t('Şimdi yedekle')}
                 </button>
                 <span className="muted small">{backupMsg || 'Geri yüklemek için: Dosya → İçe aktar ile yedek dosyasını seçin.'}</span>
               </div>
             </fieldset>
             <fieldset>
-              <legend>Varsayılan konum (Bugün haritası ve transit yeri)</legend>
+              <legend>{t('Varsayılan konum (Bugün haritası ve transit yeri)')}</legend>
               <PlaceSearch
                 value={s.defaultPlace}
                 onChange={(p) => setS({ ...s, defaultPlace: p, defaultZone: p.zone ?? s.defaultZone })}
@@ -315,9 +357,9 @@ export default function SettingsDialog({
         )}
 
         <div className="actions">
-          <button onClick={onClose}>Vazgeç</button>
+          <button onClick={onClose}>{t('Vazgeç')}</button>
           <button className="primary" onClick={() => void save()}>
-            Kaydet
+            {t('Kaydet')}
           </button>
         </div>
       </div>

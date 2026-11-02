@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
@@ -37,6 +38,8 @@ interface Props {
   settings: AppSettings
   aspectLayer: number // -1 natal-natal, otherwise index into outers
   onWheel?: (deltaY: number, shift: boolean) => void
+  /** Ask the AI about a point or an aspect (prompt text). */
+  onAsk?: (prompt: string) => void
 }
 
 interface Ring {
@@ -99,7 +102,9 @@ function spread(points: ChartPoint[], minSep: number): Placed[] {
   return out
 }
 
-export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel }: Props) {
+export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel, onAsk }: Props) {
+  const [selected, setSelected] = useState<{ ring: number; key: string } | null>(null)
+  const [hoverAspect, setHoverAspect] = useState<number | null>(null)
   // Plain wheel scrolls the page; Alt/Option + wheel steps time. A native
   // non-passive listener is needed so the scroll can be cancelled.
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -154,6 +159,14 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
     return findAspects(natal.points, null, settings, false)
   }, [natal, outers, settings, aspectLayer])
 
+  const layerOf = (p: ChartPoint) => (natal.points.includes(p) ? natal : outers.find((o) => o.points.includes(p)) ?? natal)
+  const PREFIX: Record<string, string> = { natal: 'N.', transit: 'T.', progressed: 'P.', solarArc: 'SA.', synastry: 'S.', solarReturn: 'GD.', lunarReturn: 'AD.' }
+  const pointName = (p: ChartPoint) => `${outers.length ? PREFIX[layerOf(p).kind] ?? '' : ''}${POINT[p.key].name}`
+  const aspectPrompt = (x: Aspect) =>
+    `${pointName(x.a)} ${ASPECT[x.aspect.key].name} ${pointName(x.b)} (orb ${fmtOrb(x.orb)}, ${x.applying ? 'yaklaşan' : 'ayrılan'}) açısını bu haritada yorumla: anlamı, hangi evleri ve yaşam alanlarını etkilediği${outers.length ? ', zamanlaması' : ''}.`
+  const selPoint = selected ? (selected.ring < 0 ? natal : outers[selected.ring])?.points.find((p) => p.key === selected.key) ?? null : null
+  const selLayer = selected ? (selected.ring < 0 ? natal : outers[selected.ring]) : null
+
   const hoverPoint = hover
     ? (hover.ring < 0 ? natal : outers[hover.ring])?.points.find((p) => p.key === hover.key) ?? null
     : null
@@ -165,7 +178,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
 
   return (
     <div className="wheel-wrap" ref={wrapRef}>
-      <svg viewBox="-90 -30 1180 1060" className="wheel" role="img" aria-label="Harita çarkı">
+      <svg viewBox="-90 -30 1180 1060" className="wheel" role="img" aria-label={t('Harita çarkı')}>
         {/* Zodiac band */}
         <circle cx={C} cy={C} r={rZ1} className="w-line w-strong" fill="none" />
         {SIGNS.map((s, i) => {
@@ -248,10 +261,13 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
             const outerAspect = aspectLayer >= 0 && !!outers[aspectLayer]?.points.includes(x.a)
             const maxOrb = Math.max(0.1, outerAspect ? set.outerOrb : set.orb)
             const tight = Math.max(0, 1 - x.orb / maxOrb)
-            const active = hoverPoint ? isHoverAspect(x) : true
+            const active = hoverPoint ? isHoverAspect(x) : hoverAspect === null || hoverAspect === i
             return (
+              <g key={i} className="w-asp" onMouseEnter={() => setHoverAspect(i)} onMouseLeave={() => setHoverAspect(null)} onClick={() => onAsk?.(aspectPrompt(x))}>
+              <line x1={x1} y1={y1} x2={x2} y2={y2} className="w-asp-hit">
+                <title>{`${pointName(x.a)} ${def.name} ${pointName(x.b)} · orb ${fmtOrb(x.orb)} · tıklayın: yorumla`}</title>
+              </line>
               <line
-                key={i}
                 x1={x1}
                 y1={y1}
                 x2={x2}
@@ -263,6 +279,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
                   strokeDasharray: def.kind === 'minor' ? '6 5' : undefined
                 }}
               />
+              </g>
             )
           })}
         </g>
@@ -276,6 +293,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
             pt={pt}
             aspectR={aspectR}
             hoverKey={hover && hover.ring === ring.index ? hover.key : null}
+            onSelect={(key) => setSelected({ ring: ring.index, key })}
             onHover={(key, e) => {
               if (!key) return setHover(null)
               const box = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect()
@@ -284,8 +302,31 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
           />
         ))}
       </svg>
-      {onWheel && <div className="wheel-hint muted small">⌥ Alt + tekerlek: zamanı ilerlet · Shift ile ×10</div>}
-      {hover && hoverPoint && hoverLayer && (
+      {onWheel && <div className="wheel-hint muted small">{t('⌥ Alt + tekerlek: zamanı ilerlet · Shift ile ×10')}</div>}
+      {selPoint && selLayer && (
+        <div className="point-card">
+          <button className="pc-close" onClick={() => setSelected(null)} aria-label={t('Kapat')}>
+            ×
+          </button>
+          <PointDetails point={selPoint} layer={selLayer} aspects={aspects.filter((x) => x.a === selPoint || x.b === selPoint)} />
+          {onAsk && (
+            <div className="pc-actions">
+              <button
+                className="primary"
+                onClick={() => {
+                  const sd = splitDeg(selPoint.lon)
+                  onAsk(
+                    `${pointName(selPoint)} (${sd.deg}°${String(sd.min).padStart(2, '0')}' ${SIGNS[sd.sign].name}${['asc', 'mc'].includes(selPoint.key) ? '' : `, ${selPoint.house}. ev`}${selPoint.retro ? ', retro' : ''}) konumunu ve açılarını bu haritada ayrıntılı yorumla.`
+                  )
+                }}
+              >
+                {t('Yorumla')}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+      {hover && hoverPoint && hoverLayer && !selPoint && (
         <PointTooltip
           x={hover.x}
           y={hover.y}
@@ -304,7 +345,8 @@ function PlanetRing({
   pt,
   aspectR,
   hoverKey,
-  onHover
+  onHover,
+  onSelect
 }: {
   ring: Ring
   width: number
@@ -312,6 +354,7 @@ function PlanetRing({
   aspectR: number
   hoverKey: string | null
   onHover: (key: string | null, e: React.MouseEvent<SVGGElement>) => void
+  onSelect: (key: string) => void
 }) {
   const { layer, r0 } = ring
   const color = LAYER_COLOR[layer.kind]
@@ -348,6 +391,7 @@ function PlanetRing({
             onMouseEnter={(e) => onHover(p.key, e)}
             onMouseMove={(e) => onHover(p.key, e)}
             onMouseLeave={(e) => onHover(null, e)}
+            onClick={() => onSelect(p.key)}
           >
             <line x1={tx1} y1={ty1} x2={tx2} y2={ty2} style={{ stroke: color }} strokeWidth={1.6} />
             {Math.abs(norm360(display - p.lon + 180) - 180) > 0.4 && (
@@ -383,10 +427,18 @@ function PlanetRing({
 }
 
 function PointTooltip({ x, y, point, layer, aspects }: { x: number; y: number; point: ChartPoint; layer: Layer; aspects: Aspect[] }) {
+  return (
+    <div className="tooltip" style={{ left: x + 16, top: y + 12 }}>
+      <PointDetails point={point} layer={layer} aspects={aspects} />
+    </div>
+  )
+}
+
+function PointDetails({ point, layer, aspects }: { point: ChartPoint; layer: Layer; aspects: Aspect[] }) {
   const def = POINT[point.key]
   const dig = dignity(point.key, splitDeg(point.lon).sign)
   return (
-    <div className="tooltip" style={{ left: x + 16, top: y + 12 }}>
+    <>
       <div className="tt-title">
         <span className="glyph" style={{ color: LAYER_COLOR[layer.kind] }}>
           {glyph(point.key)}
@@ -414,6 +466,6 @@ function PointTooltip({ x, y, point, layer, aspects }: { x: number; y: number; p
           })}
         </div>
       )}
-    </div>
+    </>
   )
 }

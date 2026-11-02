@@ -142,7 +142,7 @@ export async function skyReport(jd: number, days: number, sidMode: number | null
  * Void-of-course Moon around jd: from the Moon's last Ptolemaic aspect to a
  * planet (Sun..Pluto) until it leaves its sign.
  */
-function voidOfCourse(jd: number, lon: (t: number, b: number) => number) {
+export function voidOfCourse(jd: number, lon: (t: number, b: number) => number) {
   const sign = (t: number) => Math.floor(norm(lon(t, 1)) / 30)
   // Next ingress of the Moon.
   const s0 = sign(jd)

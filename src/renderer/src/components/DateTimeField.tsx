@@ -1,8 +1,9 @@
+import { dowMonFirst, monthsLong, t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
 import type { LocalDateTime } from '@shared/types'
 
+const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 export const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
-const DAYS_TR = ['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pz']
 const p2 = (n: number) => String(n).padStart(2, '0')
 
 const daysIn = (y: number, m: number) => (m === 2 ? (isLeap(y) ? 29 : 28) : [4, 6, 9, 11].includes(m) ? 30 : 31)
@@ -33,7 +34,7 @@ export function parseLocal(text: string, prev: LocalDateTime): LocalDateTime | n
     ;[d, m, y] = [+mt[1], +mt[2], +mt[3]]
     rest = mt[4]
   } else if ((mt = t.match(/^(\d{1,2})\s+([a-z]+)\s+(-?\d{1,4})(.*)$/))) {
-    const idx = MONTHS_TR.findIndex((n) => fold(n).startsWith(mt![2].slice(0, 3)))
+    const idx = [MONTHS_TR, MONTHS_EN].map((list) => list.findIndex((n) => fold(n).startsWith(mt![2].slice(0, 3)))).find((i) => i >= 0) ?? -1
     if (idx < 0) return null
     ;[d, m, y] = [+mt[1], idx + 1, +mt[3]]
     rest = mt[4]
@@ -112,7 +113,7 @@ export default function DateTimeField({
         value={text}
         spellCheck={false}
         placeholder={seconds ? 'gg.aa.yyyy ss:dd:sn' : 'gg.aa.yyyy ss:dd'}
-        title="Örn. 17.01.1942 18:35 · 17 Ocak 1942 18:35 · 1942-01-17"
+        title={t('Örn. 17.01.1942 18:35 · 17 Ocak 1942 18:35 · 1942-01-17')}
         onFocus={() => setFocused(true)}
         onBlur={() => {
           setFocused(false)
@@ -133,17 +134,20 @@ export default function DateTimeField({
           }
         }}
       />
-      <button type="button" className="dtf-btn" title="Takvim" onClick={() => setOpen(!open)}>
-        📅
+      <button type="button" className="dtf-btn" title={t('Takvim')} aria-label={t('Takvimi aç')} onClick={() => setOpen(!open)}>
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden>
+          <rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
       </button>
       {open && (
         <div className="dtf-pop" onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}>
           <div className="dtf-head">
-            <button type="button" onClick={() => shiftMonth(-1)} title="Önceki ay">
+            <button type="button" onClick={() => shiftMonth(-1)} title={t('Önceki ay')}>
               ‹
             </button>
             <select value={view.m} onChange={(e) => setView({ ...view, m: +e.target.value })}>
-              {MONTHS_TR.map((name, i) => (
+              {monthsLong().map((name, i) => (
                 <option key={i} value={i + 1}>
                   {name}
                 </option>
@@ -155,12 +159,12 @@ export default function DateTimeField({
               value={view.y}
               onChange={(e) => e.target.value && setView({ ...view, y: Math.max(-3000, Math.min(3000, +e.target.value)) })}
             />
-            <button type="button" onClick={() => shiftMonth(1)} title="Sonraki ay">
+            <button type="button" onClick={() => shiftMonth(1)} title={t('Sonraki ay')}>
               ›
             </button>
           </div>
           <div className="dtf-grid">
-            {DAYS_TR.map((d) => (
+            {dowMonFirst().map((d) => (
               <span key={d} className="dtf-dow">
                 {d}
               </span>
@@ -181,7 +185,7 @@ export default function DateTimeField({
             )}
           </div>
           <div className="dtf-time">
-            <span className="muted small">Saat</span>
+            <span className="muted small">{t('Saat')}</span>
             <input type="number" min={0} max={23} value={value.h} onChange={(e) => setTime({ h: Math.max(0, Math.min(23, +e.target.value || 0)) })} />
             :
             <input type="number" min={0} max={59} value={p2(value.mi)} onChange={(e) => setTime({ mi: Math.max(0, Math.min(59, +e.target.value || 0)) })} />
@@ -193,7 +197,7 @@ export default function DateTimeField({
             )}
             <span className="grow" />
             <button type="button" className="link small" onClick={() => setOpen(false)}>
-              Tamam
+              {t('Tamam')}
             </button>
           </div>
         </div>

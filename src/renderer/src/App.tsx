@@ -1,28 +1,35 @@
+import { setLang, t } from './lib/i18n'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { AppSettings, ChartRecord, Interpretation, LocalDateTime, PlanetaryHours, SkyReport, TransitHit, TzSpec } from '@shared/types'
+import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
+import ElectionalSearch from './components/ElectionalSearch'
+import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
+import Onboarding from './components/Onboarding'
+import Shortcuts from './components/Shortcuts'
 import PrintReport from './components/PrintReport'
 import SkyPanel from './components/SkyPanel'
 import SettingsDialog from './components/SettingsDialog'
 import { AspectGrid, AspectList, HousesTable, PositionsTable } from './components/Tables'
 import TimeControls, { STEPS } from './components/TimeControls'
 import TransitCalendar, { calendarText } from './components/TransitCalendar'
-import { diff180, fmtCoord, HOUSE_SYSTEMS, moonPhase } from './lib/astro'
-import { chartJd, computeCharts, OUTER_LABEL, type Computed, type OuterKind } from './lib/chart'
+import { diff180, fmtCoord, fmtPosText, HOUSE_SYSTEMS, moonPhase, POINT } from './lib/astro'
+import { chartJd, compositeRecord, computeCharts, davisonRecord, OUTER_LABEL, type Computed, type OuterKind } from './lib/chart'
 import { buildContext, patternsText, starsText, traditionalText } from './lib/context'
 import { findPatterns } from './lib/patterns'
+import { harmonicLayer } from './lib/midpoints'
 import { skyContext } from './lib/sky'
 import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, tzLabel, type StepUnit } from './lib/time'
 
 const NOW_ID = 'now'
 
 const THEME_NEXT = { system: 'light', light: 'dark', dark: 'system' } as const
-const THEME_LABEL = { system: '◐ Sistem', light: '☀ Açık', dark: '☾ Koyu' } as const
+const THEME_LABEL = { system: 'Tema: sistem', light: 'Tema: açık', dark: 'Tema: koyu' } as const
 const OUTER_HELP: Record<OuterKind, string> = {
   transit: 'Seçili tarihteki gökyüzü, natal haritanın etrafında',
   progressed: 'İkincil progresyonlar (bir gün = bir yıl)',
@@ -55,7 +62,7 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'info' | 'calendar' | 'notes'
+type View = 'chart' | 'info' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem'
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
 
 export default function App() {
@@ -88,6 +95,16 @@ export default function App() {
   const [printing, setPrinting] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
   const [update, setUpdate] = useState<{ version: string; url: string } | null>(null)
+  const [obOpen, setObOpen] = useState(false)
+  const [updateReady, setUpdateReady] = useState<string | null>(null)
+  useEffect(() => window.astro.onUpdateReady(setUpdateReady), [])
+  const [harmonic, setHarmonic] = useState(1)
+  const [showKeys, setShowKeys] = useState(false)
+  const [inject, setInject] = useState<{ id: number; text: string } | null>(null)
+  const ask = useCallback((text: string) => {
+    setShowChat(true)
+    setInject({ id: Date.now(), text })
+  }, [])
 
   // ---- boot ----------------------------------------------------------------
   useEffect(() => {
@@ -95,12 +112,15 @@ export default function App() {
       const s = await window.astro.settings.get()
       setSettings(s)
       setCharts(await window.astro.charts.list())
+      const list = await window.astro.charts.list()
       setInterps(await window.astro.interp.list())
       setWorking(nowChart(s))
+      setObOpen(!s.onboarded && list.length === 0)
       window.setTimeout(() => void window.astro.checkUpdate().then(setUpdate), 4000)
     })()
   }, [])
 
+  if (settings) setLang(settings.uiLanguage)
   useEffect(() => {
     if (!settings) return
     const root = document.documentElement
@@ -193,6 +213,10 @@ export default function App() {
     }
     return out.sort((a, b) => a.orb - b.orb)
   }, [computed, starPos])
+  const shown = useMemo(
+    () => (computed && harmonic !== 1 ? { natal: harmonicLayer(computed.natal, harmonic), outers: computed.outers.map((o) => harmonicLayer(o, harmonic)) } : computed),
+    [computed, harmonic]
+  )
   const chartInterps = useMemo(() => interps.filter((i) => i.chartId === working?.id), [interps, working?.id])
 
   const context = useMemo(() => {
@@ -205,8 +229,13 @@ export default function App() {
     if (working.id !== NOW_ID) parts.push(traditionalText(computed.natal, computed.natalJd, eventJd))
     if (sky && (working.id === NOW_ID || outers.includes('transit'))) parts.push(skyContext(sky, eventTz, eventPlace.lon))
     if (calHits.length) parts.push(calendarText(calHits, working.tz, working.place.lon))
+    if (harmonic !== 1 && shown)
+      parts.push(
+        `# HARMONİK ${harmonic} HARİTASI (ekranda gösterilen)\n` +
+          shown.natal.points.map((p) => `- ${POINT[p.key]?.name ?? p.key}: ${fmtPosText(p.lon)}`).join('\n')
+      )
     return parts.join('\n\n')
-  }, [computed, working, settings, eventJd, eventTz, eventPlace, partner, sky, outers, patterns, starConj, calHits])
+  }, [computed, working, settings, eventJd, eventTz, eventPlace, partner, sky, outers, patterns, starConj, calHits, harmonic, shown])
 
   // ---- time --------------------------------------------------------------------
   const effTarget = outers.length ? target : 'natal'
@@ -242,8 +271,8 @@ export default function App() {
       else if (workingId === NOW_ID) setNatalJd(nowJd())
     }
     tick()
-    const t = window.setInterval(tick, 1000)
-    return () => window.clearInterval(t)
+    const timer = window.setInterval(tick, 1000)
+    return () => window.clearInterval(timer)
   }, [live, playing, effTarget, workingId, setNatalJd])
 
   const goNowRef = useRef(goNow)
@@ -252,14 +281,19 @@ export default function App() {
   stepRef.current = step
   useEffect(() => {
     if (!playing) return
-    const t = window.setInterval(() => stepRef.current(1), Math.max(16, 1000 / speed))
-    return () => window.clearInterval(t)
+    const timer = window.setInterval(() => stepRef.current(1), Math.max(16, 1000 / speed))
+    return () => window.clearInterval(timer)
   }, [playing, speed])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement
       if (el.closest('input, textarea, select, [contenteditable]') || editor || showSettings) return
+      if (e.key === '?') {
+        e.preventDefault()
+        setShowKeys((v) => !v)
+        return
+      }
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
         e.preventDefault()
         const dir = e.key === 'ArrowRight' ? 1 : -1
@@ -290,7 +324,7 @@ export default function App() {
   // ---- charts -------------------------------------------------------------------
   const openChart = (c: ChartRecord, mode: OpenMode) => {
     if (c.id !== working?.id) {
-      if (dirty && !confirm('Kaydedilmemiş değişiklikler kaybolacak. Devam edilsin mi?')) return
+      if (dirty && !confirm(t('Kaydedilmemiş değişiklikler kaybolacak. Devam edilsin mi?'))) return
       setWorking(structuredClone(c))
       setSaved(c.id === NOW_ID ? null : structuredClone(c))
     }
@@ -336,7 +370,7 @@ export default function App() {
   }
 
   const removeChart = async (c: ChartRecord) => {
-    if (!confirm(`"${c.name}" haritası silinsin mi?`)) return
+    if (!confirm(`"${c.name}" — ${t('haritası silinsin mi?')}`)) return
     setCharts(await window.astro.charts.remove(c.id))
     if (working?.id === c.id && settings) {
       setWorking(nowChart(settings))
@@ -353,13 +387,20 @@ export default function App() {
       else void persist(working)
     } else if (cmd === 'import') void window.astro.charts.importFile().then((all) => all && setCharts(all))
     else if (cmd === 'export') void window.astro.charts.exportAll(charts)
+    else if (cmd === 'shortcuts') setShowKeys(true)
   }
   useEffect(() => window.astro.onMenu((cmd) => menuRef.current(cmd)), [])
+  const openByIdRef = useRef<(id: string) => void>(() => undefined)
+  openByIdRef.current = (id: string) => {
+    const c = charts.find((x) => x.id === id)
+    if (c) openChart(c, 'transit')
+  }
+  useEffect(() => window.astro.onOpenChart((id) => openByIdRef.current(id)), [])
 
   const toggleOuter = (k: OuterKind) => {
     setOuters((cur) => {
       if (cur.includes(k)) return cur.filter((x) => x !== k)
-      const next = [...cur, k].slice(-2)
+      const next = [...cur, k].slice(-3)
       if (k === 'synastry' && !partnerId) {
         const other = charts.find((c) => c.id !== working?.id)
         if (other) setPartnerId(other.id)
@@ -437,7 +478,7 @@ export default function App() {
     )
   }
 
-  if (!settings || !working) return <div className="loading">Efemeris yükleniyor…</div>
+  if (!settings || !working) return <div className="loading">{t('Efemeris yükleniyor…')}</div>
 
   const targetTz = effTarget === 'natal' ? working.tz : eventTz
   const targetLon = effTarget === 'natal' ? working.place.lon : settings.defaultPlace.lon
@@ -456,7 +497,7 @@ export default function App() {
   return (
     <div className={showChat ? 'app' : 'app no-chat'}>
       <header className="toolbar">
-        <div className="brand">✶ AstroFree</div>
+        <div className="brand">{t('✶ AstroFree')}</div>
         <div className="seg">
           {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).map((k) => (
             <button
@@ -468,12 +509,29 @@ export default function App() {
                 (k === 'synastry' && charts.filter((c) => c.id !== working.id).length === 0) ||
                 ((k === 'solarReturn' || k === 'lunarReturn' || k === 'progressed' || k === 'solarArc') && working.id === NOW_ID)
               }
-              title={OUTER_HELP[k] + (working.id === NOW_ID && k !== 'transit' && k !== 'synastry' ? ' — önce soldan bir kişi seçin' : '')}
+              title={t(OUTER_HELP[k]) + (working.id === NOW_ID && k !== 'transit' && k !== 'synastry' ? t(' — önce soldan bir kişi seçin') : '')}
             >
-              {OUTER_LABEL[k]}
+              {t(OUTER_LABEL[k])}
             </button>
           ))}
         </div>
+        {outers.includes('synastry') && partner && working.id !== NOW_ID && (
+          <span className="rel-actions">
+            <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
+              {t('Kompozit')}
+            </button>
+            <button
+              onClick={async () => {
+                const tmp = davisonRecord(working, partner, jdToLocal, null)
+                const zone = await window.astro.geo.zone(tmp.place.lat, tmp.place.lon)
+                openChart(davisonRecord(working, partner, jdToLocal, zone), 'natal')
+              }}
+              title={t('İki doğumun zaman ve mekân orta noktası')}
+            >
+              {t('Davison')}
+            </button>
+          </span>
+        )}
         {outers.includes('synastry') && (
           <select value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)}>
             {charts
@@ -485,38 +543,49 @@ export default function App() {
               ))}
           </select>
         )}
+        <select value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
+          {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
+            <option key={n} value={n}>
+              {n === 1 ? t('Harmonik: yok') : `${t('Harmonik')} ${n}`}
+            </option>
+          ))}
+        </select>
         <select
           value={settings.houseSystem}
           onChange={(e) => saveSettings({ ...settings, houseSystem: e.target.value })}
-          title="Ev sistemi"
+          title={t('Ev sistemi')}
         >
           {HOUSE_SYSTEMS.map(([k, n]) => (
             <option key={k} value={k}>
-              {n}
+              {t(n)}
             </option>
           ))}
         </select>
         <span className="grow" />
-        {update && (
-          <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title="GitHub'da yeni sürüm">
+        {updateReady ? (
+          <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
+            v{updateReady} hazır · Yeniden başlat
+          </button>
+        ) : update && (
+          <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title={t('GitHub\'da yeni sürüm')}>
             Yeni sürüm v{update.version} · İndir
           </a>
         )}
         <button
           onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-          title="Tema: sistem → açık → koyu"
+          title={t('Tema: sistem → açık → koyu')}
         >
-          {THEME_LABEL[settings.theme]}
+          {t(THEME_LABEL[settings.theme])}
         </button>
-        <button onClick={() => setShowChat(!showChat)}>{showChat ? 'Sohbeti gizle' : 'AI sohbet'}</button>
-        <button onClick={() => setShowSettings(true)} title="Ayarlar">
-          ⚙ Ayarlar
+        <button onClick={() => setShowChat(!showChat)}>{showChat ? t('Sohbeti gizle') : t('AI sohbet')}</button>
+        <button onClick={() => setShowSettings(true)} title={t('Ayarlar')}>
+          {t('Ayarlar')}
         </button>
       </header>
 
       <TimeControls
         local={targetLocal}
-        tzText={`${effTarget === 'natal' ? 'Doğum' : 'Olay'} · ${tzLabel(targetTz)} ${fmtOffset(offsetAt(targetTz, targetJd, targetLon))}`}
+        tzText={`${effTarget === 'natal' ? t('Doğum') : t('Olay')} · ${tzLabel(targetTz)} ${fmtOffset(offsetAt(targetTz, targetJd, targetLon))}`}
         target={effTarget}
         canTargetEvent={outers.length > 0}
         onTarget={setTarget}
@@ -542,17 +611,17 @@ export default function App() {
 
       <aside className="sidebar">
         <div className="side-actions">
-          <button className="primary" onClick={() => setEditor(blankChart(settings))} title="Yeni kişi (⌘N)">
-            + Kişi
+          <button className="primary" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
+            {t('+ Kişi')}
           </button>
-          <button onClick={() => setEditor(blankChart(settings, 'event'))} title="Evlilik, kuruluş, taşınma gibi bir olay haritası">
-            + Olay
+          <button onClick={() => setEditor(blankChart(settings, 'event'))} title={t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}>
+            {t('+ Olay')}
           </button>
-          <button onClick={openToday} title="Şu anki gökyüzü (canlı)">
-            Bugün
+          <button onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
+            {t('Bugün')}
           </button>
         </div>
-        <input className="search" placeholder="Ara (isim, etiket, not, yer)…" value={filter} onChange={(e) => setFilter(e.target.value)} />
+        <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
         {allTags.length > 0 && (
           <div className="tag-filter">
             {allTags.map((t) => (
@@ -568,7 +637,7 @@ export default function App() {
             if (!group.length) return null
             return [
               <li key={`h-${kind}`} className="list-head">
-                {kind === 'person' ? 'Kişiler' : 'Olaylar'} <span className="muted">{group.length}</span>
+                {kind === 'person' ? t('Kişiler') : t('Olaylar')} <span className="muted">{group.length}</span>
               </li>,
               ...group.map((c) => (
                 <li key={c.id} className={c.id === working.id ? 'active' : ''}>
@@ -584,15 +653,15 @@ export default function App() {
                         {(c.tags?.length ?? 0) > 0 && <span className="item-tags">{c.tags!.map((t) => `#${t}`).join(' ')}</span>}
                       </span>
                     </button>
-                    <button className="x" title="Sil" onClick={() => void removeChart(c)}>
+                    <button className="x" title={t('Sil')} onClick={() => void removeChart(c)}>
                       ×
                     </button>
                   </div>
                   <div className="chips">
-                    <button onClick={() => openChart(c, 'natal')}>Harita</button>
-                    <button onClick={() => openChart(c, 'info')}>Bilgiler</button>
-                    <button onClick={() => openChart(c, 'transit')}>Transit</button>
-                    {kind === 'person' && <button onClick={() => openChart(c, 'progressed')}>Progresyon</button>}
+                    <button onClick={() => openChart(c, 'natal')}>{t('Harita')}</button>
+                    <button onClick={() => openChart(c, 'info')}>{t('Bilgiler')}</button>
+                    <button onClick={() => openChart(c, 'transit')}>{t('Transit')}</button>
+                    {kind === 'person' && <button onClick={() => openChart(c, 'progressed')}>{t('Progresyon')}</button>}
                   </div>
                 </li>
               ))
@@ -600,17 +669,16 @@ export default function App() {
           })}
           {!visible.length && (
             <li className="empty-list">
-              <div className="empty-icon">✶</div>
-              <div>Henüz kayıt yok</div>
-              <div className="muted small">“+ Kişi” ile doğum haritası, “+ Olay” ile olay haritası ekleyin.</div>
+              <div>{t('Henüz kayıt yok')}</div>
+              <div className="muted small">{t('“+ Kişi” ile doğum haritası, “+ Olay” ile olay haritası ekleyin.')}</div>
             </li>
           )}
         </ul>
         <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
         <div className="side-actions">
-          <button onClick={() => menuRef.current('import')}>İçe aktar</button>
+          <button onClick={() => menuRef.current('import')}>{t('İçe aktar')}</button>
           <button onClick={() => menuRef.current('export')} disabled={!charts.length}>
-            Dışa aktar
+            {t('Dışa aktar')}
           </button>
         </div>
       </aside>
@@ -620,10 +688,10 @@ export default function App() {
           <div>
             <h1>
               {working.name || 'İsimsiz'}
-              {dirty && <span className="dirty" title="Kaydedilmemiş değişiklik"> ●</span>}
-              {working.kind === 'event' && <span className="badge">Olay</span>}
-              {working.timeUnknown && <span className="badge warn" title="12:00 kullanıldı; yükselen ve evler güvenilmez">Saat bilinmiyor</span>}
-              {working.rodden && !working.timeUnknown && <span className="badge" title="Rodden veri güvenilirliği">{working.rodden}</span>}
+              {dirty && <span className="dirty" title={t('Kaydedilmemiş değişiklik')}> ●</span>}
+              {working.kind === 'event' && <span className="badge">{t('Olay')}</span>}
+              {working.timeUnknown && <span className="badge warn" title={t('12:00 kullanıldı; yükselen ve evler güvenilmez')}>{t('Saat bilinmiyor')}</span>}
+              {working.rodden && !working.timeUnknown && <span className="badge" title={t('Rodden veri güvenilirliği')}>{working.rodden}</span>}
             </h1>
             <div className="muted small">
               {fmtLocal(working.local, true)} {tzLabel(working.tz)} ({fmtOffset(offsetAt(working.tz, natalJd, working.place.lon))}) ·{' '}
@@ -632,7 +700,7 @@ export default function App() {
             </div>
             {computed?.outers.map((o, i) => (
               <div key={i} className="small" style={{ color: LAYER_COLOR[o.kind] }}>
-                {o.label}:{' '}
+                {t(o.label)}:{' '}
                 {o.kind === 'synastry' && partner
                   ? `${fmtLocal(partner.local)} · ${partner.place.name}`
                   : o.kind === 'solarReturn' || o.kind === 'lunarReturn'
@@ -644,22 +712,22 @@ export default function App() {
                 {(o.kind === 'solarReturn' || o.kind === 'lunarReturn') && (
                   <span className="ret-nav">
                     <button className="link small" onClick={() => shiftReturn(o.kind as 'solarReturn' | 'lunarReturn', -1)}>
-                      ◀ önceki
+                      {t('◀ önceki')}
                     </button>
                     {o.kind === 'solarReturn' && (
                       <input
                         type="number"
                         className="ret-year"
-                        title="Doğum günü yılı"
+                        title={t('Doğum günü yılı')}
                         value={computed.returns.find((r) => r.kind === 'solarReturn') ? jdToLocal(computed.returns.find((r) => r.kind === 'solarReturn')!.jd, working.tz, working.place.lon).y : ''}
                         onChange={(e) => e.target.value.length === 4 && setReturnYear(+e.target.value)}
                       />
                     )}
                     <button className="link small" onClick={() => shiftReturn(o.kind as 'solarReturn' | 'lunarReturn', 1)}>
-                      sonraki ▶
+                      {t('sonraki ▶')}
                     </button>
                     <button className="link small" onClick={() => openReturn(o.kind as 'solarReturn' | 'lunarReturn')}>
-                      ayrı harita olarak aç
+                      {t('ayrı harita olarak aç')}
                     </button>
                   </span>
                 )}
@@ -668,29 +736,38 @@ export default function App() {
             ))}
           </div>
           <div className="head-actions">
-            <button onClick={() => void exportPng()} title="Çarkı PNG olarak kaydet">
-              PNG
+            <button onClick={() => void exportPng()} title={t('Çarkı PNG olarak kaydet')}>
+              {t('PNG')}
             </button>
-            <button onClick={() => void exportPdf()} title="Çark, natal bilgiler ve kayıtlı yorumlarla PDF rapor">
-              PDF rapor
+            <button onClick={() => void exportPdf()} title={t('Çark, natal bilgiler ve kayıtlı yorumlarla PDF rapor')}>
+              {t('PDF rapor')}
             </button>
-            <button onClick={() => setEditor(working.id === NOW_ID ? { ...working, id: crypto.randomUUID(), name: '' } : working)}>Düzenle</button>
-            {dirty && saved && <button onClick={() => setWorking(structuredClone(saved))}>Geri al</button>}
+            <button onClick={() => setEditor(working.id === NOW_ID ? { ...working, id: crypto.randomUUID(), name: '' } : working)}>{t('Düzenle')}</button>
+            {dirty && saved && <button onClick={() => setWorking(structuredClone(saved))}>{t('Geri al')}</button>}
             <button className={dirty ? 'primary' : ''} onClick={() => menuRef.current('save')}>
-              Kaydet
+              {t('Kaydet')}
             </button>
           </div>
         </div>
 
         <div className="tabs view-tabs">
           <button className={view === 'chart' ? 'on' : ''} onClick={() => setView('chart')}>
-            Harita
+            {t('Harita')}
           </button>
           <button className={view === 'info' ? 'on' : ''} onClick={() => setView('info')}>
-            Natal Bilgiler
+            {t('Natal Bilgiler')}
           </button>
           <button className={view === 'calendar' ? 'on' : ''} onClick={() => setView('calendar')}>
-            Transit Takvimi
+            {t('Transit Takvimi')}
+          </button>
+          <button className={view === 'ephem' ? 'on' : ''} onClick={() => setView('ephem')}>
+            {t('Grafik Efemeris')}
+          </button>
+          <button className={view === 'acg' ? 'on' : ''} onClick={() => setView('acg')}>
+            {t('Astrokartografi')}
+          </button>
+          <button className={view === 'election' ? 'on' : ''} onClick={() => setView('election')}>
+            {t('Zaman Seçimi')}
           </button>
           <button className={view === 'notes' ? 'on' : ''} onClick={() => setView('notes')}>
             Yorumlar{chartInterps.length ? ` (${chartInterps.length})` : ''}
@@ -712,6 +789,36 @@ export default function App() {
             onHits={setCalHits}
           />
         )}
+        {view === 'ephem' && computed && (
+          <GraphicEphemeris natal={computed.natal} startJd={eventJd} tz={working.tz} lon={working.place.lon} settings={settings} onJump={jumpTo} />
+        )}
+        {view === 'election' && (
+          <ElectionalSearch startJd={eventJd} place={settings.defaultPlace} tz={eventTz} settings={settings} onJump={jumpTo} onAsk={ask} />
+        )}
+        {view === 'acg' && computed && (
+          <Astrocartography
+            natal={computed.natal}
+            rec={working}
+            onAsk={ask}
+            onRelocate={(place) => {
+              const tz: TzSpec = place.zone ? { kind: 'zone', zone: place.zone } : { kind: 'lmt' }
+              openChart(
+                {
+                  ...working,
+                  id: `reloc-${working.id}-${place.lat.toFixed(2)}-${place.lon.toFixed(2)}`,
+                  name: `${working.name} — ${place.name.split(',')[0]} (taşınmış)`,
+                  local: jdToLocal(natalJd, tz, place.lon),
+                  tz,
+                  place: { name: place.name, lat: place.lat, lon: place.lon, cc: place.cc, country: place.country, zone: place.zone },
+                  notes: `${working.name} haritasının ${place.name} konumuna taşınmış hâli (aynı doğum anı).`,
+                  createdAt: 0,
+                  updatedAt: 0
+                },
+                'natal'
+              )
+            }}
+          />
+        )}
         {view === 'notes' && (
           <Interpretations
             items={chartInterps}
@@ -720,7 +827,7 @@ export default function App() {
           />
         )}
         {view === 'chart' && computed && (
-          <ChartWheel natal={computed.natal} outers={computed.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} />
+          <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} />
         )}
 
         {view === 'chart' && <div className="bottom">
@@ -734,15 +841,15 @@ export default function App() {
               ] as [BottomTab, string][]
             ).map(([k, l]) => (
               <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>
-                {l}
+                {t(l)}
               </button>
             ))}
             {outers.length > 0 && (
-              <select value={aspectLayer} onChange={(e) => setAspectLayer(Number(e.target.value))} title="Çarkta ve tabloda gösterilen açılar">
-                <option value={-1}>Açılar: Natal ↔ Natal</option>
+              <select value={aspectLayer} onChange={(e) => setAspectLayer(Number(e.target.value))} title={t('Çarkta ve tabloda gösterilen açılar')}>
+                <option value={-1}>{t('Açılar: Natal ↔ Natal')}</option>
                 {computed?.outers.map((o, i) => (
                   <option key={i} value={i}>
-                    Açılar: {o.label} → Natal
+                    {t('Açılar')}: {t(o.label)} → Natal
                   </option>
                 ))}
               </select>
@@ -754,7 +861,7 @@ export default function App() {
           </div>
           {computed && (
             <div className="table-wrap">
-              {tab === 'positions' && <PositionsTable natal={computed.natal} outers={computed.outers} />}
+              {tab === 'positions' && <PositionsTable natal={shown!.natal} outers={shown!.outers} />}
               {tab === 'aspects' && <AspectList natal={computed.natal} outer={aspectLayer >= 0 ? computed.outers[aspectLayer] ?? null : null} settings={settings} />}
               {tab === 'grid' && <AspectGrid natal={computed.natal} outer={aspectLayer >= 0 ? computed.outers[aspectLayer] ?? null : null} settings={settings} />}
               {tab === 'houses' && <HousesTable natal={computed.natal} />}
@@ -772,6 +879,7 @@ export default function App() {
             settings={settings}
             onSettings={saveSettings}
             onSave={saveInterpretation}
+            inject={inject}
           />
         </aside>
       )}
@@ -809,6 +917,19 @@ export default function App() {
           }}
         />
       )}
+      {obOpen && (
+        <Onboarding
+          hidden={!!editor}
+          settings={settings}
+          onSettings={saveSettings}
+          onAddPerson={() => setEditor(blankChart(settings))}
+          onDone={() => {
+            setObOpen(false)
+            saveSettings({ ...settings, onboarded: true })
+          }}
+        />
+      )}
+      {showKeys && <Shortcuts onClose={() => setShowKeys(false)} />}
       {showSettings && (
         <SettingsDialog
           settings={settings}

@@ -1,5 +1,5 @@
 // Turns chart records + the current moment into computed wheel layers.
-import type { AppSettings, ChartRecord, EphemRequest, Place, TzSpec } from '@shared/types'
+import type { AppSettings, ChartRecord, EphemRequest, EphemResult, Place, TzSpec } from '@shared/types'
 import { bodiesFor, buildLayer, eclToRa, houseOf, norm360, shiftLayer, type Layer } from './astro'
 import { localToJd } from './time'
 
@@ -68,8 +68,9 @@ export async function computeCharts(spec: ComputeSpec): Promise<Computed> {
   if (needProg) idx.prog = first.push(req(progJd, natal.place)) - 1
 
   const res = await window.astro.compute(first)
-  const natalRes = res[0]
+  let natalRes = res[0]
   if (natalRes.error) throw new Error(natalRes.error)
+  if (natal.composite) natalRes = await compositeResult(natal.composite.a, natal.composite.b, req)
   const natalLayer = buildLayer('natal', natal.name || 'Natal', natalRes, s)
 
   let progLayer: Layer | null = null
@@ -128,3 +129,73 @@ export async function computeCharts(spec: ComputeSpec): Promise<Computed> {
   return { natal: natalLayer, outers, natalJd, progressedJd: needProg ? progJd : null, returns }
 }
 
+
+const mid = (a: number, b: number) => norm360(a + ((((b - a) % 360) + 540) % 360 - 180) / 2)
+
+/**
+ * Composite chart: the shorter-arc midpoint of every body; houses from the
+ * midpoint MC (as an ARMC) at the mean latitude.
+ */
+async function compositeResult(
+  a: ChartRecord,
+  b: ChartRecord,
+  req: (jdUT: number, place: Place, armc?: number) => EphemRequest
+): Promise<EphemResult> {
+  const [ra, rb] = await window.astro.compute([req(chartJd(a), a.place), req(chartJd(b), b.place)])
+  const midJd = (chartJd(a) + chartJd(b)) / 2
+  const place: Place = { name: 'Kompozit', lat: (a.place.lat + b.place.lat) / 2, lon: mid(a.place.lon, b.place.lon) }
+  const mc = mid(ra.mc, rb.mc)
+  const [h] = await window.astro.compute([req(midJd, place, eclToRa(mc, (ra.eps + rb.eps) / 2))])
+  const bodies = ra.bodies
+    .map((x) => {
+      const y = rb.bodies.find((z) => z.id === x.id)
+      if (!y) return null
+      return { id: x.id, lon: mid(x.lon, y.lon), lat: (x.lat + y.lat) / 2, dist: (x.dist + y.dist) / 2, speed: (x.speed + y.speed) / 2, decl: (x.decl + y.decl) / 2 }
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null)
+  return { ...h, bodies, mc: h.mc, asc: h.asc }
+}
+
+/** Davison chart: the midpoint in time and on the globe of two charts. */
+export function davisonRecord(a: ChartRecord, b: ChartRecord, jdToLocal: (jd: number, tz: TzSpec, lon: number) => ChartRecord['local'], zone: string | null): ChartRecord {
+  const jd = (chartJd(a) + chartJd(b)) / 2
+  // Geographic midpoint along the great circle.
+  const r = Math.PI / 180
+  const v = (p: Place) => [Math.cos(p.lat * r) * Math.cos(p.lon * r), Math.cos(p.lat * r) * Math.sin(p.lon * r), Math.sin(p.lat * r)]
+  const [x1, y1, z1] = v(a.place)
+  const [x2, y2, z2] = v(b.place)
+  const [x, y, z] = [(x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2]
+  const lat = Math.atan2(z, Math.hypot(x, y)) / r
+  const lon = Math.atan2(y, x) / r
+  const tz: TzSpec = zone ? { kind: 'zone', zone } : { kind: 'lmt' }
+  return {
+    id: `davison-${a.id}-${b.id}`,
+    name: `${a.name} & ${b.name} — Davison`,
+    kind: 'event',
+    local: jdToLocal(jd, tz, lon),
+    tz,
+    place: { name: `Orta nokta (${lat.toFixed(2)}, ${lon.toFixed(2)})`, lat, lon, zone: zone ?? undefined },
+    notes: `${a.name} ve ${b.name} için Davison ilişki haritası: iki doğumun zaman ve mekân orta noktası.`,
+    createdAt: 0,
+    updatedAt: 0
+  }
+}
+
+export function compositeRecord(a: ChartRecord, b: ChartRecord, jdToLocal: (jd: number, tz: TzSpec, lon: number) => ChartRecord['local']): ChartRecord {
+  const jd = (chartJd(a) + chartJd(b)) / 2
+  const lat = (a.place.lat + b.place.lat) / 2
+  const lon = mid(a.place.lon, b.place.lon)
+  const tz: TzSpec = { kind: 'lmt' }
+  return {
+    id: `composite-${a.id}-${b.id}`,
+    name: `${a.name} & ${b.name} — Kompozit`,
+    kind: 'event',
+    local: jdToLocal(jd, tz, lon),
+    tz,
+    place: { name: 'Kompozit (orta noktalar)', lat, lon },
+    composite: { a, b },
+    notes: `${a.name} ve ${b.name} için kompozit ilişki haritası (gezegen orta noktaları).`,
+    createdAt: 0,
+    updatedAt: 0
+  }
+}

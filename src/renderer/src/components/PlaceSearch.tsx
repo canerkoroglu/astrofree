@@ -1,12 +1,12 @@
+import { t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
 import type { GeoResult, Place } from '@shared/types'
 import { fmtCoord } from '../lib/astro'
 import { fmtDms, parseCoord } from '../lib/coords'
 import WorldMap from './WorldMap'
 
-/** 🇹🇷 from "TR" (regional indicator letters). */
-export const flag = (cc?: string) =>
-  cc && /^[A-Z]{2}$/i.test(cc) ? String.fromCodePoint(...[...cc.toUpperCase()].map((ch) => 0x1f1e6 + ch.charCodeAt(0) - 65)) : '📍'
+/** Country code shown as a small neutral tag in place of a flag. */
+const ccTag = (cc?: string) => (cc && /^[A-Z]{2}$/i.test(cc) ? cc.toUpperCase() : '')
 
 /**
  * Place picker: offline city search with keyboard navigation, a card for the
@@ -84,10 +84,13 @@ export default function PlaceSearch({
   return (
     <div className="place">
       <div className="place-search">
-        <span className="place-icon">⌕</span>
+        <svg className="place-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden>
+          <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M11 11l3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
         <input
           autoFocus={autoFocus}
-          placeholder="Şehir veya ilçe ara… (İzmir, Kadıköy, Londra)"
+          placeholder={t('Şehir veya ilçe ara… (İzmir, Kadıköy, Londra)')}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
@@ -111,14 +114,14 @@ export default function PlaceSearch({
         {busy && <span className="muted small">…</span>}
       </div>
       {q.trim().length >= 2 && !busy && results.length === 0 && (
-        <div className="muted small">Bulunamadı — aşağıdan koordinat girin veya haritadan seçin.</div>
+        <div className="muted small">{t('Bulunamadı — aşağıdan koordinat girin veya haritadan seçin.')}</div>
       )}
       {results.length > 0 && (
         <ul className="place-results">
           {results.map((r, i) => (
             <li key={i}>
               <button type="button" className={i === active ? 'active' : ''} onMouseEnter={() => setActive(i)} onClick={() => pick(r)}>
-                <span className="flag">{flag(r.cc)}</span>
+                <span className={ccTag(r.cc) ? 'cc' : ''}>{ccTag(r.cc)}</span>
                 <span className="pr-name">{r.name}</span>
                 <span className="muted small">{r.zone}</span>
               </button>
@@ -128,9 +131,9 @@ export default function PlaceSearch({
       )}
 
       <div className="place-card">
-        <span className="flag big">{flag(value.cc)}</span>
+        {ccTag(value.cc) && <span className="cc big">{ccTag(value.cc)}</span>}
         <div className="pc-body">
-          <input className="pc-name" value={value.name} onChange={(e) => onChange({ ...value, name: e.target.value })} title="Yer adı (düzenlenebilir)" />
+          <input className="pc-name" value={value.name} onChange={(e) => onChange({ ...value, name: e.target.value })} title={t('Yer adı (düzenlenebilir)')} />
           <div className="muted small">
             {fmtDms(value.lat, true)} · {fmtDms(value.lon, false)}
             {value.zone ? ` · ${value.zone}` : ''}
@@ -145,10 +148,10 @@ export default function PlaceSearch({
         <div className="place-adv">
           <div className="row">
             <label className="coord">
-              Enlem
+              {t('Enlem')}
               <input
                 value={latText}
-                placeholder="38n15 · 38°15'K · 38.25"
+                placeholder={t('38n15 · 38°15\'K · 38.25')}
                 onChange={(e) => setLatText(e.target.value)}
                 onBlur={applyTyped}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyTyped())}
@@ -157,10 +160,10 @@ export default function PlaceSearch({
               <span className={latParsed === null ? 'error small' : 'muted small'}>{latParsed === null ? 'geçersiz' : fmtDms(latParsed, true)}</span>
             </label>
             <label className="coord">
-              Boylam
+              {t('Boylam')}
               <input
                 value={lonText}
-                placeholder="85w46 · 28°57'D · -85.77"
+                placeholder={t('85w46 · 28°57\'D · -85.77')}
                 onChange={(e) => setLonText(e.target.value)}
                 onBlur={applyTyped}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyTyped())}
@@ -171,7 +174,7 @@ export default function PlaceSearch({
           </div>
           <div className="row">
             <button type="button" onClick={() => setShowMap(!showMap)}>
-              {showMap ? 'Haritayı gizle' : '🌍 Haritadan seç'}
+              {showMap ? 'Haritayı gizle' : 'Haritadan seç'}
             </button>
             {near && <span className="muted small">En yakın yerleşim: {near}</span>}
           </div>

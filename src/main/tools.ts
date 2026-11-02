@@ -1,12 +1,15 @@
 // Ephemeris searches used by the renderer: transit calendar, return charts,
 // fixed stars and planetary hours.
 import type {
+  ElectionRequest,
+  ElectionWindow,
   FixedStarPos,
   PlanetaryHours,
   TransitHit,
   TransitSearchRequest
 } from '@shared/types'
 import { getSwe } from './ephemeris'
+import { voidOfCourse } from './events'
 
 const SEFLG_SWIEPH = 2
 const SEFLG_SPEED = 256
@@ -183,4 +186,77 @@ export async function planetaryHours(jd: number, lat: number, lon: number, tzOff
     hours.push({ start: s, end: e, ruler: CHALDEAN[(start + i) % 7], night: i >= 12 })
   }
   return { sunrise, sunset, nextSunrise: nextRise, dayRuler, weekday, hours }
+}
+
+/**
+ * Electional search: windows in which every chosen condition holds, sampled
+ * every stepMinutes and merged into continuous spans.
+ */
+export async function electionalSearch(req: ElectionRequest): Promise<ElectionWindow[]> {
+  const swe = await getSwe()
+  const calc = lonFn(swe, req.sidMode)
+  const lon = (t: number, b: number) => calc(t, b)[0]
+  const { cond } = req
+  const step = Math.max(5, req.stepMinutes) / 1440
+
+  // Void-of-course spans across the range, found once.
+  const voc: { start: number; end: number }[] = []
+  if (cond.moonNotVoc) {
+    let t = req.start - 3
+    for (let guard = 0; guard < 400 && t < req.end; guard++) {
+      const v = voidOfCourse(t, lon)
+      if (!v) break
+      voc.push({ start: v.start, end: v.end })
+      t = v.end + 0.05
+    }
+  }
+  const inVoc = (t: number) => voc.some((v) => t >= v.start && t < v.end)
+
+  const ok = (t: number): number | null => {
+    const moon = lon(t, 1)
+    if (cond.moonSigns.length && !cond.moonSigns.includes(Math.floor(norm(moon) / 30))) return null
+    if (cond.moonWaxing && norm(moon - lon(t, 0)) >= 180) return null
+    if (cond.moonNotVoc && inVoc(t)) return null
+    for (const b of cond.notRetro) if (calc(t, b)[1] < 0) return null
+    if (cond.aspect) {
+      const sep = Math.abs(d180(lon(t, cond.aspect.a) - lon(t, cond.aspect.b)))
+      if (!cond.aspect.aspects.some((a) => Math.abs(sep - a) <= cond.aspect!.orb)) return null
+    }
+    if (cond.angular) {
+      const h = swe.houses_ex(t, req.sidMode !== null ? SEFLG_SIDEREAL : 0, req.lat, req.lon, 'P')
+      const p = lon(t, cond.angular.body)
+      const near = [h.ascmc[0], h.ascmc[1], h.ascmc[0] + 180, h.ascmc[1] + 180].some((x: number) => Math.abs(d180(p - x)) <= cond.angular!.orb)
+      if (!near) return null
+    }
+    return moon
+  }
+
+  const out: ElectionWindow[] = []
+  let cur: ElectionWindow | null = null
+  for (let t = req.start; t <= req.end; t += step) {
+    const m = ok(t)
+    if (m !== null) {
+      if (!cur) cur = { start: t, end: t, moonLon: m }
+      cur.end = t
+    } else if (cur) {
+      out.push(cur)
+      cur = null
+      if (out.length >= 300) break
+    }
+  }
+  if (cur) out.push(cur)
+  return out
+}
+
+/** Longitudes of several bodies sampled over a range (graphic ephemeris). */
+export async function ephemSeries(start: number, days: number, stepDays: number, bodies: number[], sidMode: number | null) {
+  const swe = await getSwe()
+  const calc = lonFn(swe, sidMode)
+  const jd: number[] = []
+  const lon: Record<number, number[]> = Object.fromEntries(bodies.map((b) => [b, []]))
+  for (let t = start; t <= start + days + 1e-9; t += stepDays) {
+    jd.push(t)
+    for (const b of bodies) lon[b].push(calc(t, b)[0])
+  }
+  return { jd, lon }
 }

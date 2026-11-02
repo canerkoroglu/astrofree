@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { WORLD_PATH } from '../assets/world'
 import { fmtDms } from '../lib/coords'
@@ -33,7 +34,27 @@ function declutter<T extends [number, number, string, ...unknown[]]>(items: T[],
 }
 
 /** Offline equirectangular world map: wheel to zoom, drag to pan, click to pick. */
-export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: number; onPick: (lat: number, lon: number) => void }) {
+export interface MapOverlay {
+  d: string
+  className?: string
+  width?: number
+  label?: { x: number; y: number; text: string; className?: string }
+  title?: string
+}
+
+export default function WorldMap({
+  lat,
+  lon,
+  onPick,
+  overlays = [],
+  className = ''
+}: {
+  lat: number
+  lon: number
+  onPick: (lat: number, lon: number) => void
+  overlays?: MapOverlay[]
+  className?: string
+}) {
   const [box, setBox] = useState<Box>(FULL)
   const [hover, setHover] = useState<[number, number] | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
@@ -105,7 +126,7 @@ export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: numbe
   for (let v = 0; v <= 360; v += step) grid.push(v)
 
   return (
-    <div className="worldmap">
+    <div className={`worldmap ${className}`}>
       <svg
         ref={svgRef}
         viewBox={box.join(' ')}
@@ -165,6 +186,18 @@ export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: numbe
             {name}
           </text>
         ))}
+        {overlays.map((o, i) => (
+          <g key={`o${i}`}>
+            <path d={o.d} className={`wm-overlay ${o.className ?? ''}`} strokeWidth={o.width ?? 1.4}>
+              {o.title && <title>{o.title}</title>}
+            </path>
+            {o.label && (
+              <text x={o.label.x} y={o.label.y} className={`wm-olabel ${o.label.className ?? ''}`} fontSize={11 / pxPerUnit} strokeWidth={3 / pxPerUnit}>
+                {o.label.text}
+              </text>
+            )}
+          </g>
+        ))}
         <circle cx={mx} cy={my} r={2.2 * k} className="wm-marker" strokeWidth={0.8 * k} />
         <line x1={mx - 5 * k} y1={my} x2={mx + 5 * k} y2={my} className="wm-cross" strokeWidth={0.5 * k} />
         <line x1={mx} y1={my - 5 * k} x2={mx} y2={my + 5 * k} className="wm-cross" strokeWidth={0.5 * k} />
@@ -175,10 +208,10 @@ export default function WorldMap({ lat, lon, onPick }: { lat: number; lon: numbe
         </span>
         <span className="grow" />
         <button className="link small" onClick={() => setBox(clamp([mx - 15, my - 7.5, 30, 15]))}>
-          Seçime yakınlaş
+          {t('Seçime yakınlaş')}
         </button>
         <button className="link small" onClick={() => setBox(FULL)}>
-          Tüm dünya
+          {t('Tüm dünya')}
         </button>
       </div>
     </div>

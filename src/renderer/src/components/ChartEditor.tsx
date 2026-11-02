@@ -1,9 +1,10 @@
+import { t } from '../lib/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChartRecord, TzSpec } from '@shared/types'
 import { fmtPos, glyph, SIGNS, signGlyph, splitDeg } from '../lib/astro'
 import { fmtLocal, fmtOffset, isValidZone, jdToLocal, localToJd, nowJd, offsetAt, revjul } from '../lib/time'
 import DateTimeField from './DateTimeField'
-import PlaceSearch, { flag } from './PlaceSearch'
+import PlaceSearch from './PlaceSearch'
 
 const RODDEN: [string, string][] = [
   ['', 'Belirtilmedi'],
@@ -112,10 +113,10 @@ export default function ChartEditor({
           <h2>{isNew ? (isEvent ? 'Yeni olay' : 'Yeni kişi') : isEvent ? 'Olayı düzenle' : 'Kişiyi düzenle'}</h2>
           <div className="seg kind-seg">
             <button type="button" className={!isEvent ? 'on' : ''} onClick={() => setRec({ ...rec, kind: 'person' })}>
-              👤 Kişi
+              {t('Kişi')}
             </button>
             <button type="button" className={isEvent ? 'on' : ''} onClick={() => setRec({ ...rec, kind: 'event', timeUnknown: false })}>
-              ◆ Olay
+              {t('Olay')}
             </button>
           </div>
         </header>
@@ -136,9 +137,9 @@ export default function ChartEditor({
                 {duplicate && <div className="warn small">Bu isimde bir kayıt zaten var ({fmtLocal(duplicate.local)}).</div>}
                 {isEvent && !rec.name && (
                   <div className="idea-chips">
-                    {EVENT_IDEAS.map((t) => (
-                      <button type="button" key={t} onClick={() => setRec({ ...rec, name: t })}>
-                        {t}
+                    {EVENT_IDEAS.map((idea) => (
+                      <button type="button" key={idea} onClick={() => setRec({ ...rec, name: t(idea) })}>
+                        {t(idea)}
                       </button>
                     ))}
                   </div>
@@ -148,17 +149,17 @@ export default function ChartEditor({
 
             <section className="ed-sec">
               <div className="ed-sec-title">
-                <span className="num">1</span> {isEvent ? 'Olay ne zaman oldu?' : 'Ne zaman doğdu?'}
+                {isEvent ? 'Olay ne zaman oldu?' : 'Ne zaman doğdu?'}
               </div>
               <div className="row">
                 <DateTimeField live seconds value={rec.local} onChange={(local) => setRec((r) => ({ ...r, local }))} />
                 {isEvent && (
                   <button type="button" onClick={() => setRec((r) => ({ ...r, local: jdToLocal(nowJd(), r.tz, r.place.lon) }))}>
-                    Şimdi
+                    {t('Şimdi')}
                   </button>
                 )}
               </div>
-              <div className="muted small">Yazın (17.01.1942 18:35 · 17 Ocak 1942) ya da 📅 takvimden seçin.</div>
+              <div className="muted small">{t('Yazın (17.01.1942 18:35 · 17 Ocak 1942) ya da takvimden seçin.')}</div>
               {!isEvent && (
                 <div className="row ed-time-opts">
                   <label className="switch">
@@ -173,15 +174,15 @@ export default function ChartEditor({
                         }))
                       }
                     />
-                    <span>Doğum saati bilinmiyor</span>
+                    <span>{t('Doğum saati bilinmiyor')}</span>
                   </label>
                   {!rec.timeUnknown && (
                     <label className="inline-select">
-                      Saat kaynağı
-                      <select value={rec.rodden ?? ''} onChange={(e) => setRec({ ...rec, rodden: e.target.value })} title="Rodden güvenilirlik derecesi">
+                      {t('Saat kaynağı')}
+                      <select value={rec.rodden ?? ''} onChange={(e) => setRec({ ...rec, rodden: e.target.value })} title={t('Rodden güvenilirlik derecesi')}>
                         {RODDEN.filter(([k]) => k !== 'X').map(([k, n]) => (
                           <option key={k} value={k}>
-                            {n}
+                            {t(n)}
                           </option>
                         ))}
                       </select>
@@ -198,7 +199,7 @@ export default function ChartEditor({
 
             <section className="ed-sec">
               <div className="ed-sec-title">
-                <span className="num">2</span> Nerede?
+                {t('Nerede?')}
               </div>
               <PlaceSearch
                 value={rec.place}
@@ -209,7 +210,7 @@ export default function ChartEditor({
               />
               <div className="tz-line">
                 <span className={tzOk ? '' : 'error'}>
-                  🕒 {tzOk ? `${rec.tz.kind === 'zone' ? rec.tz.zone : rec.tz.kind === 'lmt' ? 'Yerel ortalama zaman' : 'Sabit fark'} · ${fmtOffset(off)}${dstNote}` : 'Geçersiz saat dilimi'}
+                  {tzOk ? `${rec.tz.kind === 'zone' ? rec.tz.zone : rec.tz.kind === 'lmt' ? 'Yerel ortalama zaman' : 'Sabit fark'} · ${fmtOffset(off)}${dstNote}` : 'Geçersiz saat dilimi'}
                 </span>
                 <button type="button" className="link small" onClick={() => setTzOpen(!tzOpen)}>
                   {tzOpen ? 'Gizle' : 'Değiştir'}
@@ -226,9 +227,9 @@ export default function ChartEditor({
                       else setTz({ kind: 'offset', minutes: Math.round(off) })
                     }}
                   >
-                    <option value="zone">Bölge (yaz saati geçmişi dahil)</option>
-                    <option value="offset">Sabit fark</option>
-                    <option value="lmt">Yerel ortalama zaman (LMT)</option>
+                    <option value="zone">{t('Bölge (yaz saati geçmişi dahil)')}</option>
+                    <option value="offset">{t('Sabit fark')}</option>
+                    <option value="lmt">{t('Yerel ortalama zaman (LMT)')}</option>
                   </select>
                   {rec.tz.kind === 'zone' && (
                     <input
@@ -237,7 +238,7 @@ export default function ChartEditor({
                         setZoneText(e.target.value)
                         setTz({ kind: 'zone', zone: e.target.value })
                       }}
-                      placeholder="Europe/Istanbul"
+                      placeholder={t('Europe/Istanbul')}
                     />
                   )}
                   {rec.tz.kind === 'offset' && (
@@ -246,7 +247,7 @@ export default function ChartEditor({
                       step="0.25"
                       value={rec.tz.minutes / 60}
                       onChange={(e) => setTz({ kind: 'offset', minutes: Math.round(Number(e.target.value) * 60) })}
-                      title="Saat farkı (doğu +)"
+                      title={t('Saat farkı (doğu +)')}
                     />
                   )}
                 </div>
@@ -255,17 +256,17 @@ export default function ChartEditor({
 
             <section className="ed-sec">
               <button type="button" className="ed-sec-title as-btn" onClick={() => setMoreOpen(!moreOpen)}>
-                <span className="num">3</span> Etiketler ve notlar <span className="muted small">(isteğe bağlı)</span>
+                Etiketler ve notlar <span className="muted small">{t('(isteğe bağlı)')}</span>
                 <span className="grow" />
                 <span className="muted">{moreOpen ? '▾' : '▸'}</span>
               </button>
               {moreOpen && (
                 <>
                   <div className="tag-input">
-                    {(rec.tags ?? []).map((t) => (
-                      <span key={t} className="tag-chip">
-                        #{t}
-                        <button type="button" onClick={() => setRec({ ...rec, tags: (rec.tags ?? []).filter((x) => x !== t) })} title="Kaldır">
+                    {(rec.tags ?? []).map((tag) => (
+                      <span key={tag} className="tag-chip">
+                        #{tag}
+                        <button type="button" onClick={() => setRec({ ...rec, tags: (rec.tags ?? []).filter((x) => x !== tag) })} title={t('Kaldır')}>
                           ×
                         </button>
                       </span>
@@ -295,20 +296,20 @@ export default function ChartEditor({
                       ))}
                     </div>
                   )}
-                  <textarea rows={3} placeholder="Notlar…" value={rec.notes ?? ''} onChange={(e) => setRec({ ...rec, notes: e.target.value })} />
+                  <textarea rows={3} placeholder={t('Notlar…')} value={rec.notes ?? ''} onChange={(e) => setRec({ ...rec, notes: e.target.value })} />
                 </>
               )}
             </section>
           </div>
 
           <aside className="ed-preview">
-            <div className="pv-title muted small">Önizleme</div>
+            <div className="pv-title muted small">{t('Önizleme')}</div>
             <div className="pv-name">{rec.name.trim() || (isEvent ? 'Yeni olay' : 'Yeni kişi')}</div>
             <div className="muted small">
               {fmtLocal(rec.local)} {rec.timeUnknown ? '(saat bilinmiyor)' : ''}
             </div>
             <div className="muted small">
-              {flag(rec.place.cc)} {rec.place.name.split(',').slice(0, 2).join(',')}
+              {rec.place.name.split(',').slice(0, 2).join(',')}
             </div>
             {preview ? (
               <div className="pv-big3">
@@ -326,7 +327,7 @@ export default function ChartEditor({
                       <span className="glyph pv-planet">{k === 'asc' ? 'AC' : glyph(k)}</span>
                       <span className={`glyph pv-sign el-${SIGNS[sd.sign].element}`}>{signGlyph(sd.sign)}</span>
                       <div>
-                        <div className="pv-label">{label}</div>
+                        <div className="pv-label">{t(label)}</div>
                         <div className="pv-val">
                           {SIGNS[sd.sign].name} {sd.deg}°{String(sd.min).padStart(2, '0')}'{unreliable ? ' ?' : ''}
                         </div>
@@ -336,17 +337,17 @@ export default function ChartEditor({
                 })}
               </div>
             ) : (
-              <div className="muted small">Hesaplanıyor…</div>
+              <div className="muted small">{t('Hesaplanıyor…')}</div>
             )}
             {preview && <div className="muted small pv-ut">{preview.ut}</div>}
           </aside>
         </div>
 
         <footer className="actions">
-          <span className="muted small grow">Esc kapat · ⌘/Ctrl + Enter kaydet</span>
-          <button onClick={onClose}>Vazgeç</button>
-          <button disabled={!canSave} onClick={() => submit(false)} title="Kaydetmeden haritayı göster">
-            Göster
+          <span className="muted small grow">{t('Esc kapat · ⌘/Ctrl + Enter kaydet')}</span>
+          <button onClick={onClose}>{t('Vazgeç')}</button>
+          <button disabled={!canSave} onClick={() => submit(false)} title={t('Kaydetmeden haritayı göster')}>
+            {t('Göster')}
           </button>
           <button className="primary" disabled={!canSave} onClick={() => submit(true)}>
             {isNew ? 'Ekle' : 'Kaydet'}

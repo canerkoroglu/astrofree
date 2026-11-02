@@ -4,6 +4,8 @@ import type {
   AiEvent,
   AppSettings,
   ChartRecord,
+  ElectionRequest,
+  ElectionWindow,
   EphemRequest,
   EphemResult,
   GeoResult,
@@ -27,6 +29,9 @@ const api = {
     returnTime: (body: number, lon: number, jd: number, sid: number | null): Promise<number | null> =>
       ipcRenderer.invoke('tools:return', body, lon, jd, sid),
     stars: (jd: number, sid: number | null): Promise<FixedStarPos[]> => ipcRenderer.invoke('tools:stars', jd, sid),
+    series: (start: number, days: number, step: number, bodies: number[], sid: number | null): Promise<{ jd: number[]; lon: Record<number, number[]> }> =>
+      ipcRenderer.invoke('tools:series', start, days, step, bodies, sid),
+    election: (req: ElectionRequest): Promise<ElectionWindow[]> => ipcRenderer.invoke('tools:election', req),
     hours: (jd: number, lat: number, lon: number, tzOffset: number): Promise<PlanetaryHours | null> =>
       ipcRenderer.invoke('tools:hours', jd, lat, lon, tzOffset)
   },
@@ -90,12 +95,23 @@ const api = {
     }
   },
 
+  onOpenChart: (fn: (id: string) => void): (() => void) => {
+    const listener = (_: unknown, id: string) => fn(id)
+    ipcRenderer.on('open-chart', listener)
+    return () => ipcRenderer.removeListener('open-chart', listener)
+  },
   onMenu: (fn: (cmd: string) => void): (() => void) => {
     const listener = (_: unknown, cmd: string) => fn(cmd)
     ipcRenderer.on('menu', listener)
     return () => ipcRenderer.removeListener('menu', listener)
   },
 
+  onUpdateReady: (fn: (version: string) => void): (() => void) => {
+    const listener = (_: unknown, v: string) => fn(v)
+    ipcRenderer.on('update-ready', listener)
+    return () => ipcRenderer.removeListener('update-ready', listener)
+  },
+  installUpdate: (): Promise<void> => ipcRenderer.invoke('app:installUpdate'),
   checkUpdate: (): Promise<{ version: string; url: string } | null> => ipcRenderer.invoke('app:checkUpdate'),
   info: (): Promise<{ version: string; platform: string; userData: string }> => ipcRenderer.invoke('app:info')
 }

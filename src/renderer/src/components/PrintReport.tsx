@@ -1,3 +1,4 @@
+import { t } from '../lib/i18n'
 import type { AppSettings, ChartRecord, Interpretation } from '@shared/types'
 import type { Pattern } from '../lib/patterns'
 import type { Computed } from '../lib/chart'
@@ -33,7 +34,7 @@ export default function PrintReport({
       <NatalInfo natal={computed.natal} rec={rec} settings={settings} natalJd={natalJd} eventJd={eventJd} patterns={patterns} stars={stars} />
       {interpretations.length > 0 && (
         <section className="print-interp">
-          <h2>Yorumlar</h2>
+          <h2>{t('Yorumlar')}</h2>
           {[...interpretations]
             .sort((a, b) => a.createdAt - b.createdAt)
             .map((it) => (
@@ -44,7 +45,7 @@ export default function PrintReport({
             ))}
         </section>
       )}
-      <p className="print-foot">AstroFree · Swiss Ephemeris</p>
+      <p className="print-foot">{t('AstroFree · Swiss Ephemeris')}</p>
     </div>
   )
 }

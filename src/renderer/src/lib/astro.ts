@@ -1,5 +1,6 @@
 // Astrological reference data and pure calculations on top of raw ephemeris.
 import type { AppSettings, AspectKey, EphemResult } from '@shared/types'
+import { getLang } from './i18n'
 
 /** Text presentation selector: keeps zodiac glyphs from rendering as emoji. */
 const T = '︎'
@@ -41,6 +42,37 @@ export const POINTS: PointDef[] = [
   { key: 'mc', name: 'Tepe Noktası (MC)', short: 'MC', glyph: 'MC', kind: 'angle', orbFactor: 1, aspects: true }
 ]
 
+const POINT_EN: Record<string, [string, string]> = {
+  sun: ['Sun', 'Sun'],
+  moon: ['Moon', 'Moo'],
+  mercury: ['Mercury', 'Mer'],
+  venus: ['Venus', 'Ven'],
+  mars: ['Mars', 'Mar'],
+  jupiter: ['Jupiter', 'Jup'],
+  saturn: ['Saturn', 'Sat'],
+  uranus: ['Uranus', 'Ura'],
+  neptune: ['Neptune', 'Nep'],
+  pluto: ['Pluto', 'Plu'],
+  node: ['North Node', 'NN'],
+  snode: ['South Node', 'SN'],
+  chiron: ['Chiron', 'Chi'],
+  lilith: ['Lilith (Black Moon)', 'Lil'],
+  ceres: ['Ceres', 'Cer'],
+  pallas: ['Pallas', 'Pal'],
+  juno: ['Juno', 'Jun'],
+  vesta: ['Vesta', 'Ves'],
+  fortune: ['Part of Fortune', 'PoF'],
+  vertex: ['Vertex', 'Vx'],
+  asc: ['Ascendant (ASC)', 'ASC'],
+  mc: ['Midheaven (MC)', 'MC']
+}
+// Names follow the UI language; every caller reads p.name / p.short.
+for (const p of POINTS) {
+  const tr = { name: p.name, short: p.short }
+  Object.defineProperty(p, 'name', { enumerable: true, get: () => (getLang() === 'en' ? POINT_EN[p.key]?.[0] ?? tr.name : tr.name) })
+  Object.defineProperty(p, 'short', { enumerable: true, get: () => (getLang() === 'en' ? POINT_EN[p.key]?.[1] ?? tr.short : tr.short) })
+}
+
 export const POINT = Object.fromEntries(POINTS.map((p) => [p.key, p])) as Record<string, PointDef>
 export const glyph = (key: string) => {
   const g = POINT[key]?.glyph ?? key
@@ -64,6 +96,12 @@ export const SIGNS = [
   { name: 'Kova', glyph: '♒', element: 'air', mode: 'fixed' },
   { name: 'Balık', glyph: '♓', element: 'water', mode: 'mutable' }
 ] as const
+
+const SIGN_EN = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
+SIGNS.forEach((sg, i) => {
+  const tr = sg.name
+  Object.defineProperty(sg, 'name', { enumerable: true, get: () => (getLang() === 'en' ? SIGN_EN[i] : tr) })
+})
 
 export const signGlyph = (i: number) => SIGNS[i].glyph + T
 export const ELEMENT_TR = { fire: 'Ateş', earth: 'Toprak', air: 'Hava', water: 'Su' } as const
@@ -90,6 +128,23 @@ export const ASPECTS: AspectDef[] = [
   { key: 'quintile', angle: 72, name: 'Kuintil', glyph: 'Q', kind: 'minor' },
   { key: 'biquintile', angle: 144, name: 'Bikuintil', glyph: 'bQ', kind: 'minor' }
 ]
+const ASPECT_EN: Record<AspectKey, string> = {
+  conjunction: 'Conjunction',
+  opposition: 'Opposition',
+  trine: 'Trine',
+  square: 'Square',
+  sextile: 'Sextile',
+  quincunx: 'Quincunx',
+  semisextile: 'Semi-sextile',
+  semisquare: 'Semi-square',
+  sesquiquadrate: 'Sesquiquadrate',
+  quintile: 'Quintile',
+  biquintile: 'Biquintile'
+}
+for (const a of ASPECTS) {
+  const tr = a.name
+  Object.defineProperty(a, 'name', { enumerable: true, get: () => (getLang() === 'en' ? ASPECT_EN[a.key] : tr) })
+}
 export const ASPECT = Object.fromEntries(ASPECTS.map((a) => [a.key, a])) as Record<AspectKey, AspectDef>
 
 export const HOUSE_SYSTEMS: [string, string][] = [
@@ -368,6 +423,9 @@ export function balance(points: ChartPoint[]) {
 
 export function moonPhase(sunLon: number, moonLon: number): { angle: number; name: string } {
   const angle = norm360(moonLon - sunLon)
-  const names = ['Yeni Ay', 'Hilal', 'İlk Dördün', 'Şişkin Ay', 'Dolunay', 'Yayılan Ay', 'Son Dördün', 'Balzamik Ay']
+  const names =
+    getLang() === 'en'
+      ? ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Disseminating', 'Last Quarter', 'Balsamic Moon']
+      : ['Yeni Ay', 'Hilal', 'İlk Dördün', 'Şişkin Ay', 'Dolunay', 'Yayılan Ay', 'Son Dördün', 'Balzamik Ay']
   return { angle, name: names[Math.floor(angle / 45) % 8] }
 }

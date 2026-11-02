@@ -1,3 +1,4 @@
+import { monthsLong, t } from '../lib/i18n'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, AspectKey, TransitHit, TzSpec } from '@shared/types'
 import { ASPECT, glyph, POINT, type Layer } from '../lib/astro'
@@ -13,7 +14,6 @@ type Group = keyof typeof GROUPS
 
 const NATAL_KEYS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'node', 'chiron', 'asc', 'mc']
 const MAJORS: AspectKey[] = ['conjunction', 'opposition', 'square', 'trine', 'sextile']
-const MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
 const p2 = (n: number) => String(n).padStart(2, '0')
 
 export function calendarText(hits: TransitHit[], tz: TzSpec, lon: number, limit = 80): string {
@@ -94,7 +94,7 @@ export default function TransitCalendar({
       }
       const key = h.exacts[0]?.jd ?? h.start
       const l = jdToLocal(key, tz, lon)
-      const label = `${MONTHS[l.m - 1]} ${l.y}`
+      const label = `${monthsLong()[l.m - 1]} ${l.y}`
       if (out[out.length - 1]?.label !== label) out.push({ label, rows: [] })
       out[out.length - 1].rows.push(h)
     }
@@ -120,13 +120,13 @@ export default function TransitCalendar({
             {GROUPS[g].label}
           </label>
         ))}
-        <input className="cal-filter" placeholder="Süz… (ör. Satürn, kare)" value={filter} onChange={(e) => setFilter(e.target.value)} />
-        {busy && <span className="muted small">Hesaplanıyor…</span>}
+        <input className="cal-filter" placeholder={t('Süz… (ör. Satürn, kare)')} value={filter} onChange={(e) => setFilter(e.target.value)} />
+        {busy && <span className="muted small">{t('Hesaplanıyor…')}</span>}
       </div>
       <p className="muted small">
-        Tarihe tıklayınca harita o ana gider. Orb'lar Ayarlar → Açılar'daki "Transit" sütunundan alınır. ℞: geçiş retro sırasında.
+        {t('Tarihe tıklayınca harita o ana gider. Orb\'lar Ayarlar → Açılar\'daki "Transit" sütunundan alınır. ℞: geçiş retro sırasında.')}
       </p>
-      {hits && hits.length === 0 && <p className="muted pad">Bu aralıkta transit bulunamadı.</p>}
+      {hits && hits.length === 0 && <p className="muted pad">{t('Bu aralıkta transit bulunamadı.')}</p>}
       {grouped.map((g) => (
         <section key={g.label}>
           <h3>{g.label}</h3>
@@ -137,13 +137,13 @@ export default function TransitCalendar({
                   <td className="cal-exact">
                     {h.exacts.length ? (
                       h.exacts.map((e, j) => (
-                        <button key={j} className="link" onClick={() => onJump(e.jd)} title="Bu ana git">
+                        <button key={j} className="link" onClick={() => onJump(e.jd)} title={t('Bu ana git')}>
                           {date(e.jd)}
                           {e.retro ? ' ℞' : ''}
                         </button>
                       ))
                     ) : (
-                      <span className="muted small">orb içinde</span>
+                      <span className="muted small">{t('orb içinde')}</span>
                     )}
                   </td>
                   <td>

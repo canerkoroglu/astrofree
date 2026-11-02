@@ -11,6 +11,7 @@ npm install
 npm run dev          # geliştirme modu
 npm run build        # derleme
 npm run test:engine  # efemeris doğruluk testi (astro.com değerleriyle karşılaştırır)
+npm run test:e2e     # uçtan uca arayüz testleri (E2E_AI=1 ile yerel Claude Code / Codex de denenir)
 ```
 
 Paketleme (her işletim sistemi kendi üzerinde derlenmelidir). macOS'ta `dist/` altında .dmg ve .zip oluşur;
@@ -25,7 +26,8 @@ npm run dist:linux  # AppImage + .deb
 
 ## Sürüm yayınlama (GitHub Actions)
 
-`main`'e her push'ta `.github/workflows/release.yml` tip denetimi, efemeris testi ve derlemeyi çalıştırır.
+`main`'e her push'ta `.github/workflows/release.yml` tip denetimi, efemeris testi, derleme ve uçtan uca
+arayüz testlerini (Linux, xvfb) çalıştırır.
 `package.json`'daki `version` için henüz yayınlanmış bir release yoksa macOS (arm64 + x64), Windows ve
 Linux paketleri derlenip `v<sürüm>` adıyla GitHub Release olarak yayınlanır. Yeni sürüm için:
 
@@ -82,6 +84,20 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
 - **Dışa aktarma**: çarkı PNG, ya da çark + natal bilgiler + kayıtlı yorumlarla PDF rapor.
 - **Tema**: araç çubuğundaki düğmeyle Sistem / Açık / Koyu.
 - **Güncelleme bildirimi**: GitHub'da daha yeni bir release varsa araç çubuğunda "Yeni sürüm · İndir" görünür.
+- **Diğer programlardan içe aktarma**: AAF (astro.com, AstroGold, Solar Fire, Janus) ve CSV; Dosya → İçe aktar.
+- **İngilizce arayüz**: Ayarlar → Genel → Arayüz dili (Türkçe / English); gezegen, burç ve açı adları da çevrilir.
+- **Astrokartografi**: gezegenlerin MC/IC/ASC/DSC çizgileri dünya haritasında; bir yere tıklayınca yakın çizgiler,
+  "bu yere taşınmış harita" ve AI yorumu.
+- **Kompozit ve Davison**: sinastri açıkken araç çubuğundan; dış halka sayısı üçe çıktı.
+- **Orta noktalar ve harmonikler**: Natal Bilgiler'de Ebertin tarzı orta nokta listesi; araç çubuğunda H1–H16.
+- **Zaman seçimi (elektif)**: Ay burcu, boşluk, büyüyen Ay, retro olmayan gezegenler, gezegen açısı ve köşe
+  koşullarını aynı anda sağlayan zaman aralıklarını bulur.
+- **Grafik efemeris**: 360° / 90° / 45° / 30° kiplerinde transit eğrileri ve natal çizgiler.
+- **Çarkta tıklama**: gezegene tıklayınca ayrıntı kartı ve "Yorumla"; açı çizgisine tıklayınca o açının yorumu.
+- **Masaüstü bildirimleri**: kayıtlı kişilere 3 gün içinde tam olacak Mars–Plüton transitleri (Ayarlar → Genel).
+- **İlk açılış rehberi** ve `?` ile klavye kısayolları.
+- **Otomatik güncelleme**: Windows kurulumlu sürüm ve Linux AppImage arka planda güncellenir; macOS ve portable
+  sürümde "Yeni sürüm · İndir" bağlantısı gösterilir.
 - **Otomatik yedek**: Ayarlar → Genel'de seçilen klasöre (iCloud Drive, Dropbox…) her değişiklikte günlük
   yedek; son 30 gün tutulur. Geri yükleme: Dosya → İçe aktar.
 
@@ -116,6 +132,12 @@ node scripts/build-cities.mjs cities5000.txt admin1CodesASCII.txt TR.txt
 
 Haritalar, ayarlar ve sohbetler kullanıcı veri klasöründe JSON olarak tutulur
 (macOS: `~/Library/Application Support/astro-free`). Dosya menüsünden içe/dışa aktarılabilir.
+
+## Tasarım
+
+Arayüz, `design-taste-frontend` skill'inin uygulama ekranı kurallarına göre düzenlendi ("data-terminal" stili):
+renk veriye (çark, gezegen çizgileri) gider, seçimler tek 1px vurgu çizgisiyle işaretlenir, yüzeyler düzdür,
+yazı Public Sans, rakamlar IBM Plex Mono (ikisi de uygulamaya gömülü).
 
 ## Lisans
 
