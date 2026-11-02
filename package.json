@@ -1,0 +1,44 @@
+{
+  "name": "astro-free",
+  "productName": "AstroFree",
+  "version": "0.1.0",
+  "description": "Doğum haritası, transit ve progresyon analizi; Claude Code / Codex / Gemini / DeepSeek ile yorum ve sohbet.",
+  "main": "./out/main/index.js",
+  "author": "Caner Köroğlu",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:engine": "node scripts/verify-engine.mjs",
+    "dist": "electron-vite build && electron-builder",
+    "dist:mac": "electron-vite build && electron-builder --mac",
+    "dist:win": "electron-vite build && electron-builder --win",
+    "dist:linux": "electron-vite build && electron-builder --linux"
+  },
+  "dependencies": {
+    "swisseph-wasm": "^0.1.0",
+    "tz-lookup": "^6.1.25"
+  },
+  "devDependencies": {
+    "@fontsource/noto-sans-symbols": "^5.3.0",
+    "@fontsource/noto-sans-symbols-2": "^5.3.0",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.0",
+    "dompurify": "^3.4.17",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "marked": "^18.1.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "topojson-client": "^3.1.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "world-atlas": "^2.0.2"
+  }
+}

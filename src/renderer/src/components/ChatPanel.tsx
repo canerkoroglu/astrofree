@@ -1,0 +1,261 @@
+import DOMPurify from 'dompurify'
+import { marked } from 'marked'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
+import type { AiMessage, AppSettings, ProviderId, ProviderStatus } from '@shared/types'
+
+interface Props {
+  chatKey: string
+  context: string
+  layers: string[] // e.g. ['natal', 'transit']
+  settings: AppSettings
+  onSettings: (s: AppSettings) => void
+  onSave?: (content: string, question: string, provider: string) => Promise<void>
+}
+
+const QUICK: { label: string; needs?: string; prompt: string }[] = [
+  {
+    label: 'Günün gökyüzü',
+    needs: 'sky',
+    prompt:
+      'Bu anın gökyüzünü yorumla: Ay burcu ve fazı, retro gezegenler, sıkı gezegen açıları ve yaklaşan önemli olaylar (duraklar, burç geçişleri, ay evreleri, tutulmalar). Gün için genel temayı ve dikkat edilmesi gerekenleri özetle.'
+  },
+  {
+    label: 'Natal yorum',
+    needs: 'natal',
+    prompt:
+      'Doğum haritasını bütünlüklü yorumla: kişilik teması, Güneş-Ay-Yükselen üçlüsü, harita yöneticisi, en sıkı açılar, öne çıkan evler ve güçlü/zayıf yönler.'
+  },
+  {
+    label: 'Transitler',
+    needs: 'transit',
+    prompt:
+      'Bu tarihteki transitleri natal haritaya göre yorumla. Önce en etkili (yavaş gezegen, sıkı orb, yaklaşan) transitleri ele al; hangi yaşam alanlarını etkilediklerini ve yaklaşık zamanlamayı açıkla.'
+  },
+  {
+    label: 'Progresyon',
+    needs: 'progressed',
+    prompt: 'İkincil progresyonları yorumla: progres Ay fazı ve evi, progres gezegenlerin natal noktalara açıları, açı/burç değiştiren progres gezegenler.'
+  },
+  { label: 'Solar ark', needs: 'solarArc', prompt: 'Solar ark direksiyonlarını yorumla; 1° orb içindeki direksiyonlara odaklan.' },
+  {
+    label: 'Sinastri',
+    needs: 'synastry',
+    prompt: 'İki harita arasındaki sinastriyi yorumla: çekim, uyum ve zorlanma alanları, Venüs-Mars ve Ay bağlantıları, uzun vadeli potansiyel.'
+  },
+  { label: 'Kariyer', needs: 'natal', prompt: 'Haritaya göre kariyer ve meslek potansiyelini yorumla (MC, 10. ev, 6. ev, 2. ev ve yöneticileri).' },
+  { label: 'İlişkiler', needs: 'natal', prompt: 'Haritaya göre ilişki ve ortaklık dinamiklerini yorumla (7. ev, Venüs, Mars, Ay, DC yöneticisi).' }
+]
+
+function Markdown({ text }: { text: string }) {
+  const html = useMemo(() => DOMPurify.sanitize(marked.parse(text, { async: false }) as string), [text])
+  return <div className="md" dangerouslySetInnerHTML={{ __html: html }} />
+}
+
+export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave }: Props) {
+  const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
+  const [messages, setMessages] = useState<AiMessage[]>([])
+  const [input, setInput] = useState('')
+  const [runId, setRunId] = useState<string | null>(null)
+  const [status, setStatus] = useState('')
+  const [error, setError] = useState('')
+  const [statuses, setStatuses] = useState<ProviderStatus[]>([])
+  const [showCtx, setShowCtx] = useState(false)
+  const [attach, setAttach] = useState(true)
+  const listRef = useRef<HTMLDivElement>(null)
+  const loadedKey = useRef<string | null>(null)
+  const runIdRef = useRef<string | null>(null)
+
+  const provider = settings.ai.provider
+  const cfg = settings.ai.providers[provider]
+  const info = PROVIDERS.find((p) => p.id === provider)!
+  const st = statuses.find((s) => s.id === provider)
+  const models = [...new Set([...(st?.models ?? []), ...info.models].filter(Boolean))]
+
+  useEffect(() => {
+    void window.astro.ai.detect().then(setStatuses)
+  }, [settings.ai.providers])
+
+  // Load the stored conversation for this chart.
+  useEffect(() => {
+    loadedKey.current = null
+    setSavedIdx(new Set())
+    setMessages([])
+    setError('')
+    void window.astro.chats.get(chatKey).then((c) => {
+      setMessages(c?.messages ?? [])
+      loadedKey.current = chatKey
+    })
+  }, [chatKey])
+
+  useEffect(() => {
+    if (loadedKey.current === chatKey && !runId) {
+      void window.astro.chats.set(chatKey, { messages, updatedAt: Date.now() })
+    }
+  }, [messages, runId, chatKey])
+
+  useEffect(() => {
+    return window.astro.ai.onEvent((e) => {
+      if (e.id !== runIdRef.current) return
+      if (e.type === 'delta') {
+        setStatus('')
+        setMessages((m) => {
+          const last = m[m.length - 1]
+          if (last?.role === 'assistant') return [...m.slice(0, -1), { ...last, content: last.content + e.text }]
+          return [...m, { role: 'assistant', content: e.text }]
+        })
+      } else if (e.type === 'status') setStatus(e.text)
+      else {
+        if (e.type === 'error') setError(e.message)
+        setStatus('')
+        setRunId(null)
+        runIdRef.current = null
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
+  }, [messages, status])
+
+  const send = (text: string) => {
+    const t = text.trim()
+    if (!t || runId) return
+    const next: AiMessage[] = [...messages, { role: 'user', content: t }]
+    setMessages(next)
+    setInput('')
+    setError('')
+    const id = crypto.randomUUID()
+    runIdRef.current = id
+    setRunId(id)
+    setStatus(`${info.label} yanıtlıyor…`)
+    const system = settings.ai.systemPrompt.trim() || (settings.ai.language === 'en' ? SYSTEM_PROMPT_EN : SYSTEM_PROMPT_TR)
+    window.astro.ai.start({
+      id,
+      provider,
+      model: cfg.model || undefined,
+      system,
+      context: attach ? context : '',
+      messages: next
+    })
+  }
+
+  const stop = () => {
+    if (runId) window.astro.ai.cancel(runId)
+  }
+
+  const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
+  const setModel = (model: string) =>
+    onSettings({ ...settings, ai: { ...settings.ai, providers: { ...settings.ai.providers, [provider]: { ...cfg, model } } } })
+
+  return (
+    <div className="chat">
+      <div className="chat-head">
+        <select value={provider} onChange={(e) => setProvider(e.target.value as ProviderId)}>
+          {PROVIDERS.map((p) => {
+            const s = statuses.find((x) => x.id === p.id)
+            return (
+              <option key={p.id} value={p.id}>
+                {s ? (s.available ? '● ' : '○ ') : ''}
+                {p.label}
+              </option>
+            )
+          })}
+        </select>
+        <input list="models" value={cfg.model} placeholder="model (varsayılan)" onChange={(e) => setModel(e.target.value)} />
+        <datalist id="models">
+          {models.map((m) => (
+            <option key={m} value={m} />
+          ))}
+        </datalist>
+      </div>
+      <div className={st && !st.available ? 'chat-status warn' : 'chat-status'}>{st ? st.detail : 'Kontrol ediliyor…'}</div>
+
+      <div className="quick">
+        {QUICK.filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
+          <button key={q.label} disabled={!!runId} onClick={() => send(q.prompt)}>
+            {q.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="messages" ref={listRef}>
+        {messages.length === 0 && (
+          <div className="muted pad">
+            Haritayı yorumlatmak için yukarıdaki kısayollardan birini seçin ya da soru yazın. Ekrandaki harita (ve zamanı ilerlettiğinizde güncel
+            transitler) her mesajla birlikte gönderilir.
+          </div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i} className={`msg ${m.role}`}>
+            {m.role === 'assistant' ? <Markdown text={m.content} /> : <div className="user-text">{m.content}</div>}
+            {m.role === 'assistant' && (
+              <div className="msg-actions">
+                <button className="link small" onClick={() => navigator.clipboard.writeText(m.content)}>
+                  Kopyala
+                </button>
+                {onSave && (
+                  <button
+                    className="link small"
+                    disabled={savedIdx.has(i) || (!!runId && i === messages.length - 1)}
+                    onClick={async () => {
+                      const q = [...messages.slice(0, i)].reverse().find((x) => x.role === 'user')?.content ?? ''
+                      await onSave(m.content, q, `${info.label}${cfg.model ? ' · ' + cfg.model : ''}`)
+                      setSavedIdx((s) => new Set(s).add(i))
+                    }}
+                  >
+                    {savedIdx.has(i) ? '✓ Kaydedildi' : 'Yoruma kaydet'}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+        {status && <div className="msg status">{status}</div>}
+        {error && <div className="msg error">{error}</div>}
+      </div>
+
+      <div className="composer">
+        <textarea
+          rows={3}
+          value={input}
+          placeholder="Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)"
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              send(input)
+            }
+          }}
+        />
+        <div className="composer-row">
+          <label className="inline small">
+            <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} /> Harita verisini ekle
+          </label>
+          <button className="link small" onClick={() => setShowCtx(!showCtx)}>
+            {showCtx ? 'Veriyi gizle' : 'Gönderilen veri'}
+          </button>
+          <button
+            className="link small"
+            disabled={!!runId || !messages.length}
+            onClick={() => {
+              setMessages([])
+              setError('')
+            }}
+          >
+            Temizle
+          </button>
+          <span className="grow" />
+          {runId ? (
+            <button onClick={stop}>■ Durdur</button>
+          ) : (
+            <button className="primary" disabled={!input.trim()} onClick={() => send(input)}>
+              Gönder
+            </button>
+          )}
+        </div>
+        {showCtx && <pre className="ctx">{context}</pre>}
+      </div>
+    </div>
+  )
+}

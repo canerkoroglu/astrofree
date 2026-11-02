@@ -1,0 +1,25 @@
+appId: app.astrofree.desktop
+productName: AstroFree
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+extraResources:
+  - from: resources/cities.json.gz
+    to: cities.json.gz
+asarUnpack:
+  - node_modules/swisseph-wasm/wasm/**
+mac:
+  target: [dmg, zip]
+  category: public.app-category.lifestyle
+win:
+  target: [nsis, portable]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+linux:
+  target: [AppImage, deb]
+  category: Science
+  maintainer: AstroFree

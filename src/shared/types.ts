@@ -1,0 +1,273 @@
+// Types shared by the main process, preload bridge and renderer.
+
+export interface LocalDateTime {
+  y: number
+  m: number // 1-12
+  d: number
+  h: number
+  mi: number
+  s: number
+}
+
+/** How local clock time maps to UT for a chart. */
+export type TzSpec =
+  | { kind: 'zone'; zone: string } // IANA zone, historical DST rules via Intl
+  | { kind: 'offset'; minutes: number } // fixed offset east of Greenwich
+  | { kind: 'lmt' } // local mean time from longitude
+
+export interface Place {
+  name: string
+  lat: number // north positive
+  lon: number // east positive
+  country?: string
+  admin?: string
+  zone?: string
+}
+
+export interface ChartRecord {
+  id: string
+  name: string
+  local: LocalDateTime
+  tz: TzSpec
+  place: Place
+  notes?: string
+  tags?: string[]
+  gender?: 'f' | 'm' | ''
+  createdAt: number
+  updatedAt: number
+}
+
+// ---- Ephemeris IPC -------------------------------------------------------
+
+export interface EphemRequest {
+  jdUT: number
+  lat: number
+  lon: number
+  houseSystem: string
+  /** Swiss Ephemeris SE_SIDM_* constant, or null for tropical. */
+  sidMode: number | null
+  /** Override the ARMC (degrees) used for houses, e.g. progressed angles. */
+  armc?: number
+  bodies: number[]
+}
+
+export interface EphemBody {
+  id: number
+  lon: number
+  lat: number
+  dist: number
+  speed: number
+  decl: number
+}
+
+export interface EphemResult {
+  jdUT: number
+  bodies: EphemBody[]
+  cusps: number[] // 12 entries, house 1..12
+  asc: number
+  mc: number
+  armc: number
+  vertex: number
+  eps: number
+  ayanamsa: number
+  error?: string
+}
+
+// ---- Settings ------------------------------------------------------------
+
+export type AspectKey =
+  | 'conjunction'
+  | 'opposition'
+  | 'trine'
+  | 'square'
+  | 'sextile'
+  | 'quincunx'
+  | 'semisextile'
+  | 'semisquare'
+  | 'sesquiquadrate'
+  | 'quintile'
+  | 'biquintile'
+
+export interface AspectSetting {
+  enabled: boolean
+  orb: number // natal-natal orb in degrees
+  outerOrb: number // transit / progression / synastry to natal orb
+}
+
+export type ProviderId =
+  | 'claude-code'
+  | 'codex'
+  | 'gemini-cli'
+  | 'anthropic'
+  | 'openai'
+  | 'gemini'
+  | 'deepseek'
+
+export interface ProviderConfig {
+  model: string
+  /** CLI providers: executable name or absolute path. */
+  command?: string
+  /** CLI providers: extra arguments, whitespace separated. */
+  extraArgs?: string
+  /** API providers: override base URL (proxies, OpenAI-compatible hosts). */
+  baseUrl?: string
+}
+
+export interface AiSettings {
+  provider: ProviderId
+  providers: Record<ProviderId, ProviderConfig>
+  language: 'tr' | 'en'
+  systemPrompt: string
+}
+
+export interface AppSettings {
+  settingsVersion: number
+  houseSystem: string
+  zodiac: 'tropical' | 'sidereal'
+  sidMode: number
+  nodeType: 'mean' | 'true'
+  lilithType: 'mean' | 'true'
+  orientation: 'asc' | 'aries'
+  progressedAngles: 'naibod' | 'solarArc'
+  points: Record<string, boolean>
+  aspects: Record<AspectKey, AspectSetting>
+  showNatalAspectsInBiwheel: boolean
+  defaultPlace: Place
+  defaultZone: string
+  theme: 'light' | 'dark' | 'system'
+  backupDir: string
+  returnPlace: 'natal' | 'current'
+  ai: AiSettings
+}
+
+// ---- AI IPC ----------------------------------------------------------------
+
+export interface AiMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface AiChatRequest {
+  id: string
+  provider: ProviderId
+  model?: string
+  /** Standing instructions (persona, rules, language). */
+  system: string
+  /** Chart data for the current screen, refreshed on every turn. */
+  context: string
+  messages: AiMessage[]
+}
+
+export type AiEvent =
+  | { id: string; type: 'delta'; text: string }
+  | { id: string; type: 'status'; text: string }
+  | { id: string; type: 'done' }
+  | { id: string; type: 'error'; message: string }
+
+export interface ProviderStatus {
+  id: ProviderId
+  kind: 'cli' | 'api'
+  available: boolean
+  detail: string
+  models?: string[]
+}
+
+export interface GeoResult extends Place {
+  population?: number
+}
+
+export interface StoredChat {
+  messages: AiMessage[]
+  updatedAt: number
+}
+
+// ---- Sky events ------------------------------------------------------------
+
+export type SkyEventKind =
+  | 'station-r'
+  | 'station-d'
+  | 'ingress'
+  | 'new-moon'
+  | 'full-moon'
+  | 'solar-eclipse'
+  | 'lunar-eclipse'
+
+export interface SkyEvent {
+  jd: number
+  kind: SkyEventKind
+  /** Swiss Ephemeris body id (0 Sun, 1 Moon, ...). */
+  body: number
+  lon: number
+  /** Eclipse type: total, annular, partial, penumbral, hybrid. */
+  detail?: string
+}
+
+export interface RetroPeriod {
+  body: number
+  /** Station retrograde before the reference date (null if not found). */
+  start: number | null
+  /** Station direct after the reference date. */
+  end: number | null
+  startLon: number | null
+  endLon: number | null
+}
+
+export interface SkyReport {
+  jd: number
+  retro: RetroPeriod[]
+  events: SkyEvent[]
+  previousLunation: SkyEvent | null
+  nextEclipses: SkyEvent[]
+  moonLon: number
+  sunLon: number
+  /** Void-of-course Moon: last major aspect before the next sign change. */
+  voc: { start: number; end: number; lastBody: number; lastAspect: number } | null
+}
+
+// ---- Searches ----------------------------------------------------------------
+
+export interface TransitSearchRequest {
+  start: number
+  end: number
+  bodies: number[]
+  natal: { key: string; lon: number }[]
+  aspects: { key: AspectKey; angle: number; orb: number }[]
+  sidMode: number | null
+}
+
+export interface TransitHit {
+  body: number
+  natalKey: string
+  aspect: AspectKey
+  /** Entering orb (or the search start when already in orb). */
+  start: number
+  /** Leaving orb (or the search end when still in orb). */
+  end: number
+  exacts: { jd: number; retro: boolean }[]
+  startsBefore?: boolean
+  endsAfter?: boolean
+}
+
+export interface FixedStarPos {
+  name: string
+  lon: number
+  lat: number
+}
+
+export interface PlanetaryHours {
+  sunrise: number
+  sunset: number
+  nextSunrise: number
+  dayRuler: number
+  weekday: number
+  hours: { start: number; end: number; ruler: number; night: boolean }[]
+}
+
+export interface Interpretation {
+  id: string
+  chartId: string
+  title: string
+  content: string
+  provider: string
+  createdAt: number
+}
