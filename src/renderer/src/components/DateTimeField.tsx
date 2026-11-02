@@ -54,12 +54,15 @@ export default function DateTimeField({
   value,
   onChange,
   seconds = false,
-  className = ''
+  className = '',
+  live = false
 }: {
   value: LocalDateTime
   onChange: (l: LocalDateTime) => void
   seconds?: boolean
   className?: string
+  /** Apply every valid edit immediately (forms) instead of on blur (time bar). */
+  live?: boolean
 }) {
   const [text, setText] = useState(formatLocal(value, seconds))
   const [focused, setFocused] = useState(false)
@@ -115,7 +118,13 @@ export default function DateTimeField({
           setFocused(false)
           commit()
         }}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value)
+          if (live) {
+            const p = parseLocal(e.target.value, value)
+            if (p && p.y >= 100) onChange(p)
+          }
+        }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
           if (e.key === 'Escape') {

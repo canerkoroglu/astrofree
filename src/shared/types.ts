@@ -17,6 +17,8 @@ export type TzSpec =
 
 export interface Place {
   name: string
+  /** ISO 3166 country code, for the flag. */
+  cc?: string
   lat: number // north positive
   lon: number // east positive
   country?: string
@@ -32,7 +34,12 @@ export interface ChartRecord {
   place: Place
   notes?: string
   tags?: string[]
-  gender?: 'f' | 'm' | ''
+  /** Person (default) or an event chart (wedding, company founding, move…). */
+  kind?: 'person' | 'event'
+  /** Birth time unknown: noon is used and houses/angles are unreliable. */
+  timeUnknown?: boolean
+  /** Rodden rating of the time source: AA, A, B, C, DD, X. */
+  rodden?: string
   createdAt: number
   updatedAt: number
 }

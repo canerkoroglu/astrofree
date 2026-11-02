@@ -53,11 +53,14 @@ Sürümü değiştirmeden yapılan push'lar yalnızca kontrolleri çalıştırı
   içinde gelir; internet gerekmez. Yerel listede bulunamayan yer için (varsa) Open-Meteo'ya sorulur,
   koordinatlar elle de girilebilir. Yalnızca AI sohbeti internet ister.
 - **Ev sistemi**: varsayılan Alcabitius; araç çubuğundan veya Ayarlar'dan değiştirilebilir.
+- **Kişi / olay ekleme**: Kişi veya Olay (evlilik, kuruluş, taşınma…) seçimi; yazarken canlı Güneş-Ay-Yükselen
+  önizlemesi; "doğum saati bilinmiyor" seçeneği (12:00, evler güvenilmez uyarısıyla); Rodden veri güvenilirliği;
+  bayraklı yer kartı, klavyeyle şehir seçimi, yaz/kış saati bilgisi; etiket çipleri; aynı isim uyarısı.
 - **Kişi kısayolları**: listede isme tıklamak doğum haritasını açar; altında Natal / Bilgiler / Transit /
   Progresyon kısayolları vardır. "Bugün" düğmesi canlı gökyüzü haritasını açar.
 - **Natal Bilgiler** sekmesi: Güneş-Ay-Yükselen, harita yöneticisi, ay fazı, element/nitelik dağılımı,
   gezegen tablosu (burç, derece, ev, günlük hız), açılar (orb, yaklaşan/ayrılan), asaletler, evler.
-- **Gökyüzü paneli**: seçili tarihteki retro gezegenler (başlangıç → bitiş), önümüzdeki 45 günün durakları,
+- **Gökyüzü paneli**: Ay evresi çizimi, seçili tarihteki retro gezegenler (ilerleme çubuğu ve kalan gün), önümüzdeki 45 günün durakları,
   burç geçişleri, yeni ay/dolunaylar ve sonraki tutulmalar. Bir olaya tıklamak zamanı o ana götürür.
 - **Tablolar**: konumlar (ev, hız, deklinasyon, yönetim/yücelim), açı listesi (yaklaşan/ayrılan),
   açı tablosu, evler ve yöneticileri.

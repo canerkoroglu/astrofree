@@ -86,6 +86,7 @@ export function searchOffline(query: string, limit = 15): GeoResult[] {
       lat: r[5],
       lon: r[6],
       country,
+      cc: r[3],
       admin: r[4] || undefined,
       zone: d.tz[r[7]],
       population: r[8]
@@ -121,6 +122,7 @@ export function nearestPlace(lat: number, lon: number, maxKm = 75): (GeoResult &
     lat: row[5],
     lon: row[6],
     country,
+    cc: row[3],
     admin: row[4] || undefined,
     zone: d.tz[row[7]],
     km: bestKm

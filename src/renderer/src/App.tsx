@@ -45,10 +45,13 @@ function nowChart(s: AppSettings): ChartRecord {
   }
 }
 
-function blankChart(s: AppSettings): ChartRecord {
+function blankChart(s: AppSettings, kind: 'person' | 'event' = 'person'): ChartRecord {
   const c = nowChart(s)
-  return { ...c, id: crypto.randomUUID(), name: '', local: { ...c.local, s: 0 } }
+  return { ...c, id: crypto.randomUUID(), name: '', kind, local: { ...c.local, s: 0 } }
 }
+
+const initialsOf = (name: string) =>
+  name.trim().split(/\s+/).slice(0, 2).map((w) => w[0] ?? '').join('').toLocaleUpperCase('tr') || '?'
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
@@ -539,8 +542,11 @@ export default function App() {
 
       <aside className="sidebar">
         <div className="side-actions">
-          <button className="primary" onClick={() => setEditor(blankChart(settings))}>
-            + Yeni
+          <button className="primary" onClick={() => setEditor(blankChart(settings))} title="Yeni kişi (⌘N)">
+            + Kişi
+          </button>
+          <button onClick={() => setEditor(blankChart(settings, 'event'))} title="Evlilik, kuruluş, taşınma gibi bir olay haritası">
+            + Olay
           </button>
           <button onClick={openToday} title="Şu anki gökyüzü (canlı)">
             Bugün
@@ -557,29 +563,48 @@ export default function App() {
           </div>
         )}
         <ul className="chart-list">
-          {visible.map((c) => (
-            <li key={c.id} className={c.id === working.id ? 'active' : ''}>
-              <div className="item-row">
-                <button className="item" onClick={() => openChart(c, 'natal')} title="Doğum haritasına bak">
-                  <span className="nm">{c.name}</span>
-                  <span className="muted small">
-                    {fmtLocal(c.local)} · {c.place.name.split(',')[0]}
-                  </span>
-                  {(c.tags?.length ?? 0) > 0 && <span className="item-tags">{c.tags!.map((t) => `#${t}`).join(' ')}</span>}
-                </button>
-                <button className="x" title="Sil" onClick={() => void removeChart(c)}>
-                  ×
-                </button>
-              </div>
-              <div className="chips">
-                <button onClick={() => openChart(c, 'natal')}>Natal</button>
-                <button onClick={() => openChart(c, 'info')}>Bilgiler</button>
-                <button onClick={() => openChart(c, 'transit')}>Transit</button>
-                <button onClick={() => openChart(c, 'progressed')}>Progresyon</button>
-              </div>
+          {(['person', 'event'] as const).map((kind) => {
+            const group = visible.filter((c) => (c.kind ?? 'person') === kind)
+            if (!group.length) return null
+            return [
+              <li key={`h-${kind}`} className="list-head">
+                {kind === 'person' ? 'Kişiler' : 'Olaylar'} <span className="muted">{group.length}</span>
+              </li>,
+              ...group.map((c) => (
+                <li key={c.id} className={c.id === working.id ? 'active' : ''}>
+                  <div className="item-row">
+                    <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? 'Doğum haritasına bak' : 'Olay haritasına bak'}>
+                      <span className={`avatar sm ${kind === 'event' ? 'event' : ''}`}>{kind === 'event' ? '◆' : initialsOf(c.name)}</span>
+                      <span className="item-text">
+                        <span className="nm">{c.name}</span>
+                        <span className="muted small">
+                          {fmtLocal(c.local).split(' ')[0]}
+                          {c.timeUnknown ? '' : ' ' + fmtLocal(c.local).split(' ')[1]} · {c.place.name.split(',')[0]}
+                        </span>
+                        {(c.tags?.length ?? 0) > 0 && <span className="item-tags">{c.tags!.map((t) => `#${t}`).join(' ')}</span>}
+                      </span>
+                    </button>
+                    <button className="x" title="Sil" onClick={() => void removeChart(c)}>
+                      ×
+                    </button>
+                  </div>
+                  <div className="chips">
+                    <button onClick={() => openChart(c, 'natal')}>Harita</button>
+                    <button onClick={() => openChart(c, 'info')}>Bilgiler</button>
+                    <button onClick={() => openChart(c, 'transit')}>Transit</button>
+                    {kind === 'person' && <button onClick={() => openChart(c, 'progressed')}>Progresyon</button>}
+                  </div>
+                </li>
+              ))
+            ]
+          })}
+          {!visible.length && (
+            <li className="empty-list">
+              <div className="empty-icon">✶</div>
+              <div>Henüz kayıt yok</div>
+              <div className="muted small">“+ Kişi” ile doğum haritası, “+ Olay” ile olay haritası ekleyin.</div>
             </li>
-          ))}
-          {!visible.length && <li className="muted small pad">Kayıtlı harita yok. “+ Yeni” ile ekleyin.</li>}
+          )}
         </ul>
         <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
         <div className="side-actions">
@@ -596,6 +621,9 @@ export default function App() {
             <h1>
               {working.name || 'İsimsiz'}
               {dirty && <span className="dirty" title="Kaydedilmemiş değişiklik"> ●</span>}
+              {working.kind === 'event' && <span className="badge">Olay</span>}
+              {working.timeUnknown && <span className="badge warn" title="12:00 kullanıldı; yükselen ve evler güvenilmez">Saat bilinmiyor</span>}
+              {working.rodden && !working.timeUnknown && <span className="badge" title="Rodden veri güvenilirliği">{working.rodden}</span>}
             </h1>
             <div className="muted small">
               {fmtLocal(working.local, true)} {tzLabel(working.tz)} ({fmtOffset(offsetAt(working.tz, natalJd, working.place.lon))}) ·{' '}
@@ -766,6 +794,7 @@ export default function App() {
       {editor && (
         <ChartEditor
           initial={editor}
+          existing={charts}
           onClose={() => setEditor(null)}
           onApply={(rec, save) => {
             setEditor(null)

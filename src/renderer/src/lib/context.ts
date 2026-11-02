@@ -62,8 +62,11 @@ function aspectLine(x: Aspect, prefixA = '', prefixB = ''): string {
 function natalSection(c: Computed, rec: ChartRecord, s: AppSettings): string {
   const l = c.natal
   const out: string[] = []
-  out.push(`# DOĞUM HARİTASI — ${rec.name || 'İsimsiz'}`)
-  out.push(`Doğum: ${when(c.natalJd, rec.tz, rec.place.lon)}`)
+  const ev = rec.kind === 'event'
+  out.push(`# ${ev ? 'OLAY HARİTASI' : 'DOĞUM HARİTASI'} — ${rec.name || 'İsimsiz'}`)
+  out.push(`${ev ? 'Olay zamanı' : 'Doğum'}: ${when(c.natalJd, rec.tz, rec.place.lon)}`)
+  if (rec.timeUnknown) out.push('UYARI: Doğum saati bilinmiyor; 12:00 kullanıldı. Yükselen, MC, ev konumları ve ev yöneticileri güvenilmez; Ay derecesi ±7° oynayabilir. Bunlara dayanarak yorum yapma.')
+  else if (rec.rodden) out.push(`Saat verisi güvenilirliği (Rodden): ${rec.rodden}`)
   out.push(`Yer: ${placeText(rec.place)}`)
   const hs = HOUSE_SYSTEMS.find((h) => h[0] === s.houseSystem)?.[1] ?? s.houseSystem
   const zod =
