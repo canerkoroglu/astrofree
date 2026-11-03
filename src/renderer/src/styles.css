@@ -2989,17 +2989,17 @@ td.good, td.num.good, .tag.good { color: var(--good); }
   line-height: 1;
 }
 /* Narrower windows: drop the least needed controls first. */
-@container timebar (max-width: 1300px) {
+@container timebar (max-width: 1460px) {
   .timebar .tb-speed {
     display: none;
   }
 }
-@container timebar (max-width: 1200px) {
+@container timebar (max-width: 1340px) {
   .timebar .tb-fine {
     display: none;
   }
 }
-@container timebar (max-width: 1060px) {
+@container timebar (max-width: 1140px) {
   .timebar .tb-coarse {
     display: none;
   }
@@ -3056,17 +3056,17 @@ td.good, td.num.good, .tag.good { color: var(--good); }
 .toolbar .lbl-icon {
   display: none;
 }
-@container toolbar (max-width: 1520px) {
+@container toolbar (max-width: 1640px) {
   .brand-name {
     display: none;
   }
 }
-@container toolbar (max-width: 1440px) {
+@container toolbar (max-width: 1300px) {
   .toolbar > .tb-zone {
     display: none;
   }
 }
-@container toolbar (max-width: 1120px) {
+@container toolbar (max-width: 1460px) {
   .toolbar .lbl-icon {
     display: inline;
   }
@@ -3074,7 +3074,7 @@ td.good, td.num.good, .tag.good { color: var(--good); }
     display: none;
   }
 }
-@container toolbar (max-width: 1180px) {
+@container toolbar (max-width: 1600px) {
   .tg-layers button {
     padding-left: 8px;
     padding-right: 8px;
@@ -3607,4 +3607,75 @@ button.kb-nav span:first-child {
 }
 .kb-rule-row > select {
   grid-column: 2 / 4;
+}
+
+
+/* ---- dropdowns: same pill shape, height and spacing as buttons, with a theme-coloured chevron ---- */
+:root {
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a1a1aa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+}
+:root[data-theme='dark'] {
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a1a1aa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 999px;
+  min-height: 32px;
+  padding: 6px 36px 6px 16px;
+  background-color: var(--panel);
+  background-image: var(--chevron);
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 10px 6px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+select:hover:not(:disabled) {
+  border-color: var(--line-strong);
+}
+button {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* toolbar dropdowns stay compact enough to fit beside the layer buttons */
+@container toolbar (max-width: 1600px) {
+  .toolbar select {
+    padding-left: 12px;
+    padding-right: 30px;
+    background-position: right 11px center;
+  }
+}
+
+@container toolbar (max-width: 1100px) {
+  .toolbar button {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@container timebar (max-width: 1100px) {
+  .timebar button:not(.big) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+@container toolbar (max-width: 1060px) {
+  .toolbar .tg-layers button {
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 12px;
+  }
+  .toolbar .tg-house {
+    max-width: 120px;
+  }
+}
+.toolbar .lbl-icon {
+  font-size: 17px;
+  line-height: 1;
 }
