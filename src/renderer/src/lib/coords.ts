@@ -1,3 +1,4 @@
+import { compass } from './astro'
 // Coordinate parsing and formatting. Accepts decimal degrees and the common
 // astrological / atlas forms: 38n15, 85w46, 38°15'K, 38 15 30 N, 41K01, 28D57.
 
@@ -49,6 +50,6 @@ export function fmtDms(v: number, isLat: boolean): string {
     m = 0
     d++
   }
-  const h = isLat ? (v >= 0 ? 'K' : 'G') : v >= 0 ? 'D' : 'B'
+  const h = compass(isLat ? (v >= 0 ? 'K' : 'G') : v >= 0 ? 'D' : 'B')
   return `${d}°${p2(m)}'${p2(s)}" ${h}`
 }

@@ -5,22 +5,19 @@ import { promises as fs } from 'node:fs'
 import { join } from 'node:path'
 import type { ChartRecord, EphemRequest } from '@shared/types'
 import { computeMany } from './ephemeris'
+import { mainLocale, setMainLang, tm } from './i18n'
 import { getSettings, listCharts } from './store'
 import { transitSearch } from './tools'
 
 const SLOW = [4, 5, 6, 7, 8, 9] // Mars..Pluto
-const NAMES: Record<number, string> = { 4: 'Mars', 5: 'Jüpiter', 6: 'Satürn', 7: 'Uranüs', 8: 'Neptün', 9: 'Plüton' }
 const NATAL: Record<number, string> = { 0: 'sun', 1: 'moon', 2: 'mercury', 3: 'venus', 4: 'mars', 5: 'jupiter', 6: 'saturn', 7: 'uranus', 8: 'neptune', 9: 'pluto' }
-const NATAL_TR: Record<string, string> = {
-  sun: 'Güneş', moon: 'Ay', mercury: 'Merkür', venus: 'Venüs', mars: 'Mars', jupiter: 'Jüpiter', saturn: 'Satürn',
-  uranus: 'Uranüs', neptune: 'Neptün', pluto: 'Plüton', asc: 'Yükselen', mc: 'MC'
-}
 const ASPECTS = [
-  { key: 'conjunction' as const, angle: 0, name: 'kavuşum' },
-  { key: 'opposition' as const, angle: 180, name: 'karşıt' },
-  { key: 'square' as const, angle: 90, name: 'kare' },
-  { key: 'trine' as const, angle: 120, name: 'üçgen' }
+  { key: 'conjunction' as const, angle: 0 },
+  { key: 'opposition' as const, angle: 180 },
+  { key: 'square' as const, angle: 90 },
+  { key: 'trine' as const, angle: 120 }
 ]
+const pointName = (key: string) => mainLocale().points[key]?.[0] ?? key
 
 const seenFile = () => join(app.getPath('userData'), 'notified.json')
 
@@ -46,6 +43,7 @@ function chartJd(c: ChartRecord): number {
 async function checkOnce(): Promise<void> {
   const settings = await getSettings()
   if (!settings.notifications?.enabled || !Notification.isSupported()) return
+  setMainLang(settings.uiLanguage)
   const charts = (await listCharts()).filter(
     (c) => (c.kind ?? 'person') === 'person' && (settings.notifications.scope === 'all' || (c.tags ?? []).includes(settings.notifications.tag))
   )
@@ -80,11 +78,11 @@ async function checkOnce(): Promise<void> {
         const id = `${c.id}|${h.body}|${h.natalKey}|${h.aspect}|${Math.round(e.jd)}`
         if (seen.includes(id)) continue
         seen.push(id)
-        const when = new Date((e.jd - 2440587.5) * 86400000).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })
-        const aspect = ASPECTS.find((a) => a.key === h.aspect)?.name ?? h.aspect
+        const when = new Date((e.jd - 2440587.5) * 86400000).toLocaleDateString(mainLocale().intl, { day: '2-digit', month: 'short' })
+        const aspect = (mainLocale().aspects[h.aspect] ?? h.aspect).toLocaleLowerCase(mainLocale().intl)
         const n = new Notification({
-          title: `${c.name}: T.${NAMES[h.body]} ${aspect} N.${NATAL_TR[h.natalKey] ?? h.natalKey}`,
-          body: `Tam isabet ${when}${e.retro ? ' (retro)' : ''} · AstroFree`
+          title: `${c.name}: T.${pointName(NATAL[h.body])} ${aspect} N.${pointName(h.natalKey)}`,
+          body: tm('Tam isabet {date}', { date: when }) + (e.retro ? ' (retro)' : '') + ' · AstroFree'
         })
         n.on('click', () => {
           const win = BrowserWindow.getAllWindows()[0]

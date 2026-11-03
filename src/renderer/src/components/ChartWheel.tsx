@@ -163,7 +163,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
   const PREFIX: Record<string, string> = { natal: 'N.', transit: 'T.', progressed: 'P.', solarArc: 'SA.', synastry: 'S.', solarReturn: 'GD.', lunarReturn: 'AD.' }
   const pointName = (p: ChartPoint) => `${outers.length ? PREFIX[layerOf(p).kind] ?? '' : ''}${POINT[p.key].name}`
   const aspectPrompt = (x: Aspect) =>
-    `${pointName(x.a)} ${ASPECT[x.aspect.key].name} ${pointName(x.b)} (orb ${fmtOrb(x.orb)}, ${x.applying ? 'yaklaşan' : 'ayrılan'}) açısını bu haritada yorumla: anlamı, hangi evleri ve yaşam alanlarını etkilediği${outers.length ? ', zamanlaması' : ''}.`
+    t('{a} {aspect} {b} (orb {orb}, {state}) açısını bu haritada yorumla: anlamı, hangi evleri ve yaşam alanlarını etkilediği{timing}.', { a: pointName(x.a), aspect: ASPECT[x.aspect.key].name, b: pointName(x.b), orb: fmtOrb(x.orb), state: x.applying ? t('yaklaşan') : t('ayrılan'), timing: outers.length ? t(', zamanlaması') : '' })
   const selPoint = selected ? (selected.ring < 0 ? natal : outers[selected.ring])?.points.find((p) => p.key === selected.key) ?? null : null
   const selLayer = selected ? (selected.ring < 0 ? natal : outers[selected.ring]) : null
 
@@ -265,7 +265,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
             return (
               <g key={i} className="w-asp" onMouseEnter={() => setHoverAspect(i)} onMouseLeave={() => setHoverAspect(null)} onClick={() => onAsk?.(aspectPrompt(x))}>
               <line x1={x1} y1={y1} x2={x2} y2={y2} className="w-asp-hit">
-                <title>{`${pointName(x.a)} ${def.name} ${pointName(x.b)} · orb ${fmtOrb(x.orb)} · tıklayın: yorumla`}</title>
+                <title>{`${pointName(x.a)} ${def.name} ${pointName(x.b)} · orb ${fmtOrb(x.orb)} · ${t('tıklayın: yorumla')}`}</title>
               </line>
               <line
                 x1={x1}
@@ -316,7 +316,10 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
                 onClick={() => {
                   const sd = splitDeg(selPoint.lon)
                   onAsk(
-                    `${pointName(selPoint)} (${sd.deg}°${String(sd.min).padStart(2, '0')}' ${SIGNS[sd.sign].name}${['asc', 'mc'].includes(selPoint.key) ? '' : `, ${selPoint.house}. ev`}${selPoint.retro ? ', retro' : ''}) konumunu ve açılarını bu haritada ayrıntılı yorumla.`
+                    t('{p} ({pos}) konumunu ve açılarını bu haritada ayrıntılı yorumla.', {
+                      p: pointName(selPoint),
+                      pos: `${sd.deg}°${String(sd.min).padStart(2, '0')}' ${SIGNS[sd.sign].name}${['asc', 'mc'].includes(selPoint.key) ? '' : `, ${t('{n}. ev', { n: selPoint.house })}`}${selPoint.retro ? ', retro' : ''}`
+                    })
                   )
                 }}
               >
@@ -446,12 +449,12 @@ function PointDetails({ point, layer, aspects }: { point: ChartPoint; layer: Lay
         {def.name} <span className="muted">· {layer.label}</span>
       </div>
       <div>
-        {fmtPos(point.lon, true)} · {point.house}. ev{point.retro ? ' · Retro' : ''}
-        {dig ? ` · ${dig}` : ''}
+        {fmtPos(point.lon, true)} · {t('{n}. ev', { n: point.house })}{point.retro ? ' · Retro' : ''}
+        {dig ? ` · ${t(dig)}` : ''}
       </div>
       {!['asc', 'mc'].includes(point.key) && (
         <div className="muted">
-          Hız {point.speed.toFixed(4)}°/gün · Dekl. {fmtDecl(point.decl)}
+          {t('Hız')} {point.speed.toFixed(4)}°/{t('gün')} · {t('Dekl.')} {fmtDecl(point.decl)}
         </div>
       )}
       {aspects.length > 0 && (
@@ -460,7 +463,7 @@ function PointDetails({ point, layer, aspects }: { point: ChartPoint; layer: Lay
             const other = a.a === point ? a.b : a.a
             return (
               <div key={i}>
-                <span className="glyph">{a.aspect.glyph}</span> {POINT[other.key].name} · {fmtOrb(a.orb)} {a.applying ? 'yakl.' : 'ayr.'}
+                <span className="glyph">{a.aspect.glyph}</span> {POINT[other.key].name} · {fmtOrb(a.orb)} {a.applying ? t('yakl.') : t('ayr.')}
               </div>
             )
           })}

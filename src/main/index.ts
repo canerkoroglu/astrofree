@@ -16,7 +16,8 @@ import { cancelChat, detectProviders, startChat } from './ai'
 import { ensureShellPath } from './ai/proc'
 import { computeMany } from './ephemeris'
 import { skyReport } from './events'
-import { nearestPlace, searchPlaces, zoneAt } from './geo'
+import { nearestPlace, placeForZone, searchPlaces, zoneAt } from './geo'
+import { setMainLang, tm } from './i18n'
 import { parseChartsFile } from './importers'
 import { startNotifier } from './notifier'
 import { startAutoUpdate } from './updater'
@@ -73,8 +74,8 @@ function registerIpc(): void {
 
   ipcMain.handle('charts:export', async (_e, recs: ChartRecord[]) => {
     const r = await dialog.showSaveDialog(win!, {
-      title: 'Haritaları dışa aktar',
-      defaultPath: 'astrofree-haritalar.json',
+      title: tm('Haritaları dışa aktar'),
+      defaultPath: tm('astrofree-haritalar') + '.json',
       filters: [{ name: 'JSON', extensions: ['json'] }]
     })
     if (r.canceled || !r.filePath) return false
@@ -83,11 +84,11 @@ function registerIpc(): void {
   })
   ipcMain.handle('charts:import', async () => {
     const r = await dialog.showOpenDialog(win!, {
-      title: 'Harita içe aktar',
+      title: tm('Harita içe aktar'),
       properties: ['openFile'],
       filters: [
-        { name: 'Desteklenenler (AstroFree, AAF, CSV)', extensions: ['json', 'aaf', 'csv', 'tsv', 'txt'] },
-        { name: 'AstroFree / yedek (JSON)', extensions: ['json'] },
+        { name: tm('Desteklenenler (AstroFree, AAF, CSV)'), extensions: ['json', 'aaf', 'csv', 'tsv', 'txt'] },
+        { name: tm('AstroFree / yedek (JSON)'), extensions: ['json'] },
         { name: 'AAF — astro.com, AstroGold, Solar Fire', extensions: ['aaf', 'txt'] },
         { name: 'CSV', extensions: ['csv', 'tsv'] }
       ]
@@ -116,7 +117,7 @@ function registerIpc(): void {
   ipcMain.handle('interp:remove', (_e, id: string) => store.removeInterpretation(id))
 
   ipcMain.handle('backup:choose', async () => {
-    const r = await dialog.showOpenDialog(win!, { title: 'Yedek klasörü seçin', properties: ['openDirectory', 'createDirectory'] })
+    const r = await dialog.showOpenDialog(win!, { title: tm('Yedek klasörü seçin'), properties: ['openDirectory', 'createDirectory'] })
     return r.canceled ? null : (r.filePaths[0] ?? null)
   })
   ipcMain.handle('backup:run', (_e, dir?: string) => store.runBackup(dir))
@@ -129,21 +130,26 @@ function registerIpc(): void {
       width: Math.round(rect.width),
       height: Math.round(rect.height)
     })
-    const r = await dialog.showSaveDialog(win!, { title: 'Haritayı kaydet', defaultPath: `${name}.png`, filters: [{ name: 'PNG', extensions: ['png'] }] })
+    const r = await dialog.showSaveDialog(win!, { title: tm('Haritayı kaydet'), defaultPath: `${name}.png`, filters: [{ name: 'PNG', extensions: ['png'] }] })
     if (r.canceled || !r.filePath) return false
     await writeFile(r.filePath, img.toPNG())
     return true
   })
   ipcMain.handle('export:pdf', async (_e, name: string) => {
     const pdf = await win!.webContents.printToPDF({ printBackground: true, pageSize: 'A4', margins: { top: 0.4, bottom: 0.4, left: 0.4, right: 0.4 } })
-    const r = await dialog.showSaveDialog(win!, { title: 'Raporu kaydet', defaultPath: `${name}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] })
+    const r = await dialog.showSaveDialog(win!, { title: tm('Raporu kaydet'), defaultPath: `${name}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] })
     if (r.canceled || !r.filePath) return false
     await writeFile(r.filePath, pdf)
     return true
   })
 
   ipcMain.handle('settings:get', () => store.getSettings())
-  ipcMain.handle('settings:set', (_e, s: AppSettings) => store.setSettings(s))
+  ipcMain.handle('settings:set', async (_e, s: AppSettings) => {
+    const saved = await store.setSettings(s)
+    setMainLang(s.uiLanguage)
+    buildMenu()
+    return saved
+  })
 
   ipcMain.handle('secrets:set', (_e, p: ProviderId, key: string) => store.setSecret(p, key))
   ipcMain.handle('secrets:status', () => store.secretStatus())
@@ -153,6 +159,7 @@ function registerIpc(): void {
 
   ipcMain.handle('geo:search', (_e, q: string, lang: string) => searchPlaces(q, lang))
   ipcMain.handle('geo:zone', (_e, lat: number, lon: number) => zoneAt(lat, lon))
+  ipcMain.handle('geo:placeForZone', (_e, zone: string) => placeForZone(zone))
   ipcMain.handle('geo:nearest', (_e, lat: number, lon: number) => nearestPlace(lat, lon))
 
   ipcMain.handle('ai:detect', () => detectProviders())
@@ -193,45 +200,46 @@ function buildMenu(): void {
   const template: Electron.MenuItemConstructorOptions[] = [
     ...(isMac ? [{ role: 'appMenu' as const }] : []),
     {
-      label: 'Dosya',
+      label: tm('Dosya'),
       submenu: [
-        { label: 'Yeni harita', accelerator: 'CmdOrCtrl+N', click: () => win?.webContents.send('menu', 'new') },
-        { label: 'Kaydet', accelerator: 'CmdOrCtrl+S', click: () => win?.webContents.send('menu', 'save') },
+        { label: tm('Yeni harita'), accelerator: 'CmdOrCtrl+N', click: () => win?.webContents.send('menu', 'new') },
+        { label: tm('Kaydet'), accelerator: 'CmdOrCtrl+S', click: () => win?.webContents.send('menu', 'save') },
         { type: 'separator' },
-        { label: 'İçe aktar…', click: () => win?.webContents.send('menu', 'import') },
-        { label: 'Dışa aktar…', click: () => win?.webContents.send('menu', 'export') },
+        { label: tm('İçe aktar…'), click: () => win?.webContents.send('menu', 'import') },
+        { label: tm('Dışa aktar…'), click: () => win?.webContents.send('menu', 'export') },
         { type: 'separator' },
-        isMac ? { role: 'close', label: 'Kapat' } : { role: 'quit', label: 'Çıkış' }
+        isMac ? { role: 'close', label: tm('Kapat') } : { role: 'quit', label: tm('Çıkış') }
       ]
     },
-    { role: 'editMenu', label: 'Düzen' },
+    { role: 'editMenu', label: tm('Düzen') },
     {
-      label: 'Görünüm',
+      label: tm('Görünüm'),
       submenu: [
-        { role: 'reload', label: 'Yenile' },
-        { role: 'toggleDevTools', label: 'Geliştirici araçları' },
+        { role: 'reload', label: tm('Yenile') },
+        { role: 'toggleDevTools', label: tm('Geliştirici araçları') },
         { type: 'separator' },
-        { role: 'resetZoom', label: 'Gerçek boyut' },
-        { role: 'zoomIn', label: 'Yakınlaştır' },
-        { role: 'zoomOut', label: 'Uzaklaştır' },
+        { role: 'resetZoom', label: tm('Gerçek boyut') },
+        { role: 'zoomIn', label: tm('Yakınlaştır') },
+        { role: 'zoomOut', label: tm('Uzaklaştır') },
         { type: 'separator' },
-        { role: 'togglefullscreen', label: 'Tam ekran' }
+        { role: 'togglefullscreen', label: tm('Tam ekran') }
       ]
     },
-    { role: 'windowMenu', label: 'Pencere' },
+    { role: 'windowMenu', label: tm('Pencere') },
     {
       role: 'help',
-      label: 'Yardım',
+      label: tm('Yardım'),
       submenu: [
-        { label: 'Klavye kısayolları   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
-        { label: 'GitHub sayfası', click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') }
+        { label: tm('Klavye kısayolları') + '   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
+        { label: tm('GitHub sayfası'), click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') }
       ]
     }
   ]
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  setMainLang((await store.getSettings()).uiLanguage)
   void ensureShellPath()
   registerIpc()
   buildMenu()

@@ -1,6 +1,7 @@
 // Importers for chart files written by other astrology programs.
 //   AAF  (Astrodienst / AstroGold / Solar Fire / Janus "Astrological Exchange Format")
 //   CSV  (name;date;time;place;lat;lon;zone — header row decides the columns)
+import { tm } from './i18n'
 import type { ChartRecord, TzSpec } from '@shared/types'
 import { zoneAt } from './geo'
 
@@ -37,7 +38,7 @@ export function parseAaf(text: string): ChartRecord[] {
     const dm = /^(\d{1,2})\.(\d{1,2})\.(-?\d{1,4})$/.exec(date ?? '')
     if (!dm) continue
     const unknownTime = !time || time === '*' || /^\*/.test(time)
-    const tm = /^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/.exec(time ?? '')
+    const timeM = /^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/.exec(time ?? '')
     let lat = 0
     let lon = 0
     let tz: TzSpec | null = null
@@ -54,16 +55,16 @@ export function parseAaf(text: string): ChartRecord[] {
       const z = zoneAt(lat, lon)
       tz = z ? { kind: 'zone', zone: z } : { kind: 'lmt' }
     }
-    const name = [first, last].filter((x) => x && x !== '*').join(' ') || 'İsimsiz'
+    const name = [first, last].filter((x) => x && x !== '*').join(' ') || tm('İsimsiz')
     out.push({
       id: crypto.randomUUID(),
       name,
       kind: sex === 'e' ? 'event' : 'person',
-      local: { y: +dm[3], m: +dm[2], d: +dm[1], h: tm ? +tm[1] : 12, mi: tm ? +tm[2] : 0, s: tm?.[3] ? +tm[3] : 0 },
+      local: { y: +dm[3], m: +dm[2], d: +dm[1], h: timeM ? +timeM[1] : 12, mi: timeM ? +timeM[2] : 0, s: timeM?.[3] ? +timeM[3] : 0 },
       tz,
       timeUnknown: unknownTime || undefined,
-      place: { name: [place, country].filter((x) => x && x !== '*').join(', ') || 'Bilinmiyor', lat, lon, zone: zoneAt(lat, lon) ?? undefined },
-      tags: ['içe-aktarılan'],
+      place: { name: [place, country].filter((x) => x && x !== '*').join(', ') || tm('Bilinmiyor'), lat, lon, zone: zoneAt(lat, lon) ?? undefined },
+      tags: [tm('içe-aktarılan')],
       createdAt: now(),
       updatedAt: now()
     })
@@ -71,6 +72,7 @@ export function parseAaf(text: string): ChartRecord[] {
   return out
 }
 
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
 const CSV_COLS: Record<string, string[]> = {
   name: ['name', 'isim', 'ad', 'adı', 'ad soyad'],
   date: ['date', 'tarih', 'doğum tarihi', 'birth date'],
@@ -82,6 +84,7 @@ const CSV_COLS: Record<string, string[]> = {
   tags: ['tags', 'etiketler', 'etiket'],
   notes: ['notes', 'notlar', 'not']
 }
+// i18n-ignore-end
 
 function splitCsv(line: string, sep: string): string[] {
   const out: string[] = []
@@ -111,7 +114,7 @@ export function parseCsv(text: string): ChartRecord[] {
   const head = splitCsv(lines[0], sep).map((h) => h.toLocaleLowerCase('tr'))
   const col = (k: string) => head.findIndex((h) => CSV_COLS[k].includes(h))
   const idx = Object.fromEntries(Object.keys(CSV_COLS).map((k) => [k, col(k)])) as Record<string, number>
-  if (idx.name < 0 || idx.date < 0) throw new Error('CSV başlığında en az "isim" ve "tarih" sütunları olmalı.')
+  if (idx.name < 0 || idx.date < 0) throw new Error(tm('CSV başlığında en az "isim" ve "tarih" sütunları olmalı.'))
   const out: ChartRecord[] = []
   for (const line of lines.slice(1)) {
     const f = splitCsv(line, sep)
@@ -122,7 +125,7 @@ export function parseCsv(text: string): ChartRecord[] {
     if (m) [d, mo, y] = [+m[1], +m[2], +m[3]]
     else if ((m = /^(-?\d{1,4})-(\d{1,2})-(\d{1,2})$/.exec(ds))) [y, mo, d] = [+m[1], +m[2], +m[3]]
     else continue
-    const tm = /^(\d{1,2})[:.](\d{1,2})(?:[:.](\d{1,2}))?$/.exec(get('time'))
+    const timeM = /^(\d{1,2})[:.](\d{1,2})(?:[:.](\d{1,2}))?$/.exec(get('time'))
     const num = (s: string, isLat: boolean) => {
       if (!s) return null
       if (/^-?\d+(\.\d+)?$/.test(s)) return +s
@@ -134,13 +137,13 @@ export function parseCsv(text: string): ChartRecord[] {
     const zone = get('zone') || zoneAt(lat, lon) || 'UTC'
     out.push({
       id: crypto.randomUUID(),
-      name: get('name') || 'İsimsiz',
+      name: get('name') || tm('İsimsiz'),
       kind: 'person',
-      local: { y, m: mo, d, h: tm ? +tm[1] : 12, mi: tm ? +tm[2] : 0, s: tm?.[3] ? +tm[3] : 0 },
+      local: { y, m: mo, d, h: timeM ? +timeM[1] : 12, mi: timeM ? +timeM[2] : 0, s: timeM?.[3] ? +timeM[3] : 0 },
       tz: { kind: 'zone', zone },
-      timeUnknown: tm ? undefined : true,
-      place: { name: get('place') || 'Bilinmiyor', lat, lon, zone },
-      tags: get('tags') ? get('tags').split(/[|,]/).map((t) => t.trim()).filter(Boolean) : ['içe-aktarılan'],
+      timeUnknown: timeM ? undefined : true,
+      place: { name: get('place') || tm('Bilinmiyor'), lat, lon, zone },
+      tags: get('tags') ? get('tags').split(/[|,]/).map((t) => t.trim()).filter(Boolean) : [tm('içe-aktarılan')],
       notes: get('notes') || undefined,
       createdAt: now(),
       updatedAt: now()

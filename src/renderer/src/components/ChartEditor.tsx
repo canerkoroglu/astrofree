@@ -55,7 +55,7 @@ export default function ChartEditor({
     const jan = offsetAt(rec.tz, jd - ((rec.local.m - 1) * 30.4), rec.place.lon)
     const jul = offsetAt(rec.tz, jd + ((7 - rec.local.m) * 30.4), rec.place.lon)
     const std = Math.min(jan, jul)
-    return off > std ? ' · yaz saati' : jan !== jul ? ' · kış saati' : ''
+    return off > std ? ` · ${t('yaz saati')}` : jan !== jul ? ` · ${t('kış saati')}` : ''
   }, [tzOk, rec.tz, jd, off, rec.local.m, rec.place.lon])
 
   const duplicate = existing.find((c) => c.id !== rec.id && c.name.trim().toLocaleLowerCase('tr') === rec.name.trim().toLocaleLowerCase('tr') && rec.name.trim())
@@ -110,7 +110,7 @@ export default function ChartEditor({
     >
       <div className="modal wide editor">
         <header className="ed-head">
-          <h2>{isNew ? (isEvent ? 'Yeni olay' : 'Yeni kişi') : isEvent ? 'Olayı düzenle' : 'Kişiyi düzenle'}</h2>
+          <h2>{t(isNew ? (isEvent ? 'Yeni olay' : 'Yeni kişi') : isEvent ? 'Olayı düzenle' : 'Kişiyi düzenle')}</h2>
           <div className="seg kind-seg">
             <button type="button" className={!isEvent ? 'on' : ''} onClick={() => setRec({ ...rec, kind: 'person' })}>
               {t('Kişi')}
@@ -130,11 +130,11 @@ export default function ChartEditor({
                   ref={nameRef}
                   autoFocus
                   className="big-input"
-                  placeholder={isEvent ? 'Olay adı (ör. Evlilik, Şirket kuruluşu)' : 'Ad Soyad'}
+                  placeholder={isEvent ? t('Olay adı (ör. Evlilik, Şirket kuruluşu)') : t('Ad Soyad')}
                   value={rec.name}
                   onChange={(e) => setRec({ ...rec, name: e.target.value })}
                 />
-                {duplicate && <div className="warn small">Bu isimde bir kayıt zaten var ({fmtLocal(duplicate.local)}).</div>}
+                {duplicate && <div className="warn small">{t('Bu isimde bir kayıt zaten var ({date}).', { date: fmtLocal(duplicate.local) })}</div>}
                 {isEvent && !rec.name && (
                   <div className="idea-chips">
                     {EVENT_IDEAS.map((idea) => (
@@ -149,7 +149,7 @@ export default function ChartEditor({
 
             <section className="ed-sec">
               <div className="ed-sec-title">
-                {isEvent ? 'Olay ne zaman oldu?' : 'Ne zaman doğdu?'}
+                {isEvent ? t('Olay ne zaman oldu?') : t('Ne zaman doğdu?')}
               </div>
               <div className="row">
                 <DateTimeField live seconds value={rec.local} onChange={(local) => setRec((r) => ({ ...r, local }))} />
@@ -192,7 +192,7 @@ export default function ChartEditor({
               )}
               {rec.timeUnknown && (
                 <div className="note small">
-                  12:00 kullanılacak. Yükselen, MC ve evler güvenilmez olur; Ay ±7° oynayabilir. Yorumlar buna göre yapılır.
+                  {t('12:00 kullanılacak. Yükselen, MC ve evler güvenilmez olur; Ay ±7° oynayabilir. Yorumlar buna göre yapılır.')}
                 </div>
               )}
             </section>
@@ -210,10 +210,10 @@ export default function ChartEditor({
               />
               <div className="tz-line">
                 <span className={tzOk ? '' : 'error'}>
-                  {tzOk ? `${rec.tz.kind === 'zone' ? rec.tz.zone : rec.tz.kind === 'lmt' ? 'Yerel ortalama zaman' : 'Sabit fark'} · ${fmtOffset(off)}${dstNote}` : 'Geçersiz saat dilimi'}
+                  {tzOk ? `${rec.tz.kind === 'zone' ? rec.tz.zone : rec.tz.kind === 'lmt' ? t('Yerel ortalama zaman') : t('Sabit fark')} · ${fmtOffset(off)}${dstNote}` : t('Geçersiz saat dilimi')}
                 </span>
                 <button type="button" className="link small" onClick={() => setTzOpen(!tzOpen)}>
-                  {tzOpen ? 'Gizle' : 'Değiştir'}
+                  {tzOpen ? t('Gizle') : t('Değiştir')}
                 </button>
               </div>
               {tzOpen && (
@@ -256,7 +256,7 @@ export default function ChartEditor({
 
             <section className="ed-sec">
               <button type="button" className="ed-sec-title as-btn" onClick={() => setMoreOpen(!moreOpen)}>
-                Etiketler ve notlar <span className="muted small">{t('(isteğe bağlı)')}</span>
+                {t('Etiketler ve notlar')} <span className="muted small">{t('(isteğe bağlı)')}</span>
                 <span className="grow" />
                 <span className="muted">{moreOpen ? '▾' : '▸'}</span>
               </button>
@@ -304,9 +304,9 @@ export default function ChartEditor({
 
           <aside className="ed-preview">
             <div className="pv-title muted small">{t('Önizleme')}</div>
-            <div className="pv-name">{rec.name.trim() || (isEvent ? 'Yeni olay' : 'Yeni kişi')}</div>
+            <div className="pv-name">{rec.name.trim() || (isEvent ? t('Yeni olay') : t('Yeni kişi'))}</div>
             <div className="muted small">
-              {fmtLocal(rec.local)} {rec.timeUnknown ? '(saat bilinmiyor)' : ''}
+              {fmtLocal(rec.local)} {rec.timeUnknown ? `(${t('saat bilinmiyor')})` : ''}
             </div>
             <div className="muted small">
               {rec.place.name.split(',').slice(0, 2).join(',')}
@@ -350,7 +350,7 @@ export default function ChartEditor({
             {t('Göster')}
           </button>
           <button className="primary" disabled={!canSave} onClick={() => submit(true)}>
-            {isNew ? 'Ekle' : 'Kaydet'}
+            {isNew ? t('Ekle') : t('Kaydet')}
           </button>
         </footer>
       </div>

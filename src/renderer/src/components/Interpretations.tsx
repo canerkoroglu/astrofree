@@ -1,4 +1,4 @@
-import { t } from '../lib/i18n'
+import { getLocaleData, t } from '../lib/i18n'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useState } from 'react'
@@ -9,7 +9,7 @@ export function MarkdownBlock({ text }: { text: string }) {
 }
 
 const fmtDate = (ms: number) =>
-  new Date(ms).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  new Date(ms).toLocaleString(getLocaleData().intl, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 
 /** Saved AI interpretations for one chart. */
 export default function Interpretations({
@@ -26,7 +26,7 @@ export default function Interpretations({
   if (!items.length) {
     return (
       <div className="interp muted pad">
-        Henüz kaydedilmiş yorum yok. Sohbet panelindeki bir yanıtın altındaki <strong>{t('“Yoruma kaydet”')}</strong> düğmesiyle buraya ekleyebilirsiniz.
+        {t('Henüz kaydedilmiş yorum yok. Sohbet panelindeki bir yanıtın altındaki “Yoruma kaydet” düğmesiyle buraya ekleyebilirsiniz.')}
       </div>
     )
   }
@@ -66,7 +66,7 @@ export default function Interpretations({
                   {t('Düzenle')}
                 </button>
               )}
-              <button className="link small danger" onClick={() => confirm('Bu yorum silinsin mi?') && onRemove(it.id)}>
+              <button className="link small danger" onClick={() => confirm(t('Bu yorum silinsin mi?')) && onRemove(it.id)}>
                 {t('Sil')}
               </button>
             </header>

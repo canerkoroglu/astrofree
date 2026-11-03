@@ -35,7 +35,7 @@ export function PositionsTable({ natal, outers }: { natal: Layer; outers: Layer[
           <th>{t('Dekl.')}</th>
           {outers.map((o, i) => (
             <th key={i} colSpan={2} style={{ color: LAYER_COLOR[o.kind] }}>
-              {o.label}
+              {t(o.label)}
             </th>
           ))}
         </tr>
@@ -51,7 +51,7 @@ export function PositionsTable({ natal, outers }: { natal: Layer; outers: Layer[
               <td className="pos">
                 {n ? fmtPos(n.lon, true) : ''}
                 {n?.retro ? <span className="retro"> ℞</span> : null}
-                {n && dignity(k, splitDeg(n.lon).sign) ? <span className="dig"> {dignity(k, splitDeg(n.lon).sign)}</span> : null}
+                {n && dignity(k, splitDeg(n.lon).sign) ? <span className="dig"> {t(dignity(k, splitDeg(n.lon).sign))}</span> : null}
               </td>
               <td className="num">{n && !['asc', 'mc'].includes(k) ? n.house : ''}</td>
               <td className="num muted">{n && !['asc', 'mc', 'fortune', 'vertex'].includes(k) ? n.speed.toFixed(3) : ''}</td>
@@ -126,7 +126,7 @@ function useAspects(natal: Layer, outer: Layer | null, settings: AppSettings) {
 function Cell({ a }: { a: Aspect | undefined }) {
   if (!a) return <td className="cell" />
   return (
-    <td className={`cell ${ASPECT_CLASS[a.aspect.kind]}`} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? 'yaklaşan' : 'ayrılan'}`}>
+    <td className={`cell ${ASPECT_CLASS[a.aspect.kind]}`} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? t('yaklaşan') : t('ayrılan')}`}>
       <span className="glyph">{a.aspect.glyph}</span>
       <small>
         {fmtOrb(a.orb).replace("'", '')}
@@ -200,7 +200,7 @@ export function AspectList({ natal, outer, settings }: { natal: Layer; outer: La
               {POINT[a.b.key].name}
             </td>
             <td className="num">{fmtOrb(a.orb)}</td>
-            <td className="muted">{a.applying ? 'yaklaşan' : 'ayrılan'}</td>
+            <td className="muted">{a.applying ? t('yaklaşan') : t('ayrılan')}</td>
           </tr>
         ))}
       </tbody>

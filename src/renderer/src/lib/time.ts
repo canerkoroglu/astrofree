@@ -123,10 +123,35 @@ export function fmtOffset(minutes: number): string {
   return `UTC${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`
 }
 
-export function fmtLocal(l: LocalDateTime, seconds = false): string {
-  const year = l.y < 0 ? `${l.y}` : pad(l.y, 4)
-  return `${pad(l.d)}.${pad(l.m)}.${year} ${pad(l.h)}:${pad(l.mi)}${seconds ? ':' + pad(l.s) : ''}`
+export type DateOrder = 'DMY' | 'MDY' | 'YMD'
+let dateOrder: DateOrder = 'DMY'
+/** Set by the app from the language and the user's date-format setting. */
+export function setDateOrder(o: DateOrder): void {
+  dateOrder = o
 }
+export const getDateOrder = () => dateOrder
+
+/** Date only, in the user's order: 17.01.1942 · 01/17/1942 · 1942-01-17 */
+export function fmtDate(l: { y: number; m: number; d: number }, order: DateOrder = dateOrder): string {
+  const year = l.y < 0 ? `${l.y}` : pad(l.y, 4)
+  if (order === 'MDY') return `${pad(l.m)}/${pad(l.d)}/${year}`
+  if (order === 'YMD') return `${year}-${pad(l.m)}-${pad(l.d)}`
+  return `${pad(l.d)}.${pad(l.m)}.${year}`
+}
+
+export function fmtLocal(l: LocalDateTime, seconds = false): string {
+  return `${fmtDate(l)} ${pad(l.h)}:${pad(l.mi)}${seconds ? ':' + pad(l.s) : ''}`
+}
+
+/** All IANA zones the runtime knows (for pickers). */
+export function allZones(): string[] {
+  try {
+    return (Intl as unknown as { supportedValuesOf: (k: string) => string[] }).supportedValuesOf('timeZone')
+  } catch {
+    return ['UTC', 'Europe/Istanbul', 'Europe/London', 'America/New_York']
+  }
+}
+export const systemZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
 
 export function tzLabel(tz: TzSpec): string {
   if (tz.kind === 'zone') return tz.zone

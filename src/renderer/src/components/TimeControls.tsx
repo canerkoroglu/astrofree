@@ -49,16 +49,16 @@ export default function TimeControls(p: Props) {
 
       <div className="steps">
         <button onClick={() => p.onStep(-1, 'year', 1)} title={t('−1 yıl')}>
-          −Y
+          {t('−Y')}
         </button>
         <button onClick={() => p.onStep(-1, 'month', 1)} title={t('−1 ay')}>
-          −A
+          {t('−A')}
         </button>
         <button onClick={() => p.onStep(-1, 'day', 1)} title={t('−1 gün')}>
-          −G
+          {t('−G')}
         </button>
         <button onClick={() => p.onStep(-1, 'hour', 1)} title={t('−1 saat')}>
-          −S
+          {t('−S')}
         </button>
         <button onClick={() => p.onStep(-1, 'min', 1)} title={t('−1 dakika')}>
           {t('−dk')}
@@ -74,16 +74,16 @@ export default function TimeControls(p: Props) {
           {t('+dk')}
         </button>
         <button onClick={() => p.onStep(1, 'hour', 1)} title={t('+1 saat')}>
-          +S
+          {t('+S')}
         </button>
         <button onClick={() => p.onStep(1, 'day', 1)} title={t('+1 gün')}>
-          +G
+          {t('+G')}
         </button>
         <button onClick={() => p.onStep(1, 'month', 1)} title={t('+1 ay')}>
-          +A
+          {t('+A')}
         </button>
         <button onClick={() => p.onStep(1, 'year', 1)} title={t('+1 yıl')}>
-          +Y
+          {t('+Y')}
         </button>
       </div>
       <span className="muted small tz">{p.tzText}</span>

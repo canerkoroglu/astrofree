@@ -1,10 +1,8 @@
 // Wording for sky events, shared by the sky panel and the AI context.
 import type { SkyEvent, SkyReport, TzSpec } from '@shared/types'
 import { fmtPos, fmtPosText, glyph, moonPhase, POINTS, SIGNS, splitDeg } from './astro'
-import { getLang } from './i18n'
-import { fmtLocal, jdToLocal } from './time'
-
-const ECL_EN: Record<string, string> = { tam: 'total', halkalı: 'annular', parçalı: 'partial', yarıgölge: 'penumbral', hibrit: 'hybrid' }
+import { t } from './i18n'
+import { fmtDate, fmtLocal, jdToLocal } from './time'
 
 const KEY_BY_SWE = Object.fromEntries(POINTS.filter((p) => p.swe !== undefined).map((p) => [p.swe!, p.key]))
 export const bodyKey = (swe: number) => KEY_BY_SWE[swe] ?? 'sun'
@@ -12,39 +10,21 @@ const bodyName = (swe: number) => POINTS.find((p) => p.swe === swe)?.name ?? '?'
 
 export function eventText(e: SkyEvent): string {
   const name = bodyName(e.body)
-  if (getLang() === 'en') {
-    switch (e.kind) {
-      case 'station-r':
-        return `${name} stations retrograde`
-      case 'station-d':
-        return `${name} stations direct`
-      case 'ingress':
-        return `${name} enters ${SIGNS[splitDeg(e.lon).sign].name}`
-      case 'new-moon':
-        return 'New Moon'
-      case 'full-moon':
-        return 'Full Moon'
-      case 'solar-eclipse':
-        return `Solar eclipse${e.detail ? ` (${ECL_EN[e.detail] ?? e.detail})` : ''}`
-      case 'lunar-eclipse':
-        return `Lunar eclipse${e.detail ? ` (${ECL_EN[e.detail] ?? e.detail})` : ''}`
-    }
-  }
   switch (e.kind) {
     case 'station-r':
-      return `${name} retro başlıyor`
+      return t('{p} retro başlıyor', { p: name })
     case 'station-d':
-      return `${name} düz harekete geçiyor`
+      return t('{p} düz harekete geçiyor', { p: name })
     case 'ingress':
-      return `${name} ${SIGNS[splitDeg(e.lon).sign].name} burcunda`
+      return t('{p} {sign} burcunda', { p: name, sign: SIGNS[splitDeg(e.lon).sign].name })
     case 'new-moon':
-      return 'Yeni Ay'
+      return t('Yeni Ay')
     case 'full-moon':
-      return 'Dolunay'
+      return t('Dolunay')
     case 'solar-eclipse':
-      return `Güneş tutulması${e.detail ? ` (${e.detail})` : ''}`
+      return t('Güneş tutulması') + (e.detail ? ` (${t(e.detail)})` : '')
     case 'lunar-eclipse':
-      return `Ay tutulması${e.detail ? ` (${e.detail})` : ''}`
+      return t('Ay tutulması') + (e.detail ? ` (${t(e.detail)})` : '')
   }
 }
 
@@ -76,18 +56,18 @@ export function skyContext(r: SkyReport, tz: TzSpec, lon: number): string {
   const d = (jd: number) => fmtLocal(jdToLocal(jd, tz, lon))
   const out: string[] = []
   const ref = jdToLocal(r.jd, tz, lon)
-  out.push(`# GÖKYÜZÜ OLAYLARI — referans ${p2(ref.d)}.${p2(ref.m)}.${ref.y}`)
+  out.push(`# ${t('GÖKYÜZÜ OLAYLARI')} — ${t('referans')} ${fmtDate(ref)}`)
   const ph = moonPhase(r.sunLon, r.moonLon)
-  out.push(`- Ay: ${fmtPosText(r.moonLon)}, ${ph.name} (%${moonIllumination(r)} aydınlık)`)
+  out.push(`- ${t('Ay')}: ${fmtPosText(r.moonLon)}, ${ph.name} (${t('%{n} aydınlık', { n: moonIllumination(r) })})`)
   if (r.retro.length) {
     for (const p of r.retro) {
       out.push(
-        `- Retro: ${bodyName(p.body)} — başlangıç ${p.start ? d(p.start) : '?'}${p.startLon !== null ? ` (${fmtPosText(p.startLon)})` : ''}, bitiş ${p.end ? d(p.end) : '?'}${p.endLon !== null ? ` (${fmtPosText(p.endLon)})` : ''}`
+        `- Retro: ${bodyName(p.body)} — ${t('başlangıç')} ${p.start ? d(p.start) : '?'}${p.startLon !== null ? ` (${fmtPosText(p.startLon)})` : ''}, ${t('bitiş')} ${p.end ? d(p.end) : '?'}${p.endLon !== null ? ` (${fmtPosText(p.endLon)})` : ''}`
       )
     }
-  } else out.push('- Şu an retro gezegen yok')
-  if (r.previousLunation) out.push(`- Son ay evresi: ${eventText(r.previousLunation)} ${d(r.previousLunation.jd)}, ${fmtPosText(r.previousLunation.lon)}`)
+  } else out.push(`- ${t('Şu an retro gezegen yok')}`)
+  if (r.previousLunation) out.push(`- ${t('Son ay evresi')}: ${eventText(r.previousLunation)} ${d(r.previousLunation.jd)}, ${fmtPosText(r.previousLunation.lon)}`)
   for (const e of r.events) out.push(`- ${d(e.jd)}: ${eventText(e)}, ${fmtPosText(e.lon)}`)
-  for (const e of r.nextEclipses) if (!r.events.includes(e)) out.push(`- Sonraki: ${eventText(e)} ${d(e.jd)}, ${fmtPosText(e.lon)}`)
+  for (const e of r.nextEclipses) if (!r.events.includes(e)) out.push(`- ${t('Sonraki')}: ${eventText(e)} ${d(e.jd)}, ${fmtPosText(e.lon)}`)
   return out.join('\n')
 }

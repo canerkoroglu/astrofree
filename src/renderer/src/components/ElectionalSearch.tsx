@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { AppSettings, ElectionConditions, ElectionWindow, Place, TzSpec } from '@shared/types'
 import { glyph, POINT, SIGNS, signGlyph, splitDeg } from '../lib/astro'
 import { bodyKey } from '../lib/sky'
-import { jdToLocal } from '../lib/time'
+import { fmtDate, jdToLocal } from '../lib/time'
 
 const BODIES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 const RETRO_BODIES = [2, 3, 4, 5, 6]
@@ -47,11 +47,11 @@ export default function ElectionalSearch({
 
   const fmt = (jd: number) => {
     const l = jdToLocal(jd, tz, place.lon)
-    return `${p2(l.d)}.${p2(l.m)}.${l.y} ${p2(l.h)}:${p2(l.mi)}`
+    return `${fmtDate(l)} ${p2(l.h)}:${p2(l.mi)}`
   }
   const dur = (w: ElectionWindow) => {
     const h = (w.end - w.start) * 24
-    return h >= 24 ? `${(h / 24).toFixed(1)} gün` : `${Math.max(0.25, h).toFixed(h < 2 ? 1 : 0)} saat`
+    return h >= 24 ? t('{n} gün', { n: (h / 24).toFixed(1) }) : t('{n} saat', { n: Math.max(0.25, h).toFixed(h < 2 ? 1 : 0) })
   }
 
   const run = async () => {
@@ -81,12 +81,12 @@ export default function ElectionalSearch({
 
   const describe = () =>
     [
-      cond.moonSigns.length ? `Ay ${cond.moonSigns.map((s) => SIGNS[s].name).join('/')} burcunda` : '',
-      cond.moonNotVoc ? 'Ay boşlukta değil' : '',
-      cond.moonWaxing ? 'Ay büyüyor' : '',
-      cond.notRetro.length ? `${cond.notRetro.map((b) => POINT[bodyKey(b)].name).join(', ')} retro değil` : '',
-      aspectOn ? `${POINT[bodyKey(asp.a)].name}–${POINT[bodyKey(asp.b)].name} ${ASPECT_CHOICES[asp.kind][0].toLocaleLowerCase('tr')} (±${asp.orb}°)` : '',
-      angOn ? `${POINT[bodyKey(ang.body)].name} köşede (±${ang.orb}°, ${place.name.split(',')[0]})` : ''
+      cond.moonSigns.length ? t('Ay {signs} burcunda', { signs: cond.moonSigns.map((s) => SIGNS[s].name).join('/') }) : '',
+      cond.moonNotVoc ? t('Ay boşlukta değil') : '',
+      cond.moonWaxing ? t('Ay büyüyor') : '',
+      cond.notRetro.length ? t('{list} retro değil', { list: cond.notRetro.map((b) => POINT[bodyKey(b)].name).join(', ') }) : '',
+      aspectOn ? `${POINT[bodyKey(asp.a)].name}–${POINT[bodyKey(asp.b)].name} ${t(ASPECT_CHOICES[asp.kind][0])} (±${asp.orb}°)` : '',
+      angOn ? t('{p} köşede (±{orb}°, {place})', { p: POINT[bodyKey(ang.body)].name, orb: ang.orb, place: place.name.split(',')[0] }) : ''
     ]
       .filter(Boolean)
       .join('; ')
@@ -105,12 +105,12 @@ export default function ElectionalSearch({
               </button>
             ))}
           </div>
-          <div className="muted small">{cond.moonSigns.length ? cond.moonSigns.map((i) => SIGNS[i].name).join(', ') : 'Herhangi bir burç'}</div>
+          <div className="muted small">{cond.moonSigns.length ? cond.moonSigns.map((i) => SIGNS[i].name).join(', ') : t('Herhangi bir burç')}</div>
           <label className="inline">
-            <input type="checkbox" checked={cond.moonNotVoc} onChange={(e) => setCond({ ...cond, moonNotVoc: e.target.checked })} /> Boşlukta olmasın
+            <input type="checkbox" checked={cond.moonNotVoc} onChange={(e) => setCond({ ...cond, moonNotVoc: e.target.checked })} /> {t('Boşlukta olmasın')}
           </label>
           <label className="inline">
-            <input type="checkbox" checked={cond.moonWaxing} onChange={(e) => setCond({ ...cond, moonWaxing: e.target.checked })} /> Büyüyen Ay (yeni aydan dolunaya)
+            <input type="checkbox" checked={cond.moonWaxing} onChange={(e) => setCond({ ...cond, moonWaxing: e.target.checked })} /> {t('Büyüyen Ay (yeni aydan dolunaya)')}
           </label>
         </section>
         <section>
@@ -124,7 +124,7 @@ export default function ElectionalSearch({
           </div>
           <h3>{t('Gezegen açısı')}</h3>
           <label className="inline">
-            <input type="checkbox" checked={aspectOn} onChange={(e) => setAspectOn(e.target.checked)} /> Şu açı olsun:
+            <input type="checkbox" checked={aspectOn} onChange={(e) => setAspectOn(e.target.checked)} /> {t('Şu açı olsun:')}
           </label>
           <div className="row" style={{ opacity: aspectOn ? 1 : 0.5 }}>
             <select value={asp.a} onChange={(e) => setAsp({ ...asp, a: +e.target.value })}>
@@ -137,7 +137,7 @@ export default function ElectionalSearch({
             <select value={asp.kind} onChange={(e) => setAsp({ ...asp, kind: +e.target.value })}>
               {ASPECT_CHOICES.map(([n], i) => (
                 <option key={i} value={i}>
-                  {n}
+                  {t(n)}
                 </option>
               ))}
             </select>
@@ -154,7 +154,7 @@ export default function ElectionalSearch({
         <section>
           <h3>{t('Köşede gezegen')}</h3>
           <label className="inline">
-            <input type="checkbox" checked={angOn} onChange={(e) => setAngOn(e.target.checked)} /> ASC/DSC/MC/IC yakınında:
+            <input type="checkbox" checked={angOn} onChange={(e) => setAngOn(e.target.checked)} /> {t('ASC/DSC/MC/IC yakınında:')}
           </label>
           <div className="row" style={{ opacity: angOn ? 1 : 0.5 }}>
             <select value={ang.body} onChange={(e) => setAng({ ...ang, body: +e.target.value })}>
@@ -166,20 +166,20 @@ export default function ElectionalSearch({
             </select>
             <input type="number" min={1} max={15} value={ang.orb} onChange={(e) => setAng({ ...ang, orb: +e.target.value })} title={t('Orb (°)')} style={{ width: 64 }} />
           </div>
-          <div className="muted small">Konum: {place.name}</div>
+          <div className="muted small">{t('Konum')}: {place.name}</div>
           <h3>{t('Aralık')}</h3>
           <div className="row">
             <select value={days} onChange={(e) => setDays(+e.target.value)}>
               {[7, 14, 30, 60, 90, 180, 365].map((d) => (
                 <option key={d} value={d}>
-                  {d} gün
+                  {t('{n} gün', { n: d })}
                 </option>
               ))}
             </select>
-            <span className="muted small">{fmt(startJd)} tarihinden itibaren</span>
+            <span className="muted small">{t('{date} tarihinden itibaren', { date: fmt(startJd) })}</span>
           </div>
           <button className="primary" onClick={() => void run()} disabled={busy}>
-            {busy ? 'Aranıyor…' : 'Zamanları bul'}
+            {busy ? t('Aranıyor…') : t('Zamanları bul')}
           </button>
         </section>
       </div>
@@ -188,17 +188,20 @@ export default function ElectionalSearch({
         <section className="el-results">
           <div className="el-res-head">
             <h3>
-              {res.length} uygun aralık <span className="muted small">— {describe() || 'koşul yok'}</span>
+              {t('{n} uygun aralık', { n: res.length })} <span className="muted small">— {describe() || t('koşul yok')}</span>
             </h3>
             <span className="grow" />
             {res.length > 0 && (
               <button
                 onClick={() =>
                   onAsk(
-                    `Elektif astroloji: şu koşullara uyan zaman aralıkları buldum (${describe()}). İlk aralıklar: ${res
-                      .slice(0, 8)
-                      .map((w) => `${fmt(w.start)}–${fmt(w.end)}`)
-                      .join('; ')}. Hangisi daha uygun ve neden? Benim haritama göre de değerlendir.`
+                    t('Elektif astroloji: şu koşullara uyan zaman aralıkları buldum ({cond}). İlk aralıklar: {list}. Hangisi daha uygun ve neden? Benim haritama göre de değerlendir.', {
+                      cond: describe(),
+                      list: res
+                        .slice(0, 8)
+                        .map((w) => `${fmt(w.start)}–${fmt(w.end)}`)
+                        .join('; ')
+                    })
                   )
                 }
               >
@@ -221,7 +224,7 @@ export default function ElectionalSearch({
                     <td className="num-l muted">→ {fmt(w.end)}</td>
                     <td className="num">{dur(w)}</td>
                     <td className="muted">
-                      Ay <span className="glyph">{signGlyph(sd.sign)}</span> {SIGNS[sd.sign].name}
+                      {t('Ay')} <span className="glyph">{signGlyph(sd.sign)}</span> {SIGNS[sd.sign].name}
                     </td>
                   </tr>
                 )
@@ -230,7 +233,7 @@ export default function ElectionalSearch({
           </table>
         </section>
       )}
-      <p className="muted small">Açılar o andaki gezegenler arasında ölçülür; köşe koşulu seçili konuma göre hesaplanır. Bir tarihe tıklayınca harita o ana gider.</p>
+      <p className="muted small">{t('Açılar o andaki gezegenler arasında ölçülür; köşe koşulu seçili konuma göre hesaplanır. Bir tarihe tıklayınca harita o ana gider.')}</p>
     </div>
   )
 }

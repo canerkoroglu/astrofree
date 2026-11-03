@@ -1,9 +1,12 @@
 import { dowMonFirst, monthsLong, t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
 import type { LocalDateTime } from '@shared/types'
+import { fmtDate, getDateOrder } from '../lib/time'
 
 const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
 export const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
+// i18n-ignore-end
 const p2 = (n: number) => String(n).padStart(2, '0')
 
 const daysIn = (y: number, m: number) => (m === 2 ? (isLeap(y) ? 29 : 28) : [4, 6, 9, 11].includes(m) ? 30 : 31)
@@ -12,7 +15,7 @@ function isLeap(y: number) {
 }
 
 export function formatLocal(l: LocalDateTime, seconds: boolean): string {
-  return `${p2(l.d)}.${p2(l.m)}.${l.y} ${p2(l.h)}:${p2(l.mi)}${seconds ? ':' + p2(l.s) : ''}`
+  return `${fmtDate(l)} ${p2(l.h)}:${p2(l.mi)}${seconds ? ':' + p2(l.s) : ''}`
 }
 
 const fold = (s: string) => s.toLocaleLowerCase('tr').normalize('NFD').replace(/\p{M}/gu, '').replace(/ı/g, 'i')
@@ -31,7 +34,8 @@ export function parseLocal(text: string, prev: LocalDateTime): LocalDateTime | n
     ;[y, m, d] = [+mt[1], +mt[2], +mt[3]]
     rest = mt[4]
   } else if ((mt = t.match(/^(\d{1,2})[./-](\d{1,2})[./-](-?\d{1,4})(.*)$/))) {
-    ;[d, m, y] = [+mt[1], +mt[2], +mt[3]]
+    // Numeric dates follow the user's order (01/17/1942 when month-first).
+    ;[d, m, y] = getDateOrder() === 'MDY' ? [+mt[2], +mt[1], +mt[3]] : [+mt[1], +mt[2], +mt[3]]
     rest = mt[4]
   } else if ((mt = t.match(/^(\d{1,2})\s+([a-z]+)\s+(-?\d{1,4})(.*)$/))) {
     const idx = [MONTHS_TR, MONTHS_EN].map((list) => list.findIndex((n) => fold(n).startsWith(mt![2].slice(0, 3)))).find((i) => i >= 0) ?? -1
@@ -112,7 +116,7 @@ export default function DateTimeField({
         className={parsed ? '' : 'invalid'}
         value={text}
         spellCheck={false}
-        placeholder={seconds ? 'gg.aa.yyyy ss:dd:sn' : 'gg.aa.yyyy ss:dd'}
+        placeholder={t(getDateOrder() === 'MDY' ? 'aa/gg/yyyy ss:dd' : getDateOrder() === 'YMD' ? 'yyyy-aa-gg ss:dd' : 'gg.aa.yyyy ss:dd')}
         title={t('Örn. 17.01.1942 18:35 · 17 Ocak 1942 18:35 · 1942-01-17')}
         onFocus={() => setFocused(true)}
         onBlur={() => {

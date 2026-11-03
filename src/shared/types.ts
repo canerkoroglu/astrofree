@@ -125,7 +125,8 @@ export interface ProviderConfig {
 export interface AiSettings {
   provider: ProviderId
   providers: Record<ProviderId, ProviderConfig>
-  language: 'tr' | 'en'
+  /** Answer language (locale code). */
+  language: string
   systemPrompt: string
 }
 
@@ -146,7 +147,11 @@ export interface AppSettings {
   theme: 'light' | 'dark' | 'system'
   backupDir: string
   onboarded: boolean
-  uiLanguage: 'tr' | 'en'
+  /** Language code from src/shared/i18n (tr, en, …). */
+  uiLanguage: string
+  /** 'system' follows the computer's time zone; 'manual' uses defaultZone as set. */
+  timezoneMode: 'system' | 'manual'
+  dateOrder: 'auto' | 'DMY' | 'MDY' | 'YMD'
   notifications: { enabled: boolean; scope: 'all' | 'tagged'; tag: string }
   returnPlace: 'natal' | 'current'
   ai: AiSettings

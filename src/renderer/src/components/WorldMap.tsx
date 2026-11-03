@@ -1,4 +1,4 @@
-import { t } from '../lib/i18n'
+import { getLang, t } from '../lib/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { WORLD_PATH } from '../assets/world'
 import { fmtDms } from '../lib/coords'
@@ -176,14 +176,14 @@ export default function WorldMap({
           <path key={i} d={p.d} className="wm-province" strokeWidth={0.8} />
         ))}
         {detail && <path d={detail.COUNTRY_BORDERS} className="wm-border" strokeWidth={1} />}
-        {labels.provinces.map(([lo, la, name], i) => (
+        {labels.provinces.map(([lo, la, nameTr, nameEn], i) => (
           <text key={`p${i}`} x={lo + 180} y={90 - la} className="wm-label wm-plabel" fontSize={PROVINCE_PX / pxPerUnit} strokeWidth={2.5 / pxPerUnit}>
-            {name}
+            {getLang() === 'tr' ? nameTr : nameEn}
           </text>
         ))}
-        {labels.countries.map(([lo, la, name], i) => (
+        {labels.countries.map(([lo, la, nameTr, , nameEn], i) => (
           <text key={`c${i}`} x={lo + 180} y={90 - la} className="wm-label" fontSize={COUNTRY_PX / pxPerUnit} strokeWidth={3 / pxPerUnit}>
-            {name}
+            {getLang() === 'tr' ? nameTr : nameEn}
           </text>
         ))}
         {overlays.map((o, i) => (
@@ -204,7 +204,7 @@ export default function WorldMap({
       </svg>
       <div className="wm-bar small">
         <span className="muted">
-          {hover ? `${fmtDms(hover[0], true)}  ${fmtDms(hover[1], false)}` : 'Tıklayarak konum seçin · tekerlek: yakınlaştır · sürükle: kaydır'}
+          {hover ? `${fmtDms(hover[0], true)}  ${fmtDms(hover[1], false)}` : t('Tıklayarak konum seçin · tekerlek: yakınlaştır · sürükle: kaydır')}
         </span>
         <span className="grow" />
         <button className="link small" onClick={() => setBox(clamp([mx - 15, my - 7.5, 30, 15]))}>

@@ -75,7 +75,7 @@ export default function SkyPanel({
     if (days === 0) return t('bugün')
     if (days === 1) return t('yarın')
     if (days === -1) return t('dün')
-    return days > 0 ? `${days} ${t('gün sonra')}` : `${-days} ${t('gün önce')}`
+    return days > 0 ? t('{n} gün sonra', { n: days }) : t('{n} gün önce', { n: -days })
   }
   const vocActive = !!report.voc && jd >= report.voc.start && jd < report.voc.end
   const curHour = hours?.hours.find((h) => jd >= h.start && jd < h.end)
@@ -104,7 +104,7 @@ export default function SkyPanel({
           <button
             className={`pill ${vocActive ? 'pill-warn' : ''}`}
             onClick={() => onJump(report.voc!.start)}
-            title={`Ay boşlukta: ${shortDate(report.voc.start)} ${hm(report.voc.start)} → ${shortDate(report.voc.end)} ${hm(report.voc.end)}`}
+            title={`${t('Ay boşlukta')}: ${shortDate(report.voc.start)} ${hm(report.voc.start)} → ${shortDate(report.voc.end)} ${hm(report.voc.end)}`}
           >
             {vocActive ? `◌ ${t('Ay boşlukta')}` : `◌ ${t('Boşluk')}`} · {vocActive ? `${t('bitiş')} ${hm(report.voc.end)}` : `${rel(report.voc.start)} ${hm(report.voc.start)}`}
           </button>
@@ -124,7 +124,7 @@ export default function SkyPanel({
       {showHours && hours && (
         <div className="hours-card">
           <div className="muted small">
-            ☀ Doğuş {hm(hours.sunrise)} · Batış {hm(hours.sunset)}
+            ☀ {t('Doğuş')} {hm(hours.sunrise)} · {t('Batış')} {hm(hours.sunset)}
           </div>
           <div className="hours-grid">
             {hours.hours.map((h, i) => (
@@ -142,12 +142,12 @@ export default function SkyPanel({
         const pct = r.start && r.end ? Math.min(100, Math.max(0, ((jd - r.start) / (r.end - r.start)) * 100)) : 50
         const left = r.end ? Math.max(0, Math.ceil(r.end - jd)) : null
         return (
-          <button key={r.body} className="retro-row" onClick={() => r.end && onJump(r.end)} title={`${r.start ? shortDate(r.start) : '?'} → ${r.end ? shortDate(r.end) : '?'} · tıklayınca düz harekete geçtiği ana gider`}>
+          <button key={r.body} className="retro-row" onClick={() => r.end && onJump(r.end)} title={`${r.start ? shortDate(r.start) : '?'} → ${r.end ? shortDate(r.end) : '?'} · ${t('tıklayınca düz harekete geçtiği ana gider')}`}>
             <span className="glyph retro-glyph">{glyph(bodyKey(r.body))}</span>
             <span className="retro-body">
               <span className="retro-top">
                 <span>{POINT[bodyKey(r.body)].name}</span>
-                <span className="muted small">{left !== null ? `${left} ${t('gün kaldı')}` : ''}</span>
+                <span className="muted small">{left !== null ? t('{n} gün kaldı', { n: left }) : ''}</span>
               </span>
               <span className="retro-bar">
                 <span style={{ width: `${pct}%` }} />

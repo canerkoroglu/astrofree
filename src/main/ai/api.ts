@@ -1,4 +1,5 @@
 // Streaming chat over provider HTTP APIs (Anthropic, OpenAI-compatible, Gemini).
+import { tm } from '../i18n'
 import type { AiChatRequest, ProviderConfig } from '@shared/types'
 import type { Emit } from './cli'
 
@@ -61,7 +62,7 @@ async function anthropic(req: AiChatRequest, cfg: ProviderConfig, key: string, e
   for await (const data of sse(res)) {
     const o = JSON.parse(data)
     if (o.type === 'content_block_delta' && o.delta?.type === 'text_delta') emit({ type: 'delta', text: o.delta.text })
-    else if (o.type === 'error') throw new Error(o.error?.message ?? 'Anthropic hatası')
+    else if (o.type === 'error') throw new Error(o.error?.message ?? tm('Anthropic hatası'))
   }
 }
 
@@ -88,11 +89,11 @@ async function openaiCompatible(
   for await (const data of sse(res)) {
     if (data === '[DONE]') break
     const o = JSON.parse(data)
-    if (o.error) throw new Error(o.error.message ?? 'API hatası')
+    if (o.error) throw new Error(o.error.message ?? tm('API hatası'))
     const delta = o.choices?.[0]?.delta
     if (delta?.reasoning_content && !thinking) {
       thinking = true
-      emit({ type: 'status', text: 'Model düşünüyor…' })
+      emit({ type: 'status', text: tm('Model düşünüyor…') })
     }
     if (delta?.content) emit({ type: 'delta', text: delta.content })
   }
@@ -113,7 +114,7 @@ async function gemini(req: AiChatRequest, cfg: ProviderConfig, key: string, emit
   await failIfBad(res, 'Gemini')
   for await (const data of sse(res)) {
     const o = JSON.parse(data)
-    if (o.error) throw new Error(o.error.message ?? 'Gemini hatası')
+    if (o.error) throw new Error(o.error.message ?? tm('Gemini hatası'))
     for (const part of o.candidates?.[0]?.content?.parts ?? []) {
       if (part.text && !part.thought) emit({ type: 'delta', text: part.text })
     }
@@ -127,7 +128,7 @@ export async function runApi(
   emit: Emit,
   signal: AbortSignal
 ): Promise<void> {
-  if (!key) throw new Error('Bu sağlayıcı için API anahtarı girilmemiş (Ayarlar → Yapay Zekâ).')
+  if (!key) throw new Error(tm('Bu sağlayıcı için API anahtarı girilmemiş (Ayarlar → Yapay Zekâ).'))
   switch (req.provider) {
     case 'anthropic':
       return anthropic(req, cfg, key, emit, signal)
@@ -138,6 +139,6 @@ export async function runApi(
     case 'gemini':
       return gemini(req, cfg, key, emit, signal)
     default:
-      throw new Error(`Bilinmeyen sağlayıcı: ${req.provider}`)
+      throw new Error(tm('Bilinmeyen sağlayıcı: {p}', { p: req.provider }))
   }
 }

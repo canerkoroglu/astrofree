@@ -8,6 +8,8 @@ const os = require('node:os')
 const path = require('node:path')
 
 process.env.ASTROFREE_NO_NOTIFY = '1'
+// The suite's selectors are Turkish: start the app as a Turkish system would.
+app.commandLine.appendSwitch('lang', process.env.E2E_LANG || 'tr')
 const root = path.resolve(__dirname, '../..')
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'astrofree-e2e-'))
 app.setPath('userData', path.join(tmp, 'profile'))

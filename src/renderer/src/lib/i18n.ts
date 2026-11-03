@@ -1,35 +1,25 @@
-// Minimal i18n: Turkish source strings are the keys; English lives in en.ts.
-import { EN } from './en'
+// Renderer side of i18n: the current locale plus helpers. The registry and
+// the language files live in src/shared/i18n.
+import { getLocale, translate, type DateOrder, type Locale } from '@shared/i18n'
+import { setDateOrder } from './time'
 
-let lang: 'tr' | 'en' = 'tr'
+let locale: Locale = getLocale('tr')
 
-export function setLang(l: 'tr' | 'en'): void {
-  lang = l
-  document.documentElement.lang = l
+/** Switch language; a date order of 'auto' (or none) follows the language. */
+export function setLang(code: string, order?: DateOrder | 'auto'): void {
+  locale = getLocale(code)
+  setDateOrder(!order || order === 'auto' ? locale.dateOrder : order)
+  document.documentElement.lang = locale.code
 }
-export const getLang = () => lang
+export const getLang = () => locale.code
+export const getLocaleData = () => locale
 
-/** Translate a Turkish UI string; falls back to the source. */
-export function t(s: string): string {
-  if (lang === 'tr') return s
-  return EN[s] ?? s
+/** Translate a Turkish UI string; `{name}` placeholders come from vars. */
+export function t(s: string, vars?: Record<string, string | number>): string {
+  return translate(locale, s, vars)
 }
 
-const MONTHS_LONG = {
-  tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-}
-const MONTHS_SHORT = {
-  tr: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
-  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-}
-const WEEKDAYS = {
-  tr: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
-  en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-}
-const DOW_MON_FIRST = { tr: ['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pz'], en: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] }
-
-export const monthsLong = () => MONTHS_LONG[lang]
-export const monthsShort = () => MONTHS_SHORT[lang]
-export const weekdays = () => WEEKDAYS[lang]
-export const dowMonFirst = () => DOW_MON_FIRST[lang]
+export const monthsLong = () => locale.monthsLong
+export const monthsShort = () => locale.monthsShort
+export const weekdays = () => locale.weekdays
+export const dowMonFirst = () => locale.weekdaysMin

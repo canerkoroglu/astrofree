@@ -1,6 +1,7 @@
 // Turns chart records + the current moment into computed wheel layers.
 import type { AppSettings, ChartRecord, EphemRequest, EphemResult, Place, TzSpec } from '@shared/types'
 import { bodiesFor, buildLayer, eclToRa, houseOf, norm360, shiftLayer, type Layer } from './astro'
+import { t } from './i18n'
 import { localToJd } from './time'
 
 export type OuterKind = 'transit' | 'progressed' | 'solarArc' | 'synastry' | 'solarReturn' | 'lunarReturn'
@@ -174,8 +175,8 @@ export function davisonRecord(a: ChartRecord, b: ChartRecord, jdToLocal: (jd: nu
     kind: 'event',
     local: jdToLocal(jd, tz, lon),
     tz,
-    place: { name: `Orta nokta (${lat.toFixed(2)}, ${lon.toFixed(2)})`, lat, lon, zone: zone ?? undefined },
-    notes: `${a.name} ve ${b.name} için Davison ilişki haritası: iki doğumun zaman ve mekân orta noktası.`,
+    place: { name: t('Orta nokta ({lat}, {lon})', { lat: lat.toFixed(2), lon: lon.toFixed(2) }), lat, lon, zone: zone ?? undefined },
+    notes: t('{a} ve {b} için Davison ilişki haritası: iki doğumun zaman ve mekân orta noktası.', { a: a.name, b: b.name }),
     createdAt: 0,
     updatedAt: 0
   }
@@ -188,13 +189,13 @@ export function compositeRecord(a: ChartRecord, b: ChartRecord, jdToLocal: (jd: 
   const tz: TzSpec = { kind: 'lmt' }
   return {
     id: `composite-${a.id}-${b.id}`,
-    name: `${a.name} & ${b.name} — Kompozit`,
+    name: `${a.name} & ${b.name} — ${t('Kompozit')}`,
     kind: 'event',
     local: jdToLocal(jd, tz, lon),
     tz,
-    place: { name: 'Kompozit (orta noktalar)', lat, lon },
+    place: { name: t('Kompozit (orta noktalar)'), lat, lon },
     composite: { a, b },
-    notes: `${a.name} ve ${b.name} için kompozit ilişki haritası (gezegen orta noktaları).`,
+    notes: t('{a} ve {b} için kompozit ilişki haritası (gezegen orta noktaları).', { a: a.name, b: b.name }),
     createdAt: 0,
     updatedAt: 0
   }

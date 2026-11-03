@@ -1,6 +1,7 @@
 // Chat through locally installed agent CLIs. Each call is stateless: the
 // chart context and the whole conversation are sent on stdin every turn, so
 // the chat follows the chart as the user steps through time.
+import { tm } from '../i18n'
 import { app } from 'electron'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -91,13 +92,13 @@ function claudeSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
       } else if (o.type === 'system' && o.subtype === 'init') {
         emit({ type: 'status', text: `Claude Code · ${o.model ?? ''}`.trim() })
       } else if (o.type === 'result') {
-        if (o.is_error) st.error = String(o.result || o.subtype || 'Claude Code hatası')
+        if (o.is_error) st.error = String(o.result || o.subtype || tm('Claude Code hatası'))
         else if (typeof o.result === 'string') st.final = o.result
       }
     },
     explain(stderr) {
       if (/not logged in|login|authenticat/i.test(stderr)) {
-        return 'Claude Code oturumu açık değil. Terminalde `claude` çalıştırıp giriş yapın.'
+        return tm('Claude Code oturumu açık değil. Terminalde `claude` çalıştırıp giriş yapın.')
       }
       return null
     }
@@ -121,16 +122,16 @@ function codexSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
         emit({ type: 'delta', text: (st.gotText ? '\n\n' : '') + o.item.text })
         st.gotText = true
       } else if (o.type === 'item.started' && o.item?.type === 'reasoning') {
-        emit({ type: 'status', text: 'Codex düşünüyor…' })
+        emit({ type: 'status', text: tm('Codex düşünüyor…') })
       } else if (o.type === 'error' || o.type === 'turn.failed') {
-        const raw = String(o.message ?? o.error?.message ?? 'Codex hatası')
+        const raw = String(o.message ?? o.error?.message ?? tm('Codex hatası'))
         const inner = tryJson(raw) as any
         st.error = inner?.error?.message ?? raw
       }
     },
     explain(stderr) {
       if (/not logged in|login|unauthor/i.test(stderr)) {
-        return 'Codex oturumu açık değil. Terminalde `codex login` çalıştırın.'
+        return tm('Codex oturumu açık değil. Terminalde `codex login` çalıştırın.')
       }
       return null
     }
@@ -163,14 +164,14 @@ function geminiSpec(req: AiChatRequest, cfg: ProviderConfig, apiKey: string | nu
       } else if (o.type === 'init') {
         emit({ type: 'status', text: `Gemini CLI · ${o.model ?? ''}`.trim() })
       } else if (o.type === 'error') {
-        st.error = String(o.message ?? o.error?.message ?? 'Gemini hatası')
+        st.error = String(o.message ?? o.error?.message ?? tm('Gemini hatası'))
       } else if (o.type === 'result' && o.status && o.status !== 'success') {
         st.error = String(o.error?.message ?? o.status)
       }
     },
     explain(stderr) {
       if (/authenticat|Opening authentication page|login/i.test(stderr)) {
-        return 'Gemini CLI oturumu açık değil. Terminalde bir kez `gemini` çalıştırıp giriş yapın ya da Ayarlar → Gemini API anahtarı girin.'
+        return tm('Gemini CLI oturumu açık değil. Terminalde bir kez `gemini` çalıştırıp giriş yapın ya da Ayarlar → Gemini API anahtarı girin.')
       }
       return null
     }
@@ -190,7 +191,7 @@ export async function runCli(
   const defaults = { 'claude-code': 'claude', codex: 'codex', 'gemini-cli': 'gemini' } as const
   const name = cfg.command?.trim() || defaults[req.provider as keyof typeof defaults]
   const exe = resolveCommand(name)
-  if (!exe) throw new Error(`"${name}" komutu bulunamadı. Kurulu olduğundan emin olun veya Ayarlar'dan tam yolunu girin.`)
+  if (!exe) throw new Error(tm('"{cmd}" komutu bulunamadı. Kurulu olduğundan emin olun veya Ayarlar\'dan tam yolunu girin.', { cmd: name }))
 
   const spec =
     req.provider === 'claude-code'
@@ -250,6 +251,6 @@ export async function runCli(
   if (!st.gotText) {
     const hint = spec.explain?.(stderr)
     const tail = stderr.trim().split('\n').slice(-6).join('\n')
-    throw new Error(hint ?? `Komut yanıt vermeden bitti (çıkış kodu ${code}).${tail ? '\n' + tail : ''}`)
+    throw new Error(hint ?? tm('Komut yanıt vermeden bitti (çıkış kodu {code}).', { code: String(code) }) + (tail ? '\n' + tail : ''))
   }
 }

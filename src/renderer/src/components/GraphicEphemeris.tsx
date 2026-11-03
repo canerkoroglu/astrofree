@@ -1,10 +1,10 @@
-import { monthsShort } from '../lib/i18n'
+import { monthsShort, t } from '../lib/i18n'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, TzSpec } from '@shared/types'
 import { glyph, POINT, type Layer } from '../lib/astro'
 import { acgTone } from '../lib/acg'
 import { bodyKey } from '../lib/sky'
-import { jdToLocal } from '../lib/time'
+import { fmtDate, jdToLocal } from '../lib/time'
 
 const BODIES = [0, 2, 3, 4, 5, 6, 7, 8, 9, 15]
 const NATAL_KEYS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
@@ -94,18 +94,18 @@ export default function GraphicEphemeris({
         <select value={months} onChange={(e) => setMonths(+e.target.value)}>
           {[3, 6, 12, 24].map((m) => (
             <option key={m} value={m}>
-              {m} ay
+              {t('{n} ay', { n: m })}
             </option>
           ))}
         </select>
         <div className="seg">
           {[360, 90, 45, 30].map((m) => (
-            <button key={m} className={mod === m ? 'on' : ''} onClick={() => setMod(m)} title={m === 360 ? 'Tam daire' : m === 90 ? 'Kavuşum, kare, karşıt tek çizgide' : m === 45 ? 'Tüm sert açılar' : 'Burç içi derece'}>
+            <button key={m} className={mod === m ? 'on' : ''} onClick={() => setMod(m)} title={t(m === 360 ? 'Tam daire' : m === 90 ? 'Kavuşum, kare, karşıt tek çizgide' : m === 45 ? 'Tüm sert açılar' : 'Burç içi derece')}>
               {m}°
             </button>
           ))}
         </div>
-        <span className="muted small">Yatay kesik çizgiler natal noktalar; bir eğrinin onları kestiği yerler tam transitlerdir. Tıklayınca o tarihe gider.</span>
+        <span className="muted small">{t('Yatay kesik çizgiler natal noktalar; bir eğrinin onları kestiği yerler tam transitlerdir. Tıklayınca o tarihe gider.')}</span>
       </div>
       <svg
         viewBox={`0 0 ${W} ${H}`}
@@ -173,7 +173,7 @@ export default function GraphicEphemeris({
         <div className="muted small ge-readout">
           {(() => {
             const l = jdToLocal(data.jd[hoverIdx], tz, lon)
-            return `${String(l.d).padStart(2, '0')}.${String(l.m).padStart(2, '0')}.${l.y}`
+            return fmtDate(l)
           })()}{' '}
           ·{' '}
           {BODIES.map((b) => `${POINT[bodyKey(b)].short} ${(data.lon[b][hoverIdx] % 30).toFixed(0)}°`).join('  ')}

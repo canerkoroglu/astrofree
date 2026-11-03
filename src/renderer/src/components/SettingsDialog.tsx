@@ -1,3 +1,7 @@
+import { getLocale, LOCALES } from '@shared/i18n'
+import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, offsetAt, systemZone } from '../lib/time'
+
+const SAMPLE = { y: 2026, m: 1, d: 17 }
 import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
@@ -21,6 +25,7 @@ export default function SettingsDialog({
   const [keys, setKeys] = useState<Record<string, string>>({})
   const [hasKey, setHasKey] = useState<Record<string, boolean>>({})
   const [backupMsg, setBackupMsg] = useState('')
+  const [zoneDraft, setZoneDraft] = useState(settings.defaultZone)
 
   useEffect(() => {
     void window.astro.secrets.status().then(setHasKey)
@@ -44,7 +49,7 @@ export default function SettingsDialog({
           {(
             [
               ['chart', 'Harita'],
-              ['aspects', 'Açılar & orb'],
+              ['aspects', 'Açılar ve orb'],
               ['ai', 'Yapay zekâ'],
               ['general', 'Genel']
             ] as [Tab, string][]
@@ -199,9 +204,12 @@ export default function SettingsDialog({
             <div className="form-grid">
               <label>
                 {t('Yanıt dili')}
-                <select value={s.ai.language} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value as 'tr' | 'en' } })}>
-                  <option value="tr">{t('Türkçe')}</option>
-                  <option value="en">{t('English')}</option>
+                <select value={s.ai.language} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value } })}>
+                  {LOCALES.map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.name}
+                    </option>
+                  ))}
                 </select>
               </label>
             </div>
@@ -210,7 +218,7 @@ export default function SettingsDialog({
               return (
                 <fieldset key={p.id}>
                   <legend>{p.label}</legend>
-                  <div className="muted small">{p.hint}</div>
+                  <div className="muted small">{t(p.hint)}</div>
                   <div className="row">
                     {p.kind === 'cli' ? (
                       <>
@@ -226,10 +234,10 @@ export default function SettingsDialog({
                     ) : (
                       <>
                         <label>
-                          API anahtarı {hasKey[p.id] ? '(kayıtlı)' : ''}
+                          {t('API anahtarı')} {hasKey[p.id] ? `(${t('kayıtlı')})` : ''}
                           <input
                             type="password"
-                            placeholder={hasKey[p.id] ? '•••••••• (değiştirmek için yazın)' : 'anahtar'}
+                            placeholder={hasKey[p.id] ? `•••••••• (${t('değiştirmek için yazın')})` : t('anahtar')}
                             value={keys[p.id] ?? ''}
                             onChange={(e) => setKeys({ ...keys, [p.id]: e.target.value })}
                           />
@@ -268,14 +276,77 @@ export default function SettingsDialog({
               <select
                 value={s.uiLanguage}
                 onChange={(e) => {
-                  const lang = e.target.value as 'tr' | 'en'
+                  const lang = e.target.value
                   setS({ ...s, uiLanguage: lang, ai: { ...s.ai, language: lang } })
                 }}
               >
-                <option value="tr">{t('Türkçe')}</option>
-                <option value="en">{t('English')}</option>
+                {LOCALES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.name}
+                  </option>
+                ))}
               </select>
             </label>
+            <fieldset>
+              <legend>{t('Saat dilimi ve tarih biçimi')}</legend>
+              <div className="muted small">
+                {t('Bugün haritası, transitler, gökyüzü olayları ve gezegen saatleri bu saat dilimine göre gösterilir. Doğum haritaları kendi doğum yerinin saat dilimini kullanır.')}
+              </div>
+              <label className="inline">
+                <input
+                  type="radio"
+                  name="tzmode"
+                  checked={s.timezoneMode === 'system'}
+                  onChange={async () => {
+                    const zone = systemZone()
+                    const place = await window.astro.geo.placeForZone(zone)
+                    setS({ ...s, timezoneMode: 'system', defaultZone: zone, defaultPlace: place ?? { ...s.defaultPlace, zone } })
+                  }}
+                />
+                {t('Bilgisayarın saat dilimini izle')} <span className="muted small">({systemZone()})</span>
+              </label>
+              <label className="inline">
+                <input type="radio" name="tzmode" checked={s.timezoneMode === 'manual'} onChange={() => setS({ ...s, timezoneMode: 'manual' })} />
+                {t('Elle seç')}
+              </label>
+              {s.timezoneMode === 'manual' && (
+                <div className="row">
+                  <input
+                    list="tz-list"
+                    value={zoneDraft}
+                    placeholder="Europe/Istanbul"
+                    className={isValidZone(zoneDraft) ? '' : 'invalid'}
+                    onChange={async (e) => {
+                      const z = e.target.value
+                      setZoneDraft(z)
+                      if (!isValidZone(z) || !allZones().includes(z)) return
+                      const place = s.defaultPlace.zone === z ? null : await window.astro.geo.placeForZone(z)
+                      setS({ ...s, defaultZone: z, defaultPlace: place ?? { ...s.defaultPlace, zone: z } })
+                    }}
+                  />
+                  <datalist id="tz-list">
+                    {allZones().map((z) => (
+                      <option key={z} value={z} />
+                    ))}
+                  </datalist>
+                </div>
+              )}
+              <div className="muted small tz-now">
+                {s.defaultZone} · {fmtOffset(offsetAt({ kind: 'zone', zone: s.defaultZone }, nowJd(), 0))} · {t('şu an')}{' '}
+                {fmtLocal(jdToLocal(nowJd(), { kind: 'zone', zone: s.defaultZone }, 0)).split(' ')[1]}
+              </div>
+              <label>
+                {t('Tarih biçimi')}
+                <select value={s.dateOrder} onChange={(e) => setS({ ...s, dateOrder: e.target.value as AppSettings['dateOrder'] })}>
+                  <option value="auto">
+                    {t('Dile göre')} ({fmtDate(SAMPLE, getLocale(s.uiLanguage).dateOrder)})
+                  </option>
+                  <option value="DMY">{fmtDate(SAMPLE, 'DMY')}</option>
+                  <option value="MDY">{fmtDate(SAMPLE, 'MDY')}</option>
+                  <option value="YMD">{fmtDate(SAMPLE, 'YMD')}</option>
+                </select>
+              </label>
+            </fieldset>
             <label>
               {t('Tema')}
               <select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
@@ -315,11 +386,11 @@ export default function SettingsDialog({
             <fieldset>
               <legend>{t('Otomatik yedek')}</legend>
               <div className="muted small">
-                {t('Haritalar ve kaydedilmiş yorumlar her değişiklikte seçilen klasöre günlük bir dosya olarak yazılır (son 30 gün tutulur).')}
-                iCloud Drive, Dropbox veya bir USB bellek klasörü seçebilirsiniz.
+                {t('Haritalar ve kaydedilmiş yorumlar her değişiklikte seçilen klasöre günlük bir dosya olarak yazılır (son 30 gün tutulur).')}{' '}
+                {t('iCloud Drive, Dropbox veya bir USB bellek klasörü seçebilirsiniz.')}
               </div>
               <div className="row">
-                <input readOnly value={s.backupDir || 'Kapalı'} style={{ flex: 1 }} />
+                <input readOnly value={s.backupDir || t('Kapalı')} style={{ flex: 1 }} />
                 <button
                   onClick={async () => {
                     const d = await window.astro.backup.choose()
@@ -336,14 +407,14 @@ export default function SettingsDialog({
                   onClick={async () => {
                     const path = await window.astro.backup.run(s.backupDir)
                     if (path) {
-                      setBackupMsg(`Yedek yazıldı: ${path}`)
+                      setBackupMsg(t('Yedek yazıldı: {path}', { path }))
                       void window.astro.backup.reveal(path)
                     }
                   }}
                 >
                   {t('Şimdi yedekle')}
                 </button>
-                <span className="muted small">{backupMsg || 'Geri yüklemek için: Dosya → İçe aktar ile yedek dosyasını seçin.'}</span>
+                <span className="muted small">{backupMsg || t('Geri yüklemek için: Dosya → İçe aktar ile yedek dosyasını seçin.')}</span>
               </div>
             </fieldset>
             <fieldset>

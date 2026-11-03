@@ -1,3 +1,4 @@
+import { LOCALES } from '@shared/i18n'
 import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
@@ -47,12 +48,20 @@ export default function Onboarding({
                 <select
                   value={settings.uiLanguage}
                   onChange={(e) => {
-                    const lang = e.target.value as 'tr' | 'en'
+                    const lang = e.target.value
+                    try {
+                      localStorage.setItem('astrofree:lang-picked', '1')
+                    } catch {
+                      /* storage unavailable */
+                    }
                     onSettings({ ...settings, uiLanguage: lang, ai: { ...settings.ai, language: lang } })
                   }}
                 >
-                  <option value="tr">{t('Türkçe')}</option>
-                  <option value="en">{t('English')}</option>
+                  {LOCALES.map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.name}
+                    </option>
+                  ))}
                 </select>
               </label>
               <label>

@@ -97,7 +97,7 @@ export const DEFAULT_ASPECTS: Record<AspectKey, AspectSetting> = {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  settingsVersion: 2,
+  settingsVersion: 3,
   houseSystem: 'B',
   zodiac: 'tropical',
   sidMode: 1,
@@ -118,12 +118,16 @@ export const DEFAULT_SETTINGS: AppSettings = {
   },
   aspects: DEFAULT_ASPECTS,
   showNatalAspectsInBiwheel: false,
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
   defaultPlace: { name: 'İstanbul, Türkiye', lat: 41.01384, lon: 28.94966, country: 'Türkiye', cc: 'TR', zone: 'Europe/Istanbul' },
+// i18n-ignore-end
   defaultZone: 'Europe/Istanbul',
   theme: 'system',
   backupDir: '',
   onboarded: false,
   uiLanguage: 'tr',
+  timezoneMode: 'system',
+  dateOrder: 'auto',
   notifications: { enabled: true, scope: 'all', tag: 'takip' },
   returnPlace: 'natal',
   ai: {
@@ -156,7 +160,13 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
     aspects[k] = { ...d.aspects[k], ...(stored.aspects?.[k] ?? {}) }
   }
   // v2 made Alcabitius the house system; move older settings over once.
-  const migrated = (stored.settingsVersion ?? 1) < 2 ? { houseSystem: 'B', settingsVersion: 2 } : {}
+  const v = stored.settingsVersion ?? 1
+  const migrated = {
+    ...(v < 2 ? { houseSystem: 'B' } : {}),
+    // v3 added the time zone mode: earlier installs follow the system zone.
+    ...(v < 3 ? { timezoneMode: 'system' as const, dateOrder: 'auto' as const } : {}),
+    settingsVersion: 3
+  }
   return {
     ...structuredClone(d),
     ...stored,

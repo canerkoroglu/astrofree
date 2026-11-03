@@ -2,7 +2,8 @@ import { t } from '../lib/i18n'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
+import { PROVIDERS } from '@shared/defaults'
+import { getLocale } from '@shared/i18n'
 import type { AiMessage, AppSettings, ProviderId, ProviderStatus } from '@shared/types'
 
 interface Props {
@@ -131,8 +132,8 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
     const id = crypto.randomUUID()
     runIdRef.current = id
     setRunId(id)
-    setStatus(`${info.label} ${t('yanıtlıyor…')}`)
-    const system = settings.ai.systemPrompt.trim() || (settings.ai.language === 'en' ? SYSTEM_PROMPT_EN : SYSTEM_PROMPT_TR)
+    setStatus(t('{p} yanıtlıyor…', { p: info.label }))
+    const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
     window.astro.ai.start({
       id,
       provider,
@@ -191,7 +192,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
 
       <div className="quick">
         {QUICK.filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
-          <button key={q.label} disabled={!!runId} onClick={() => send(q.prompt)}>
+          <button key={q.label} disabled={!!runId} onClick={() => send(t(q.prompt))}>
             {t(q.label)}
           </button>
         ))}

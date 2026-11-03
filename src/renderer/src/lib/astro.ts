@@ -1,6 +1,6 @@
 // Astrological reference data and pure calculations on top of raw ephemeris.
 import type { AppSettings, AspectKey, EphemResult } from '@shared/types'
-import { getLang } from './i18n'
+import { getLocaleData } from './i18n'
 
 /** Text presentation selector: keeps zodiac glyphs from rendering as emoji. */
 const T = '︎'
@@ -17,6 +17,7 @@ export interface PointDef {
   aspects: boolean
 }
 
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
 export const POINTS: PointDef[] = [
   { key: 'sun', name: 'Güneş', short: 'Gün', glyph: '☉', swe: 0, kind: 'luminary', orbFactor: 1.15, aspects: true },
   { key: 'moon', name: 'Ay', short: 'Ay', glyph: '☽', swe: 1, kind: 'luminary', orbFactor: 1.15, aspects: true },
@@ -41,36 +42,13 @@ export const POINTS: PointDef[] = [
   { key: 'asc', name: 'Yükselen (ASC)', short: 'ASC', glyph: 'AC', kind: 'angle', orbFactor: 1, aspects: true },
   { key: 'mc', name: 'Tepe Noktası (MC)', short: 'MC', glyph: 'MC', kind: 'angle', orbFactor: 1, aspects: true }
 ]
+// i18n-ignore-end
 
-const POINT_EN: Record<string, [string, string]> = {
-  sun: ['Sun', 'Sun'],
-  moon: ['Moon', 'Moo'],
-  mercury: ['Mercury', 'Mer'],
-  venus: ['Venus', 'Ven'],
-  mars: ['Mars', 'Mar'],
-  jupiter: ['Jupiter', 'Jup'],
-  saturn: ['Saturn', 'Sat'],
-  uranus: ['Uranus', 'Ura'],
-  neptune: ['Neptune', 'Nep'],
-  pluto: ['Pluto', 'Plu'],
-  node: ['North Node', 'NN'],
-  snode: ['South Node', 'SN'],
-  chiron: ['Chiron', 'Chi'],
-  lilith: ['Lilith (Black Moon)', 'Lil'],
-  ceres: ['Ceres', 'Cer'],
-  pallas: ['Pallas', 'Pal'],
-  juno: ['Juno', 'Jun'],
-  vesta: ['Vesta', 'Ves'],
-  fortune: ['Part of Fortune', 'PoF'],
-  vertex: ['Vertex', 'Vx'],
-  asc: ['Ascendant (ASC)', 'ASC'],
-  mc: ['Midheaven (MC)', 'MC']
-}
 // Names follow the UI language; every caller reads p.name / p.short.
 for (const p of POINTS) {
   const tr = { name: p.name, short: p.short }
-  Object.defineProperty(p, 'name', { enumerable: true, get: () => (getLang() === 'en' ? POINT_EN[p.key]?.[0] ?? tr.name : tr.name) })
-  Object.defineProperty(p, 'short', { enumerable: true, get: () => (getLang() === 'en' ? POINT_EN[p.key]?.[1] ?? tr.short : tr.short) })
+  Object.defineProperty(p, 'name', { enumerable: true, get: () => getLocaleData().points[p.key]?.[0] ?? tr.name })
+  Object.defineProperty(p, 'short', { enumerable: true, get: () => getLocaleData().points[p.key]?.[1] ?? tr.short })
 }
 
 export const POINT = Object.fromEntries(POINTS.map((p) => [p.key, p])) as Record<string, PointDef>
@@ -82,6 +60,7 @@ export const glyph = (key: string) => {
 /** Optional points the user can switch on/off; the rest are always shown. */
 export const OPTIONAL_POINTS = ['chiron', 'lilith', 'snode', 'fortune', 'vertex', 'ceres', 'pallas', 'juno', 'vesta']
 
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
 export const SIGNS = [
   { name: 'Koç', glyph: '♈', element: 'fire', mode: 'cardinal' },
   { name: 'Boğa', glyph: '♉', element: 'earth', mode: 'fixed' },
@@ -96,16 +75,16 @@ export const SIGNS = [
   { name: 'Kova', glyph: '♒', element: 'air', mode: 'fixed' },
   { name: 'Balık', glyph: '♓', element: 'water', mode: 'mutable' }
 ] as const
+// i18n-ignore-end
 
-const SIGN_EN = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
 SIGNS.forEach((sg, i) => {
   const tr = sg.name
-  Object.defineProperty(sg, 'name', { enumerable: true, get: () => (getLang() === 'en' ? SIGN_EN[i] : tr) })
+  Object.defineProperty(sg, 'name', { enumerable: true, get: () => getLocaleData().signs[i] ?? tr })
 })
 
 export const signGlyph = (i: number) => SIGNS[i].glyph + T
-export const ELEMENT_TR = { fire: 'Ateş', earth: 'Toprak', air: 'Hava', water: 'Su' } as const
-export const MODE_TR = { cardinal: 'Öncü', fixed: 'Sabit', mutable: 'Değişken' } as const
+/** Element or modality name in the UI language. */
+export const elementName = (k: 'fire' | 'earth' | 'air' | 'water' | 'cardinal' | 'fixed' | 'mutable') => getLocaleData().elements[k]
 
 export interface AspectDef {
   key: AspectKey
@@ -115,6 +94,7 @@ export interface AspectDef {
   kind: 'hard' | 'soft' | 'minor'
 }
 
+// i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
 export const ASPECTS: AspectDef[] = [
   { key: 'conjunction', angle: 0, name: 'Kavuşum', glyph: '☌', kind: 'hard' },
   { key: 'opposition', angle: 180, name: 'Karşıt', glyph: '☍', kind: 'hard' },
@@ -128,22 +108,10 @@ export const ASPECTS: AspectDef[] = [
   { key: 'quintile', angle: 72, name: 'Kuintil', glyph: 'Q', kind: 'minor' },
   { key: 'biquintile', angle: 144, name: 'Bikuintil', glyph: 'bQ', kind: 'minor' }
 ]
-const ASPECT_EN: Record<AspectKey, string> = {
-  conjunction: 'Conjunction',
-  opposition: 'Opposition',
-  trine: 'Trine',
-  square: 'Square',
-  sextile: 'Sextile',
-  quincunx: 'Quincunx',
-  semisextile: 'Semi-sextile',
-  semisquare: 'Semi-square',
-  sesquiquadrate: 'Sesquiquadrate',
-  quintile: 'Quintile',
-  biquintile: 'Biquintile'
-}
+// i18n-ignore-end
 for (const a of ASPECTS) {
   const tr = a.name
-  Object.defineProperty(a, 'name', { enumerable: true, get: () => (getLang() === 'en' ? ASPECT_EN[a.key] : tr) })
+  Object.defineProperty(a, 'name', { enumerable: true, get: () => getLocaleData().aspects[a.key] ?? tr })
 }
 export const ASPECT = Object.fromEntries(ASPECTS.map((a) => [a.key, a])) as Record<AspectKey, AspectDef>
 
@@ -221,7 +189,15 @@ export function fmtDecl(decl: number): string {
   return `${decl < 0 ? 'G' : 'K'} ${d}°${p2(m)}'`
 }
 
+/** Map the Turkish compass letters used in code to the UI language. */
+export function compass(letter: string): string {
+  const c = getLocaleData().compass
+  return ({ K: c.n, G: c.s, D: c.e, B: c.w } as Record<string, string>)[letter] ?? letter
+}
+
 export function fmtCoord(v: number, pos: string, neg: string): string {
+  pos = compass(pos)
+  neg = compass(neg)
   const a = Math.abs(v)
   const d = Math.floor(a)
   const m = Math.round((a - d) * 60)
@@ -423,9 +399,6 @@ export function balance(points: ChartPoint[]) {
 
 export function moonPhase(sunLon: number, moonLon: number): { angle: number; name: string } {
   const angle = norm360(moonLon - sunLon)
-  const names =
-    getLang() === 'en'
-      ? ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Disseminating', 'Last Quarter', 'Balsamic Moon']
-      : ['Yeni Ay', 'Hilal', 'İlk Dördün', 'Şişkin Ay', 'Dolunay', 'Yayılan Ay', 'Son Dördün', 'Balzamik Ay']
+  const names = getLocaleData().phases
   return { angle, name: names[Math.floor(angle / 45) % 8] }
 }

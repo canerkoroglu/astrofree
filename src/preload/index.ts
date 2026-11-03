@@ -81,6 +81,7 @@ const api = {
   geo: {
     search: (q: string, lang: string): Promise<GeoResult[]> => ipcRenderer.invoke('geo:search', q, lang),
     zone: (lat: number, lon: number): Promise<string | null> => ipcRenderer.invoke('geo:zone', lat, lon),
+    placeForZone: (zone: string): Promise<GeoResult | null> => ipcRenderer.invoke('geo:placeForZone', zone),
     nearest: (lat: number, lon: number): Promise<(GeoResult & { km: number }) | null> => ipcRenderer.invoke('geo:nearest', lat, lon)
   },
 

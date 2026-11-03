@@ -3,11 +3,10 @@ import { useMemo } from 'react'
 import type { AppSettings, ChartRecord } from '@shared/types'
 import {
   balance,
-  ELEMENT_TR,
+  elementName,
   findAspects,
   glyph,
   HOUSE_SYSTEMS,
-  MODE_TR,
   moonPhase,
   POINT,
   rulerOf,
@@ -16,7 +15,7 @@ import {
   splitDeg,
   type Layer
 } from '../lib/astro'
-import { fmtLocal, fmtOffset, jdToLocal, offsetAt, tzLabel } from '../lib/time'
+import { fmtDate, fmtLocal, fmtOffset, jdToLocal, offsetAt, tzLabel } from '../lib/time'
 import { fmtCoord, fmtOrb } from '../lib/astro'
 import type { Pattern } from '../lib/patterns'
 import { midpointHits } from '../lib/midpoints'
@@ -106,10 +105,7 @@ export default function NatalInfo({
   const firdar = useMemo(() => firdaria(natalJd, sect.day), [natalJd, sect.day])
   const curFirdar = currentFirdar(firdar, eventJd)
   const lots = hermeticLots(natal)
-  const dateOf = (jd: number) => {
-    const l = jdToLocal(jd, rec.tz, rec.place.lon)
-    return `${p2(l.d)}.${p2(l.m)}.${l.y}`
-  }
+  const dateOf = (jd: number) => fmtDate(jdToLocal(jd, rec.tz, rec.place.lon))
   const g = (k: string) => <span className="glyph">{glyph(k)}</span>
   const aspects = useMemo(() => findAspects(natal.points, null, settings, false), [natal, settings])
   const pt = (k: string) => natal.points.find((p) => p.key === k)
@@ -120,7 +116,7 @@ export default function NatalInfo({
   const bal = balance(natal.points)
   const ascRuler = asc ? rulerOf(splitDeg(asc.lon).sign) : null
   const ascRulerPt = ascRuler ? pt(ascRuler) : undefined
-  const dominant = (Object.entries(bal.elements) as [keyof typeof ELEMENT_TR, number][]).sort((a, b) => b[1] - a[1])[0]
+  const dominant = (Object.entries(bal.elements) as ['fire' | 'earth' | 'air' | 'water', number][]).sort((a, b) => b[1] - a[1])[0]
   const houseName = t(HOUSE_SYSTEMS.find((h) => h[0] === settings.houseSystem)?.[1] ?? settings.houseSystem)
 
   const big3: [string, string, number | undefined][] = [
@@ -133,7 +129,7 @@ export default function NatalInfo({
     <div className="natal-info">
       <section className="ni-summary">
         <div className="ni-person">
-          <h2>{rec.name || 'İsimsiz'}</h2>
+          <h2>{rec.name || t('İsimsiz')}</h2>
           <div className="muted">
             {fmtLocal(rec.local)} · {tzLabel(rec.tz)} ({fmtOffset(offsetAt(rec.tz, natalJd, rec.place.lon))})
           </div>
@@ -183,13 +179,13 @@ export default function NatalInfo({
           <div className="ni-card">
             <div className="muted small">{t('Baskın element')}</div>
             <div className="ni-big" style={{ color: ELEMENT_COLOR[dominant[0]] }}>
-              {t(ELEMENT_TR[dominant[0]])}
+              {elementName(dominant[0])}
             </div>
             <div className="muted small">
-              {(Object.entries(bal.elements) as [keyof typeof ELEMENT_TR, number][]).map(([k, v]) => `${t(ELEMENT_TR[k])} ${v}`).join(' · ')}
+              {(Object.entries(bal.elements) as ['fire' | 'earth' | 'air' | 'water', number][]).map(([k, v]) => `${elementName(k)} ${v}`).join(' · ')}
             </div>
             <div className="muted small">
-              {(Object.entries(bal.modes) as [keyof typeof MODE_TR, number][]).map(([k, v]) => `${t(MODE_TR[k])} ${v}`).join(' · ')}
+              {(Object.entries(bal.modes) as ['cardinal' | 'fixed' | 'mutable', number][]).map(([k, v]) => `${elementName(k)} ${v}`).join(' · ')}
             </div>
           </div>
         </div>
@@ -249,7 +245,7 @@ export default function NatalInfo({
                   <Name k={a.b.key} retro={a.b.retro} />
                 </td>
                 <td className="num">{a.orb.toFixed(2)}</td>
-                <td className="muted">{a.applying ? 'yaklaşan' : 'ayrılan'}</td>
+                <td className="muted">{a.applying ? t('yaklaşan') : t('ayrılan')}</td>
               </tr>
             ))}
           </tbody>
@@ -272,7 +268,7 @@ export default function NatalInfo({
       <details open>
         <summary>{t('Asaletler (esas)')}</summary>
         <p className="muted small ni-note">
-          {sect.day ? 'Gündüz' : 'Gece'} haritası · Mısır sınırları, Dorotheus üçlüleri, Kalde yüzleri · Puan: yönetici +5, yücelim +4, üçlü +3, sınır +2, yüz +1, zarar −5, düşüş −4, peregrin −5
+          {sect.day ? t('Gündüz haritası') : t('Gece haritası')} · {t('Mısır sınırları, Dorotheus üçlüleri, Kalde yüzleri · Puan: yönetici +5, yücelim +4, üçlü +3, sınır +2, yüz +1, zarar −5, düşüş −4, peregrin −5')}
         </p>
         <table className="data ni">
           <thead>
@@ -343,13 +339,13 @@ export default function NatalInfo({
           <div>
             <h4>{t('Sekt')}</h4>
             <div>
-              {sect.day ? 'Gündüz' : 'Gece'} haritası · Sekt ışığı {g(sect.luminary)} {POINT[sect.luminary].name}
+              {sect.day ? t('Gündüz haritası') : t('Gece haritası')} · {t('Sekt ışığı')} {g(sect.luminary)} {POINT[sect.luminary].name}
             </div>
             <div>
-              Sekt iyicili {g(sect.benefic)} {POINT[sect.benefic].name} · Sekt kötücülü {g(sect.malefic)} {POINT[sect.malefic].name}
+              {t('Sekt iyicili')} {g(sect.benefic)} {POINT[sect.benefic].name} · {t('Sekt kötücülü')} {g(sect.malefic)} {POINT[sect.malefic].name}
             </div>
             <div className="muted">
-              Sekt dışı kötücül (en zorlayıcı): {g(sect.contraryMalefic)} {POINT[sect.contraryMalefic].name}
+              {t('Sekt dışı kötücül (en zorlayıcı)')}: {g(sect.contraryMalefic)} {POINT[sect.contraryMalefic].name}
             </div>
             <h4>{t('Almuten')}</h4>
             {asc && (
@@ -368,8 +364,8 @@ export default function NatalInfo({
             <table className="data ni compact">
               <tbody>
                 {lots.map((l) => (
-                  <tr key={l.name} title={l.formula + (sect.day ? '' : ' (gece ters)')}>
-                    <td>{l.name}</td>
+                  <tr key={l.name} title={t(l.formula) + (sect.day ? '' : ` (${t('gece ters')})`)}>
+                    <td>{t(l.name)}</td>
                     <SignCell lon={l.lon} />
                     <td className="num-l">{degMin(l.lon)}</td>
                   </tr>
@@ -381,26 +377,26 @@ export default function NatalInfo({
       </details>
 
       <details open>
-        <summary>Zaman lordları — {dateOf(eventJd)}</summary>
+        <summary>{t('Zaman lordları')} — {dateOf(eventJd)}</summary>
         <div className="ni-grid">
           <div>
             <h4>{t('Yıllık profeksiyon')}</h4>
             <div>
-              {prof.age} yaş → <strong>{prof.house}. ev</strong> ({SIGNS[prof.sign].name})
+              {t('{n} yaş', { n: prof.age })} → <strong>{t('{n}. ev', { n: prof.house })}</strong> ({SIGNS[prof.sign].name})
             </div>
             <div>
-              Yılın lordu: {g(prof.lord)} <strong>{POINT[prof.lord].name}</strong>
-              {pt(prof.lord) ? <span className="muted"> (natalde {pt(prof.lord)!.house}. ev, {SIGNS[splitDeg(pt(prof.lord)!.lon).sign].name})</span> : null}
+              {t('Yılın lordu')}: {g(prof.lord)} <strong>{POINT[prof.lord].name}</strong>
+              {pt(prof.lord) ? <span className="muted"> ({t('natalde')} {t('{n}. ev', { n: pt(prof.lord)!.house })}, {SIGNS[splitDeg(pt(prof.lord)!.lon).sign].name})</span> : null}
             </div>
             <div className="muted">
-              Aylık: {SIGNS[prof.monthSign].name}, ay lordu {g(prof.monthLord)} {POINT[prof.monthLord].name}
+              {t('Aylık')}: {SIGNS[prof.monthSign].name}, {t('ay lordu')} {g(prof.monthLord)} {POINT[prof.monthLord].name}
             </div>
           </div>
           <div>
             <h4>{t('Firdaria')}</h4>
             {curFirdar.major && (
               <div>
-                Şu an: <strong>{firdarName(curFirdar.major.lord)}</strong>
+                {t('Şu an')}: <strong>{firdarName(curFirdar.major.lord)}</strong>
                 {curFirdar.sub?.sub ? ` / ${firdarName(curFirdar.sub.sub)}` : ''}{' '}
                 <span className="muted">
                   ({dateOf((curFirdar.sub ?? curFirdar.major).start)} – {dateOf((curFirdar.sub ?? curFirdar.major).end)})

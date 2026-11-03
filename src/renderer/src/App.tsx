@@ -24,9 +24,19 @@ import { buildContext, patternsText, starsText, traditionalText } from './lib/co
 import { findPatterns } from './lib/patterns'
 import { harmonicLayer } from './lib/midpoints'
 import { skyContext } from './lib/sky'
-import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, tzLabel, type StepUnit } from './lib/time'
+import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, systemZone, tzLabel, type StepUnit } from './lib/time'
+import { pickLocale } from '@shared/i18n'
 
 const NOW_ID = 'now'
+
+/** One-time flags kept in localStorage (safe when storage is unavailable). */
+function localStorageFlag(key: string): boolean {
+  try {
+    return localStorage.getItem(`astrofree:${key}`) === '1'
+  } catch {
+    return false
+  }
+}
 
 const THEME_NEXT = { system: 'light', light: 'dark', dark: 'system' } as const
 const THEME_LABEL = { system: 'Tema: sistem', light: 'Tema: açık', dark: 'Tema: koyu' } as const
@@ -43,7 +53,7 @@ function nowChart(s: AppSettings): ChartRecord {
   const tz: TzSpec = { kind: 'zone', zone: s.defaultZone }
   return {
     id: NOW_ID,
-    name: 'Bugünün Gökyüzü',
+    name: t('Bugünün Gökyüzü'),
     local: jdToLocal(nowJd(), tz, s.defaultPlace.lon),
     tz,
     place: s.defaultPlace,
@@ -109,7 +119,22 @@ export default function App() {
   // ---- boot ----------------------------------------------------------------
   useEffect(() => {
     void (async () => {
-      const s = await window.astro.settings.get()
+      let s = await window.astro.settings.get()
+      const list0 = await window.astro.charts.list()
+      // First run: speak the system language.
+      if (!s.onboarded && list0.length === 0 && !localStorageFlag('lang-picked')) {
+        const loc = pickLocale(navigator.languages)
+        s = { ...s, uiLanguage: loc.code, ai: { ...s.ai, language: loc.code } }
+      }
+      // Follow the computer's time zone (travel, DST rules) unless set by hand.
+      if (s.timezoneMode === 'system') {
+        const zone = systemZone()
+        if (zone !== s.defaultZone) {
+          const place = await window.astro.geo.placeForZone(zone)
+          s = { ...s, defaultZone: zone, defaultPlace: place ? { ...place } : { ...s.defaultPlace, zone } }
+        }
+      }
+      void window.astro.settings.set(s)
       setSettings(s)
       setCharts(await window.astro.charts.list())
       const list = await window.astro.charts.list()
@@ -120,7 +145,7 @@ export default function App() {
     })()
   }, [])
 
-  if (settings) setLang(settings.uiLanguage)
+  if (settings) setLang(settings.uiLanguage, settings.dateOrder)
   useEffect(() => {
     if (!settings) return
     const root = document.documentElement
@@ -231,7 +256,7 @@ export default function App() {
     if (calHits.length) parts.push(calendarText(calHits, working.tz, working.place.lon))
     if (harmonic !== 1 && shown)
       parts.push(
-        `# HARMONİK ${harmonic} HARİTASI (ekranda gösterilen)\n` +
+        t('# HARMONİK {n} HARİTASI (ekranda gösterilen)', { n: harmonic }) + '\n' +
           shown.natal.points.map((p) => `- ${POINT[p.key]?.name ?? p.key}: ${fmtPosText(p.lon)}`).join('\n')
       )
     return parts.join('\n\n')
@@ -423,7 +448,7 @@ export default function App() {
         local,
         tz,
         place: r.place,
-        notes: `${working.name} için ${OUTER_LABEL[kind].toLocaleLowerCase('tr')} haritası`,
+        notes: t('{name} için {kind} haritası', { name: working.name, kind: t(OUTER_LABEL[kind]) }),
         createdAt: 0,
         updatedAt: 0
       },
@@ -564,11 +589,11 @@ export default function App() {
         <span className="grow" />
         {updateReady ? (
           <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
-            v{updateReady} hazır · Yeniden başlat
+            {t('v{v} hazır · Yeniden başlat', { v: updateReady })}
           </button>
         ) : update && (
           <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title={t('GitHub\'da yeni sürüm')}>
-            Yeni sürüm v{update.version} · İndir
+            {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
         <button
@@ -642,7 +667,7 @@ export default function App() {
               ...group.map((c) => (
                 <li key={c.id} className={c.id === working.id ? 'active' : ''}>
                   <div className="item-row">
-                    <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? 'Doğum haritasına bak' : 'Olay haritasına bak'}>
+                    <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
                       <span className={`avatar sm ${kind === 'event' ? 'event' : ''}`}>{kind === 'event' ? '◆' : initialsOf(c.name)}</span>
                       <span className="item-text">
                         <span className="nm">{c.name}</span>
@@ -687,7 +712,7 @@ export default function App() {
         <div className="chart-head">
           <div>
             <h1>
-              {working.name || 'İsimsiz'}
+              {working.name || t('İsimsiz')}
               {dirty && <span className="dirty" title={t('Kaydedilmemiş değişiklik')}> ●</span>}
               {working.kind === 'event' && <span className="badge">{t('Olay')}</span>}
               {working.timeUnknown && <span className="badge warn" title={t('12:00 kullanıldı; yükselen ve evler güvenilmez')}>{t('Saat bilinmiyor')}</span>}
@@ -806,11 +831,11 @@ export default function App() {
                 {
                   ...working,
                   id: `reloc-${working.id}-${place.lat.toFixed(2)}-${place.lon.toFixed(2)}`,
-                  name: `${working.name} — ${place.name.split(',')[0]} (taşınmış)`,
+                  name: `${working.name} — ${place.name.split(',')[0]} (${t('taşınmış')})`,
                   local: jdToLocal(natalJd, tz, place.lon),
                   tz,
                   place: { name: place.name, lat: place.lat, lon: place.lon, cc: place.cc, country: place.country, zone: place.zone },
-                  notes: `${working.name} haritasının ${place.name} konumuna taşınmış hâli (aynı doğum anı).`,
+                  notes: t('{name} haritasının {place} konumuna taşınmış hâli (aynı doğum anı).', { name: working.name, place: place.name }),
                   createdAt: 0,
                   updatedAt: 0
                 },

@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import tzlookup from 'tz-lookup'
 import type { GeoResult } from '@shared/types'
+import { mainLocale, tm } from './i18n'
 
 // [name, ascii, alt names "|"-joined, country code, admin1, lat, lon, tz index, population]
 type Row = [string, string, string, string, string, number, number, number, number]
@@ -44,10 +45,13 @@ function loadDb(): CityDb {
   return db
 }
 
-const countryNames = new Intl.DisplayNames(['tr'], { type: 'region' })
+const countryNamesCache = new Map<string, Intl.DisplayNames>()
 function countryName(cc: string): string {
   try {
-    return countryNames.of(cc) ?? cc
+    const loc = mainLocale().intl
+    let names = countryNamesCache.get(loc)
+    if (!names) countryNamesCache.set(loc, (names = new Intl.DisplayNames([loc], { type: 'region' })))
+    return names.of(cc) ?? cc
   } catch {
     return cc
   }
@@ -129,6 +133,26 @@ export function nearestPlace(lat: number, lon: number, maxKm = 75): (GeoResult &
   }
 }
 
+/** The most populous bundled city in an IANA zone (rows are sorted by population). */
+export function placeForZone(zone: string): GeoResult | null {
+  const d = loadDb()
+  const idx = d.tz.indexOf(zone)
+  if (idx < 0) return null
+  const row = d.rows.find((r) => r[7] === idx)
+  if (!row) return null
+  const country = countryName(row[3])
+  return {
+    name: [row[0], country].filter(Boolean).join(', '),
+    lat: row[5],
+    lon: row[6],
+    country,
+    cc: row[3],
+    admin: row[4] || undefined,
+    zone,
+    population: row[8]
+  }
+}
+
 interface OpenMeteoPlace {
   name: string
   latitude: number
@@ -144,7 +168,7 @@ async function searchOnline(q: string, lang: string): Promise<GeoResult[]> {
     'https://geocoding-api.open-meteo.com/v1/search?count=12&format=json' +
     `&language=${encodeURIComponent(lang)}&name=${encodeURIComponent(q)}`
   const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
-  if (!res.ok) throw new Error(`Konum servisi hatası (${res.status})`)
+  if (!res.ok) throw new Error(tm('Konum servisi hatası ({code})', { code: res.status }))
   const data = (await res.json()) as { results?: OpenMeteoPlace[] }
   return (data.results ?? []).map((r) => ({
     name: [r.name, r.admin1 !== r.name ? r.admin1 : undefined, r.country].filter(Boolean).join(', '),

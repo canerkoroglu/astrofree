@@ -1,6 +1,7 @@
 // Aspect pattern detection (grand trine, T-square, yod, ...) on natal points.
 import type { AppSettings } from '@shared/types'
 import { findAspects, POINT, SIGNS, splitDeg, type Aspect, type ChartPoint } from './astro'
+import { t } from './i18n'
 
 export interface Pattern {
   name: string
@@ -44,7 +45,7 @@ export function findPatterns(points: ChartPoint[], settings: AppSettings): Patte
       for (let k = j + 1; k < n; k++) {
         const [a, b, c] = [keys[i], keys[j], keys[k]]
         if (is(a, b, 'trine') && is(b, c, 'trine') && is(a, c, 'trine')) {
-          add('Büyük Üçgen', [a, b, c], `${names([a, b, c])} birbirine üçgen`)
+          add('Büyük Üçgen', [a, b, c], t('{list} birbirine üçgen', { list: names([a, b, c]) }))
         }
         for (const [x, y, apex] of [
           [a, b, c],
@@ -52,10 +53,10 @@ export function findPatterns(points: ChartPoint[], settings: AppSettings): Patte
           [b, c, a]
         ]) {
           if (is(x, y, 'opposition') && is(x, apex, 'square') && is(y, apex, 'square')) {
-            add('T-Kare', [x, y, apex], `${POINT[x].name}–${POINT[y].name} karşıtlığı, tepe: ${POINT[apex].name}`)
+            add('T-Kare', [x, y, apex], t('{a}–{b} karşıtlığı, tepe: {apex}', { a: POINT[x].name, b: POINT[y].name, apex: POINT[apex].name }))
           }
           if (is(x, y, 'sextile') && is(x, apex, 'quincunx') && is(y, apex, 'quincunx')) {
-            add('Yod (Tanrının Parmağı)', [x, y, apex], `${POINT[x].name}–${POINT[y].name} sekstili, tepe: ${POINT[apex].name}`)
+            add('Yod (Tanrının Parmağı)', [x, y, apex], t('{a}–{b} sekstili, tepe: {apex}', { a: POINT[x].name, b: POINT[y].name, apex: POINT[apex].name }))
           }
         }
       }
@@ -65,7 +66,7 @@ export function findPatterns(points: ChartPoint[], settings: AppSettings): Patte
       if (gt.keys.includes(d)) continue
       const opp = gt.keys.find((x) => is(x, d, 'opposition'))
       if (opp && gt.keys.filter((x) => x !== opp).every((x) => is(x, d, 'sextile'))) {
-        add('Uçurtma', [...gt.keys, d], `Büyük üçgen + ${POINT[d].name}, kuyruk ${POINT[opp].name} karşıtı`)
+        add('Uçurtma', [...gt.keys, d], t('Büyük üçgen + {p}, kuyruk {q} karşıtı', { p: POINT[d].name, q: POINT[opp].name }))
       }
     }
   }
@@ -94,11 +95,11 @@ export function findPatterns(points: ChartPoint[], settings: AppSettings): Patte
   const planets = points.filter((p) => PLANETS.includes(p.key))
   for (let s0 = 0; s0 < 12; s0++) {
     const inSign = planets.filter((p) => splitDeg(p.lon).sign === s0)
-    if (inSign.length >= 3) add(`Stelyum (${SIGNS[s0].name})`, inSign.map((p) => p.key), names(inSign.map((p) => p.key)))
+    if (inSign.length >= 3) add(t('Stelyum ({where})', { where: SIGNS[s0].name }), inSign.map((p) => p.key), names(inSign.map((p) => p.key)))
   }
   for (let h = 1; h <= 12; h++) {
     const inHouse = planets.filter((p) => p.house === h)
-    if (inHouse.length >= 3) add(`Stelyum (${h}. ev)`, inHouse.map((p) => p.key), names(inHouse.map((p) => p.key)))
+    if (inHouse.length >= 3) add(t('Stelyum ({where})', { where: t('{n}. ev', { n: h }) }), inHouse.map((p) => p.key), names(inHouse.map((p) => p.key)))
   }
   return out
 }

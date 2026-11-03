@@ -1,4 +1,4 @@
-import { t } from '../lib/i18n'
+import { getLang, t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
 import type { GeoResult, Place } from '@shared/types'
 import { fmtCoord } from '../lib/astro'
@@ -46,7 +46,7 @@ export default function PlaceSearch({
     timer.current = window.setTimeout(async () => {
       setBusy(true)
       try {
-        setResults(await window.astro.geo.search(q, 'tr'))
+        setResults(await window.astro.geo.search(q, getLang()))
         setActive(0)
       } catch {
         setResults([])
@@ -72,7 +72,7 @@ export default function PlaceSearch({
     const name =
       nearest && nearest.km < 15
         ? nearest.name
-        : `${fmtCoord(lat, 'K', 'G')} ${fmtCoord(lon, 'D', 'B')}${nearest ? ` (${nearest.name.split(',')[0]} yakını)` : ''}`
+        : `${fmtCoord(lat, 'K', 'G')} ${fmtCoord(lon, 'D', 'B')}${nearest ? ` (${t('{p} yakını', { p: nearest.name.split(',')[0] })})` : ''}`
     onChange({ ...value, name, lat, lon, zone: zone ?? undefined, country: nearest?.country ?? value.country, cc: nearest?.cc ?? value.cc })
   }
 
@@ -140,7 +140,7 @@ export default function PlaceSearch({
           </div>
         </div>
         <button type="button" className="link small" onClick={() => setAdvanced(!advanced)}>
-          {advanced ? 'Gizle' : 'Koordinat / harita'}
+          {advanced ? t('Gizle') : t('Koordinat / harita')}
         </button>
       </div>
 
@@ -157,7 +157,7 @@ export default function PlaceSearch({
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyTyped())}
                 className={latParsed === null ? 'invalid' : ''}
               />
-              <span className={latParsed === null ? 'error small' : 'muted small'}>{latParsed === null ? 'geçersiz' : fmtDms(latParsed, true)}</span>
+              <span className={latParsed === null ? 'error small' : 'muted small'}>{latParsed === null ? t('geçersiz') : fmtDms(latParsed, true)}</span>
             </label>
             <label className="coord">
               {t('Boylam')}
@@ -169,14 +169,14 @@ export default function PlaceSearch({
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyTyped())}
                 className={lonParsed === null ? 'invalid' : ''}
               />
-              <span className={lonParsed === null ? 'error small' : 'muted small'}>{lonParsed === null ? 'geçersiz' : fmtDms(lonParsed, false)}</span>
+              <span className={lonParsed === null ? 'error small' : 'muted small'}>{lonParsed === null ? t('geçersiz') : fmtDms(lonParsed, false)}</span>
             </label>
           </div>
           <div className="row">
             <button type="button" onClick={() => setShowMap(!showMap)}>
-              {showMap ? 'Haritayı gizle' : 'Haritadan seç'}
+              {showMap ? t('Haritayı gizle') : t('Haritadan seç')}
             </button>
-            {near && <span className="muted small">En yakın yerleşim: {near}</span>}
+            {near && <span className="muted small">{t('En yakın yerleşim')}: {near}</span>}
           </div>
           {showMap && <WorldMap lat={value.lat} lon={value.lon} onPick={(la, lo) => void setCoord(la, lo)} />}
         </div>

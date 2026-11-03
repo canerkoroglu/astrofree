@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, AspectKey, TransitHit, TzSpec } from '@shared/types'
 import { ASPECT, glyph, POINT, type Layer } from '../lib/astro'
 import { bodyKey } from '../lib/sky'
-import { jdToLocal } from '../lib/time'
+import { fmtDate, jdToLocal } from '../lib/time'
 
 const GROUPS = {
   slow: { label: 'Jüpiter–Plüton, Chiron', bodies: [5, 6, 7, 8, 9, 15] },
@@ -14,18 +14,21 @@ type Group = keyof typeof GROUPS
 
 const NATAL_KEYS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'node', 'chiron', 'asc', 'mc']
 const MAJORS: AspectKey[] = ['conjunction', 'opposition', 'square', 'trine', 'sextile']
-const p2 = (n: number) => String(n).padStart(2, '0')
 
 export function calendarText(hits: TransitHit[], tz: TzSpec, lon: number, limit = 80): string {
-  const d = (jd: number) => {
-    const l = jdToLocal(jd, tz, lon)
-    return `${p2(l.d)}.${p2(l.m)}.${l.y}`
-  }
+  const d = (jd: number) => fmtDate(jdToLocal(jd, tz, lon))
   const lines = hits.slice(0, limit).map((h) => {
-    const exact = h.exacts.length ? h.exacts.map((e) => d(e.jd) + (e.retro ? ' ℞' : '')).join(', ') : 'tam isabet yok (orb içinde)'
-    return `- T.${POINT[bodyKey(h.body)].name} ${ASPECT[h.aspect].name} N.${POINT[h.natalKey].name}: tam ${exact}; etki ${h.startsBefore ? '…' : d(h.start)} – ${h.endsAfter ? '…' : d(h.end)}`
+    const exact = h.exacts.length ? h.exacts.map((e) => d(e.jd) + (e.retro ? ' ℞' : '')).join(', ') : t('tam isabet yok (orb içinde)')
+    return t('- T.{p} {aspect} N.{n}: tam {exact}; etki {from} – {to}', {
+      p: POINT[bodyKey(h.body)].name,
+      aspect: ASPECT[h.aspect].name,
+      n: POINT[h.natalKey].name,
+      exact,
+      from: h.startsBefore ? '…' : d(h.start),
+      to: h.endsAfter ? '…' : d(h.end)
+    })
   })
-  return ['# TRANSİT TAKVİMİ', ...lines, hits.length > limit ? `(+${hits.length - limit} transit daha)` : ''].filter(Boolean).join('\n')
+  return ['# ' + t('TRANSİT TAKVİMİ'), ...lines, hits.length > limit ? t('(+{n} transit daha)', { n: hits.length - limit }) : ''].filter(Boolean).join('\n')
 }
 
 export default function TransitCalendar({
@@ -79,10 +82,7 @@ export default function TransitCalendar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDay, months, groups, natalKey, settings.aspects, settings.zodiac, settings.sidMode])
 
-  const date = (jd: number) => {
-    const l = jdToLocal(jd, tz, lon)
-    return `${p2(l.d)}.${p2(l.m)}.${l.y}`
-  }
+  const date = (jd: number) => fmtDate(jdToLocal(jd, tz, lon))
 
   const grouped = useMemo(() => {
     const out: { label: string; rows: TransitHit[] }[] = []
@@ -105,19 +105,19 @@ export default function TransitCalendar({
     <div className="calendar">
       <div className="cal-controls">
         <span>
-          <strong>{date(startDay + 0.5)}</strong> tarihinden itibaren
+          {t('{date} tarihinden itibaren', { date: date(startDay + 0.5) })}
         </span>
         <select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
           {[1, 3, 6, 12, 24, 36].map((m) => (
             <option key={m} value={m}>
-              {m} ay
+              {t('{n} ay', { n: m })}
             </option>
           ))}
         </select>
         {(Object.keys(GROUPS) as Group[]).map((g) => (
           <label key={g} className="inline small">
             <input type="checkbox" checked={groups[g]} onChange={(e) => setGroups({ ...groups, [g]: e.target.checked })} />
-            {GROUPS[g].label}
+            {t(GROUPS[g].label)}
           </label>
         ))}
         <input className="cal-filter" placeholder={t('Süz… (ör. Satürn, kare)')} value={filter} onChange={(e) => setFilter(e.target.value)} />

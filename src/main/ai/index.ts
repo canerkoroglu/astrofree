@@ -1,3 +1,4 @@
+import { tm } from '../i18n'
 import type { WebContents } from 'electron'
 import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
@@ -62,11 +63,11 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
     PROVIDERS.map(async (p): Promise<ProviderStatus> => {
       if (p.kind === 'api') {
         const has = !!keys[p.id]
-        return { id: p.id, kind: 'api', available: has, detail: has ? 'API anahtarı kayıtlı' : 'API anahtarı yok' }
+        return { id: p.id, kind: 'api', available: has, detail: has ? tm('API anahtarı kayıtlı') : tm('API anahtarı yok') }
       }
       const cmd = settings.ai.providers[p.id as ProviderId].command || p.id.replace('-cli', '')
       const exe = resolveCommand(cmd)
-      if (!exe) return { id: p.id, kind: 'cli', available: false, detail: `"${cmd}" bulunamadı` }
+      if (!exe) return { id: p.id, kind: 'cli', available: false, detail: tm('"{cmd}" bulunamadı', { cmd }) }
       const version = await runVersion(exe)
       const models = p.id === 'codex' ? await codexModels() : undefined
       return { id: p.id, kind: 'cli', available: true, detail: version || exe, models }

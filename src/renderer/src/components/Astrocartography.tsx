@@ -103,7 +103,7 @@ export default function Astrocartography({
             <div>
               <div className="acg-place">{pickPlace ? pickPlace.name : `${pick.lat.toFixed(2)}, ${pick.lon.toFixed(2)}`}</div>
               <div className="muted small">
-                {pickPlace ? `${Math.round(pickPlace.km)} km yakınında · ` : ''}
+                {pickPlace ? `${t('{km} km yakınında', { km: Math.round(pickPlace.km) })} · ` : ''}
                 {pick.lat.toFixed(2)}°, {pick.lon.toFixed(2)}°
               </div>
             </div>
@@ -117,14 +117,17 @@ export default function Astrocartography({
               className="primary"
               onClick={() =>
                 onAsk(
-                  `Astrokartografi: ${pickPlace ? pickPlace.name : `${pick.lat.toFixed(2)}, ${pick.lon.toFixed(2)}`} konumu için yorum yap. ` +
-                    (near.length
-                      ? `Yakındaki çizgiler: ${near
-                          .slice(0, 6)
-                          .map((n) => `${POINT[n.line.key].name} ${n.line.angle} (${Math.round(n.km)} km)`)
-                          .join(', ')}.`
-                      : 'Yakında belirgin bir gezegen çizgisi yok.') +
-                    ' Bu yerde yaşamak, çalışmak veya seyahat etmek hayatımın hangi alanlarını nasıl etkiler?'
+                  t('Astrokartografi: {place} konumu için yorum yap. {lines} Bu yerde yaşamak, çalışmak veya seyahat etmek hayatımın hangi alanlarını nasıl etkiler?', {
+                    place: pickPlace ? pickPlace.name : `${pick.lat.toFixed(2)}, ${pick.lon.toFixed(2)}`,
+                    lines: near.length
+                      ? t('Yakındaki çizgiler: {list}.', {
+                          list: near
+                            .slice(0, 6)
+                            .map((n) => `${POINT[n.line.key].name} ${n.line.angle} (${Math.round(n.km)} km)`)
+                            .join(', ')
+                        })
+                      : t('Yakında belirgin bir gezegen çizgisi yok.')
+                  })
                 )
               }
             >
@@ -141,7 +144,7 @@ export default function Astrocartography({
                     <td>
                       <span className={`glyph tone-${acgTone(n.line.key)}`}>{glyph(n.line.key)}</span> {POINT[n.line.key].name}
                     </td>
-                    <td className="muted">{ANGLE_TEXT[n.line.angle]}</td>
+                    <td className="muted">{t(ANGLE_TEXT[n.line.angle])}</td>
                     <td className="num">{Math.round(n.km)} km</td>
                   </tr>
                 ))}
