@@ -838,5 +838,16 @@ Rules:
     "Rektifikasyon": "Rectification",
     "Tutulmalar": "Eclipses",
     "Antiscia": "Antiscia",
+    "Bu anı yeni bir harita olarak kaydet": "Save this moment as a new chart",
+    "İsim, tarih, saat ve doğum yerini düzenle": "Edit name, date, time and birthplace",
+    "+ Harita olarak kaydet": "+ Save as chart",
+    "Çark görseli (PNG)": "Wheel image (PNG)",
+    "çark, natal bilgiler, yorumlar": "wheel, natal details, interpretations",
+    "Saat dilimleri": "Time zones",
+    "oynatılıyor": "being stepped",
+    "{place} konumundan gelir": "Taken from {place}",
+    "Transit ve Bugün": "Transits and Today",
+    "Bilgisayarınızın saat dilimi": "Your computer's time zone",
+    "Ayarlarda elle seçildi": "Chosen in Settings",
   }
 }

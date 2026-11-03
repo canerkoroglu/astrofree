@@ -99,6 +99,8 @@ export default function App() {
   const [editor, setEditor] = useState<ChartRecord | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [settingsFocus, setSettingsFocus] = useState<'zone' | undefined>()
+  const [exportOpen, setExportOpen] = useState(false)
+  const [zoneOpen, setZoneOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
@@ -630,23 +632,54 @@ export default function App() {
             {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
-        <button
-          className="tb-zone"
-          onClick={() => {
-            if (effTarget === 'natal' && working.id !== NOW_ID) setEditor(working)
-            else {
-              setSettingsFocus('zone')
-              setShowSettings(true)
-            }
-          }}
-          title={
-            t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? (working.kind === 'event' ? t('Olay anı') : t('Doğum')) : t('Transit') }) +
-            ' — ' +
-            (effTarget === 'natal' && working.id !== NOW_ID ? t('değiştirmek için haritayı düzenleyin') : t('değiştirmek için tıklayın (Ayarlar → Genel)'))
-          }
-        >
-          {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
-        </button>
+        <div className="menu-wrap tb-zone-wrap">
+          <button className="tb-zone" aria-expanded={zoneOpen} onClick={() => setZoneOpen(!zoneOpen)} title={t('Saat dilimleri')}>
+            {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
+          </button>
+          {zoneOpen && (
+            <div className="pop-menu zone-pop" onMouseLeave={() => setZoneOpen(false)}>
+              {working.id !== NOW_ID && (
+                <div className={`zone-row${effTarget === 'natal' ? ' current' : ''}`}>
+                  <div>
+                    <div className="zone-label">
+                      {working.kind === 'event' ? t('Olay anı') : t('Doğum')}
+                      {effTarget === 'natal' && <span className="zone-now">{t('oynatılıyor')}</span>}
+                    </div>
+                    <div className="zone-value">
+                      {tzLabel(working.tz)} <span className="muted">{fmtOffset(offsetAt(working.tz, natalJd, working.place.lon))}</span>
+                    </div>
+                    <div className="muted small">{t('{place} konumundan gelir', { place: working.place.name.split(',')[0] })}</div>
+                  </div>
+                  <button className="small" onClick={() => (setZoneOpen(false), setEditor(working))}>
+                    {t('Düzenle')}
+                  </button>
+                </div>
+              )}
+              <div className={`zone-row${effTarget === 'event' || working.id === NOW_ID ? ' current' : ''}`}>
+                <div>
+                  <div className="zone-label">
+                    {t('Transit ve Bugün')}
+                    {(effTarget === 'event' || working.id === NOW_ID) && <span className="zone-now">{t('oynatılıyor')}</span>}
+                  </div>
+                  <div className="zone-value">
+                    {settings.defaultZone} <span className="muted">{fmtOffset(offsetAt(eventTz, eventJd, eventPlace?.lon ?? 0))}</span>
+                  </div>
+                  <div className="muted small">{settings.timezoneMode === 'system' ? t('Bilgisayarınızın saat dilimi') : t('Ayarlarda elle seçildi')}</div>
+                </div>
+                <button
+                  className="small"
+                  onClick={() => {
+                    setZoneOpen(false)
+                    setSettingsFocus('zone')
+                    setShowSettings(true)
+                  }}
+                >
+                  {t('Değiştir')}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         <div className="tgroup">
           <button
             className="icon-btn"
@@ -742,9 +775,14 @@ export default function App() {
                         {(c.tags?.length ?? 0) > 0 && <span className="item-tags">{c.tags!.map((t) => `#${t}`).join(' ')}</span>}
                       </span>
                     </button>
+<span className="row-actions">
+                    <button className="x" title={t('Düzenle')} aria-label={t('Düzenle')} onClick={() => setEditor(c)}>
+                      ✎
+                    </button>
                     <button className="x" title={t('Sil')} onClick={() => void removeChart(c)}>
                       ×
                     </button>
+                    </span>
                   </div>
                   <div className="chips">
                     <button onClick={() => openChart(c, 'natal')}>{t('Harita')}</button>
@@ -777,10 +815,16 @@ export default function App() {
           <div>
             <h1>
               {working.name || t('İsimsiz')}
-              {dirty && <span className="dirty" title={t('Kaydedilmemiş değişiklik')}> ●</span>}
               {working.kind === 'event' && <span className="badge">{t('Olay')}</span>}
               {working.timeUnknown && <span className="badge warn" title={t('12:00 kullanıldı; yükselen ve evler güvenilmez')}>{t('Saat bilinmiyor')}</span>}
               {working.rodden && !working.timeUnknown && <span className="badge" title={t('Rodden veri güvenilirliği')}>{working.rodden}</span>}
+              <button
+                className="head-edit"
+                onClick={() => (working.id === NOW_ID ? menuRef.current('save') : setEditor(working))}
+                title={working.id === NOW_ID ? t('Bu anı yeni bir harita olarak kaydet') : t('İsim, tarih, saat ve doğum yerini düzenle')}
+              >
+                {working.id === NOW_ID ? t('+ Harita olarak kaydet') : `✎ ${t('Düzenle')}`}
+              </button>
             </h1>
             <div className="muted small">
               {fmtLocal(working.local, true)} {tzLabel(working.tz)} ({fmtOffset(offsetAt(working.tz, natalJd, working.place.lon))}) ·{' '}
@@ -825,17 +869,31 @@ export default function App() {
             ))}
           </div>
           <div className="head-actions">
-            <button onClick={() => void exportPng()} title={t('Çarkı PNG olarak kaydet')}>
-              {t('PNG')}
-            </button>
-            <button onClick={() => void exportPdf()} title={t('Çark, natal bilgiler ve kayıtlı yorumlarla PDF rapor')}>
-              {t('PDF rapor')}
-            </button>
-            <button onClick={() => setEditor(working.id === NOW_ID ? { ...working, id: crypto.randomUUID(), name: '' } : working)}>{t('Düzenle')}</button>
-            {dirty && saved && <button onClick={() => setWorking(structuredClone(saved))}>{t('Geri al')}</button>}
-            <button className={dirty ? 'primary' : ''} onClick={() => menuRef.current('save')}>
-              {t('Kaydet')}
-            </button>
+            {dirty && (
+              <div className="unsaved" role="status">
+                <span className="unsaved-dot" aria-hidden />
+                <span>{t('Kaydedilmemiş değişiklik')}</span>
+                {saved && <button onClick={() => setWorking(structuredClone(saved))}>{t('Geri al')}</button>}
+                <button className="primary" onClick={() => menuRef.current('save')}>
+                  {t('Kaydet')}
+                </button>
+              </div>
+            )}
+            <div className="menu-wrap">
+              <button aria-expanded={exportOpen} onClick={() => setExportOpen(!exportOpen)}>
+                {t('Dışa aktar')} ▾
+              </button>
+              {exportOpen && (
+                <div className="pop-menu" onMouseLeave={() => setExportOpen(false)}>
+                  <button onClick={() => (setExportOpen(false), void exportPng())}>
+                    {t('Çark görseli (PNG)')}
+                  </button>
+                  <button onClick={() => (setExportOpen(false), void exportPdf())}>
+                    {t('PDF rapor')} <span className="muted small">{t('çark, natal bilgiler, yorumlar')}</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
