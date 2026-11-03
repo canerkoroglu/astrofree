@@ -10,3 +10,6 @@ dist
 
 # Tanıtım sitesi brifi (yerel, repoya gönderilmez)
 MARKETING-SPA.md
+
+# Kişisel bilgi bankası (ders notlarından; üçüncü kişinin eseri, repoya gönderilmez)
+knowledge/

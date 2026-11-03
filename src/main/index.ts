@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
-import { readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { basename, join } from 'node:path'
 import type {
   AiChatRequest,
   AppSettings,
@@ -118,6 +118,22 @@ function registerIpc(): void {
   ipcMain.handle('interp:add', (_e, it: Interpretation) => store.addInterpretation(it))
   ipcMain.handle('interp:update', (_e, id: string, patch: Partial<Interpretation>) => store.updateInterpretation(id, patch))
   ipcMain.handle('interp:remove', (_e, id: string) => store.removeInterpretation(id))
+
+  ipcMain.handle('kb:list', () => store.listKnowledge())
+  ipcMain.handle('kb:save', (_e, name: string, text: string) => store.saveKnowledge(name, text))
+  ipcMain.handle('kb:import', async () => {
+    const r = await dialog.showOpenDialog(win!, {
+      title: tm('Bilgi bankasına dosya ekle'),
+      properties: ['openFile', 'multiSelections'],
+      filters: [{ name: tm('Markdown veya metin'), extensions: ['md', 'txt'] }]
+    })
+    return r.canceled ? [] : store.importKnowledge(r.filePaths)
+  })
+  ipcMain.handle('kb:openDir', async () => {
+    await mkdir(store.knowledgeDir(), { recursive: true })
+    return shell.openPath(store.knowledgeDir())
+  })
+  ipcMain.handle('kb:trash', (_e, name: string) => shell.trashItem(join(store.knowledgeDir(), basename(name))))
 
   ipcMain.handle('backup:choose', async () => {
     const r = await dialog.showOpenDialog(win!, { title: tm('Yedek klasörü seçin'), properties: ['openDirectory', 'createDirectory'] })

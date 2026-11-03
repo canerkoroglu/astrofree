@@ -128,6 +128,8 @@ export interface AiSettings {
   /** Answer language (locale code). */
   language: string
   systemPrompt: string
+  /** Add matching knowledge-base entries to what is sent with each message. */
+  useKnowledge: boolean
 }
 
 export interface AppSettings {

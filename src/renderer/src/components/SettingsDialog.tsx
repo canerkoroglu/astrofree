@@ -213,6 +213,10 @@ export default function SettingsDialog({
                 </select>
               </label>
             </div>
+            <label className="inline">
+              <input type="checkbox" checked={s.ai.useKnowledge} onChange={(e) => setS({ ...s, ai: { ...s.ai, useKnowledge: e.target.checked } })} />{' '}
+              {t('Sohbette bilgi bankamı kullan (haritayla ve soruyla eşleşen kayıtlar gönderilir)')}
+            </label>
             {PROVIDERS.map((p) => {
               const c = s.ai.providers[p.id]
               return (

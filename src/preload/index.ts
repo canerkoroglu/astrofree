@@ -43,6 +43,14 @@ const api = {
     remove: (id: string): Promise<Interpretation[]> => ipcRenderer.invoke('interp:remove', id)
   },
 
+  kb: {
+    list: (): Promise<{ name: string; text: string }[]> => ipcRenderer.invoke('kb:list'),
+    save: (name: string, text: string): Promise<void> => ipcRenderer.invoke('kb:save', name, text),
+    import: (): Promise<string[]> => ipcRenderer.invoke('kb:import'),
+    openDir: (): Promise<string> => ipcRenderer.invoke('kb:openDir'),
+    trash: (name: string): Promise<void> => ipcRenderer.invoke('kb:trash', name)
+  },
+
   backup: {
     choose: (): Promise<string | null> => ipcRenderer.invoke('backup:choose'),
     run: (dir?: string): Promise<string | null> => ipcRenderer.invoke('backup:run', dir),

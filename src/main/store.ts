@@ -67,7 +67,7 @@ export const removeChart = (id: string) =>
 /** Import a chart list or a full backup file ({ charts, interpretations }). */
 export const importData = (data: unknown) =>
   serial(async () => {
-    const backup = data && typeof data === 'object' && !Array.isArray(data) && 'charts' in data ? (data as { charts: ChartRecord[]; interpretations?: Interpretation[] }) : null
+    const backup = data && typeof data === 'object' && !Array.isArray(data) && 'charts' in data ? (data as { charts: ChartRecord[]; interpretations?: Interpretation[]; knowledge?: { name: string; text: string }[] }) : null
     const recs: ChartRecord[] = backup ? backup.charts : Array.isArray(data) ? data : [data as ChartRecord]
     const all = await listCharts()
     const ids = new Set(all.map((c) => c.id))
@@ -92,6 +92,15 @@ export const importData = (data: unknown) =>
         existing.push({ ...it, chartId: remap.get(it.chartId) ?? it.chartId })
       }
       await writeJson('interpretations.json', existing)
+    }
+    if (backup?.knowledge?.length) {
+      // Restore knowledge files that are missing; never overwrite the user's current ones.
+      await fs.mkdir(knowledgeDir(), { recursive: true })
+      const have = new Set(await fs.readdir(knowledgeDir()))
+      for (const k of backup.knowledge) {
+        if (typeof k?.text !== 'string' || have.has(basename(k.name))) continue
+        await fs.writeFile(join(knowledgeDir(), kbName(k.name)), k.text, 'utf8').catch(() => undefined)
+      }
     }
     scheduleBackup()
     return all
@@ -186,6 +195,50 @@ export const removeInterpretation = (id: string) =>
     return all
   })
 
+// ---- knowledge base -------------------------------------------------------------
+// Plain Markdown files the user owns and may edit in any editor.
+
+export const knowledgeDir = () => join(dir(), 'knowledge')
+const kbName = (name: string) => {
+  const n = basename(name)
+  if (!/\.(md|txt)$/i.test(n)) throw new Error('Only .md or .txt files')
+  return n
+}
+
+export async function listKnowledge(): Promise<{ name: string; text: string }[]> {
+  try {
+    const names = (await fs.readdir(knowledgeDir())).filter((f) => /\.(md|txt)$/i.test(f)).sort((a, b) => a.localeCompare(b))
+    return Promise.all(names.map(async (name) => ({ name, text: await fs.readFile(join(knowledgeDir(), name), 'utf8') })))
+  } catch {
+    return []
+  }
+}
+
+export async function saveKnowledge(name: string, text: string): Promise<void> {
+  await fs.mkdir(knowledgeDir(), { recursive: true })
+  const target = join(knowledgeDir(), kbName(name))
+  const tmp = `${target}.${process.pid}.tmp`
+  await fs.writeFile(tmp, text, 'utf8')
+  await fs.rename(tmp, target)
+  scheduleBackup()
+}
+
+/** Copy files in; an existing file of the same name is kept and the new one numbered. */
+export async function importKnowledge(paths: string[]): Promise<string[]> {
+  await fs.mkdir(knowledgeDir(), { recursive: true })
+  const existing = new Set(await fs.readdir(knowledgeDir()))
+  const added: string[] = []
+  for (const p of paths) {
+    let name = kbName(p)
+    for (let i = 2; existing.has(name); i++) name = kbName(p).replace(/(\.\w+)$/, ` (${i})$1`)
+    await fs.copyFile(p, join(knowledgeDir(), name))
+    existing.add(name)
+    added.push(name)
+  }
+  if (added.length) scheduleBackup()
+  return added
+}
+
 // ---- automatic backups ---------------------------------------------------------
 
 const BACKUP_PREFIX = 'astrofree-yedek-'
@@ -198,7 +251,8 @@ export async function backupData() {
     format: 1,
     createdAt: new Date().toISOString(),
     charts: await listCharts(),
-    interpretations: await listInterpretations()
+    interpretations: await listInterpretations(),
+    knowledge: await listKnowledge()
   }
 }
 

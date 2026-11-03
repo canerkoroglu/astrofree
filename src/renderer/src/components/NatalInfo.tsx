@@ -1,3 +1,4 @@
+import { mansionOf, moonChartLord } from '../lib/kb'
 import { t } from '../lib/i18n'
 import { useMemo } from 'react'
 import type { AppSettings, ChartRecord } from '@shared/types'
@@ -48,6 +49,8 @@ function degMin(lon: number) {
   const s = splitDeg(lon)
   return `${p2(s.deg)}° ${p2(s.min)}'`
 }
+
+const signDeg = (lon: number) => `${SIGNS[Math.floor(lon / 30) % 12].name} ${Math.round(lon % 30)}°`
 
 /** Daily motion as ±DD° MM' SS". */
 function speedDms(v: number) {
@@ -111,6 +114,8 @@ export default function NatalInfo({
   const pt = (k: string) => natal.points.find((p) => p.key === k)
   const sun = pt('sun')
   const moon = pt('moon')
+  const mansion = moon ? mansionOf(moon.lon) : null
+  const moonLord = moon ? moonChartLord(moon.lon) : null
   const asc = pt('asc')
   const mc = pt('mc')
   const bal = balance(natal.points)
@@ -174,6 +179,31 @@ export default function NatalInfo({
               <div className="muted small">{t('Ay fazı')}</div>
               <div className="ni-big">{moonPhase(sun.lon, moon.lon).name}</div>
               <div className="muted small">{sun.house >= 7 ? t('Gündüz haritası') : t('Gece haritası')}</div>
+            </div>
+          )}
+          {moon && (
+            <div className="ni-card" title={t('28 Ay durağı (menâzil)')}>
+              <div className="muted small">{t('Ay durağı')}</div>
+              <div className="ni-big">
+                {mansion!.n}. {mansion!.name}
+              </div>
+              <div className="muted small">
+                {signDeg(mansion!.start)} – {signDeg(mansion!.end)}
+              </div>
+            </div>
+          )}
+          {moon && (
+            <div className="ni-card" title={t("Ay'ın burcundan sonraki burcun yöneticisi (Güneş ve Ay atlanır)")}>
+              <div className="muted small">{t("Ay'a göre harita lordu")}</div>
+              <div className="ni-big">
+                <span className="glyph">{glyph(moonLord!)}</span> {POINT[moonLord!].name}
+                {pt(moonLord!)?.retro ? ' ℞' : ''}
+              </div>
+              {pt(moonLord!) && (
+                <div className="muted small">
+                  {SIGNS[splitDeg(pt(moonLord!)!.lon).sign].name} · {pt(moonLord!)!.house}. {t('ev')}
+                </div>
+              )}
             </div>
           )}
           <div className="ni-card">

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { PlanetaryHours, SkyEvent, SkyReport, TzSpec } from '@shared/types'
 import { glyph, moonPhase, POINT, SIGNS, signGlyph, splitDeg } from '../lib/astro'
 import { bodyKey, eventText, moonIllumination } from '../lib/sky'
+import { mansionOf } from '../lib/kb'
 import { jdToLocal } from '../lib/time'
 
 const p2 = (n: number) => String(n).padStart(2, '0')
@@ -95,6 +96,9 @@ export default function SkyPanel({
           </div>
           <div className="muted small">
             {ph.name} · %{moonIllumination(report)}
+          </div>
+          <div className="muted small" title={t('28 Ay durağı (menâzil)')}>
+            {t('{n}. durak', { n: mansionOf(report.moonLon).n })} · {mansionOf(report.moonLon).name}
           </div>
         </div>
       </div>

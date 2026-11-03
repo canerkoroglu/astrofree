@@ -134,6 +134,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     provider: 'claude-code',
     language: 'tr',
     systemPrompt: '',
+    useKnowledge: true,
     providers: {
       'claude-code': { model: '', command: 'claude', extraArgs: '' },
       codex: { model: '', command: 'codex', extraArgs: '' },

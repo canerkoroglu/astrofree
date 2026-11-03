@@ -103,6 +103,15 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
   o yere taşınmış harita.
 - **Masaüstü bildirimleri:** kayıtlı kişilere yaklaşan önemli transitler.
 
+### Bilgi bankası
+- Kendi ders notlarınızı, kitap özetlerinizi ve yorum kurallarınızı Markdown dosyaları olarak ekleyin
+  (**Bilgi Bankası** sekmesi → Dosya ekle). Her `### Başlık` bir kayıttır.
+- Kayda `- anahtarlar: durak:5, yildiz:algol, burc:boga, derece:25-27` gibi bir satır eklenirse kayıt haritayla
+  **otomatik eşleşir**: Ay durağı, sabit yıldız kavuşumları, hassas dereceler, Ay fazı, Ay'a göre harita lordu.
+- Sohbette eşleşen kayıtlar (ve sorunuzda geçen konular) yapay zekâya bağlam olarak gönderilir; böylece yorumlar
+  kendi okulunuzun kurallarına göre yapılır. Dosyalar kullanıcı veri klasöründe `knowledge/` altında durur ve yedeğe dahildir.
+- Natal Bilgiler'de **28 Ay durağı** ve **Ay'a göre harita lordu**, gökyüzü panelinde günün Ay durağı gösterilir.
+
 ### Diğer
 - Yapay zekâ yanıtlarını kişiye **yorum** olarak kaydetme ve düzenleme.
 - **PNG** (çark) ve **PDF** rapor (çark + natal bilgiler + kayıtlı yorumlar).

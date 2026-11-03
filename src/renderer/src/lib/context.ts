@@ -1,4 +1,5 @@
 // Plain-text chart summary sent to the AI with every chat turn.
+import { mansionOf, moonChartLord } from './kb'
 import type { AppSettings, ChartRecord, Place, TzSpec } from '@shared/types'
 import {
   AYANAMSAS,
@@ -121,6 +122,9 @@ function natalSection(c: Computed, rec: ChartRecord, s: AppSettings): string {
   if (sun && moon) {
     const ph = moonPhase(sun.lon, moon.lon)
     out.push(`- ${t('Ay fazı')}: ${ph.name} (${ph.angle.toFixed(0)}°) · ${sun.house >= 7 ? t('Gündüz haritası') : t('Gece haritası')}`)
+    const mn = mansionOf(moon.lon)
+    out.push(`- ${t('Ay durağı')}: ${mn.n}. ${mn.name} (${fmtPosText(mn.start)} – ${fmtPosText(mn.end)})`)
+    out.push(`- ${t("Ay'a göre harita lordu")}: ${POINT[moonChartLord(moon.lon)].name}`)
   }
   const asc = l.points.find((p) => p.key === 'asc')
   if (asc) {

@@ -2850,3 +2850,157 @@ input[type='range'] {
 .app.no-chat {
   grid-template-columns: 264px minmax(0, 1fr) 0;
 }
+
+/* ---- knowledge base ---- */
+.kb {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--s5);
+  padding: var(--s4) var(--s5);
+  min-height: 0;
+  overflow: hidden;
+  flex: 1;
+}
+.kb.pad {
+  display: block;
+}
+.kb-empty {
+  max-width: 640px;
+  margin: var(--s6) auto;
+}
+.kb-empty h3 {
+  margin: 0 0 var(--s2);
+}
+.kb-empty .row {
+  display: flex;
+  gap: var(--s2);
+  margin-top: var(--s4);
+  align-items: center;
+}
+.kb-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.kb-side input[type='search'] {
+  margin-bottom: var(--s3);
+}
+.kb-side > button {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s2);
+  text-align: left;
+  border: 0;
+  border-left: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  padding: var(--s2) var(--s3);
+  min-height: 0;
+}
+.kb-side > button.on {
+  border-left-color: var(--accent);
+  color: var(--accent-ink);
+  background: var(--panel-2);
+}
+.kb-side > button span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s3);
+  padding: var(--s3);
+  border-top: 1px solid var(--line);
+  margin-top: var(--s3);
+}
+.kb-main {
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding-right: var(--s2);
+}
+.kb-filebar {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--line);
+}
+.kb-entry {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: var(--s3) var(--s4);
+}
+.kb-entry header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+}
+.kb-entry h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.kb-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin: var(--s2) 0;
+}
+.kb-meta:empty {
+  display: none;
+}
+.kb .chip {
+  font-size: 11.5px;
+  padding: 1px var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+}
+.kb .chip.muted {
+  color: var(--muted);
+}
+.kb .chip.accent {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.kb-entry .md p:first-child {
+  margin-top: 0;
+}
+.kb-entry .md p:last-child {
+  margin-bottom: 0;
+}
+.kb-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  flex: 1;
+  min-height: 420px;
+}
+.kb-editor textarea {
+  flex: 1;
+  min-height: 420px;
+  font-family: var(--num-font);
+  font-size: 13px;
+  line-height: 1.55;
+  resize: none;
+}
+
+/* composer: options wrap onto their own line instead of squeezing the send button */
+.composer-row {
+  flex-wrap: wrap;
+  row-gap: var(--s2);
+}
+.composer-row label.inline {
+  white-space: nowrap;
+}
+.composer-row > button.primary,
+.composer-row > button:last-child {
+  flex-shrink: 0;
+}

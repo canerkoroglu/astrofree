@@ -26,6 +26,9 @@ import { harmonicLayer } from './lib/midpoints'
 import { skyContext } from './lib/sky'
 import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, systemZone, tzLabel, type StepUnit } from './lib/time'
 import { pickLocale } from '@shared/i18n'
+import { parseKnowledge, type KbFile } from '@shared/knowledge'
+import Knowledge from './components/Knowledge'
+import { knowledgeText, matchKnowledge } from './lib/kb'
 
 const NOW_ID = 'now'
 
@@ -72,7 +75,7 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'info' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem'
+type View = 'chart' | 'info' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
 
 export default function App() {
@@ -101,6 +104,8 @@ export default function App() {
   const [hours, setHours] = useState<PlanetaryHours | null>(null)
   const [starPos, setStarPos] = useState<{ name: string; lon: number }[]>([])
   const [interps, setInterps] = useState<Interpretation[]>([])
+  const [kbFiles, setKbFiles] = useState<KbFile[]>([])
+  const reloadKb = useCallback(() => void window.astro.kb.list().then(setKbFiles), [])
   const [calHits, setCalHits] = useState<TransitHit[]>([])
   const [printing, setPrinting] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
@@ -139,6 +144,7 @@ export default function App() {
       setCharts(await window.astro.charts.list())
       const list = await window.astro.charts.list()
       setInterps(await window.astro.interp.list())
+      setKbFiles(await window.astro.kb.list())
       setWorking(nowChart(s))
       setObOpen(!s.onboarded && list.length === 0)
       window.setTimeout(() => void window.astro.checkUpdate().then(setUpdate), 4000)
@@ -241,6 +247,21 @@ export default function App() {
   const shown = useMemo(
     () => (computed && harmonic !== 1 ? { natal: harmonicLayer(computed.natal, harmonic), outers: computed.outers.map((o) => harmonicLayer(o, harmonic)) } : computed),
     [computed, harmonic]
+  )
+  const kbEntries = useMemo(() => kbFiles.flatMap((f) => parseKnowledge(f.name, f.text)), [kbFiles])
+  const kbBase = useMemo(() => {
+    if (!computed || !working) return null
+    const transit = working.id === NOW_ID ? undefined : computed.outers.find((o) => o.kind === 'transit')
+    const topics = [
+      ...(outers.includes('synastry') ? ['sinastri', 'ilişki'] : []), // i18n-ignore
+      ...(working.composite ? ['kompozit', 'ilişki'] : []) // i18n-ignore
+    ]
+    return { natal: computed.natal, transit, stars: starConj, topics }
+  }, [computed, working, outers, starConj])
+  const kbMatches = useMemo(() => (kbBase && kbEntries.length ? matchKnowledge(kbEntries, kbBase) : []), [kbBase, kbEntries])
+  const knowledgeFor = useCallback(
+    (question: string) => (kbBase && kbEntries.length ? knowledgeText(matchKnowledge(kbEntries, { ...kbBase, question })) : ''),
+    [kbBase, kbEntries]
   )
   const chartInterps = useMemo(() => interps.filter((i) => i.chartId === working?.id), [interps, working?.id])
 
@@ -795,11 +816,16 @@ export default function App() {
             {t('Zaman Seçimi')}
           </button>
           <button className={view === 'notes' ? 'on' : ''} onClick={() => setView('notes')}>
-            Yorumlar{chartInterps.length ? ` (${chartInterps.length})` : ''}
+            {t('Yorumlar')}
+            {chartInterps.length ? ` (${chartInterps.length})` : ''}
+          </button>
+          <button className={view === 'kb' ? 'on' : ''} onClick={() => setView('kb')}>
+            {t('Bilgi Bankası')}
+            {kbMatches.length ? ` (${kbMatches.length})` : ''}
           </button>
         </div>
 
-        {calcError && <div className="error pad">Hesaplama hatası: {calcError}</div>}
+        {calcError && <div className="error pad">{t('Hesaplama hatası')}: {calcError}</div>}
         {view === 'info' && computed && (
           <NatalInfo natal={computed.natal} rec={working} settings={settings} natalJd={natalJd} eventJd={eventJd} patterns={patterns} stars={starConj} />
         )}
@@ -851,6 +877,7 @@ export default function App() {
             onRemove={async (id) => setInterps(await window.astro.interp.remove(id))}
           />
         )}
+        {view === 'kb' && <Knowledge files={kbFiles} entries={kbEntries} matches={kbMatches} onReload={reloadKb} onAsk={ask} />}
         {view === 'chart' && computed && (
           <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} />
         )}
@@ -905,6 +932,8 @@ export default function App() {
             onSettings={saveSettings}
             onSave={saveInterpretation}
             inject={inject}
+            knowledge={knowledgeFor}
+            knowledgeCount={kbFiles.length}
           />
         </aside>
       )}

@@ -4,8 +4,8 @@ import { marked } from 'marked'
 import { useState } from 'react'
 import type { Interpretation } from '@shared/types'
 
-export function MarkdownBlock({ text }: { text: string }) {
-  return <div className="md" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(text, { async: false }) as string) }} />
+export function MarkdownBlock({ text, breaks = false }: { text: string; breaks?: boolean }) {
+  return <div className="md" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(text, { async: false, breaks }) as string) }} />
 }
 
 const fmtDate = (ms: number) =>

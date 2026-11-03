@@ -15,6 +15,10 @@ interface Props {
   onSave?: (content: string, question: string, provider: string) => Promise<void>
   /** A prompt sent from elsewhere in the app (chart click, map, calendar). */
   inject?: { id: number; text: string } | null
+  /** Knowledge-base entries matching the chart and the question, as text. */
+  knowledge?: (question: string) => string
+  /** Number of knowledge files, to show the toggle only when there is a base. */
+  knowledgeCount?: number
 }
 
 const QUICK: { label: string; needs?: string; prompt: string }[] = [
@@ -56,7 +60,8 @@ function Markdown({ text }: { text: string }) {
   return <div className="md" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject }: Props) {
+export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0 }: Props) {
+  const [lastKb, setLastKb] = useState('')
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
   const [messages, setMessages] = useState<AiMessage[]>([])
   const [input, setInput] = useState('')
@@ -134,12 +139,14 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
     setRunId(id)
     setStatus(t('{p} yanıtlıyor…', { p: info.label }))
     const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
+    const kb = attach && settings.ai.useKnowledge && knowledge ? knowledge(msg) : ''
+    setLastKb(kb)
     window.astro.ai.start({
       id,
       provider,
       model: cfg.model || undefined,
       system,
-      context: attach ? context : '',
+      context: attach ? (kb ? `${context}\n\n${kb}` : context) : '',
       messages: next
     })
   }
@@ -250,6 +257,17 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           <label className="inline small">
             <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} /> {t('Harita verisini ekle')}
           </label>
+          {knowledgeCount > 0 && (
+            <label className="inline small" title={t('Haritayla ve sorunuzla eşleşen bilgi bankası kayıtları da gönderilir')}>
+              <input
+                type="checkbox"
+                checked={settings.ai.useKnowledge}
+                disabled={!attach}
+                onChange={(e) => onSettings({ ...settings, ai: { ...settings.ai, useKnowledge: e.target.checked } })}
+              />{' '}
+              {t('Bilgi bankası')}
+            </label>
+          )}
           <button className="link small" onClick={() => setShowCtx(!showCtx)}>
             {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
           </button>
@@ -272,7 +290,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             </button>
           )}
         </div>
-        {showCtx && <pre className="ctx">{context}</pre>}
+        {showCtx && <pre className="ctx">{lastKb ? `${context}\n\n${lastKb}` : context}</pre>}
       </div>
     </div>
   )
