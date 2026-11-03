@@ -24,7 +24,7 @@ export default function Astrocartography({
   onAsk: (prompt: string) => void
 }) {
   const lines = useMemo(() => acgLines(natal, rec.place.lon), [natal, rec.place.lon])
-  const [shown, setShown] = useState<Set<string>>(new Set(ACG_BODIES.filter((k) => !['node', 'chiron'].includes(k))))
+  const [shown, setShown] = useState<Set<string>>(new Set(ACG_BODIES.filter((k) => !['node', 'snode', 'chiron'].includes(k))))
   const [angles, setAngles] = useState<Set<AngleKind>>(new Set(['MC', 'IC', 'ASC', 'DSC']))
   const [focus, setFocus] = useState<string | null>(null)
   const [pick, setPick] = useState<{ lat: number; lon: number } | null>(null)

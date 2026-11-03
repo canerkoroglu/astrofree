@@ -3,7 +3,7 @@
 // y = 90 - lat) as SVG path data.
 import { norm360, type ChartPoint, type Layer } from './astro'
 
-export const ACG_BODIES = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'node', 'chiron']
+export const ACG_BODIES = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'node', 'snode', 'chiron']
 export type AngleKind = 'MC' | 'IC' | 'ASC' | 'DSC'
 
 export interface AcgLine {
