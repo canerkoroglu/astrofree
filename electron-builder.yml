@@ -16,6 +16,8 @@ extraResources:
     to: THIRD_PARTY_NOTICES.md
   - from: NOTICE.md
     to: NOTICE.md
+  - from: build/icon.png
+    to: icon.png
 asarUnpack:
   - node_modules/swisseph-wasm/wasm/**
 mac:

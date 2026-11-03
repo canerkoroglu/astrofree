@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, nativeTheme, shell } from 'electron'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import type {
@@ -26,6 +26,8 @@ import { electionalSearch, ephemSeries, findReturn, fixedStars, planetaryHours, 
 
 /** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
 const bundledDoc = (name: string) => join(app.isPackaged ? process.resourcesPath : join(__dirname, '../..'), name)
+// The star icon: in development Electron would otherwise show its own icon.
+const appIcon = () => nativeImage.createFromPath(app.isPackaged ? join(process.resourcesPath, 'icon.png') : join(__dirname, '../../build/icon.png'))
 
 let win: BrowserWindow | null = null
 
@@ -37,6 +39,7 @@ function createWindow(): void {
     minHeight: 680,
     show: false,
     title: 'AstroFree',
+    ...(process.platform !== 'darwin' ? { icon: appIcon() } : {}),
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#14151a' : '#f7f5f0',
     autoHideMenuBar: process.platform !== 'darwin',
     webPreferences: {
@@ -284,6 +287,7 @@ app.whenReady().then(async () => {
   void ensureShellPath()
   registerIpc()
   buildMenu()
+  if (process.platform === 'darwin' && !app.isPackaged) app.dock?.setIcon(appIcon())
   createWindow()
   if (!process.env.ASTROFREE_NO_NOTIFY) startNotifier()
   app.on('activate', () => {
