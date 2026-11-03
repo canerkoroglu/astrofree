@@ -29,7 +29,8 @@
     "dist:win": "electron-vite build && electron-builder --win",
     "dist:linux": "electron-vite build && electron-builder --linux",
     "test:e2e": "electron-vite build && electron tests/e2e/run.cjs",
-    "i18n:check": "node scripts/i18n-check.mjs"
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "licenses": "node scripts/third-party-licenses.mjs"
   },
   "dependencies": {
     "electron-updater": "^6.8.11",

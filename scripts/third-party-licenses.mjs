@@ -2,7 +2,6 @@
 // the production dependency tree (main process) plus the libraries and fonts bundled into the
 // renderer. MIT, BSD, ISC, Apache and OFL all require their text to travel with each copy.
 //   node scripts/third-party-licenses.mjs
-import { execFileSync } from 'node:child_process'
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -10,10 +9,12 @@ const root = new URL('..', import.meta.url).pathname
 // Bundled into out/renderer by Vite (imports in src/renderer and their runtime dependencies).
 const RENDERER = ['react', 'react-dom', 'scheduler', 'marked', 'dompurify', '@fontsource/public-sans', '@fontsource/ibm-plex-mono', '@fontsource/noto-sans-symbols', '@fontsource/noto-sans-symbols-2']
 
-const prod = execFileSync('npm', ['ls', '--omit=dev', '--all', '--parseable'], { cwd: root, encoding: 'utf8' })
-  .trim()
-  .split('\n')
-  .slice(1)
+// The production tree comes from package-lock.json, not `npm ls`, so the result is the same on every OS.
+// Optional (platform-specific) packages are left out for the same reason.
+const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'))
+const prod = Object.entries(lock.packages)
+  .filter(([path, info]) => path.startsWith('node_modules/') && !info.dev && !info.optional && !info.devOptional)
+  .map(([path]) => join(root, path))
 const dirs = [...new Set([...prod, ...RENDERER.map((p) => join(root, 'node_modules', p))])]
 
 const entries = dirs
