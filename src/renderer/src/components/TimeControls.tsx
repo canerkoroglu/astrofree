@@ -82,7 +82,7 @@ export default function TimeControls(p: Props) {
               </option>
             ))}
           </select>
-          <button className={`tb-play${p.playing ? ' on' : ''}`} onClick={() => p.onPlaying(!p.playing)} title={t('Animasyon (boşluk tuşu)')}>
+          <button className={`toggle tb-play${p.playing ? ' on' : ''}`} aria-pressed={p.playing} onClick={() => p.onPlaying(!p.playing)} title={t('Animasyon (boşluk tuşu)')}>
             {p.playing ? `❚❚ ${t('Durdur')}` : `▶ ${t('Oynat')}`}
           </button>
           <input
@@ -101,12 +101,12 @@ export default function TimeControls(p: Props) {
             {t('Şimdi')}
           </button>
           <button
-            className={`tb-live${p.live ? ' on' : ''}`}
+            className={`toggle tb-live${p.live ? ' on' : ''}`}
             aria-pressed={p.live}
             onClick={() => p.onLive(!p.live)}
             title={t('Zamanı gerçek saate kilitle (olay zamanı veya Şu An haritası)')}
           >
-            <span className="tb-dot" aria-hidden />
+            <span className="toggle-dot live" aria-hidden />
             {t('Canlı')}
           </button>
         </div>

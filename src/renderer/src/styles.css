@@ -3118,32 +3118,6 @@ td.good, td.num.good, .tag.good { color: var(--good); }
 .timebar .speed {
   width: 72px;
 }
-.tb-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.tb-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  border: 1px solid var(--muted);
-}
-.tb-live.on .tb-dot {
-  background: var(--positive);
-  border-color: var(--positive);
-  animation: tb-pulse 1.6s ease-in-out infinite;
-}
-@keyframes tb-pulse {
-  50% {
-    opacity: 0.35;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tb-live.on .tb-dot {
-    animation: none;
-  }
-}
 /* read-only zone of the time being stepped, top-right of the toolbar */
 .tb-zone {
   font-family: var(--num-font);
@@ -3219,9 +3193,6 @@ td.good, td.num.good, .tag.good { color: var(--good); }
 }
 .toolbar > .grow {
   min-width: 0;
-}
-.toolbar button.on[aria-pressed] {
-  border-color: var(--line-strong);
 }
 .tb-now {
   margin-left: auto;
@@ -3332,4 +3303,51 @@ td.good, td.num.good, .tag.good { color: var(--good); }
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+/* ---- on/off toggles (AI chat, live, play): stay round; "on" = filled dot + tinted pill.
+   The underline remains the mark for choosing one option among several. ---- */
+button.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+}
+button.toggle.on {
+  border-radius: 999px;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  color: var(--ink);
+  font-weight: 600;
+}
+.toggle-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  flex: none;
+}
+button.toggle.on .toggle-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+button.toggle.on .toggle-dot.live {
+  background: var(--positive);
+  border-color: var(--positive);
+  animation: toggle-pulse 1.6s ease-in-out infinite;
+}
+button.toggle.tb-live.on {
+  background: color-mix(in srgb, var(--positive) 12%, transparent);
+  border-color: color-mix(in srgb, var(--positive) 55%, var(--line));
+}
+@keyframes toggle-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  button.toggle.on .toggle-dot.live {
+    animation: none;
+  }
 }
