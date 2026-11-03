@@ -24,6 +24,9 @@ import { startAutoUpdate } from './updater'
 import * as store from './store'
 import { electionalSearch, ephemSeries, findReturn, fixedStars, planetaryHours, transitSearch } from './tools'
 
+/** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
+const bundledDoc = (name: string) => join(app.isPackaged ? process.resourcesPath : join(__dirname, '../..'), name)
+
 let win: BrowserWindow | null = null
 
 function createWindow(): void {
@@ -231,7 +234,10 @@ function buildMenu(): void {
       label: tm('Yardım'),
       submenu: [
         { label: tm('Klavye kısayolları') + '   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
-        { label: tm('GitHub sayfası'), click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') }
+        { label: tm('GitHub sayfası'), click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') },
+        { type: 'separator' },
+        { label: tm('Lisans'), click: () => void shell.openPath(bundledDoc('LICENSE')) },
+        { label: tm('Üçüncü taraf lisansları ve atıflar'), click: () => void shell.openPath(bundledDoc('THIRD_PARTY_NOTICES.md')) }
       ]
     }
   ]

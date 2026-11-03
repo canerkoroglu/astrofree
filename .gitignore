@@ -7,3 +7,6 @@ dist
 *.pem
 *.key
 .taste-skill/
+
+# Tanıtım sitesi brifi (yerel, repoya gönderilmez)
+MARKETING-SPA.md

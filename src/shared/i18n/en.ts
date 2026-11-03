@@ -726,5 +726,7 @@ Rules:
     "+G": "+D",
     "+A": "+M",
     "+Y": "+Y",
+    "Lisans": "License",
+    "Üçüncü taraf lisansları ve atıflar": "Third-party licences and credits",
   }
 }

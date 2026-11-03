@@ -122,7 +122,7 @@ jobs:
             echo "### Kurulum"
             echo "- **macOS:** Apple Silicon için \`arm64\`, Intel için \`x64\` .dmg. Uygulama notarize edilmediği için ilk açılışta sağ tık → **Aç** deyin."
             echo "  \"Hasarlı\" uyarısı alırsanız: \`xattr -cr /Applications/AstroFree.app\`"
-            echo "- **Windows:** \`Setup\` kurulum dosyası ya da kurulumsuz \`portable\` .exe. SmartScreen uyarısında **Ek bilgi → Yine de çalıştır**."
+            echo "- **Windows:** \`win-x64.exe\` kurulum dosyası ya da kurulumsuz \`win-portable.exe\`. SmartScreen uyarısında **Ek bilgi → Yine de çalıştır**."
             echo "- **Linux:** \`.AppImage\` (çalıştırılabilir yapın) ya da \`.deb\`."
           } > "$NOTES"
           gh release edit "v$VERSION" --draft=false --latest --notes-file "$NOTES"
