@@ -3071,3 +3071,214 @@ td.good, td.num.good, .tag.good { color: var(--good); }
 /* knowledge base: accent text, not the on-accent ink */
 .kb-side > button.on { color: var(--accent); }
 .kb .chip.accent { color: var(--accent); }
+
+/* ---- time bar: one fixed row, groups collapse by width instead of wrapping ---- */
+.timebar {
+  display: block;
+  padding: var(--s2) var(--s5);
+  container-type: inline-size;
+  container-name: timebar;
+}
+.tb-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  min-height: 40px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.tb-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding-left: var(--s4);
+  border-left: 1px solid var(--line);
+}
+.timebar .steps.tb-group {
+  gap: 2px;
+}
+.timebar .steps button {
+  min-width: 34px;
+  padding: 4px 6px;
+}
+.timebar .steps button.big {
+  min-width: 34px;
+  padding: 4px 8px;
+}
+.tb-mode button {
+  padding: 6px 12px;
+}
+.tb-step {
+  width: auto;
+  min-width: 112px;
+}
+.tb-play {
+  min-width: 96px;
+}
+.timebar .speed {
+  width: 72px;
+}
+.tb-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tb-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+}
+.tb-live.on .tb-dot {
+  background: var(--positive);
+  border-color: var(--positive);
+  animation: tb-pulse 1.6s ease-in-out infinite;
+}
+@keyframes tb-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-live.on .tb-dot {
+    animation: none;
+  }
+}
+/* read-only zone of the time being stepped, top-right of the toolbar */
+.tb-zone {
+  font-family: var(--num-font);
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+  padding: 0 var(--s2);
+}
+.icon-btn {
+  min-width: 36px;
+  padding: 4px 8px;
+  font-size: 16px;
+  line-height: 1;
+}
+/* Narrower windows: drop the least needed controls first. */
+@container timebar (max-width: 1300px) {
+  .timebar .speed {
+    display: none;
+  }
+}
+@container timebar (max-width: 1200px) {
+  .timebar .tb-fine {
+    display: none;
+  }
+}
+@container timebar (max-width: 1060px) {
+  .timebar .tb-coarse {
+    display: none;
+  }
+}
+
+
+/* ---- toolbar: grouped, single row; parts shorten by width instead of wrapping ---- */
+.toolbar {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: var(--s4);
+  container-type: inline-size;
+  container-name: toolbar;
+  min-width: 0;
+}
+.brand {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tgroup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding-left: var(--s4);
+  border-left: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.toolbar .tgroup.seg {
+  gap: 2px;
+}
+.toolbar .tgroup select {
+  width: auto;
+  flex: none;
+}
+.tg-harmonic {
+  min-width: 118px;
+}
+.tg-house {
+  min-width: 120px;
+  max-width: 170px;
+}
+.tg-partner {
+  max-width: 160px;
+}
+.toolbar > .tb-zone {
+  flex-shrink: 0;
+}
+.toolbar > .grow {
+  min-width: 0;
+}
+.toolbar button.on[aria-pressed] {
+  border-color: var(--line-strong);
+}
+.tb-now {
+  margin-left: auto;
+}
+.toolbar .lbl-icon {
+  display: none;
+}
+@container toolbar (max-width: 1520px) {
+  .brand-name {
+    display: none;
+  }
+}
+@container toolbar (max-width: 1440px) {
+  .toolbar > .tb-zone {
+    display: none;
+  }
+}
+@container toolbar (max-width: 1120px) {
+  .toolbar .lbl-icon {
+    display: inline;
+  }
+  .toolbar .lbl-text {
+    display: none;
+  }
+}
+@container toolbar (max-width: 1180px) {
+  .tg-layers button {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 13px;
+  }
+  .tg-house {
+    min-width: 0;
+    max-width: 130px;
+  }
+  .tg-harmonic {
+    min-width: 0;
+  }
+}
+@container toolbar (max-width: 1060px) {
+  .toolbar {
+    gap: var(--s2);
+  }
+  .toolbar .tgroup {
+    padding-left: var(--s2);
+  }
+  .tg-layers button {
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 12px;
+  }
+}
+
+/* side columns give way on narrow windows so the chart column keeps room */
+.app {
+  grid-template-columns: clamp(220px, 17vw, 264px) minmax(0, 1fr) clamp(300px, 27vw, 400px);
+}
+.app.no-chat {
+  grid-template-columns: clamp(220px, 17vw, 264px) minmax(0, 1fr) 0;
+}

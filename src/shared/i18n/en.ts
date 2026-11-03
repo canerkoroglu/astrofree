@@ -767,5 +767,16 @@ Rules:
     "{n}. durak": "Mansion {n}",
     "Çöpe taşı": "Move to Trash",
     "“{name}” çöp kutusuna taşınsın mı?": "Move “{name}” to the Trash?",
+    "−{x}": "−{x}",
+    "+{x}": "+{x}",
+    "1 dakika": "1 minute",
+    "◀ ▶ ve ← → tuşlarının adım boyu (↑ ↓)": "Step size for ◀ ▶ and the ← → keys (↑ ↓)",
+    "{who} zamanının saat dilimi": "Time zone of the {who} time",
+    "progres tarih": "progressed date",
+    "Katmanlar": "Layers",
+    "İlişki": "Relationship",
+    "Sinastri partneri": "Synastry partner",
+    "Sohbeti göster": "Show chat",
+    "Oynatılan zaman": "Time being stepped",
   }
 }

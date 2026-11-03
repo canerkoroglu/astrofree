@@ -42,6 +42,7 @@ function localStorageFlag(key: string): boolean {
 }
 
 const THEME_NEXT = { system: 'light', light: 'dark', dark: 'system' } as const
+const THEME_ICON = { system: '◐', light: '☀︎', dark: '☾' } as const
 const THEME_LABEL = { system: 'Tema: sistem', light: 'Tema: açık', dark: 'Tema: koyu' } as const
 const OUTER_HELP: Record<OuterKind, string> = {
   transit: 'Seçili tarihteki gökyüzü, natal haritanın etrafında',
@@ -543,8 +544,10 @@ export default function App() {
   return (
     <div className={showChat ? 'app' : 'app no-chat'}>
       <header className="toolbar">
-        <div className="brand">{t('✶ AstroFree')}</div>
-        <div className="seg">
+        <div className="brand" title="AstroFree">
+          ✶ <span className="brand-name">AstroFree</span>
+        </div>
+        <div className="seg tgroup tg-layers" role="group" aria-label={t('Katmanlar')}>
           {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).map((k) => (
             <button
               key={k}
@@ -561,35 +564,38 @@ export default function App() {
             </button>
           ))}
         </div>
-        {outers.includes('synastry') && partner && working.id !== NOW_ID && (
-          <span className="rel-actions">
-            <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
-              {t('Kompozit')}
-            </button>
-            <button
-              onClick={async () => {
-                const tmp = davisonRecord(working, partner, jdToLocal, null)
-                const zone = await window.astro.geo.zone(tmp.place.lat, tmp.place.lon)
-                openChart(davisonRecord(working, partner, jdToLocal, zone), 'natal')
-              }}
-              title={t('İki doğumun zaman ve mekân orta noktası')}
-            >
-              {t('Davison')}
-            </button>
-          </span>
-        )}
         {outers.includes('synastry') && (
-          <select value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)}>
-            {charts
-              .filter((c) => c.id !== working.id)
-              .map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-          </select>
+          <div className="tgroup" role="group" aria-label={t('İlişki')}>
+            <select className="tg-partner" value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)} title={t('Sinastri partneri')}>
+              {charts
+                .filter((c) => c.id !== working.id)
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+            </select>
+            {partner && working.id !== NOW_ID && (
+              <>
+                <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
+                  {t('Kompozit')}
+                </button>
+                <button
+                  onClick={async () => {
+                    const tmp = davisonRecord(working, partner, jdToLocal, null)
+                    const zone = await window.astro.geo.zone(tmp.place.lat, tmp.place.lon)
+                    openChart(davisonRecord(working, partner, jdToLocal, zone), 'natal')
+                  }}
+                  title={t('İki doğumun zaman ve mekân orta noktası')}
+                >
+                  {t('Davison')}
+                </button>
+              </>
+            )}
+          </div>
         )}
-        <select value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
+        <div className="tgroup" role="group" aria-label={t('Görünüm')}>
+        <select className="tg-harmonic" value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
           {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
               {n === 1 ? t('Harmonik: yok') : `${t('Harmonik')} ${n}`}
@@ -597,6 +603,7 @@ export default function App() {
           ))}
         </select>
         <select
+          className="tg-house"
           value={settings.houseSystem}
           onChange={(e) => saveSettings({ ...settings, houseSystem: e.target.value })}
           title={t('Ev sistemi')}
@@ -607,6 +614,7 @@ export default function App() {
             </option>
           ))}
         </select>
+        </div>
         <span className="grow" />
         {updateReady ? (
           <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
@@ -617,21 +625,32 @@ export default function App() {
             {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
-        <button
-          onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-          title={t('Tema: sistem → açık → koyu')}
-        >
-          {t(THEME_LABEL[settings.theme])}
-        </button>
-        <button onClick={() => setShowChat(!showChat)}>{showChat ? t('Sohbeti gizle') : t('AI sohbet')}</button>
-        <button onClick={() => setShowSettings(true)} title={t('Ayarlar')}>
-          {t('Ayarlar')}
-        </button>
+        <span className="tb-zone" title={t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? t('Doğum') : t('Olay') })}>
+          {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
+        </span>
+        <div className="tgroup">
+          <button
+            className="icon-btn"
+            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            aria-label={t(THEME_LABEL[settings.theme])}
+          >
+            {THEME_ICON[settings.theme]}
+          </button>
+          <button className={showChat ? 'on' : ''} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
+            {t('AI sohbet')}
+          </button>
+          <button onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
+            <span className="lbl-icon" aria-hidden>
+              ⚙︎
+            </span>
+            <span className="lbl-text">{t('Ayarlar')}</span>
+          </button>
+        </div>
       </header>
 
       <TimeControls
         local={targetLocal}
-        tzText={`${effTarget === 'natal' ? t('Doğum') : t('Olay')} · ${tzLabel(targetTz)} ${fmtOffset(offsetAt(targetTz, targetJd, targetLon))}`}
         target={effTarget}
         canTargetEvent={outers.length > 0}
         onTarget={setTarget}
@@ -777,7 +796,7 @@ export default function App() {
                     </button>
                   </span>
                 )}
-                {o.kind === 'progressed' && computed.progressedJd ? ` (progres tarih ${fmtLocal(jdToLocal(computed.progressedJd, working.tz, working.place.lon))})` : ''}
+                {o.kind === 'progressed' && computed.progressedJd ? ` (${t('progres tarih')} ${fmtLocal(jdToLocal(computed.progressedJd, working.tz, working.place.lon))})` : ''}
               </div>
             ))}
           </div>
