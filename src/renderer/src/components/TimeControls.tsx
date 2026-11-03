@@ -48,7 +48,7 @@ export default function TimeControls(p: Props) {
     ]
     const list = dir < 0 ? units : [...units].reverse()
     return list.map(([unit, short, label, cls]) => (
-      <button key={unit} className={cls} onClick={() => p.onStep(dir, unit, 1)} title={t(dir < 0 ? '−{x}' : '+{x}', { x: t(label) })}>
+      <button key={unit} className={cls} onClick={() => p.onStep(dir, unit, 1)} data-tip={t(dir < 0 ? '−{x}' : '+{x}', { x: t(label) })} aria-label={t(dir < 0 ? '−{x}' : '+{x}', { x: t(label) })}>
         {t(dir < 0 ? '−' + short : '+' + short)}
       </button>
     ))
@@ -67,11 +67,11 @@ export default function TimeControls(p: Props) {
 
         <div className="steps tb-group">
           {steps(-1)}
-          <button className="big" onClick={() => p.onStep(-1)} title={`−${t(step.label)} (←)`}>
+          <button className="big" onClick={() => p.onStep(-1)} data-tip={`−${t(step.label)} (←)`} aria-label={`−${t(step.label)}`}>
             ◀
           </button>
           <DateTimeField className="dtf-bar" seconds value={p.local} onChange={p.onSetLocal} />
-          <button className="big" onClick={() => p.onStep(1)} title={`+${t(step.label)} (→)`}>
+          <button className="big" onClick={() => p.onStep(1)} data-tip={`+${t(step.label)} (→)`} aria-label={`+${t(step.label)}`}>
             ▶
           </button>
           {steps(1)}

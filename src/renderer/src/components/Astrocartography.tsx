@@ -71,7 +71,9 @@ export default function Astrocartography({
               onClick={() => setShown(toggle(shown, k))}
               onMouseEnter={() => setFocus(k)}
               onMouseLeave={() => setFocus(null)}
-              title={POINT[k].name}
+              aria-label={POINT[k].name}
+              aria-pressed={shown.has(k)}
+              data-tip={`${POINT[k].name} · ${shown.has(k) ? t('çizgileri gizle') : t('çizgileri göster')}`}
             >
               <span className={`glyph tone-${acgTone(k)}`}>{glyph(k)}</span>
             </button>

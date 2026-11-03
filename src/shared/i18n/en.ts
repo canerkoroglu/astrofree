@@ -849,5 +849,7 @@ Rules:
     "Transit ve Bugün": "Transits and Today",
     "Bilgisayarınızın saat dilimi": "Your computer's time zone",
     "Ayarlarda elle seçildi": "Chosen in Settings",
+    "çizgileri gizle": "hide lines",
+    "çizgileri göster": "show lines",
   }
 }

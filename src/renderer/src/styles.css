@@ -3826,3 +3826,44 @@ button.head-edit {
   background: var(--panel-2);
   color: var(--ink);
 }
+
+/* ---- quick tooltip: any element with data-tip shows it right under itself, at once ---- */
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-2px);
+  z-index: 40;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--ui-font);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.08s, transform 0.08s;
+}
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* tooltips on controls at a window edge open toward the inside */
+.tip-end[data-tip]::after {
+  left: auto;
+  right: 0;
+  transform: translateY(-2px);
+}
+.tip-end[data-tip]:hover::after,
+.tip-end[data-tip]:focus-visible::after {
+  transform: translateY(0);
+}

@@ -682,9 +682,10 @@ export default function App() {
         </div>
         <div className="tgroup">
           <button
-            className="icon-btn"
+            className="icon-btn tip-end"
             onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
             title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            data-tip={t(THEME_LABEL[settings.theme])}
             aria-label={t(THEME_LABEL[settings.theme])}
           >
             {THEME_ICON[settings.theme]}
@@ -776,10 +777,10 @@ export default function App() {
                       </span>
                     </button>
 <span className="row-actions">
-                    <button className="x" title={t('Düzenle')} aria-label={t('Düzenle')} onClick={() => setEditor(c)}>
+                    <button className="x tip-end" data-tip={t('Düzenle')} aria-label={t('Düzenle')} onClick={() => setEditor(c)}>
                       ✎
                     </button>
-                    <button className="x" title={t('Sil')} onClick={() => void removeChart(c)}>
+                    <button className="x tip-end" data-tip={t('Sil')} aria-label={t('Sil')} onClick={() => void removeChart(c)}>
                       ×
                     </button>
                     </span>
