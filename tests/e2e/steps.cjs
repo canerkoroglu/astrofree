@@ -13,7 +13,10 @@ function steps({ ai, tmp }) {
   const S = []
   const step = (name, js, wait) => S.push({ name, js, wait })
   step('helpers', HELPERS, 100)
-  step('onboarding', `(()=>{const o=document.querySelector('.onboarding');if(!o)return ok('İlk açılış rehberi',false,'görünmedi');c('.onboarding .actions button','Atla');return ok('İlk açılış rehberi',true)})()`, 500)
+  step('onboarding', `(()=>{const o=document.querySelector('.onboarding');if(!o)return ok('İlk açılış rehberi',false,'görünmedi');const skip=[...o.querySelectorAll('.actions button')].find(b=>b.textContent.trim()==='Atla');return ok('Lisans onayı olmadan geçilemiyor',skip.disabled)})()`, 200)
+  step('terms', `(()=>{document.querySelector('.onboarding .terms-check input').click();return 1})()`, 300)
+  step('onboarding done', `(()=>{c('.onboarding .actions button','Atla');return 1})()`, 500)
+  step('terms saved', `window.astro.settings.get().then(s=>ok('İlk açılış rehberi ve lisans onayı',!document.querySelector('.onboarding')&&!!s.termsAccepted&&!!s.termsAcceptedAt&&!document.querySelector('.terms-dialog')))`)
   step('ephemeris', `window.astro.compute([{jdUT:2430377.5243055555,lat:38.25,lon:-85.7667,houseSystem:'P',sidMode:null,bodies:[0,1,9]}]).then(r=>{const b=r[0].bodies;return ok('Efemeris doğruluğu',Math.abs(b[0].lon-297.2930)<0.001&&Math.abs(b[1].lon-312.4323)<0.002&&Math.abs(r[0].asc-139.5244)<0.01,'Güneş '+b[0].lon.toFixed(4))})`)
   step('geo', `Promise.all(['Kadıköy','Londra','louisville, kentucky'].map(q=>window.astro.geo.search(q,'tr'))).then(r=>ok('Çevrimdışı şehir arama',r.every(x=>x.length>0)&&r[0][0].zone==='Europe/Istanbul'))`)
   step('new person', `c('.side-actions button','+ Kişi')`, 1500)

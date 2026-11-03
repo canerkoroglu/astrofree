@@ -3,6 +3,7 @@ import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
 import type { AppSettings, ProviderId, ProviderStatus } from '@shared/types'
+import { acceptTerms, termsAccepted, TermsCheckbox } from './TermsAck'
 
 /** First-run guide: language and theme, the first chart, the AI interpreter. */
 export default function Onboarding({
@@ -24,6 +25,7 @@ export default function Onboarding({
     if (step === 2 && !statuses) void window.astro.ai.detect().then(setStatuses)
   }, [step, statuses])
 
+  const agreed = termsAccepted(settings)
   const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
   const steps = [t('Hoş geldiniz'), t('İlk harita'), t('Yapay zekâ'), t('Hazır')]
 
@@ -73,6 +75,10 @@ export default function Onboarding({
                 </select>
               </label>
             </div>
+            <TermsCheckbox
+              checked={agreed}
+              onChange={(v) => onSettings(v ? acceptTerms(settings) : { ...settings, termsAccepted: undefined, termsAcceptedAt: undefined })}
+            />
           </section>
         )}
 
@@ -129,13 +135,13 @@ export default function Onboarding({
         )}
 
         <footer className="actions">
-          <button className="link" onClick={onDone}>
+          <button className="link" disabled={!agreed} onClick={onDone} title={agreed ? undefined : t('Önce lisans bildirimini onaylayın')}>
             {t('Atla')}
           </button>
           <span className="grow" />
           {step > 0 && <button onClick={() => setStep(step - 1)}>{t('Geri')}</button>}
           {step < 3 ? (
-            <button className="primary" onClick={() => setStep(step + 1)}>
+            <button className="primary" disabled={!agreed} onClick={() => setStep(step + 1)} title={agreed ? undefined : t('Önce lisans bildirimini onaylayın')}>
               {t('Devam')}
             </button>
           ) : (

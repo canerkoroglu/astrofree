@@ -96,6 +96,9 @@ export const DEFAULT_ASPECTS: Record<AspectKey, AspectSetting> = {
   biquintile: asp(false, 1.5, 1)
 }
 
+/** Bump when NOTICE.md's terms change: everyone is asked to acknowledge them again. */
+export const TERMS_VERSION = '2026-11-03'
+
 export const DEFAULT_SETTINGS: AppSettings = {
   settingsVersion: 3,
   houseSystem: 'B',

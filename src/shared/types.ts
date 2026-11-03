@@ -143,6 +143,9 @@ export interface AppSettings {
   progressedAngles: 'naibod' | 'solarArc'
   points: Record<string, boolean>
   aspects: Record<AspectKey, AspectSetting>
+  /** Version of the licence/disclaimer notice the user acknowledged, and when. */
+  termsAccepted?: string
+  termsAcceptedAt?: string
   /** User colours for aspect lines and glyphs (hex); missing keys use the theme default. */
   aspectColors: Partial<Record<AspectKey, string>>
   showNatalAspectsInBiwheel: boolean

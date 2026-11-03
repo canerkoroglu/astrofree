@@ -868,5 +868,10 @@ Rules:
     "AstroFree hakkında": "About AstroFree",
     "AstroFree özgür yazılımdır; GNU Affero Genel Kamu Lisansı 3. sürüm veya sonrası koşullarıyla dağıtabilir ve değiştirebilirsiniz. Hiçbir garanti verilmez. Değiştirilmiş sürümler bu bilgiyi korumalı, farklı bir ad ve logo kullanmalıdır.": "AstroFree is free software; you can redistribute and modify it under the GNU Affero General Public License, version 3 or later. It comes with no warranty. Modified versions must keep this notice and use a different name and logo.",
     "Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye değildir. Web sitesindeki kullanım koşulları resmi sürümler için geçerlidir.": "Astrological calculations, interpretations and AI output are for personal exploration; they are not medical, legal, financial or any other professional advice. The website's terms of use apply to official releases.",
+    "AstroFree’nin GNU AGPL-3.0 lisansı ve ek koşullarıyla, hiçbir garanti verilmeden sunulduğunu; astrolojik yorumların ve yapay zekâ çıktılarının tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye olmadığını okudum ve kabul ediyorum.": "I have read and accept that AstroFree is provided under the GNU AGPL-3.0 and its additional terms, without any warranty, and that astrological interpretations and AI output are not medical, legal, financial or any other professional advice.",
+    "Lisans ve koşullar": "Licence and terms",
+    "AstroFree ücretsiz ve açık kaynaktır. Devam etmeden önce lütfen aşağıdaki bildirimi onaylayın.": "AstroFree is free and open source. Please confirm the notice below before you continue.",
+    "Onayla ve devam et": "Confirm and continue",
+    "Önce lisans bildirimini onaylayın": "Please confirm the licence notice first",
   }
 }

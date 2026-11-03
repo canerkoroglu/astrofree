@@ -29,6 +29,7 @@ import { pickLocale } from '@shared/i18n'
 import { parseKnowledge, type KbFile } from '@shared/knowledge'
 import Knowledge from './components/Knowledge'
 import Logo from './components/Logo'
+import TermsDialog, { termsAccepted } from './components/TermsAck'
 import { knowledgeText, matchKnowledge } from './lib/kb'
 
 const NOW_ID = 'now'
@@ -1104,6 +1105,7 @@ export default function App() {
           }}
         />
       )}
+      {!obOpen && !termsAccepted(settings) && <TermsDialog settings={settings} onAccept={saveSettings} />}
       {showKeys && <Shortcuts onClose={() => setShowKeys(false)} />}
       {showSettings && (
         <SettingsDialog
