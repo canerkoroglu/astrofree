@@ -126,7 +126,7 @@ export default function ElectionalSearch({
           <label className="inline">
             <input type="checkbox" checked={aspectOn} onChange={(e) => setAspectOn(e.target.checked)} /> {t('Şu açı olsun:')}
           </label>
-          <div className="row" style={{ opacity: aspectOn ? 1 : 0.5 }}>
+          <div className="row" style={{ opacity: aspectOn ? 1 : 0.6 }}>
             <select value={asp.a} onChange={(e) => setAsp({ ...asp, a: +e.target.value })}>
               {BODIES.map((b) => (
                 <option key={b} value={b}>
@@ -156,7 +156,7 @@ export default function ElectionalSearch({
           <label className="inline">
             <input type="checkbox" checked={angOn} onChange={(e) => setAngOn(e.target.checked)} /> {t('ASC/DSC/MC/IC yakınında:')}
           </label>
-          <div className="row" style={{ opacity: angOn ? 1 : 0.5 }}>
+          <div className="row" style={{ opacity: angOn ? 1 : 0.6 }}>
             <select value={ang.body} onChange={(e) => setAng({ ...ang, body: +e.target.value })}>
               {BODIES.map((b) => (
                 <option key={b} value={b}>

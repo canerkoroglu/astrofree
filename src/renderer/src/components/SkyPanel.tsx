@@ -7,7 +7,7 @@ import { mansionOf } from '../lib/kb'
 import { jdToLocal } from '../lib/time'
 
 const p2 = (n: number) => String(n).padStart(2, '0')
-const ELEMENT_COLOR = { fire: '#e0533a', earth: '#4a9a3c', air: '#d4a12a', water: '#3878d0' } as const
+const ELEMENT_COLOR = { fire: 'var(--el-fire)', earth: 'var(--el-earth)', air: 'var(--el-air)', water: 'var(--el-water)' } as const
 
 /** Moon disc lit like the real phase (waxing lit on the right, northern view). */
 function MoonIcon({ angle, size = 44 }: { angle: number; size?: number }) {

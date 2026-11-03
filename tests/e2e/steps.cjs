@@ -7,6 +7,8 @@ window.ok=(name,cond,detail='')=>(cond?'PASS ':'FAIL ')+name+(detail?' — '+det
 window.aiAsk=(provider,model,q)=>new Promise(res=>{const id='t'+Math.random();let txt='';const off=window.astro.ai.onEvent(e=>{if(e.id!==id)return;if(e.type==='delta')txt+=e.text;if(e.type==='done'){off();res('OK: '+txt.trim().slice(0,120))}if(e.type==='error'){off();res('ERR: '+e.message.slice(0,200))}});window.astro.ai.start({id,provider,model,system:'Kısa yanıt ver.',context:'',messages:[{role:'user',content:q}]});setTimeout(()=>{off();res('TIMEOUT')},120000)});
 'ok'`
 
+const CONTRAST = require('./contrast.cjs')
+
 function steps({ ai, tmp }) {
   const S = []
   const step = (name, js, wait) => S.push({ name, js, wait })
@@ -51,6 +53,13 @@ function steps({ ai, tmp }) {
   step('kb open', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 1200)
   step('kb tab', `c('.view-tabs button','Bilgi Bankası')`, 800)
   step('kb check', `(()=>{const t=document.querySelector('.kb-main')?.innerText||'';return ok('Bilgi bankası eşleşmesi',t.includes('Kova durağı')&&t.includes('Natal Ay 23. durakta'),t.slice(0,80).replace(/\\n/g,' | '))})()`)
+  for (const theme of ['light', 'dark']) {
+    step('theme ' + theme, `(()=>{document.documentElement.setAttribute('data-theme','${theme}');return 1})()`, 400)
+    for (const v of ['Harita', 'Natal Bilgiler', 'Bilgi Bankası']) {
+      step('view ' + v, `c('.view-tabs button','${v}')`, 900)
+      step('contrast ' + theme + v, `(()=>{const bad=${CONTRAST}.filter(x=>!x.includes('[disabled]'));return ok('Kontrast (${theme}, ${v})',bad.length===0,bad.slice(0,3).join(' || '))})()`)
+    }
+  }
   step('interp', `window.astro.interp.add({id:'i1',chartId:'x',title:'t',content:'c',provider:'test',createdAt:Date.now()}).then(a=>ok('Yorum arşivi',a.length===1))`)
   if (ai) {
     step('claude', `aiAsk('claude-code','','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Claude Code — '+r)`)

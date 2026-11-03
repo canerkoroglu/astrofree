@@ -20,17 +20,17 @@ import {
 } from '../lib/astro'
 
 const C = 500
-const ELEMENT_COLOR = { fire: '#d9452b', earth: '#3f8f3a', air: '#c48f00', water: '#2b6cc4' } as const
+const ELEMENT_COLOR = { fire: 'var(--el-fire)', earth: 'var(--el-earth)', air: 'var(--el-air)', water: 'var(--el-water)' } as const
 export const LAYER_COLOR: Record<string, string> = {
   natal: 'var(--ink)',
-  transit: '#1d8a55',
-  progressed: '#8a43b8',
-  solarArc: '#c25a14',
-  synastry: '#1f62c4',
-  solarReturn: '#b07d00',
-  lunarReturn: '#3f7fae'
+  transit: 'var(--ly-transit)',
+  progressed: 'var(--ly-progressed)',
+  solarArc: 'var(--ly-solar-arc)',
+  synastry: 'var(--ly-synastry)',
+  solarReturn: 'var(--ly-solar-return)',
+  lunarReturn: 'var(--ly-lunar-return)'
 }
-const ASPECT_COLOR = { hard: '#d23c3c', soft: '#2d62c8', minor: '#2f9a5a' } as const
+const ASPECT_COLOR = { hard: 'var(--asp-hard)', soft: 'var(--asp-soft)', minor: 'var(--asp-minor)' } as const
 
 interface Props {
   natal: Layer

@@ -166,6 +166,11 @@ export default function Knowledge({
             </div>
             <textarea spellCheck={false} value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} />
           </div>
+        ) : !shown.length && file !== RELEVANT && !query && files.find((f) => f.name === file)?.text.trim() ? (
+          // A file without "###" entries (notes, a report) is shown as a document.
+          <article className="kb-entry">
+            <MarkdownBlock text={files.find((f) => f.name === file)!.text} />
+          </article>
         ) : !shown.length ? (
           <p className="muted pad">
             {query ? t('Eşleşen kayıt yok.') : file === RELEVANT ? t('Bu haritayla eşleşen kayıt yok.') : t('Bu dosyada kayıt yok.')}

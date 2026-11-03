@@ -43,7 +43,7 @@ export interface StarConj {
 }
 
 const p2 = (n: number) => String(n).padStart(2, '0')
-const ELEMENT_COLOR = { fire: '#d9452b', earth: '#3f8f3a', air: '#c48f00', water: '#2b6cc4' } as const
+const ELEMENT_COLOR = { fire: 'var(--el-fire)', earth: 'var(--el-earth)', air: 'var(--el-air)', water: 'var(--el-water)' } as const
 
 function degMin(lon: number) {
   const s = splitDeg(lon)

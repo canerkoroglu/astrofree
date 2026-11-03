@@ -41,7 +41,14 @@ export function parseKnowledge(file: string, text: string): KbEntry[] {
     }
     cur = null
   }
+  let fence = false
   for (const line of text.replace(/\r\n/g, '\n').split('\n')) {
+    // Headings inside code blocks are examples, not entries.
+    if (/^\s*(```|~~~)/.test(line)) fence = !fence
+    if (fence || /^\s*(```|~~~)/.test(line)) {
+      if (cur) cur.body += line + '\n'
+      continue
+    }
     if (/^#\s+/.test(line)) {
       flush()
       category = line.replace(/^#\s+/, '').trim()

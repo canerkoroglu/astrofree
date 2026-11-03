@@ -2238,7 +2238,7 @@ textarea {
   height: 32px;
   padding: 0;
   font-size: 16px;
-  opacity: 0.45;
+  opacity: 0.6;
 }
 .acg-chip.on {
   opacity: 1;
@@ -3004,3 +3004,70 @@ input[type='range'] {
 .composer-row > button:last-child {
   flex-shrink: 0;
 }
+
+
+/* ---- data colours: element, aspect and layer hues tuned for ≥4.5:1 on each theme ---- */
+:root {
+  --el-fire: #c0392b;
+  --el-earth: #2e7d32;
+  --el-air: #8a6200;
+  --el-water: #1f5fae;
+  --ly-transit: #17734a;
+  --good: #1f7a42;
+  --asp-hard: #c62828;
+  --asp-soft: #1f5fae;
+  --asp-minor: #1f7a42;
+  --ly-progressed: #7b3aa6;
+  --ly-solar-arc: #a84a0e;
+  --ly-synastry: #1f5fae;
+  --ly-solar-return: #8a6200;
+  --ly-lunar-return: #2f6a96;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --el-fire: #f07a5f;
+    --el-earth: #6cc06a;
+    --el-air: #e6b84a;
+    --el-water: #6fa8f0;
+    --ly-transit: #45c486;
+    --good: #56c47e;
+    --asp-hard: #f26b6b;
+    --asp-soft: #6fa8f0;
+    --asp-minor: #56c47e;
+    --ly-progressed: #c08ae6;
+    --ly-solar-arc: #f0955a;
+    --ly-synastry: #6fa8f0;
+    --ly-solar-return: #e6b84a;
+    --ly-lunar-return: #7fb4dc;
+  }
+}
+:root[data-theme='dark'] {
+  --el-fire: #f07a5f;
+  --el-earth: #6cc06a;
+  --el-air: #e6b84a;
+  --el-water: #6fa8f0;
+  --ly-transit: #45c486;
+  --good: #56c47e;
+  --asp-hard: #f26b6b;
+  --asp-soft: #6fa8f0;
+  --asp-minor: #56c47e;
+  --ly-progressed: #c08ae6;
+  --ly-solar-arc: #f0955a;
+  --ly-synastry: #6fa8f0;
+  --ly-solar-return: #e6b84a;
+  --ly-lunar-return: #7fb4dc;
+}
+.asp-hard { color: var(--asp-hard); }
+.asp-soft { color: var(--asp-soft); }
+.asp-minor { color: var(--asp-minor); }
+td.good, td.num.good, .tag.good { color: var(--good); }
+.t-col { color: var(--ly-transit); }
+.update-pill { background: color-mix(in srgb, var(--ly-transit) 16%, transparent); color: var(--ly-transit); }
+.el-fire { color: var(--el-fire); }
+.el-earth { color: var(--el-earth); }
+.el-air { color: var(--el-air); }
+.el-water { color: var(--el-water); }
+
+/* knowledge base: accent text, not the on-accent ink */
+.kb-side > button.on { color: var(--accent); }
+.kb .chip.accent { color: var(--accent); }
