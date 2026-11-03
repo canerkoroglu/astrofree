@@ -625,7 +625,7 @@ export default function App() {
             {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
-        <span className="tb-zone" title={t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? t('Doğum') : t('Olay') })}>
+        <span className="tb-zone" title={t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? (working.kind === 'event' ? t('Olay anı') : t('Doğum')) : t('Transit') })}>
           {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
         </span>
         <div className="tgroup">
@@ -653,8 +653,12 @@ export default function App() {
       <TimeControls
         local={targetLocal}
         target={effTarget}
-        canTargetEvent={outers.length > 0}
-        onTarget={setTarget}
+        natalLabel={working.kind === 'event' ? t('Olay anı') : t('Doğum')}
+        onTarget={(tg) => {
+          // Stepping the transit date needs an outer layer: switch Transit on for it.
+          if (tg === 'event' && !outers.length) toggleOuter('transit')
+          else setTarget(tg)
+        }}
         stepIndex={stepIndex}
         onStepIndex={setStepIndex}
         onStep={(d, u, n) => step(d, u, n)}

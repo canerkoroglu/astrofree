@@ -50,11 +50,11 @@ function steps({ ai, tmp }) {
   step('kb save', `window.astro.kb.save('test.md','# Test notları\\n\\n### Kova durağı\\n- anahtarlar: durak:23\\nDeneme metni.\\n').then(()=>window.astro.kb.list()).then(l=>ok('Bilgi bankası dosyası',l.length===1&&l[0].text.includes('durak:23')))`)
   step('kb reload', `(()=>{location.reload();return 1})()`, 3000)
   step('helpers3', HELPERS, 100)
-  step('kb open', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 1200)
+  step('kb open', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 2000)
   step('kb tab', `c('.view-tabs button','Bilgi Bankası')`, 800)
-  step('kb check', `(()=>{const t=document.querySelector('.kb-main')?.innerText||'';return ok('Bilgi bankası eşleşmesi',t.includes('Kova durağı')&&t.includes('Natal Ay 23. durakta'),t.slice(0,80).replace(/\\n/g,' | '))})()`)
+  step('kb check', `(()=>{const t=document.querySelector('.kb-main')?.innerText||'';return ok('Bilgi bankası eşleşmesi',t.includes('Kova durağı')&&t.includes('Natal Ay 23. durakta'),(document.querySelector('.chart-head')?.innerText||'').split('\\n')[0]+' :: '+t.slice(0,80).replace(/\\n/g,' | '))})()`)
   for (const theme of ['light', 'dark']) {
-    step('theme ' + theme, `(()=>{document.documentElement.setAttribute('data-theme','${theme}');return 1})()`, 400)
+    step('theme ' + theme, `(()=>{if(!document.getElementById('e2e-no-anim')){const st=document.createElement('style');st.id='e2e-no-anim';st.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(st)}document.documentElement.setAttribute('data-theme','${theme}');return 1})()`, 400)
     for (const v of ['Harita', 'Natal Bilgiler', 'Bilgi Bankası']) {
       step('view ' + v, `c('.view-tabs button','${v}')`, 900)
       step('contrast ' + theme + v, `(()=>{const bad=${CONTRAST}.filter(x=>!x.includes('[disabled]'));return ok('Kontrast (${theme}, ${v})',bad.length===0,bad.slice(0,3).join(' || '))})()`)

@@ -18,7 +18,8 @@ export const STEPS: { unit: StepUnit; n: number; label: string }[] = [
 interface Props {
   local: LocalDateTime
   target: 'event' | 'natal'
-  canTargetEvent: boolean
+  /** Label of the chart's own moment: birth, or the event for event charts. */
+  natalLabel: string
   onTarget: (t: 'event' | 'natal') => void
   stepIndex: number
   onStepIndex: (i: number) => void
@@ -54,11 +55,11 @@ export default function TimeControls(p: Props) {
     <div className="timebar">
       <div className="tb-row">
         <div className="seg tb-mode" role="group" aria-label={t('Oynatılan zaman')}>
-          <button className={p.target === 'event' ? 'on' : ''} disabled={!p.canTargetEvent} onClick={() => p.onTarget('event')} title={t('Transit/progresyon zamanını oynat')}>
-            {t('Olay')}
+          <button className={p.target === 'natal' ? 'on' : ''} onClick={() => p.onTarget('natal')} title={t('Haritanın kendi anını oynat (rektifikasyon)')}>
+            {p.natalLabel}
           </button>
-          <button className={p.target === 'natal' ? 'on' : ''} onClick={() => p.onTarget('natal')} title={t('Doğum zamanını oynat (rektifikasyon)')}>
-            {t('Doğum')}
+          <button className={p.target === 'event' ? 'on' : ''} onClick={() => p.onTarget('event')} title={t('Transit, progresyon ve dönüşlerin tarihini oynat (katman kapalıysa Transit açılır)')}>
+            {t('Transit')}
           </button>
         </div>
 
