@@ -3351,3 +3351,27 @@ button.toggle.tb-live.on {
     animation: none;
   }
 }
+
+/* time zone readout doubles as the shortcut to change it */
+button.tb-zone {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 999px;
+  min-height: 0;
+  padding: 4px var(--s3);
+  font-weight: 400;
+}
+button.tb-zone:hover {
+  border-color: var(--line);
+  background: var(--panel-2);
+}
+.focus-flash {
+  animation: focus-flash 1.6s ease-out 1;
+}
+@keyframes focus-flash {
+  0%,
+  40% {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+}

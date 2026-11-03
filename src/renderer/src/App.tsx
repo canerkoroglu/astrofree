@@ -98,6 +98,7 @@ export default function App() {
   const [aspectLayer, setAspectLayer] = useState(-1)
   const [editor, setEditor] = useState<ChartRecord | null>(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [settingsFocus, setSettingsFocus] = useState<'zone' | undefined>()
   const [filter, setFilter] = useState('')
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
@@ -625,9 +626,23 @@ export default function App() {
             {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
-        <span className="tb-zone" title={t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? (working.kind === 'event' ? t('Olay anı') : t('Doğum')) : t('Transit') })}>
+        <button
+          className="tb-zone"
+          onClick={() => {
+            if (effTarget === 'natal' && working.id !== NOW_ID) setEditor(working)
+            else {
+              setSettingsFocus('zone')
+              setShowSettings(true)
+            }
+          }}
+          title={
+            t('{who} zamanının saat dilimi', { who: effTarget === 'natal' ? (working.kind === 'event' ? t('Olay anı') : t('Doğum')) : t('Transit') }) +
+            ' — ' +
+            (effTarget === 'natal' && working.id !== NOW_ID ? t('değiştirmek için haritayı düzenleyin') : t('değiştirmek için tıklayın (Ayarlar → Genel)'))
+          }
+        >
           {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
-        </span>
+        </button>
         <div className="tgroup">
           <button
             className="icon-btn"
@@ -653,7 +668,7 @@ export default function App() {
       <TimeControls
         local={targetLocal}
         target={effTarget}
-        natalLabel={working.kind === 'event' ? t('Olay anı') : t('Doğum')}
+        natalLabel={working.id === NOW_ID ? t('Gökyüzü') : working.kind === 'event' ? t('Olay anı') : t('Doğum')}
         onTarget={(tg) => {
           // Stepping the transit date needs an outer layer: switch Transit on for it.
           if (tg === 'event' && !outers.length) toggleOuter('transit')
@@ -1011,9 +1026,14 @@ export default function App() {
       {showSettings && (
         <SettingsDialog
           settings={settings}
-          onClose={() => setShowSettings(false)}
+          focus={settingsFocus}
+          onClose={() => {
+            setShowSettings(false)
+            setSettingsFocus(undefined)
+          }}
           onSave={(s) => {
             setShowSettings(false)
+            setSettingsFocus(undefined)
             saveSettings(s)
           }}
         />

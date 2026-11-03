@@ -3,7 +3,7 @@ import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, 
 
 const SAMPLE = { y: 2026, m: 1, d: 17 }
 import { t } from '../lib/i18n'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
 import { ASPECTS, AYANAMSAS, HOUSE_SYSTEMS, OPTIONAL_POINTS, POINT, glyph } from '../lib/astro'
@@ -14,14 +14,21 @@ type Tab = 'chart' | 'aspects' | 'ai' | 'general'
 export default function SettingsDialog({
   settings,
   onSave,
-  onClose
+  onClose,
+  focus
 }: {
   settings: AppSettings
   onSave: (s: AppSettings) => void
   onClose: () => void
+  /** Open straight at a section, e.g. the time zone settings. */
+  focus?: 'zone'
 }) {
   const [s, setS] = useState<AppSettings>(settings)
-  const [tab, setTab] = useState<Tab>('chart')
+  const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : 'chart')
+  const zoneRef = useRef<HTMLFieldSetElement>(null)
+  useEffect(() => {
+    if (focus === 'zone') zoneRef.current?.scrollIntoView({ block: 'start' })
+  }, [focus])
   const [keys, setKeys] = useState<Record<string, string>>({})
   const [hasKey, setHasKey] = useState<Record<string, boolean>>({})
   const [backupMsg, setBackupMsg] = useState('')
@@ -291,7 +298,7 @@ export default function SettingsDialog({
                 ))}
               </select>
             </label>
-            <fieldset>
+            <fieldset ref={zoneRef} className={focus === 'zone' ? 'focus-flash' : ''}>
               <legend>{t('Saat dilimi ve tarih biçimi')}</legend>
               <div className="muted small">
                 {t('Bugün haritası, transitler, gökyüzü olayları ve gezegen saatleri bu saat dilimine göre gösterilir. Doğum haritaları kendi doğum yerinin saat dilimini kullanır.')}

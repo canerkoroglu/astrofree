@@ -781,5 +781,8 @@ Rules:
     "Olay anı": "Event moment",
     "Haritanın kendi anını oynat (rektifikasyon)": "Step the chart's own moment (rectification)",
     "Transit, progresyon ve dönüşlerin tarihini oynat (katman kapalıysa Transit açılır)": "Step the date for transits, progressions and returns (turns Transit on if no layer is shown)",
+    "değiştirmek için haritayı düzenleyin": "edit the chart to change it",
+    "değiştirmek için tıklayın (Ayarlar → Genel)": "click to change (Settings → General)",
+    "Gökyüzü": "Sky",
   }
 }
