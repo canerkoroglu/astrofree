@@ -271,7 +271,8 @@ Swiss Ephemeris AGPL-3.0 (ya da ücretli profesyonel lisans) ile dağıtılır. 
 bileşenlerle tam uyum sağlar ve değiştirilmiş bir sürümü web hizmeti olarak sunanların da kaynak kodunu paylaşmasını
 gerektirir. Kapalı kaynak bir türev mümkün değildir.
 
-Üçüncü taraf bileşenlerin listesi [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), lisans uyumluluğu
+Üçüncü taraf bileşenlerin listesi [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), tam lisans metinleri
+[THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt), lisans uyumluluğu
 analizi [docs/FOSS-ANALYSIS.md](docs/FOSS-ANALYSIS.md) dosyasındadır.
 
-Şehir verisi © GeoNames (CC BY 4.0) · Harita verisi: Natural Earth (kamu malı).
+Şehir verisi © GeoNames (CC BY 4.0) · Çevrimiçi yer arama: Open-Meteo (CC BY 4.0) · Harita verisi: Natural Earth (kamu malı).

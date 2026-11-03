@@ -33,6 +33,8 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run test:engine
+      - name: Üçüncü taraf lisans metinleri güncel mi
+        run: npm run licenses && git diff --exit-code THIRD_PARTY_LICENSES.txt
       - run: npm run build
       - name: Uçtan uca testler
         run: |

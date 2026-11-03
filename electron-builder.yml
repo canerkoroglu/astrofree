@@ -14,6 +14,8 @@ extraResources:
     to: LICENSE
   - from: THIRD_PARTY_NOTICES.md
     to: THIRD_PARTY_NOTICES.md
+  - from: THIRD_PARTY_LICENSES.txt
+    to: THIRD_PARTY_LICENSES.txt
   - from: NOTICE.md
     to: NOTICE.md
   - from: build/icon.png

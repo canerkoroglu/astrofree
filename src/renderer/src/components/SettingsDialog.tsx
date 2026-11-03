@@ -71,7 +71,7 @@ function About() {
             {t('Telif ve ek koşullar')}
           </button>{' '}
           ·{' '}
-          <button className="link" onClick={() => void window.astro.openDoc('THIRD_PARTY_NOTICES.md')}>
+          <button className="link" onClick={() => void window.astro.openDoc('THIRD_PARTY_LICENSES.txt')}>
             {t('Üçüncü taraf lisansları')}
           </button>
         </dd>
@@ -83,7 +83,7 @@ function About() {
       <p className="muted small">
         {t('Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye değildir. Web sitesindeki kullanım koşulları resmi sürümler için geçerlidir.')}
       </p>
-      <p className="muted small">Swiss Ephemeris © Astrodienst AG · GeoNames (CC BY 4.0) · Natural Earth</p>
+      <p className="muted small">Swiss Ephemeris © Astrodienst AG · GeoNames (CC BY 4.0) · Open-Meteo (CC BY 4.0) · Natural Earth</p>
     </div>
   )
 }

@@ -213,7 +213,7 @@ function registerIpc(): void {
   })
 
   ipcMain.handle('app:openDoc', (_e, name: string) =>
-    ['LICENSE', 'NOTICE.md', 'THIRD_PARTY_NOTICES.md'].includes(name) ? shell.openPath(bundledDoc(name)) : 'not allowed'
+    ['LICENSE', 'NOTICE.md', 'THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_LICENSES.txt'].includes(name) ? shell.openPath(bundledDoc(name)) : 'not allowed'
   )
   ipcMain.handle('app:info', () => ({
     version: app.getVersion(),
@@ -275,7 +275,7 @@ function buildMenu(): void {
         { type: 'separator' },
         { label: tm('Lisans'), click: () => void shell.openPath(bundledDoc('LICENSE')) },
         { label: tm('Telif ve ek koşullar'), click: () => void shell.openPath(bundledDoc('NOTICE.md')) },
-        { label: tm('Üçüncü taraf lisansları ve atıflar'), click: () => void shell.openPath(bundledDoc('THIRD_PARTY_NOTICES.md')) }
+        { label: tm('Üçüncü taraf lisansları ve atıflar'), click: () => void shell.openPath(bundledDoc('THIRD_PARTY_LICENSES.txt')) }
       ]
     }
   ]

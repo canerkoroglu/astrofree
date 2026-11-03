@@ -17,7 +17,8 @@ PURPOSE. See the GNU Affero General Public License for more details.
 
 The AGPL was chosen because AstroFree includes the Swiss Ephemeris (Astrodienst AG), which is itself distributed under
 the AGPL, and because it requires anyone who offers a modified version as a network service to share their source code
-as well. Third-party components keep their own licences; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+as well. Third-party components keep their own licences; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and the full
+texts in [`THIRD_PARTY_LICENSES.txt`](THIRD_PARTY_LICENSES.txt).
 
 ## Additional terms (AGPL-3.0, section 7)
 
@@ -44,9 +45,9 @@ Modified versions must be clearly marked as such and must not be presented as th
 endorsed by the copyright holder.
 
 **7(e) — Names and trademarks.**
-The licence does not grant permission to use the name "AstroFree", the eight-pointed star logo, or the domain
-astrofree.cklabs.tr, except as required to comply with 7(b) and to describe the origin of the work. A modified version
-that is distributed to others must use a different name and logo.
+No rights are granted under trademark law to the name "AstroFree", the eight-pointed star logo or the domain
+astrofree.cklabs.tr, except as needed to comply with 7(b) and to describe the origin of the work. Because these rights
+are not granted, a modified version distributed to others needs its own name and logo.
 
 ## Official distribution and website
 
