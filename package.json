@@ -8,7 +8,7 @@
     "name": "Caner Köroğlu",
     "email": "ckoroglu@ymail.com"
   },
-  "homepage": "https://github.com/canerkoroglu/astrofree",
+  "homepage": "https://astrofree.cklabs.tr",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/canerkoroglu/astrofree.git"
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/canerkoroglu/astrofree/issues"
   },
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "scripts": {
     "dev": "electron-vite dev",

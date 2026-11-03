@@ -3,6 +3,8 @@
 **Gereksinim:** 64 bit (x86_64) dağıtım · glibc 2.31+ (Ubuntu 20.04, Debian 11, Fedora 36 ve sonrası) ·
 X11 veya Wayland masaüstü · ~400 MB boş alan.
 
+*English: [Installing on Linux](en/linux.md)*
+
 [Son sürüm sayfasını](https://github.com/canerkoroglu/astrofree/releases/latest) açın ve **Assets**
 bölümünden dağıtımınıza uygun paketi indirin.
 
@@ -85,4 +87,4 @@ rm -r ~/.config/AstroFree
 | Bildirimler gelmiyor | Masaüstünüzde bir bildirim hizmeti (ör. GNOME, KDE, dunst) çalıştığından emin olun. |
 | Claude Code "bulunamadı" | `which claude` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
 
-Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues)
+Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

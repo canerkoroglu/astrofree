@@ -122,7 +122,8 @@ const api = {
   },
   installUpdate: (): Promise<void> => ipcRenderer.invoke('app:installUpdate'),
   checkUpdate: (): Promise<{ version: string; url: string } | null> => ipcRenderer.invoke('app:checkUpdate'),
-  info: (): Promise<{ version: string; platform: string; userData: string }> => ipcRenderer.invoke('app:info')
+  info: (): Promise<{ version: string; platform: string; userData: string }> => ipcRenderer.invoke('app:info'),
+  openDoc: (name: 'LICENSE' | 'NOTICE.md' | 'THIRD_PARTY_NOTICES.md'): Promise<string> => ipcRenderer.invoke('app:openDoc', name)
 }
 
 export type AstroApi = typeof api

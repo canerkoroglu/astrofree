@@ -1,7 +1,7 @@
 # FOSS lisans analizi
 
 Bu belge AstroFree'nin kullandığı üçüncü taraf yazılım, veri ve fontları; lisanslarını, dağıtılan pakete
-girip girmediklerini, getirdikleri yükümlülükleri ve AstroFree'nin lisansı (**GPL-3.0-or-later**) ile
+girip girmediklerini, getirdikleri yükümlülükleri ve AstroFree'nin lisansı (**AGPL-3.0-or-later**) ile
 uyumluluğunu inceler. Analiz `package.json` ve `npm ls --omit=dev --all` çıktısına göre, sürüm 0.1.0 için
 yapılmıştır (Kasım 2026).
 
@@ -11,11 +11,12 @@ yapılmıştır (Kasım 2026).
 
 | Sonuç | Açıklama |
 |---|---|
-| Lisans uyumu | **Uyumlu.** Tüm bileşenler GPL-3.0 ile birlikte dağıtılabilir. Tek copyleft bağımlılık Swiss Ephemeris (AGPL-3.0) ve onun sarmalayıcısıdır (GPL-3.0). |
-| Ticari kullanım | AstroFree'nin kendisi ücretsiz dağıtılabilir, satılabilir de (GPL izin verir), ancak **kaynak kodu kapalı bir türev** dağıtmak için Astrodienst'ten Swiss Ephemeris Professional License gerekir. |
+| Lisans uyumu | **Uyumlu.** Tüm bileşenler AGPL-3.0 ile birlikte dağıtılabilir. Tek copyleft bağımlılık Swiss Ephemeris (AGPL-3.0) ve onun sarmalayıcısıdır (GPL-3.0); AstroFree'nin kendisi de AGPL olduğundan lisanslar birebir örtüşür. |
+| Ticari kullanım | AstroFree kâr amacı gütmeyen, ücretsiz bir projedir. AGPL satışa izin verse de **kaynak kodu kapalı bir türev** (masaüstü ya da web hizmeti) mümkün değildir; bunun için hem hak sahibinin izni hem Astrodienst'ten Swiss Ephemeris Professional License gerekir. |
 | Atıf yükümlülükleri | GeoNames (CC BY 4.0) için atıf; MIT/ISC/BSD/OFL bileşenleri için telif ve lisans metinlerinin korunması. `THIRD_PARTY_NOTICES.md` ve `LICENSE` pakete eklenir. |
 | Kaynak kodu yükümlülüğü | GPL/AGPL gereği her ikili sürümle birlikte karşılık gelen kaynak kod sunulmalı. GitHub Releases ilgili etiketin kaynak arşivini otomatik içerir. |
-| Ağ hizmeti | AstroFree bir masaüstü uygulamasıdır; AGPL'nin 13. maddesi (ağ üzerinden etkileşim) ancak birisi Swiss Ephemeris'i değiştirip bir sunucu hizmeti olarak sunarsa devreye girer. |
+| Ağ hizmeti | AGPL'nin 13. maddesi gereği AstroFree'nin değiştirilmiş bir sürümünü web hizmeti olarak sunan herkes, o hizmetin kullanıcılarına kaynak kodunu vermek zorundadır. |
+| Ek koşullar | AGPL 7. madde kapsamında: garanti/sorumluluk reddi, "Hakkında" ekranındaki atfın korunması, değiştirilmiş sürümlerin işaretlenmesi, "AstroFree" adı ve logosunun lisansa dahil olmaması. Bkz. `NOTICE.md`. |
 
 ## 1. Uygulamayla dağıtılan bileşenler
 
@@ -85,25 +86,26 @@ Derleme araçlarının lisansları üretilen çıktıya geçmez.
 ## 3. Lisans uyumluluğu
 
 ```
-                 ┌──────────────── AstroFree (GPL-3.0-or-later) ────────────────┐
-  İzin verici →  │ MIT · ISC · BSD · Apache-2.0 · PSF-2.0 · BlueOak · CC0 · PD    │  GPL-3.0'a dahil edilebilir
+                 ┌─────────────── AstroFree (AGPL-3.0-or-later) ────────────────┐
+  İzin verici →  │ MIT · ISC · BSD · Apache-2.0 · PSF-2.0 · BlueOak · CC0 · PD    │  AGPL-3.0'a dahil edilebilir
   Fontlar     →  │ OFL-1.1 (fontlar ayrı eser olarak, kendi lisanslarıyla)       │  Birlikte dağıtılabilir
   Copyleft    →  │ swisseph-wasm (GPL-3.0+)  ←→  Swiss Ephemeris (AGPL-3.0)      │  GPLv3 §13 / AGPLv3 §13
   Veri        →  │ GeoNames (CC BY 4.0)                                           │  Atıfla birlikte dağıtılabilir
                  └───────────────────────────────────────────────────────────────┘
 ```
 
-- **MIT, ISC, BSD, PSF-2.0, BlueOak-1.0.0, CC0:** GPL-3.0 ile uyumlu, yalnızca telif ve lisans bildiriminin
+- **MIT, ISC, BSD, PSF-2.0, BlueOak-1.0.0, CC0:** AGPL-3.0 ile uyumlu, yalnızca telif ve lisans bildiriminin
   korunmasını ister. npm paketleri lisans dosyalarını `node_modules` içinde taşır; arayüze gömülenler
   `THIRD_PARTY_NOTICES.md` ile bildirilir.
-- **Apache-2.0** (TypeScript, DOMPurify seçeneği): GPL-3.0 ile uyumludur (GPL-2.0 ile değil). AstroFree
+- **Apache-2.0** (TypeScript, DOMPurify seçeneği): GPL-3.0/AGPL-3.0 ile uyumludur (GPL-2.0 ile değil). AstroFree
   "3.0 veya sonrası" lisanslı olduğundan sorun yoktur.
 - **OFL-1.1:** fontlar yazılımla birlikte dağıtılabilir; font dosyaları tek başına satılamaz ve ayrılmış
   font adları değiştirilmiş sürümlerde kullanılamaz. AstroFree fontları değiştirmez.
 - **GPL-3.0 ↔ AGPL-3.0:** iki lisansın 13. maddeleri bu ikisinin tek bir eserde birleştirilmesine açıkça izin
-  verir. Birleşik eser GPL-3.0 altında kalır; Swiss Ephemeris parçası için AGPL'nin ağ hükmü geçerliliğini sürdürür.
+  verir. AstroFree AGPL-3.0 lisanslı olduğundan GPL-3.0 sarmalayıcı (swisseph-wasm) ile AGPL-3.0 Swiss Ephemeris tek bir AGPL eserinde
+  sorunsuz birleşir.
 - **CC BY 4.0 (veri):** yazılım lisansı değil veri lisansıdır; atıf ve değişiklik bildirimi şartıyla her türlü
-  kullanıma izin verir, GPL ile çatışmaz.
+  kullanıma izin verir, AGPL ile çatışmaz.
 
 ## 4. Swiss Ephemeris'e özel notlar
 
@@ -114,7 +116,7 @@ Swiss Ephemeris, Astrodienst AG tarafından iki lisansla sunulur:
 
 Sonuçları:
 
-- AstroFree'nin GPL-3.0 altında kaynağı açık kaldığı sürece ek lisans gerekmez; uygulama ücretli de satılabilir.
+- AstroFree'nin AGPL-3.0 altında kaynağı açık kaldığı sürece ek lisans gerekmez.
 - AstroFree'nin kaynağı kapatılmış bir sürümünü, ya da Swiss Ephemeris'i içeren kapalı bir eklentiyi dağıtmak
   isteyen biri Astrodienst'ten profesyonel lisans almalıdır.
 - AstroFree'nin hesap motorunu değiştirip bir **web hizmeti** olarak sunan biri, AGPL gereği o hizmetin
@@ -136,13 +138,13 @@ lisansları AstroFree'yi etkilemez.
 
 ## 6. Dağıtımcı için kontrol listesi
 
-- [x] `LICENSE` (GPL-3.0 tam metni) depoda ve pakette.
+- [x] `LICENSE` (AGPL-3.0 tam metni) ve `NOTICE.md` (telif ve 7. madde ek koşulları) depoda ve pakette.
 - [x] `THIRD_PARTY_NOTICES.md` depoda ve pakette.
 - [x] Electron/Chromium lisans dosyaları electron-builder tarafından pakete ekleniyor.
 - [x] GeoNames atfı README, THIRD_PARTY_NOTICES ve uygulama içi bilgilerde.
 - [x] Her release etiketi için kaynak kodu GitHub'da (otomatik `Source code (zip/tar.gz)`).
-- [ ] Değiştirilmiş bir sürüm dağıtırsanız: değişiklikleri ve tarihlerini belirtin (GPL-3.0 §5a).
-- [ ] Kapalı kaynak türev: Astrodienst profesyonel lisansı alın ve GPL kodunu çıkarın — aksi halde mümkün değildir.
+- [ ] Değiştirilmiş bir sürüm dağıtırsanız: değişiklikleri ve tarihlerini belirtin (AGPL-3.0 §5a), farklı bir ad ve logo kullanın (`NOTICE.md` §7(c), 7(e)).
+- [ ] Kapalı kaynak türev: Astrodienst profesyonel lisansı alın ve AGPL kodunu çıkarın — aksi halde mümkün değildir.
 
 ## 7. Bağımlılık listesini yenilemek
 
@@ -152,5 +154,5 @@ npm ls --omit=dev --all --parseable | tail -n +2 | while read d; do
 done | sort -u
 ```
 
-Yeni bir bağımlılık eklerken lisansının GPL-3.0 ile uyumlu olduğundan emin olun (ör. SSPL, BUSL, "Commons
+Yeni bir bağımlılık eklerken lisansının AGPL-3.0 ile uyumlu olduğundan emin olun (ör. SSPL, BUSL, "Commons
 Clause" eklentili veya yalnızca GPL-2.0 lisanslı paketler uyumsuzdur).

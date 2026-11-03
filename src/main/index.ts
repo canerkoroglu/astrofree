@@ -209,6 +209,9 @@ function registerIpc(): void {
     }
   })
 
+  ipcMain.handle('app:openDoc', (_e, name: string) =>
+    ['LICENSE', 'NOTICE.md', 'THIRD_PARTY_NOTICES.md'].includes(name) ? shell.openPath(bundledDoc(name)) : 'not allowed'
+  )
   ipcMain.handle('app:info', () => ({
     version: app.getVersion(),
     platform: process.platform,
@@ -216,8 +219,19 @@ function registerIpc(): void {
   }))
 }
 
+const WEBSITE = 'https://astrofree.cklabs.tr'
+const REPO = 'https://github.com/canerkoroglu/astrofree'
+
 function buildMenu(): void {
   const isMac = process.platform === 'darwin'
+  app.setAboutPanelOptions({
+    applicationName: 'AstroFree',
+    applicationVersion: app.getVersion(),
+    version: '',
+    copyright: `© 2026 Caner Köroğlu · ${WEBSITE}\n${tm('Lisans')}: AGPL-3.0-or-later`,
+    credits: `${tm('Kaynak kod')}: ${REPO}\nSwiss Ephemeris © Astrodienst AG`,
+    website: WEBSITE
+  })
   const template: Electron.MenuItemConstructorOptions[] = [
     ...(isMac ? [{ role: 'appMenu' as const }] : []),
     {
@@ -252,9 +266,12 @@ function buildMenu(): void {
       label: tm('Yardım'),
       submenu: [
         { label: tm('Klavye kısayolları') + '   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
-        { label: tm('GitHub sayfası'), click: () => void shell.openExternal('https://github.com/canerkoroglu/astrofree') },
+        { label: tm('AstroFree hakkında'), click: () => win?.webContents.send('menu', 'about') },
+        { label: tm('Web sitesi'), click: () => void shell.openExternal(WEBSITE) },
+        { label: tm('GitHub sayfası'), click: () => void shell.openExternal(REPO) },
         { type: 'separator' },
         { label: tm('Lisans'), click: () => void shell.openPath(bundledDoc('LICENSE')) },
+        { label: tm('Telif ve ek koşullar'), click: () => void shell.openPath(bundledDoc('NOTICE.md')) },
         { label: tm('Üçüncü taraf lisansları ve atıflar'), click: () => void shell.openPath(bundledDoc('THIRD_PARTY_NOTICES.md')) }
       ]
     }

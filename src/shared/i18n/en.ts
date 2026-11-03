@@ -856,5 +856,17 @@ Rules:
     "Varsayılan": "Default",
     "Varsayılan renkler": "Default colours",
     "Renkler çarktaki açı çizgilerinde ve tablolardaki açı simgelerinde kullanılır. Değiştirmediğiniz açılar temaya göre ayarlanan varsayılan rengi kullanır; seçtiğiniz renk açık ve koyu temada aynı kalır.": "Colours are used for aspect lines on the wheel and aspect symbols in tables. Aspects you leave alone keep the theme-tuned default; a colour you pick stays the same in light and dark themes.",
+    "Hakkında": "About",
+    "Sürüm": "Version",
+    "Ücretsiz ve açık kaynak masaüstü astroloji programı": "Free and open-source desktop astrology app",
+    "Web sitesi": "Website",
+    "Kaynak kod": "Source code",
+    "İletişim": "Contact",
+    "Lisans metni": "Licence text",
+    "Telif ve ek koşullar": "Copyright and additional terms",
+    "Üçüncü taraf lisansları": "Third-party licences",
+    "AstroFree hakkında": "About AstroFree",
+    "AstroFree özgür yazılımdır; GNU Affero Genel Kamu Lisansı 3. sürüm veya sonrası koşullarıyla dağıtabilir ve değiştirebilirsiniz. Hiçbir garanti verilmez. Değiştirilmiş sürümler bu bilgiyi korumalı, farklı bir ad ve logo kullanmalıdır.": "AstroFree is free software; you can redistribute and modify it under the GNU Affero General Public License, version 3 or later. It comes with no warranty. Modified versions must keep this notice and use a different name and logo.",
+    "Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye değildir. Web sitesindeki kullanım koşulları resmi sürümler için geçerlidir.": "Astrological calculations, interpretations and AI output are for personal exploration; they are not medical, legal, financial or any other professional advice. The website's terms of use apply to official releases.",
   }
 }

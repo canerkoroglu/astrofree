@@ -9,8 +9,9 @@ daha fazlası; haritayı **Claude Code, Codex, Gemini, DeepSeek** veya diğer ya
 > built on the Swiss Ephemeris. It draws natal, transit, progressed, solar-arc, synastry, composite/Davison and
 > return charts, steps time minute by minute with a live-updating wheel, and lets you discuss the chart on
 > screen with Claude Code, Codex, Gemini, DeepSeek or any OpenAI-compatible API. The interface is fully
-> available in Turkish and English (Settings → General → Language). Installation guides:
-> [macOS](docs/install/macos.md) · [Windows](docs/install/windows.md) · [Linux](docs/install/linux.md).
+> available in Turkish and English (Settings → General → Language). It is free, non-commercial and licensed under
+> AGPL-3.0-or-later. Website: https://astrofree.cklabs.tr · Installation guides:
+> [macOS](docs/install/en/macos.md) · [Windows](docs/install/en/windows.md) · [Linux](docs/install/en/linux.md).
 
 ---
 
@@ -33,14 +34,14 @@ daha fazlası; haritayı **Claude Code, Codex, Gemini, DeepSeek** veya diğer ya
 
 ## İndirme ve kurulum
 
-Hazır paketler [GitHub Releases](https://github.com/canerkoroglu/astrofree/releases/latest) sayfasındadır.
+Hazır paketler [GitHub Releases](https://github.com/canerkoroglu/astrofree/releases/latest) sayfasındadır; web sitesi: https://astrofree.cklabs.tr
 
-| İşletim sistemi | Dosya | Ayrıntılı rehber |
+| İşletim sistemi | Dosya | Ayrıntılı rehber / Guide |
 |---|---|---|
-| macOS 12+ (Apple Silicon) | `AstroFree-<sürüm>-mac-arm64.dmg` | [docs/install/macos.md](docs/install/macos.md) |
-| macOS 12+ (Intel) | `AstroFree-<sürüm>-mac-x64.dmg` | [docs/install/macos.md](docs/install/macos.md) |
-| Windows 10 / 11 (64 bit) | `AstroFree-<sürüm>-win-x64.exe` (kurulum) veya `AstroFree-<sürüm>-win-portable.exe` | [docs/install/windows.md](docs/install/windows.md) |
-| Linux (x86_64) | `.AppImage` veya `.deb` | [docs/install/linux.md](docs/install/linux.md) |
+| macOS 12+ (Apple Silicon) | `AstroFree-<sürüm>-mac-arm64.dmg` | [Türkçe](docs/install/macos.md) · [English](docs/install/en/macos.md) |
+| macOS 12+ (Intel) | `AstroFree-<sürüm>-mac-x64.dmg` | [Türkçe](docs/install/macos.md) · [English](docs/install/en/macos.md) |
+| Windows 10 / 11 (64 bit) | `AstroFree-<sürüm>-win-x64.exe` (kurulum) veya `AstroFree-<sürüm>-win-portable.exe` | [Türkçe](docs/install/windows.md) · [English](docs/install/en/windows.md) |
+| Linux (x86_64) | `.AppImage` veya `.deb` | [Türkçe](docs/install/linux.md) · [English](docs/install/en/linux.md) |
 
 Uygulama henüz ücretli kod imzası taşımadığı için macOS'ta ilk açılışta **sağ tık → Aç**, Windows'ta
 SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberler bunu adım adım anlatır.
@@ -250,16 +251,25 @@ docs/          Kurulum rehberleri ve FOSS analizi
 
 ## Lisans
 
-Copyright © 2026 Caner Köroğlu
+Copyright © 2026 Caner Köroğlu · **https://astrofree.cklabs.tr** · iletişim: astrofree@cklabs.tr
 
-AstroFree özgür yazılımdır: Free Software Foundation tarafından yayımlanan **GNU Genel Kamu Lisansı'nın
-3. sürümü veya (seçiminize göre) daha sonraki bir sürümü** (GPL-3.0-or-later) koşullarına göre dağıtabilir
-ve/veya değiştirebilirsiniz. Lisansın tam metni [LICENSE](LICENSE) dosyasındadır. Program faydalı olacağı
-umuduyla, ancak HİÇBİR GARANTİ olmaksızın dağıtılmaktadır.
+AstroFree kâr amacı gütmeyen, ücretsiz bir projedir. Özgür yazılımdır: Free Software Foundation tarafından
+yayımlanan **GNU Affero Genel Kamu Lisansı'nın 3. sürümü veya (seçiminize göre) daha sonraki bir sürümü**
+(AGPL-3.0-or-later) koşullarına göre dağıtabilir ve/veya değiştirebilirsiniz. Lisansın tam metni
+[LICENSE](LICENSE), telif bildirimi ve AGPL 7. madde kapsamındaki ek koşullar [NOTICE.md](NOTICE.md) dosyasındadır.
+Program faydalı olacağı umuduyla, ancak HİÇBİR GARANTİ olmaksızın dağıtılmaktadır.
 
-Gezegen hesapları [Swiss Ephemeris](https://www.astro.com/swisseph/) (Astrodienst AG) ile yapılır; Swiss
-Ephemeris AGPL-3.0 veya ücretli profesyonel lisansla dağıtılır. Açık kaynak AstroFree için ücretsizdir;
-**kapalı kaynak veya ticari bir türev dağıtmak isteyenlerin Astrodienst'ten profesyonel lisans alması gerekir.**
+Ek koşulların özeti (`NOTICE.md`):
+- Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; profesyonel tavsiye değildir.
+- Değiştirilmiş sürümler "Hakkında" ekranındaki AstroFree atfını, web sitesi ve kaynak bağlantısını korumalı, açıkça
+  değiştirilmiş olarak işaretlenmeli ve resmi sürüm gibi sunulmamalıdır.
+- "AstroFree" adı ve sekiz köşeli yıldız logosu lisansa dahil değildir; başkalarına dağıtılan değiştirilmiş sürümler
+  farklı bir ad ve logo kullanmalıdır.
+
+Neden AGPL: gezegen hesapları [Swiss Ephemeris](https://www.astro.com/swisseph/) (Astrodienst AG) ile yapılır ve
+Swiss Ephemeris AGPL-3.0 (ya da ücretli profesyonel lisans) ile dağıtılır. AstroFree'nin de AGPL olması tüm
+bileşenlerle tam uyum sağlar ve değiştirilmiş bir sürümü web hizmeti olarak sunanların da kaynak kodunu paylaşmasını
+gerektirir. Kapalı kaynak bir türev mümkün değildir.
 
 Üçüncü taraf bileşenlerin listesi [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), lisans uyumluluğu
 analizi [docs/FOSS-ANALYSIS.md](docs/FOSS-ANALYSIS.md) dosyasındadır.

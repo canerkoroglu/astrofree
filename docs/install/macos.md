@@ -2,6 +2,8 @@
 
 **Gereksinim:** macOS 12 Monterey veya üzeri · Apple Silicon (M1–M5) ya da Intel işlemci · ~400 MB boş alan.
 
+*English: [Installing on macOS](en/macos.md)*
+
 ## 1. Doğru dosyayı indirin
 
 [Son sürüm sayfasını](https://github.com/canerkoroglu/astrofree/releases/latest) açın ve **Assets** bölümünden
@@ -78,4 +80,4 @@ Uygulamalar klasöründeki eski sürümün üzerine sürükleyin ("Değiştir").
 | Claude Code / Codex "bulunamadı" | Terminal'de `which claude` veya `which codex` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
 | Bildirimler gelmiyor |  → Sistem Ayarları → Bildirimler → AstroFree → İzin Ver. |
 
-Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues)
+Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

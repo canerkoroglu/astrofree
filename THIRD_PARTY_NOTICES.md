@@ -1,6 +1,6 @@
 # Third-party notices
 
-AstroFree is licensed under GPL-3.0-or-later (see `LICENSE`). It bundles or uses the following
+AstroFree is licensed under AGPL-3.0-or-later (see `LICENSE` and `NOTICE.md`). It bundles or uses the following
 third-party work under their own licences.
 
 | Component | Use | Licence |

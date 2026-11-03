@@ -4,12 +4,13 @@ import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, 
 const SAMPLE = { y: 2026, m: 1, d: 17 }
 import { t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
+import Logo from './Logo'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
 import { ASPECTS, AYANAMSAS, HOUSE_SYSTEMS, OPTIONAL_POINTS, POINT, glyph } from '../lib/astro'
 import PlaceSearch from './PlaceSearch'
 
-type Tab = 'chart' | 'aspects' | 'ai' | 'general'
+type Tab = 'chart' | 'aspects' | 'ai' | 'general' | 'about'
 
 /** The colour an aspect currently has from the theme, as #rrggbb for the colour picker. */
 function themeColor(key: string): string {
@@ -22,6 +23,71 @@ function themeColor(key: string): string {
   return '#' + m.slice(0, 3).map((v) => Math.round(Number(v)).toString(16).padStart(2, '0')).join('')
 }
 
+const WEBSITE = 'https://astrofree.cklabs.tr'
+const REPO = 'https://github.com/canerkoroglu/astrofree'
+
+/** Name, version, owner, links and licence (the AGPL "Appropriate Legal Notices"). */
+function About() {
+  const [version, setVersion] = useState('')
+  useEffect(() => {
+    void window.astro.info().then((i) => setVersion(i.version))
+  }, [])
+  return (
+    <div className="about">
+      <div className="about-head">
+        <Logo size={56} className="about-logo" />
+        <div>
+          <h3>AstroFree</h3>
+          <div className="muted">
+            {t('Sürüm')} {version} · {t('Ücretsiz ve açık kaynak masaüstü astroloji programı')}
+          </div>
+        </div>
+      </div>
+      <dl className="about-list">
+        <dt>{t('Web sitesi')}</dt>
+        <dd>
+          <a href={WEBSITE} target="_blank" rel="noreferrer">
+            astrofree.cklabs.tr
+          </a>
+        </dd>
+        <dt>{t('Kaynak kod')}</dt>
+        <dd>
+          <a href={REPO} target="_blank" rel="noreferrer">
+            github.com/canerkoroglu/astrofree
+          </a>
+        </dd>
+        <dt>{t('İletişim')}</dt>
+        <dd>
+          <a href="mailto:astrofree@cklabs.tr">astrofree@cklabs.tr</a>
+        </dd>
+        <dt>{t('Lisans')}</dt>
+        <dd>
+          GNU AGPL-3.0-or-later ·{' '}
+          <button className="link" onClick={() => void window.astro.openDoc('LICENSE')}>
+            {t('Lisans metni')}
+          </button>{' '}
+          ·{' '}
+          <button className="link" onClick={() => void window.astro.openDoc('NOTICE.md')}>
+            {t('Telif ve ek koşullar')}
+          </button>{' '}
+          ·{' '}
+          <button className="link" onClick={() => void window.astro.openDoc('THIRD_PARTY_NOTICES.md')}>
+            {t('Üçüncü taraf lisansları')}
+          </button>
+        </dd>
+      </dl>
+      <p className="muted small">
+        © 2026 Caner Köroğlu · {WEBSITE}.{' '}
+        {t('AstroFree özgür yazılımdır; GNU Affero Genel Kamu Lisansı 3. sürüm veya sonrası koşullarıyla dağıtabilir ve değiştirebilirsiniz. Hiçbir garanti verilmez. Değiştirilmiş sürümler bu bilgiyi korumalı, farklı bir ad ve logo kullanmalıdır.')}
+      </p>
+      <p className="muted small">
+        {t('Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye değildir. Web sitesindeki kullanım koşulları resmi sürümler için geçerlidir.')}
+      </p>
+      <p className="muted small">Swiss Ephemeris © Astrodienst AG · GeoNames (CC BY 4.0) · Natural Earth</p>
+    </div>
+  )
+}
+
 export default function SettingsDialog({
   settings,
   onSave,
@@ -32,10 +98,10 @@ export default function SettingsDialog({
   onSave: (s: AppSettings) => void
   onClose: () => void
   /** Open straight at a section, e.g. the time zone settings. */
-  focus?: 'zone'
+  focus?: 'zone' | 'about'
 }) {
   const [s, setS] = useState<AppSettings>(settings)
-  const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : 'chart')
+  const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : focus === 'about' ? 'about' : 'chart')
   const zoneRef = useRef<HTMLFieldSetElement>(null)
   useEffect(() => {
     if (focus === 'zone') zoneRef.current?.scrollIntoView({ block: 'start' })
@@ -69,11 +135,12 @@ export default function SettingsDialog({
               ['chart', 'Harita'],
               ['aspects', 'Açılar ve orb'],
               ['ai', 'Yapay zekâ'],
-              ['general', 'Genel']
+              ['general', 'Genel'],
+              ['about', 'Hakkında']
             ] as [Tab, string][]
           ).map(([k, label]) => (
             <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>
-              {label}
+              {t(label)}
             </button>
           ))}
         </div>
@@ -322,6 +389,8 @@ export default function SettingsDialog({
             <p className="muted small">{t('API anahtarları işletim sisteminin anahtar zinciriyle şifrelenip yerel olarak saklanır.')}</p>
           </div>
         )}
+
+        {tab === 'about' && <About />}
 
         {tab === 'general' && (
           <div>

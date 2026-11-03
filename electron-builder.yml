@@ -14,6 +14,8 @@ extraResources:
     to: LICENSE
   - from: THIRD_PARTY_NOTICES.md
     to: THIRD_PARTY_NOTICES.md
+  - from: NOTICE.md
+    to: NOTICE.md
 asarUnpack:
   - node_modules/swisseph-wasm/wasm/**
 mac:

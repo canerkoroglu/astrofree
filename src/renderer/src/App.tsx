@@ -28,6 +28,7 @@ import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, sys
 import { pickLocale } from '@shared/i18n'
 import { parseKnowledge, type KbFile } from '@shared/knowledge'
 import Knowledge from './components/Knowledge'
+import Logo from './components/Logo'
 import { knowledgeText, matchKnowledge } from './lib/kb'
 
 const NOW_ID = 'now'
@@ -98,7 +99,7 @@ export default function App() {
   const [aspectLayer, setAspectLayer] = useState(-1)
   const [editor, setEditor] = useState<ChartRecord | null>(null)
   const [showSettings, setShowSettings] = useState(false)
-  const [settingsFocus, setSettingsFocus] = useState<'zone' | undefined>()
+  const [settingsFocus, setSettingsFocus] = useState<'zone' | 'about' | undefined>()
   const [exportOpen, setExportOpen] = useState(false)
   const [zoneOpen, setZoneOpen] = useState(false)
   const [filter, setFilter] = useState('')
@@ -456,6 +457,10 @@ export default function App() {
     } else if (cmd === 'import') void window.astro.charts.importFile().then((all) => all && setCharts(all))
     else if (cmd === 'export') void window.astro.charts.exportAll(charts)
     else if (cmd === 'shortcuts') setShowKeys(true)
+    else if (cmd === 'about') {
+      setSettingsFocus('about')
+      setShowSettings(true)
+    }
   }
   useEffect(() => window.astro.onMenu((cmd) => menuRef.current(cmd)), [])
   const openByIdRef = useRef<(id: string) => void>(() => undefined)
@@ -566,7 +571,7 @@ export default function App() {
     <div className={showChat ? 'app' : 'app no-chat'}>
       <header className="toolbar">
         <div className="brand" title="AstroFree">
-          ✶ <span className="brand-name">AstroFree</span>
+          <Logo size={18} className="brand-logo" /> <span className="brand-name">AstroFree</span>
         </div>
         <div className="seg tgroup tg-layers" role="group" aria-label={t('Katmanlar')}>
           {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).map((k) => (

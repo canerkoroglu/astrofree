@@ -3934,3 +3934,53 @@ button.head-edit {
   width: 18px;
   text-align: center;
 }
+
+/* ---- brand mark and About ---- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.brand-logo {
+  color: var(--accent);
+  flex: none;
+}
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  padding-top: var(--s3);
+}
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+}
+.about-logo {
+  color: var(--accent);
+}
+.about-head h3 {
+  margin: 0 0 var(--s1);
+  font-size: 22px;
+}
+.about-list {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--s2) var(--s4);
+  margin: 0;
+}
+.about-list dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+.about-list dd {
+  margin: 0;
+}
+.about a {
+  color: var(--accent);
+}
+.about p {
+  margin: 0;
+  line-height: 1.55;
+  max-width: 70ch;
+}

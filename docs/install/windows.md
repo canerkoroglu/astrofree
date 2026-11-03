@@ -2,6 +2,8 @@
 
 **Gereksinim:** Windows 10 (1809+) veya Windows 11 · 64 bit (x64) · ~400 MB boş alan.
 
+*English: [Installing on Windows](en/windows.md)*
+
 ## 1. Kurulum türünü seçin
 
 [Son sürüm sayfasını](https://github.com/canerkoroglu/astrofree/releases/latest) açın ve **Assets** bölümünden
@@ -57,4 +59,4 @@ Portable sürüm için `.exe` dosyasını silmeniz yeterlidir.
 | Claude Code / Codex "bulunamadı" | PowerShell'de `where.exe claude` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
 | Ekran bulanık görünüyor | .exe → Özellikler → Uyumluluk → Yüksek DPI ayarları → "Uygulama" ölçeklendirmesini seçin. |
 
-Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues)
+Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr
