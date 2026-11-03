@@ -8,6 +8,11 @@ const os = require('node:os')
 const path = require('node:path')
 
 process.env.ASTROFREE_NO_NOTIFY = '1'
+// Run without a visible window or Dock icon (E2E_SHOW=1 to watch).
+if (!process.env.E2E_SHOW) {
+  process.env.ASTROFREE_HIDDEN = '1'
+  app.dock?.hide()
+}
 // The suite's selectors are Turkish: start the app as a Turkish system would.
 app.commandLine.appendSwitch('lang', process.env.E2E_LANG || 'tr')
 const root = path.resolve(__dirname, '../..')

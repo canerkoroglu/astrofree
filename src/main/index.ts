@@ -43,11 +43,13 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true
+      sandbox: true,
+      // Automated tests run the window hidden; keep it rendering at full speed.
+      backgroundThrottling: !process.env.ASTROFREE_HIDDEN
     }
   })
   win.once('ready-to-show', () => {
-    win?.show()
+    if (!process.env.ASTROFREE_HIDDEN) win?.show()
     if (win) startAutoUpdate(win)
   })
 
