@@ -18,7 +18,6 @@ import {
 } from '../lib/astro'
 import { LAYER_COLOR } from './ChartWheel'
 
-const ASPECT_CLASS = { hard: 'asp-hard', soft: 'asp-soft', minor: 'asp-minor' } as const
 
 export function PositionsTable({ natal, outers }: { natal: Layer; outers: Layer[] }) {
   const keys = natal.points.map((p) => p.key)
@@ -126,7 +125,7 @@ function useAspects(natal: Layer, outer: Layer | null, settings: AppSettings) {
 function Cell({ a }: { a: Aspect | undefined }) {
   if (!a) return <td className="cell" />
   return (
-    <td className={`cell ${ASPECT_CLASS[a.aspect.kind]}`} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? t('yaklaşan') : t('ayrılan')}`}>
+    <td className={`cell asp-k-${a.aspect.key}`} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? t('yaklaşan') : t('ayrılan')}`}>
       <span className="glyph">{a.aspect.glyph}</span>
       <small>
         {fmtOrb(a.orb).replace("'", '')}
@@ -195,7 +194,7 @@ export function AspectList({ natal, outer, settings }: { natal: Layer; outer: La
                 {glyph(a.a.key)}
               </span>{' '}
               {pre}
-              {POINT[a.a.key].name} <span className={`glyph ${ASPECT_CLASS[a.aspect.kind]}`}>{a.aspect.glyph}</span> {a.aspect.name}{' '}
+              {POINT[a.a.key].name} <span className={`glyph asp-k-${a.aspect.key}`}>{a.aspect.glyph}</span> {a.aspect.name}{' '}
               <span className="glyph">{glyph(a.b.key)}</span> {outer ? 'N.' : ''}
               {POINT[a.b.key].name}
             </td>

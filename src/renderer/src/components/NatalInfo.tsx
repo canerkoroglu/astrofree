@@ -268,7 +268,7 @@ export default function NatalInfo({
                   <Name k={a.a.key} retro={a.a.retro} />
                 </td>
                 <td>
-                  <span className={`glyph asp-${a.aspect.kind}`}>{a.aspect.glyph}</span> {a.aspect.name}{' '}
+                  <span className={`glyph asp-k-${a.aspect.key}`}>{a.aspect.glyph}</span> {a.aspect.name}{' '}
                   <small className="muted">{a.aspect.angle}°</small>
                 </td>
                 <td>

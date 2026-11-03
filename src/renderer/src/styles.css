@@ -3867,3 +3867,70 @@ button.head-edit {
 .tip-end[data-tip]:focus-visible::after {
   transform: translateY(0);
 }
+
+/* ---- per-aspect colours: default to the hard/soft/minor hue of the theme; user picks override them ---- */
+:root {
+  --asp-conjunction: var(--asp-hard);
+  --asp-opposition: var(--asp-hard);
+  --asp-square: var(--asp-hard);
+  --asp-trine: var(--asp-soft);
+  --asp-sextile: var(--asp-soft);
+  --asp-quincunx: var(--asp-minor);
+  --asp-semisextile: var(--asp-minor);
+  --asp-semisquare: var(--asp-minor);
+  --asp-sesquiquadrate: var(--asp-minor);
+  --asp-quintile: var(--asp-minor);
+  --asp-biquintile: var(--asp-minor);
+}
+.asp-k-conjunction {
+  color: var(--asp-conjunction);
+}
+.asp-k-opposition {
+  color: var(--asp-opposition);
+}
+.asp-k-square {
+  color: var(--asp-square);
+}
+.asp-k-trine {
+  color: var(--asp-trine);
+}
+.asp-k-sextile {
+  color: var(--asp-sextile);
+}
+.asp-k-quincunx {
+  color: var(--asp-quincunx);
+}
+.asp-k-semisextile {
+  color: var(--asp-semisextile);
+}
+.asp-k-semisquare {
+  color: var(--asp-semisquare);
+}
+.asp-k-sesquiquadrate {
+  color: var(--asp-sesquiquadrate);
+}
+.asp-k-quintile {
+  color: var(--asp-quintile);
+}
+.asp-k-biquintile {
+  color: var(--asp-biquintile);
+}
+
+.asp-color {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.asp-color input[type='color'] {
+  width: 34px;
+  height: 26px;
+  padding: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-height: 0;
+}
+.asp-preview {
+  font-size: 16px;
+  width: 18px;
+  text-align: center;
+}

@@ -30,7 +30,6 @@ export const LAYER_COLOR: Record<string, string> = {
   solarReturn: 'var(--ly-solar-return)',
   lunarReturn: 'var(--ly-lunar-return)'
 }
-const ASPECT_COLOR = { hard: 'var(--asp-hard)', soft: 'var(--asp-soft)', minor: 'var(--asp-minor)' } as const
 
 interface Props {
   natal: Layer
@@ -273,7 +272,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
                 x2={x2}
                 y2={y2}
                 style={{
-                  stroke: ASPECT_COLOR[def.kind],
+                  stroke: `var(--asp-${def.key})`,
                   strokeWidth: 0.8 + 2.4 * tight,
                   strokeOpacity: active ? 0.35 + 0.6 * tight : 0.06,
                   strokeDasharray: def.kind === 'minor' ? '6 5' : undefined

@@ -150,7 +150,7 @@ export default function TransitCalendar({
                     <span className="glyph t-col">{glyph(bodyKey(h.body))}</span> {POINT[bodyKey(h.body)].name}
                   </td>
                   <td>
-                    <span className={`glyph asp-${ASPECT[h.aspect].kind}`}>{ASPECT[h.aspect].glyph}</span> {ASPECT[h.aspect].name}
+                    <span className={`glyph asp-k-${h.aspect}`}>{ASPECT[h.aspect].glyph}</span> {ASPECT[h.aspect].name}
                   </td>
                   <td>
                     <span className="glyph">{glyph(h.natalKey)}</span> {POINT[h.natalKey].name}

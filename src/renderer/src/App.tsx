@@ -166,6 +166,20 @@ export default function App() {
     if (settings.theme === 'system') root.removeAttribute('data-theme')
     else root.setAttribute('data-theme', settings.theme)
   }, [settings])
+  // User aspect colours override the per-aspect theme tokens (see styles.css).
+  useEffect(() => {
+    if (!settings) return
+    let tag = document.getElementById('aspect-colors')
+    if (!tag) {
+      tag = document.createElement('style')
+      tag.id = 'aspect-colors'
+      document.head.appendChild(tag)
+    }
+    const rules = Object.entries(settings.aspectColors ?? {})
+      .filter(([, c]) => /^#[0-9a-f]{6}$/i.test(c ?? ''))
+      .map(([k, c]) => `--asp-${k}: ${c};`)
+    tag.textContent = rules.length ? `:root:root { ${rules.join(' ')} }` : ''
+  }, [settings?.aspectColors]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const saveSettings = useCallback((s: AppSettings) => {
     setSettings(s)

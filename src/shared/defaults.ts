@@ -117,6 +117,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     vesta: false
   },
   aspects: DEFAULT_ASPECTS,
+  aspectColors: {},
   showNatalAspectsInBiwheel: false,
 // i18n-ignore-start (default names; the UI reads them from src/shared/i18n)
   defaultPlace: { name: 'İstanbul, Türkiye', lat: 41.01384, lon: 28.94966, country: 'Türkiye', cc: 'TR', zone: 'Europe/Istanbul' },
@@ -174,6 +175,7 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
     ...migrated,
     points: { ...d.points, ...(stored.points ?? {}) },
     aspects,
+    aspectColors: { ...(stored.aspectColors ?? {}) },
     defaultPlace: { ...d.defaultPlace, ...(stored.defaultPlace ?? {}) },
     ai: { ...d.ai, ...ai, providers }
   }

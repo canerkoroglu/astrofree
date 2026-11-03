@@ -11,6 +11,17 @@ import PlaceSearch from './PlaceSearch'
 
 type Tab = 'chart' | 'aspects' | 'ai' | 'general'
 
+/** The colour an aspect currently has from the theme, as #rrggbb for the colour picker. */
+function themeColor(key: string): string {
+  const el = document.createElement('span')
+  el.style.color = `var(--asp-${key})`
+  document.body.appendChild(el)
+  const m = getComputedStyle(el).color.match(/\d+(\.\d+)?/g)
+  el.remove()
+  if (!m) return '#888888'
+  return '#' + m.slice(0, 3).map((v) => Math.round(Number(v)).toString(16).padStart(2, '0')).join('')
+}
+
 export default function SettingsDialog({
   settings,
   onSave,
@@ -163,6 +174,7 @@ export default function SettingsDialog({
                   <th>{t('Açık')}</th>
                   <th>{t('Natal orb (°)')}</th>
                   <th>{t('Transit/progresyon orb (°)')}</th>
+                  <th>{t('Renk')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -187,6 +199,31 @@ export default function SettingsDialog({
                         onChange={(e) => setAspect(a.key, { outerOrb: Number(e.target.value) })}
                       />
                     </td>
+                    <td>
+                      <span className="asp-color">
+                        <input
+                          type="color"
+                          aria-label={t('{aspect} rengi', { aspect: a.name })}
+                          value={s.aspectColors[a.key] ?? themeColor(a.key)}
+                          onChange={(e) => setS({ ...s, aspectColors: { ...s.aspectColors, [a.key]: e.target.value } })}
+                        />
+                        <span className={`glyph asp-preview`} style={{ color: s.aspectColors[a.key] ?? `var(--asp-${a.key})` }}>
+                          {a.glyph}
+                        </span>
+                        {s.aspectColors[a.key] && (
+                          <button
+                            className="link small"
+                            onClick={() => {
+                              const rest = { ...s.aspectColors }
+                              delete rest[a.key]
+                              setS({ ...s, aspectColors: rest })
+                            }}
+                          >
+                            {t('Varsayılan')}
+                          </button>
+                        )}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -201,8 +238,14 @@ export default function SettingsDialog({
                 {t('Çift çarkta natal açıları da çiz')}
               </label>
               <button onClick={() => setS({ ...s, aspects: structuredClone(DEFAULT_ASPECTS) })}>{t('Varsayılan orb\'lar')}</button>
+              <button disabled={!Object.keys(s.aspectColors).length} onClick={() => setS({ ...s, aspectColors: {} })}>
+                {t('Varsayılan renkler')}
+              </button>
             </div>
             <p className="muted small">{t('Güneş/Ay için orb ×1.15, düğümler/Chiron ×0.6, asteroitler ×0.5 uygulanır.')}</p>
+            <p className="muted small">
+              {t('Renkler çarktaki açı çizgilerinde ve tablolardaki açı simgelerinde kullanılır. Değiştirmediğiniz açılar temaya göre ayarlanan varsayılan rengi kullanır; seçtiğiniz renk açık ve koyu temada aynı kalır.')}
+            </p>
           </>
         )}
 

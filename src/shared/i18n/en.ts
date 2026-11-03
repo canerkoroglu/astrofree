@@ -851,5 +851,10 @@ Rules:
     "Ayarlarda elle seçildi": "Chosen in Settings",
     "çizgileri gizle": "hide lines",
     "çizgileri göster": "show lines",
+    "Renk": "Colour",
+    "{aspect} rengi": "{aspect} colour",
+    "Varsayılan": "Default",
+    "Varsayılan renkler": "Default colours",
+    "Renkler çarktaki açı çizgilerinde ve tablolardaki açı simgelerinde kullanılır. Değiştirmediğiniz açılar temaya göre ayarlanan varsayılan rengi kullanır; seçtiğiniz renk açık ve koyu temada aynı kalır.": "Colours are used for aspect lines on the wheel and aspect symbols in tables. Aspects you leave alone keep the theme-tuned default; a colour you pick stays the same in light and dark themes.",
   }
 }
