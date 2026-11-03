@@ -15,6 +15,8 @@ export const STEPS: { unit: StepUnit; n: number; label: string }[] = [
 ]
 
 
+const SPEEDS = [1, 2, 5, 10, 20, 30]
+
 interface Props {
   local: LocalDateTime
   target: 'event' | 'natal'
@@ -86,15 +88,14 @@ export default function TimeControls(p: Props) {
           <button className={`toggle tb-play${p.playing ? ' on' : ''}`} aria-pressed={p.playing} onClick={() => p.onPlaying(!p.playing)} title={t('Animasyon (boşluk tuşu)')}>
             {p.playing ? `❚❚ ${t('Durdur')}` : `▶ ${t('Oynat')}`}
           </button>
-          <input
-            type="range"
-            min={1}
-            max={30}
-            value={p.speed}
-            onChange={(e) => p.onSpeed(Number(e.target.value))}
-            title={t('Animasyon hızı (adım/saniye)')}
-            className="speed"
-          />
+          <select className="tb-speed" value={p.speed} onChange={(e) => p.onSpeed(Number(e.target.value))} title={t('Oynatma hızı: saniyede kaç adım ilerlenir')}>
+            {SPEEDS.includes(p.speed) ? null : <option value={p.speed}>{t('Hız')}: {p.speed}/{t('sn')}</option>}
+            {SPEEDS.map((v) => (
+              <option key={v} value={v}>
+                {t('Hız')}: {v}/{t('sn')}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="tb-group tb-now">

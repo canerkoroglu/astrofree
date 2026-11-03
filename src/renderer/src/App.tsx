@@ -90,7 +90,7 @@ export default function App() {
   const [target, setTarget] = useState<'event' | 'natal'>('natal')
   const [live, setLive] = useState(true)
   const [playing, setPlaying] = useState(false)
-  const [speed, setSpeed] = useState(4)
+  const [speed, setSpeed] = useState(5)
   const [stepIndex, setStepIndex] = useState(0)
   const [computed, setComputed] = useState<Computed | null>(null)
   const [calcError, setCalcError] = useState('')
@@ -108,6 +108,10 @@ export default function App() {
   const [interps, setInterps] = useState<Interpretation[]>([])
   const [kbFiles, setKbFiles] = useState<KbFile[]>([])
   const reloadKb = useCallback(() => void window.astro.kb.list().then(setKbFiles), [])
+  useEffect(() => {
+    window.addEventListener('focus', reloadKb)
+    return () => window.removeEventListener('focus', reloadKb)
+  }, [reloadKb])
   const [calHits, setCalHits] = useState<TransitHit[]>([])
   const [printing, setPrinting] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
@@ -916,7 +920,7 @@ export default function App() {
             onRemove={async (id) => setInterps(await window.astro.interp.remove(id))}
           />
         )}
-        {view === 'kb' && <Knowledge files={kbFiles} entries={kbEntries} matches={kbMatches} onReload={reloadKb} onAsk={ask} />}
+        {view === 'kb' && <Knowledge files={kbFiles} entries={kbEntries} matches={kbMatches} starNames={starPos.map((st) => st.name)} onReload={reloadKb} onAsk={ask} />}
         {view === 'chart' && computed && (
           <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} />
         )}

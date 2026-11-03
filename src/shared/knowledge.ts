@@ -13,6 +13,9 @@ export interface KbEntry {
   keys: string[]
   tags: string[]
   body: string
+  /** Line range of the block in its file (end exclusive), for in-place edits. */
+  start: number
+  end: number
 }
 
 export interface KbFile {
@@ -21,6 +24,7 @@ export interface KbFile {
 }
 
 const META = /^-\s*(anahtarlar|keys|etiketler|tags)\s*:\s*(.*)$/i
+const FENCE = /^\s*(```|~~~)/
 
 const list = (s: string) =>
   s
@@ -28,54 +32,93 @@ const list = (s: string) =>
     .map((x) => x.trim().toLowerCase())
     .filter(Boolean)
 
+const lines = (text: string) => text.replace(/\r\n/g, '\n').split('\n')
+
+/** The file's own "# " title, or its name without number prefix and extension. */
+export function fileTitle(name: string, text: string): string {
+  const h = lines(text).find((l) => /^#\s+/.test(l))
+  if (h) return h.replace(/^#\s+/, '').trim()
+  return name.replace(/\.(md|txt)$/i, '').replace(/^\d+[-_ ]*/, '').replace(/[-_]+/g, ' ')
+}
+
 export function parseKnowledge(file: string, text: string): KbEntry[] {
   const out: KbEntry[] = []
-  let category = file.replace(/\.(md|txt)$/i, '')
+  let category = fileTitle(file, text)
   let section = ''
   let cur: KbEntry | null = null
   let inMeta = false
-  const flush = () => {
+  let fence = false
+  const all = lines(text)
+  const flush = (end: number) => {
     if (cur) {
       cur.body = cur.body.trim()
+      cur.end = end
       out.push(cur)
     }
     cur = null
   }
-  let fence = false
-  for (const line of text.replace(/\r\n/g, '\n').split('\n')) {
+  all.forEach((line, i) => {
     // Headings inside code blocks are examples, not entries.
-    if (/^\s*(```|~~~)/.test(line)) fence = !fence
-    if (fence || /^\s*(```|~~~)/.test(line)) {
+    if (FENCE.test(line)) fence = !fence
+    if (fence || FENCE.test(line)) {
       if (cur) cur.body += line + '\n'
-      continue
+      return
     }
     if (/^#\s+/.test(line)) {
-      flush()
+      flush(i)
       category = line.replace(/^#\s+/, '').trim()
-      continue
+      return
     }
     if (/^##\s+/.test(line)) {
-      flush()
+      flush(i)
       section = line.replace(/^##\s+/, '').trim()
-      continue
+      return
     }
     if (/^###\s+/.test(line)) {
-      flush()
+      flush(i)
       const title = line.replace(/^###\s+/, '').trim()
-      cur = { id: `${file}#${out.length}`, file, category, section, title, keys: [], tags: [], body: '' }
+      cur = { id: `${file}#${out.length}`, file, category, section, title, keys: [], tags: [], body: '', start: i, end: i + 1 }
       inMeta = true
-      continue
+      return
     }
-    if (!cur) continue
+    if (!cur) return
     const m = inMeta ? META.exec(line.trim()) : null
     if (m) {
       const isKeys = /^(anahtarlar|keys)$/i.test(m[1])
       ;(isKeys ? cur.keys : cur.tags).push(...list(m[2]))
-      continue
+      return
     }
     if (line.trim()) inMeta = false
     cur.body += line + '\n'
-  }
-  flush()
+  })
+  flush(all.length)
   return out
+}
+
+export function serializeEntry(e: Pick<KbEntry, 'title' | 'keys' | 'tags' | 'body'>): string {
+  const out = [`### ${e.title.trim()}`]
+  if (e.keys.length) out.push(`- anahtarlar: ${e.keys.join(', ')}`)
+  if (e.tags.length) out.push(`- etiketler: ${e.tags.join(', ')}`)
+  out.push(e.body.trim(), '')
+  return out.join('\n')
+}
+
+/** Replace one entry's block in its file text. */
+export function replaceEntry(text: string, e: KbEntry, block: string): string {
+  const all = lines(text)
+  const after = all.slice(e.end)
+  while (after.length && !after[0].trim()) after.shift()
+  return [...all.slice(0, e.start), ...block.replace(/\n+$/, '').split('\n'), '', ...after].join('\n')
+}
+
+/** Remove one entry's block from its file text. */
+export function removeEntry(text: string, e: KbEntry): string {
+  const all = lines(text)
+  return [...all.slice(0, e.start), ...all.slice(e.end)].join('\n')
+}
+
+/** Append an entry at the end of a file (creating its title when empty). */
+export function appendEntry(text: string, title: string, block: string): string {
+  const base = text.trim() ? text.replace(/\s+$/, '') : `# ${title}`
+  return `${base}\n\n${block.replace(/\n+$/, '')}\n`
 }

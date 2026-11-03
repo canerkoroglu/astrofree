@@ -2,7 +2,7 @@
 // entries to what is on screen.
 import type { KbEntry } from '@shared/knowledge'
 import { getLang, t } from './i18n'
-import { POINT, SIGNS, norm360, type Layer } from './astro'
+import { moonPhase, POINT, SIGNS, norm360, type Layer } from './astro'
 
 // i18n-ignore-start
 /** 28 mansions as taught in the Turkish menâzil tradition: start longitude, names. */
@@ -208,4 +208,56 @@ export function knowledgeText(matches: KbMatch[], budget = 14000): string {
     used += block.length
   }
   return parts.join('\n')
+}
+
+// ---- human-readable rules ---------------------------------------------------------
+
+// i18n-ignore-start
+export const TOPICS: { key: string; label: string }[] = [
+  { key: 'ilişki', label: 'İlişkiler' },
+  { key: 'sinastri', label: 'Sinastri' },
+  { key: 'kompozit', label: 'Kompozit' },
+  { key: 'elektif', label: 'Zaman seçimi' },
+  { key: 'rektifikasyon', label: 'Rektifikasyon' },
+  { key: 'olay:tutulma', label: 'Tutulmalar' },
+  { key: 'antiscia', label: 'Antiscia' },
+  { key: 'sabit-yildiz', label: 'Sabit yıldızlar' }
+]
+export { SIGN_SLUG, PHASE_SLUG }
+// i18n-ignore-end
+
+const titleCase = (s: string) => s.replace(/-/g, ' ').replace(/(^|\s)\S/g, (c) => c.toLocaleUpperCase('tr'))
+
+/** Short topic name: "İlişki astrolojisi: natal…" → "İlişki astrolojisi". */
+export const shortCategory = (title: string) => title.split(/\s*[:(]\s*/)[0].trim()
+
+/** Matching rules of an entry as short phrases; unknown keys are left out. */
+export function describeKeys(keys: string[]): string[] {
+  const out: string[] = []
+  const signs = keys.filter((k) => k.startsWith('burc:')).map((k) => SIGN_SLUG.indexOf(k.slice(5))).filter((i) => i >= 0)
+  const ranges = keys.filter((k) => k.startsWith('derece:')).map((k) => k.slice(7))
+  for (const k of keys) {
+    const [kind, val] = k.split(':')
+    if (kind === 'durak' && val) {
+      const n = Number(val)
+      if (n >= 1 && n <= 28) out.push(t('Ay {n}. durakta ({name})', { n, name: getLang() === 'tr' ? MANSIONS[n - 1].tr : MANSIONS[n - 1].en }))
+    } else if (kind === 'yildiz' && val) out.push(t('{star} kavuşumu', { star: titleCase(val) }))
+    else if (kind === 'faz' && val) {
+      const i = PHASE_SLUG.indexOf(val)
+      if (i >= 0) out.push(t('Ay fazı: {phase}', { phase: moonPhaseName(i) }))
+    } else if (k === 'harita-lordu-ay') out.push(t("Ay'a göre harita lordu"))
+    else {
+      const topic = TOPICS.find((tp) => tp.key === k)
+      if (topic) out.push(t(topic.label))
+    }
+  }
+  if (ranges.length) {
+    const deg = ranges.map((r) => r.replace('-', '°–') + '°').join(', ')
+    out.push(signs.length ? `${signs.map((i) => SIGNS[i].name).join(' / ')} ${deg}` : t('Burcun {deg} dereceleri', { deg }))
+  }
+  return [...new Set(out)]
+}
+
+function moonPhaseName(i: number): string {
+  return moonPhase(0, i * 45 + 1).name
 }
