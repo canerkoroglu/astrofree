@@ -55,7 +55,24 @@ export const PROVIDERS: {
     kind: 'api',
     hint: 'DeepSeek API anahtarı gerekir (platform.deepseek.com).',
     models: ['deepseek-chat', 'deepseek-reasoner']
+  },
+  {
+    id: 'local',
+    label: 'Yerel / özel sunucu',
+    kind: 'api',
+    hint: 'Ollama, llama.cpp, LM Studio, LiteLLM, vLLM gibi OpenAI uyumlu bir sunucu; bilgisayarınızda ya da ağınızda çalışan modeller (ör. Qwen). API anahtarı isteğe bağlıdır.',
+    models: []
   }
+]
+
+/** Common OpenAI-compatible servers and their default addresses. */
+export const LOCAL_PRESETS: { id: string; label: string; url: string; hint: string }[] = [
+  { id: 'ollama', label: 'Ollama', url: 'http://localhost:11434/v1', hint: 'ollama serve · model ör. qwen3:8b' },
+  { id: 'llamacpp', label: 'llama.cpp (llama-server)', url: 'http://localhost:8080/v1', hint: 'llama-server -m model.gguf --port 8080' },
+  { id: 'lmstudio', label: 'LM Studio', url: 'http://localhost:1234/v1', hint: 'Developer → Start Server' },
+  { id: 'litellm', label: 'LiteLLM proxy', url: 'http://localhost:4000/v1', hint: 'litellm --config config.yaml · anahtar: master key' },
+  { id: 'vllm', label: 'vLLM', url: 'http://localhost:8000/v1', hint: 'vllm serve Qwen/Qwen3-8B' },
+  { id: 'custom', label: 'Özel', url: '', hint: 'OpenAI uyumlu herhangi bir /v1 adresi' }
 ]
 
 export const SYSTEM_PROMPT_TR = `Sen deneyimli, psikolojik ve geleneksel tekniklere hâkim bir astrologsun.
@@ -146,7 +163,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
       anthropic: { model: 'claude-opus-5-5', baseUrl: 'https://api.anthropic.com' },
       openai: { model: 'gpt-5.5', baseUrl: 'https://api.openai.com/v1' },
       gemini: { model: 'gemini-2.5-pro', baseUrl: 'https://generativelanguage.googleapis.com/v1beta' },
-      deepseek: { model: 'deepseek-chat', baseUrl: 'https://api.deepseek.com' }
+      deepseek: { model: 'deepseek-chat', baseUrl: 'https://api.deepseek.com' },
+      local: { model: '', baseUrl: 'http://localhost:11434/v1', preset: 'ollama', timeoutSec: 300, hideThinking: true }
     }
   }
 }

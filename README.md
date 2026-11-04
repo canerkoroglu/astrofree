@@ -131,12 +131,33 @@ transit→natal açılar, progresyonlar…) gönderilir. "Gönderilen veri" bağ
 | Codex (CLI) | `codex exec --json`, salt okunur, kalıcı oturum yok | `codex login` |
 | Gemini (CLI) | `gemini -o stream-json` | `gemini` ile giriş ya da Gemini API anahtarı |
 | Claude, OpenAI, Gemini, DeepSeek API | HTTPS akışı | Ayarlar → Yapay zekâ'dan API anahtarı |
+| Yerel / özel sunucu | OpenAI uyumlu `/v1/chat/completions` akışı | Ollama, llama.cpp, LM Studio, LiteLLM, vLLM vb.; anahtar isteğe bağlı |
 
 - CLI sağlayıcıları bilgisayarınızdaki mevcut oturumu kullanır; AstroFree hiçbir kimlik bilgisini görmez.
   Ajanlar boş bir çalışma klasöründe, dosya erişimi ve araçları kapalı olarak çalıştırılır.
 - API anahtarları işletim sisteminin anahtar zinciriyle (Electron `safeStorage`) şifrelenip yalnızca yerel olarak saklanır.
 - Komut yolu, ek argümanlar, model, yanıt dili ve sistem talimatı Ayarlar → Yapay zekâ bölümünden değiştirilebilir.
-- OpenAI uyumlu herhangi bir uç nokta (ör. yerel bir LM Studio / Ollama sunucusu) "Temel URL" ile kullanılabilir.
+
+### Yerel modeller (Ollama, llama.cpp, LM Studio, LiteLLM, vLLM)
+
+İnternete veri göndermeden, bilgisayarınızda ya da ağınızda çalışan bir modelle (ör. Qwen) sohbet edebilirsiniz.
+
+1. Sunucuyu başlatın, örneğin `ollama serve` ve `ollama pull qwen3:8b`.
+2. **Ayarlar → Yapay zekâ → Yerel / özel sunucu**: sunucu türünü seçin (adres ve port kendiliğinden dolar) ya da
+   protokol, sunucu, port ve yolu elle girin.
+3. **Bağlantıyı test et ve modelleri getir** ile modeli seçin; sohbet panelinde sağlayıcı olarak "Yerel / özel sunucu"yu seçin.
+
+| Sunucu | Varsayılan adres |
+|---|---|
+| Ollama | `http://localhost:11434/v1` |
+| llama.cpp (`llama-server`) | `http://localhost:8080/v1` |
+| LM Studio | `http://localhost:1234/v1` |
+| LiteLLM proxy | `http://localhost:4000/v1` (API anahtarı: master key) |
+| vLLM | `http://localhost:8000/v1` |
+
+**Gelişmiş** bölümünde sıcaklık, en fazla yanıt uzunluğu, zaman aşımı, ek HTTP başlıkları, gönderilen veri sınırı
+(bağlam penceresi küçük modeller için) ve `<think>…</think>` düşünme bloklarını gizleme seçenekleri bulunur. Sıcaklık,
+yanıt uzunluğu, zaman aşımı ve veri sınırı diğer API sağlayıcıları için de ayarlanabilir.
 
 Yapay zekâ yorumları eğlence ve kişisel keşif amaçlıdır; tıbbi, hukuki veya finansal tavsiye yerine geçmez.
 

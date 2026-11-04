@@ -5,6 +5,7 @@ const SAMPLE = { y: 2026, m: 1, d: 17 }
 import { t } from '../lib/i18n'
 import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
+import { AdvancedApiSettings, LocalServerSettings } from './AiProviderSettings'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
 import { ASPECTS, AYANAMSAS, HOUSE_SYSTEMS, OPTIONAL_POINTS, POINT, glyph } from '../lib/astro'
@@ -340,6 +341,15 @@ export default function SettingsDialog({
                 <fieldset key={p.id}>
                   <legend>{p.label}</legend>
                   <div className="muted small">{t(p.hint)}</div>
+                  {p.id === 'local' ? (
+                    <LocalServerSettings
+                      cfg={c}
+                      apiKey={keys.local ?? ''}
+                      hasKey={!!hasKey.local}
+                      onKey={(k) => setKeys({ ...keys, local: k })}
+                      onChange={(patch) => setProv('local', patch)}
+                    />
+                  ) : (
                   <div className="row">
                     {p.kind === 'cli' ? (
                       <>
@@ -374,6 +384,8 @@ export default function SettingsDialog({
                       <input value={c.model} placeholder={t('varsayılan')} onChange={(e) => setProv(p.id, { model: e.target.value })} />
                     </label>
                   </div>
+                  )}
+                  {p.kind === 'api' && <AdvancedApiSettings id={p.id} cfg={c} onChange={(patch) => setProv(p.id, patch)} />}
                 </fieldset>
               )
             })}

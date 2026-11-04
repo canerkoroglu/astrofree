@@ -95,6 +95,8 @@ const api = {
 
   ai: {
     detect: (): Promise<ProviderStatus[]> => ipcRenderer.invoke('ai:detect'),
+    models: (baseUrl: string, key: string | null, headers?: string): Promise<{ models?: string[]; error?: string }> =>
+      ipcRenderer.invoke('ai:models', baseUrl, key, headers),
     start: (req: AiChatRequest): void => ipcRenderer.send('ai:start', req),
     cancel: (id: string): void => ipcRenderer.send('ai:cancel', id),
     onEvent: (fn: (e: AiEvent) => void): (() => void) => {

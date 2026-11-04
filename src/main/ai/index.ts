@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { PROVIDERS } from '@shared/defaults'
 import type { AiChatRequest, AiEvent, ProviderId, ProviderStatus } from '@shared/types'
 import { getSecret, getSettings, secretStatus } from '../store'
-import { runApi } from './api'
+import { listModels, runApi } from './api'
 import { runCli } from './cli'
 import { ensureShellPath, resolveCommand, runVersion } from './proc'
 
@@ -61,6 +61,16 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
   const keys = await secretStatus()
   return Promise.all(
     PROVIDERS.map(async (p): Promise<ProviderStatus> => {
+      if (p.id === 'local') {
+        const cfg = settings.ai.providers.local
+        if (!cfg?.baseUrl) return { id: p.id, kind: 'api', available: false, detail: tm('Sunucu adresi girilmemiş (Ayarlar → Yapay zekâ).') }
+        try {
+          const models = await listModels(cfg.baseUrl, await getSecret('local'), cfg.headers)
+          return { id: p.id, kind: 'api', available: true, detail: tm('{url} · {n} model', { url: cfg.baseUrl, n: String(models.length) }), models }
+        } catch (e) {
+          return { id: p.id, kind: 'api', available: false, detail: String((e as Error).message) }
+        }
+      }
       if (p.kind === 'api') {
         const has = !!keys[p.id]
         return { id: p.id, kind: 'api', available: has, detail: has ? tm('API anahtarı kayıtlı') : tm('API anahtarı yok') }
@@ -73,4 +83,13 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
       return { id: p.id, kind: 'cli', available: true, detail: version || exe, models }
     })
   )
+}
+
+/** Models of an OpenAI-compatible server, for the settings screen (key: typed or stored). */
+export async function serverModels(baseUrl: string, key: string | null, headers?: string): Promise<{ models?: string[]; error?: string }> {
+  try {
+    return { models: await listModels(baseUrl, key || (await getSecret('local')), headers) }
+  } catch (e) {
+    return { error: String((e as Error).message) }
+  }
 }

@@ -111,6 +111,7 @@ export type ProviderId =
   | 'openai'
   | 'gemini'
   | 'deepseek'
+  | 'local'
 
 export interface ProviderConfig {
   model: string
@@ -120,6 +121,20 @@ export interface ProviderConfig {
   extraArgs?: string
   /** API providers: override base URL (proxies, OpenAI-compatible hosts). */
   baseUrl?: string
+  /** Local/custom server preset the address came from (ollama, llamacpp, lmstudio, litellm, vllm, custom). */
+  preset?: string
+  /** Sampling temperature; empty uses the server's default. */
+  temperature?: number
+  /** Upper limit for the answer length in tokens; empty uses the provider default. */
+  maxTokens?: number
+  /** Give up waiting after this many seconds (local models can be slow). */
+  timeoutSec?: number
+  /** Extra HTTP headers, one "Name: value" per line (OpenAI-compatible providers). */
+  headers?: string
+  /** Send at most this many characters of chart and knowledge data (small local context windows). */
+  contextLimit?: number
+  /** Drop <think>…</think> reasoning blocks from answers (Qwen, DeepSeek-R1 and similar). */
+  hideThinking?: boolean
 }
 
 export interface AiSettings {

@@ -4025,3 +4025,80 @@ button.head-edit {
 .modal.terms-dialog p {
   margin: 0;
 }
+
+/* ---- AI provider settings: local server form and advanced options ---- */
+.local-server {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+.ls-grid,
+.adv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s3) var(--s4);
+}
+.ls-grid label,
+.adv-grid label,
+.ls-parts label,
+.adv > label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+.ls-url input,
+.ls-parts input,
+.adv textarea {
+  font-family: var(--num-font);
+  font-size: 13px;
+}
+.ls-parts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 2fr) 96px minmax(0, 1fr);
+  align-items: end;
+  gap: var(--s3);
+  padding: var(--s3);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+.ls-parts label.inline {
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 8px;
+}
+.ls-test {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+.ls-ok {
+  color: var(--positive);
+}
+.ls-models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  max-height: 120px;
+  overflow-y: auto;
+}
+.adv {
+  margin-top: var(--s3);
+  border-top: 1px solid var(--line);
+  padding-top: var(--s3);
+}
+.adv summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: var(--s3);
+}
+.adv > label {
+  margin-top: var(--s3);
+}
+.adv > label.inline {
+  flex-direction: row;
+  align-items: center;
+}
