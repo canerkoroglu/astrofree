@@ -422,22 +422,35 @@ export default function SettingsDialog({
 
         {tab === 'general' && (
           <div>
-            <label>
-              {t('Arayüz dili')}
-              <select
-                value={s.uiLanguage}
-                onChange={(e) => {
-                  const lang = e.target.value
-                  setS({ ...s, uiLanguage: lang, ai: { ...s.ai, language: lang } })
-                }}
-              >
-                {LOCALES.map((l) => (
-                  <option key={l.code} value={l.code}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <fieldset>
+              <legend>{t('Dil ve görünüm')}</legend>
+              <div className="form-grid">
+                <label>
+                  {t('Arayüz dili')}
+                  <select
+                    value={s.uiLanguage}
+                    onChange={(e) => {
+                      const lang = e.target.value
+                      setS({ ...s, uiLanguage: lang, ai: { ...s.ai, language: lang } })
+                    }}
+                  >
+                    {LOCALES.map((l) => (
+                      <option key={l.code} value={l.code}>
+                        {l.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  {t('Tema')}
+                  <select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
+                    <option value="system">{t('Sistem')}</option>
+                    <option value="light">{t('Açık')}</option>
+                    <option value="dark">{t('Koyu')}</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
             <fieldset ref={zoneRef} className={focus === 'zone' ? 'focus-flash' : ''}>
               <legend>{t('Saat dilimi ve tarih biçimi')}</legend>
               <div className="muted small">
@@ -498,14 +511,6 @@ export default function SettingsDialog({
                 </select>
               </label>
             </fieldset>
-            <label>
-              {t('Tema')}
-              <select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
-                <option value="system">{t('Sistem')}</option>
-                <option value="light">{t('Açık')}</option>
-                <option value="dark">{t('Koyu')}</option>
-              </select>
-            </label>
             <fieldset>
               <legend>{t('Bildirimler')}</legend>
               <label className="inline">

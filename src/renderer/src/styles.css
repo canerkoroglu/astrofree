@@ -2876,6 +2876,9 @@ input[type='range'] {
   --asp-hard: #c62828;
   --asp-soft: #1f5fae;
   --asp-minor: #1f7a42;
+  --asp-neutral: #9a5b00;
+  --asp-hard-minor: #c0453a;
+  --asp-creative: #7d3cc0;
   --ly-progressed: #7b3aa6;
   --ly-solar-arc: #a84a0e;
   --ly-synastry: #1f5fae;
@@ -2893,6 +2896,9 @@ input[type='range'] {
     --asp-hard: #f26b6b;
     --asp-soft: #6fa8f0;
     --asp-minor: #56c47e;
+    --asp-neutral: #e6a04a;
+    --asp-hard-minor: #f5a08f;
+    --asp-creative: #c08ae6;
     --ly-progressed: #c08ae6;
     --ly-solar-arc: #f0955a;
     --ly-synastry: #6fa8f0;
@@ -2910,6 +2916,9 @@ input[type='range'] {
   --asp-hard: #f26b6b;
   --asp-soft: #6fa8f0;
   --asp-minor: #56c47e;
+  --asp-neutral: #e6a04a;
+  --asp-hard-minor: #f5a08f;
+  --asp-creative: #c08ae6;
   --ly-progressed: #c08ae6;
   --ly-solar-arc: #f0955a;
   --ly-synastry: #6fa8f0;
@@ -3868,19 +3877,20 @@ button.head-edit {
   transform: translateY(0);
 }
 
-/* ---- per-aspect colours: default to the hard/soft/minor hue of the theme; user picks override them ---- */
+/* ---- per-aspect colours, after the common convention (red hard, blue soft, green quincunx family,
+   neutral conjunction, light red for the minor squares, violet for quintiles); user picks override them ---- */
 :root {
-  --asp-conjunction: var(--asp-hard);
+  --asp-conjunction: var(--asp-neutral);
   --asp-opposition: var(--asp-hard);
   --asp-square: var(--asp-hard);
   --asp-trine: var(--asp-soft);
   --asp-sextile: var(--asp-soft);
   --asp-quincunx: var(--asp-minor);
   --asp-semisextile: var(--asp-minor);
-  --asp-semisquare: var(--asp-minor);
-  --asp-sesquiquadrate: var(--asp-minor);
-  --asp-quintile: var(--asp-minor);
-  --asp-biquintile: var(--asp-minor);
+  --asp-semisquare: var(--asp-hard-minor);
+  --asp-sesquiquadrate: var(--asp-hard-minor);
+  --asp-quintile: var(--asp-creative);
+  --asp-biquintile: var(--asp-creative);
 }
 .asp-k-conjunction {
   color: var(--asp-conjunction);
@@ -4169,4 +4179,18 @@ button.head-edit {
 }
 .modal label.ai-system-prompt {
   margin-top: 18px;
+}
+
+/* Settings: section headings stand out, sections evenly spaced */
+.modal legend {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  padding: 0 6px;
+  margin-left: -2px;
+}
+.modal fieldset + fieldset,
+.modal > div > fieldset + fieldset {
+  margin-top: 16px;
 }

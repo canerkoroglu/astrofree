@@ -976,5 +976,6 @@ Rules:
     "Anahtarı test et": "Test key",
     "Adres ve port": "Address and port",
     "API anahtarı gir": "Enter API key",
+    "Dil ve görünüm": "Language and appearance",
   }
 }
