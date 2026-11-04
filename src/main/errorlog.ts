@@ -3,16 +3,17 @@
 // to paste into an issue. Home-folder paths are shortened to "~".
 import { app, type BrowserWindow } from 'electron'
 import { appendFileSync, mkdirSync, readFileSync, renameSync, statSync } from 'node:fs'
-import { homedir, release } from 'node:os'
+import { release } from 'node:os'
 import { join } from 'node:path'
+import { scrub } from './scrub'
+
+export { issueUrl } from './scrub'
 
 const MAX_LINES = 60
 const MAX_BYTES = 256 * 1024
 const recent: string[] = []
 
 const logFile = () => join(app.getPath('userData'), 'logs', 'errors.log')
-
-const scrub = (s: string) => s.split(homedir()).join('~').replace(/\s+$/, '').slice(0, 2000)
 
 export function logError(source: string, err: unknown): void {
   const text = err instanceof Error ? `${err.name}: ${err.message}\n${err.stack ?? ''}` : String(err)
@@ -63,5 +64,5 @@ export function reportInfo(): { system: string; errors: string } {
     `Electron ${process.versions.electron} · Chrome ${process.versions.chrome}`,
     `${app.getLocale()}`
   ].join('\n')
-  return { system, errors: errors.join('\n') }
+  return { system, errors: scrub(errors.join('\n'), 6000) }
 }

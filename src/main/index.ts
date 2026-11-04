@@ -22,7 +22,7 @@ import { parseChartsFile } from './importers'
 import { startNotifier } from './notifier'
 import { startAutoUpdate } from './updater'
 import * as store from './store'
-import { logError, reportInfo, watchErrors } from './errorlog'
+import { issueUrl, logError, reportInfo, watchErrors } from './errorlog'
 import { electionalSearch, ephemSeries, findReturn, fixedStars, planetaryHours, transitSearch } from './tools'
 
 /** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
@@ -165,8 +165,7 @@ function registerIpc(): void {
   ipcMain.handle('app:logError', (_e, source: string, message: string) => logError(String(source).slice(0, 40), String(message).slice(0, 4000)))
   // Opens a new GitHub issue with the text the user saw and edited; only this fixed address is allowed.
   ipcMain.handle('app:openIssue', (_e, title: string, body: string) => {
-    const url = `${REPO}/issues/new?title=${encodeURIComponent(String(title).slice(0, 200))}&body=${encodeURIComponent(String(body).slice(0, 6000))}`
-    void shell.openExternal(url)
+    void shell.openExternal(issueUrl(REPO, title, body))
   })
   ipcMain.handle('export:pngData', async (_e, dataUrl: string, name: string) => {
     const img = nativeImage.createFromDataURL(dataUrl)

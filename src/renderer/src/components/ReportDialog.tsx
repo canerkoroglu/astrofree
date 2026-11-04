@@ -32,12 +32,15 @@ export default function ReportDialog({ onClose }: { onClose: () => void }) {
             onChange={(e) => setWhat(e.target.value)}
           />
         </label>
-        <details open>
+        <div className="report-public" role="note">
+          {t('GitHub kayıtları herkese açıktır ve arama motorlarında görünebilir. Göndermeden önce metni gözden geçirin; kişisel bilgi yazmayın.')}
+        </div>
+        <details>
           <summary>{t('Eklenecek bilgiler (düzenleyebilirsiniz)')}</summary>
           <textarea className="report-info" rows={8} spellCheck={false} value={info} onChange={(e) => setInfo(e.target.value)} />
         </details>
         <p className="muted small">
-          {t('Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. GitHub hesabınız yoksa metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderebilirsiniz.')}
+          {t('Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez; kullanıcı adı, klasör yolları, e-posta adresleri ve anahtara benzeyen metinler maskelenir. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. Herkese açık kayıt istemiyorsanız metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderin.')}
         </p>
         <div className="actions">
           <button onClick={onClose}>{t('Kapat')}</button>

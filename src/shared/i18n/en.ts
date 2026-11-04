@@ -64,6 +64,8 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "GitHub kayıtları herkese açıktır ve arama motorlarında görünebilir. Göndermeden önce metni gözden geçirin; kişisel bilgi yazmayın.": "GitHub issues are public and may appear in search engines. Review the text before sending and do not include personal information.",
+    "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez; kullanıcı adı, klasör yolları, e-posta adresleri ve anahtara benzeyen metinler maskelenir. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. Herkese açık kayıt istemiyorsanız metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderin.": "Your birth data, charts and chats are not included; user names, folder paths, email addresses and key-like text are masked. Nothing is sent automatically: “Open on GitHub” opens a new issue page in your browser and it is sent only when you confirm. If you do not want a public issue, copy the text and email it to astrofree@cklabs.tr.",
     "Yenilikler": "What’s new",
     "AstroFree {v} ile gelen yenilikler": "What’s new in AstroFree {v}",
     "Harika, devam": "Great, continue",

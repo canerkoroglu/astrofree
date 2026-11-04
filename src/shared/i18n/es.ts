@@ -64,6 +64,8 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "GitHub kayıtları herkese açıktır ve arama motorlarında görünebilir. Göndermeden önce metni gözden geçirin; kişisel bilgi yazmayın.": "Las incidencias de GitHub son públicas y pueden aparecer en buscadores. Revise el texto antes de enviarlo y no incluya información personal.",
+    "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez; kullanıcı adı, klasör yolları, e-posta adresleri ve anahtara benzeyen metinler maskelenir. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. Herkese açık kayıt istemiyorsanız metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderin.": "No se incluyen sus datos de nacimiento, cartas ni chats; se ocultan nombres de usuario, rutas de carpetas, direcciones de correo y textos parecidos a claves. Nada se envía automáticamente: “Abrir en GitHub” abre una página de incidencia nueva en el navegador y solo se envía cuando usted lo confirma. Si no quiere una incidencia pública, copie el texto y envíelo por correo a astrofree@cklabs.tr.",
     "Yenilikler": "Novedades",
     "AstroFree {v} ile gelen yenilikler": "Novedades de AstroFree {v}",
     "Harika, devam": "Genial, continuar",

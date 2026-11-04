@@ -4666,3 +4666,13 @@ button.head-edit {
   gap: 8px;
   line-height: 1.5;
 }
+
+.report-public {
+  border-left: 3px solid var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  margin: 10px 0;
+}

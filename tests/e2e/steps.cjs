@@ -26,6 +26,8 @@ function steps({ ai, tmp, mock }) {
   step('date kept', `(()=>{const i=document.querySelector('.ed-sec .dtf > input');if(!i.value.startsWith('17.01.1942'))setv(i,'17.01.1942 18:35');return 1})()`, 600)
   step('save', `c('.modal footer button','Ekle')`, 1500)
   step('saved', `ok('Formdan kişi ekleme',document.querySelector('.chart-head').innerText.includes('17.01.1942 18:35'),document.querySelector('.chart-head').innerText.slice(0,80).replace(/\\n/g,' | '))`)
+  step('first chart reading', `ok('İlk kişi Temel Yorum’da açılıyor',!!document.querySelector('.reading')&&document.querySelector('.view-tabs button.on').textContent==='Temel Yorum')`)
+  step('to chart', `c('.view-tabs button','Harita')`, 600)
   step('natal table', `(()=>{const r=[...document.querySelectorAll('table.data tr')].find(r=>r.textContent.includes('Güneş'));return ok('Natal konum tablosu',!!r&&r.textContent.includes('27°'),r?r.textContent.slice(0,50):'satır yok')})()`)
   step('partner', `window.astro.charts.save({id:'p2',name:'Test Partner',local:{y:1990,m:5,d:3,h:9,mi:20,s:0},tz:{kind:'zone',zone:'Europe/Istanbul'},place:{name:'İzmir',lat:38.42,lon:27.14,zone:'Europe/Istanbul'},createdAt:1,updatedAt:1}).then(()=>{location.reload();return 1})`, 3000)
   step('helpers2', HELPERS, 100)
