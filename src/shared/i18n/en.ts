@@ -64,6 +64,17 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Ay nakshatrası {n} ({l}); doğumda {l} dönemi işliyor.": "Moon nakshatra {n} ({l}); the {l} period is running at birth.",
+    "Gezegen D1 ve D9’da aynı burçta; geleneksel olarak güçlü sayılır.": "The planet is in the same sign in D1 and D9; traditionally considered strong.",
+    "Lahiri ayanamsası ile sidereal konumlar; Rahu = Kuzey Ay Düğümü, Ketu = Güney Ay Düğümü. Dasha dönemleri geleneksel bir zamanlama çerçevesidir, kesin olayları göstermez.": "Sidereal positions with the Lahiri ayanamsa; Rahu = North Node, Ketu = South Node. Dasha periods are a traditional timing framework and do not show definite events.",
+    "Nakshatra": "Nakshatra",
+    "Nakshatra ve navamsa (D9)": "Nakshatra and navamsa (D9)",
+    "Navamsa (D9)": "Navamsa (D9)",
+    "Pada": "Pada",
+    "Rāśi (D1)": "Rāśi (D1)",
+    "Vedik (Jyotiş)": "Vedic (Jyotish)",
+    "Vimshottari dasha": "Vimshottari dasha",
+    "vargottama": "vargottama",
     "Sinastri: {a} ve {b}": "Synastry: {a} and {b}",
     "İki haritanın kişisel gezegenleri arasındaki ana açılar (orb ≤ 5°). Bir ilişkinin nasıl yaşanacağını hiçbir harita belirlemez; bunlar yalnızca üzerine konuşulabilecek temalardır.": "Major aspects between the personal planets of the two charts (orb ≤ 5°). No chart decides how a relationship will go; these are only themes worth talking about.",
     "Uyum alanları": "Areas of harmony",

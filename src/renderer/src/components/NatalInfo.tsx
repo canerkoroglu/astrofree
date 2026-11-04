@@ -1,6 +1,7 @@
 import { mansionOf, moonChartLord } from '../lib/kb'
 import { t } from '../lib/i18n'
 import { useMemo } from 'react'
+import VedicInfo from './VedicInfo'
 import type { AppSettings, ChartRecord } from '@shared/types'
 import {
   cuspsAreAngles,
@@ -459,6 +460,8 @@ export default function NatalInfo({
           </div>
         </div>
       </details>
+
+      <VedicInfo natal={natal} rec={rec} settings={settings} eventJd={eventJd} />
 
       <details>
         <summary>{t('Orta noktalar')}</summary>
