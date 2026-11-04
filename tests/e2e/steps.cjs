@@ -59,6 +59,13 @@ function steps({ ai, tmp }) {
   step('kb open', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 2000)
   step('kb tab', `c('.view-tabs button','Bilgi Bankası')`, 800)
   step('kb check', `(()=>{const t=document.querySelector('.kb-main')?.innerText||'';return ok('Bilgi bankası eşleşmesi',t.includes('Kova durağı')&&t.includes('Natal Ay 23. durakta'),(document.querySelector('.chart-head')?.innerText||'').split('\\n')[0]+' :: '+t.slice(0,80).replace(/\\n/g,' | '))})()`)
+  step('whole sign', `window.astro.settings.get().then(s=>{s.houseSystem='W';return window.astro.settings.set(s)}).then(()=>{location.reload();return 1})`, 3000)
+  step('helpers4', HELPERS, 100)
+  step('whole sign open', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 1500)
+  step('whole sign check', `(()=>{const l=[...document.querySelectorAll('svg .w-anglelabel')].map(x=>x.textContent.trim());const ac=l.find(x=>x.startsWith('AC'))||'';return ok('Tam burç: AC gerçek derecede',ac.startsWith('AC 19°'),l.join(' | '))})()`)
+  step('house system back', `window.astro.settings.get().then(s=>{s.houseSystem='B';return window.astro.settings.set(s)}).then(()=>{location.reload();return 1})`, 3000)
+  step('helpers5', HELPERS, 100)
+  step('reopen', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 1500)
   for (const theme of ['light', 'dark']) {
     step('theme ' + theme, `(()=>{if(!document.getElementById('e2e-no-anim')){const st=document.createElement('style');st.id='e2e-no-anim';st.textContent='*,*::before,*::after{transition:none!important;animation:none!important}';document.head.appendChild(st)}document.documentElement.setAttribute('data-theme','${theme}');return 1})()`, 400)
     for (const v of ['Harita', 'Natal Bilgiler', 'Bilgi Bankası']) {

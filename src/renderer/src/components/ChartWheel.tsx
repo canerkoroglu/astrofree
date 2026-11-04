@@ -2,6 +2,7 @@ import { t } from '../lib/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
+  diff180,
   ASPECT,
   dignity,
   findAspects,
@@ -20,6 +21,7 @@ import {
 } from '../lib/astro'
 
 const C = 500
+const ANGLES = ['AC', 'IC', 'DC', 'MC'] as const
 const ELEMENT_COLOR = { fire: 'var(--el-fire)', earth: 'var(--el-earth)', air: 'var(--el-air)', water: 'var(--el-water)' } as const
 export const LAYER_COLOR: Record<string, string> = {
   natal: 'var(--ink)',
@@ -123,6 +125,8 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
   const [hover, setHover] = useState<{ ring: number; key: string; x: number; y: number } | null>(null)
 
   const rot = settings.orientation === 'asc' ? natal.asc : 0
+  // AC, IC, DC, MC in cusp order 1, 4, 7, 10.
+  const angleLon = (a: (typeof ANGLES)[number]) => norm360({ AC: natal.asc, IC: natal.mc + 180, DC: natal.asc + 180, MC: natal.mc }[a])
   const ang = (lon: number) => ((180 + lon - rot) * Math.PI) / 180
   const pt = (lon: number, r: number) => {
     const a = ang(lon)
@@ -217,37 +221,64 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
         ))}
         <circle cx={C} cy={C} r={aspectR} className="w-line w-strong" fill="none" />
 
-        {/* House cusps */}
+        {/* House cusps. Cusps 1/4/7/10 are the angles only in quadrant systems; in whole-sign, equal,
+            Morinus and meridian houses they differ, so the angles are drawn on their own below. */}
         {cuspLines &&
           natal.cusps.map((c, i) => {
-            const angular = i % 3 === 0
-            const [x1, y1] = pt(c, angular ? rZ1 + 20 : rZ2)
+            const angle = i % 3 === 0 ? ANGLES[i / 3] : null
+            const isAngle = !!angle && Math.abs(diff180(c, angleLon(angle))) < 0.01
+            const [x1, y1] = pt(c, isAngle ? rZ1 + 20 : rZ2)
             const [x2, y2] = pt(c, aspectR)
             const mid = norm360(c + norm360(natal.cusps[(i + 1) % 12] - c) / 2)
             const [hx, hy] = pt(mid, (hubOuter + aspectR) / 2)
-            const [lx, ly] = pt(c, rZ1 + (angular ? 24 : 10))
+            const [lx, ly] = pt(c, rZ1 + (isAngle ? 24 : 10))
             const sd = splitDeg(c)
-            const label = ['AC', 'IC', 'DC', 'MC'][i / 3]
             return (
               <g key={i}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} className={angular ? 'w-cusp w-angle' : 'w-cusp'} />
+                <line x1={x1} y1={y1} x2={x2} y2={y2} className={isAngle ? 'w-cusp w-angle' : 'w-cusp'} />
                 <text x={hx} y={hy} className="w-house" textAnchor="middle" dominantBaseline="central">
                   {i + 1}
                 </text>
                 <text
                   x={lx}
                   y={ly}
-                  className={angular ? 'w-cusplabel w-anglelabel' : 'w-cusplabel'}
+                  className={isAngle ? 'w-cusplabel w-anglelabel' : 'w-cusplabel'}
                   textAnchor={lx < C - 60 ? 'end' : lx > C + 60 ? 'start' : 'middle'}
                   dominantBaseline="central"
                 >
-                  {angular ? `${label} ` : ''}
+                  {isAngle ? `${angle} ` : ''}
                   {sd.deg}°<tspan className="w-glyph">{signGlyph(sd.sign)}</tspan>
                   {String(sd.min).padStart(2, '0')}'
                 </text>
               </g>
             )
           })}
+
+        {/* Angles that are not house cusps in this system: ASC/MC axes at their true degrees. */}
+        {cuspLines &&
+          ANGLES.filter((a, k) => Math.abs(diff180(natal.cusps[k * 3], angleLon(a))) >= 0.01).map((a) => {
+          const lon = angleLon(a)
+          const [x1, y1] = pt(lon, rZ1 + 20)
+          const [x2, y2] = pt(lon, aspectR)
+          const [lx, ly] = pt(lon, rZ1 + 24)
+          const sd = splitDeg(lon)
+          return (
+            <g key={a}>
+              <line x1={x1} y1={y1} x2={x2} y2={y2} className="w-cusp w-angle" />
+              <text
+                x={lx}
+                y={ly}
+                className="w-cusplabel w-anglelabel"
+                textAnchor={lx < C - 60 ? 'end' : lx > C + 60 ? 'start' : 'middle'}
+                dominantBaseline="central"
+              >
+                {`${a} `}
+                {sd.deg}°<tspan className="w-glyph">{signGlyph(sd.sign)}</tspan>
+                {String(sd.min).padStart(2, '0')}'
+              </text>
+            </g>
+          )
+        })}
 
         {/* Aspect lines */}
         <g>
