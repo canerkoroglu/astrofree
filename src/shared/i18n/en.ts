@@ -64,6 +64,8 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.": "AI is optional: even without it, the “Basic Reading” tab interprets your chart offline.",
+    "“Temel Yorum” sekmesi yapay zekâ olmadan haritanın temel yorumunu, “Bugün” sekmesi günün transitlerini gösterir.": "The “Basic Reading” tab shows a basic reading of the chart without AI; the “Today” tab shows the day's transits.",
     "Astroloji sözlüğü": "Astrology glossary",
     "Sözlükte ara…": "Search the glossary…",
     "Uygulamada geçen astroloji terimlerinin açıklamaları": "Explanations of the astrology terms used in the app",

@@ -103,6 +103,7 @@ export default function Onboarding({
           <section className="ob-body">
             <h2>{t('Yorumlar için bir yapay zekâ seçin')}</h2>
             <p>{t('Bilgisayarınızda kurulu bir AI aracı varsa onu kullanabilirsiniz; ek bir anahtar gerekmez. Sonra Ayarlar’dan değiştirebilirsiniz.')}</p>
+            <p className="ob-note">{t('Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.')}</p>
             {!statuses && <p className="muted">{t('Kontrol ediliyor…')}</p>}
             {statuses && (
               <div className="ob-providers">
@@ -126,6 +127,7 @@ export default function Onboarding({
           <section className="ob-body">
             <h2>{t('Her şey hazır')}</h2>
             <ul className="ob-tips">
+              <li>{t('“Temel Yorum” sekmesi yapay zekâ olmadan haritanın temel yorumunu, “Bugün” sekmesi günün transitlerini gösterir.')}</li>
               <li>{t('Soldaki listeden bir kişiye tıklayın; Transit, Progresyon ve diğer katmanlar üst çubukta.')}</li>
               <li>{t('Zamanı ← → tuşlarıyla veya Alt + tekerlekle ilerletin; “Canlı” şu anı takip eder.')}</li>
               <li>{t('Çarktaki bir gezegene tıklayıp “Yorumla” deyin; sağdaki sohbet haritayı bilir.')}</li>

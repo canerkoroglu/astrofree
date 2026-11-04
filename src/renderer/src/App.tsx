@@ -1234,6 +1234,8 @@ export default function App() {
           existing={charts}
           onClose={() => setEditor(null)}
           onApply={(rec, save) => {
+            // The very first saved chart opens on the offline reading: something to read right away, no AI needed.
+            const firstChart = save && charts.length === 0
             setEditor(null)
             if (save) void persist(rec)
             else {
@@ -1242,7 +1244,7 @@ export default function App() {
             }
             setOuters([])
             setAspectLayer(-1)
-            setView('chart')
+            setView(firstChart ? 'reading' : 'chart')
           }}
         />
       )}

@@ -4635,3 +4635,11 @@ button.head-edit {
     grid-template-columns: 1fr;
   }
 }
+
+.ob-note {
+  border-left: 3px solid var(--accent);
+  background: var(--panel-2);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+}

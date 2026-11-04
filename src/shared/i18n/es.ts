@@ -64,6 +64,8 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.": "La IA es opcional: aunque no la conecte, la pestaña “Lectura básica” interpreta su carta sin conexión.",
+    "“Temel Yorum” sekmesi yapay zekâ olmadan haritanın temel yorumunu, “Bugün” sekmesi günün transitlerini gösterir.": "La pestaña “Lectura básica” muestra una lectura básica de la carta sin IA; la pestaña “Hoy”, los tránsitos del día.",
     "Astroloji sözlüğü": "Glosario de astrología",
     "Sözlükte ara…": "Buscar en el glosario…",
     "Uygulamada geçen astroloji terimlerinin açıklamaları": "Explicaciones de los términos astrológicos que usa la aplicación",
