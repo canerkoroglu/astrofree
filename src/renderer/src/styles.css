@@ -4331,3 +4331,214 @@ button.head-edit {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- sidebar: people list and sky panel as two panes with a draggable divider ---- */
+.sidebar .side-panes {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar .side-pane {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-gutter: auto;
+  max-height: none;
+  margin: 0;
+  padding-right: 2px;
+}
+.sidebar .chart-list.side-pane {
+  flex: 1 1 auto;
+}
+.sidebar .side-sky {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar .side-sky.folded {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--line);
+  margin-top: var(--s2);
+}
+.side-pane-head {
+  flex: none;
+}
+.side-pane-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.sidebar .sky {
+  overflow: visible;
+  max-height: none;
+  margin: 0;
+}
+.side-split {
+  flex: none;
+  height: 14px;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: row-resize;
+  touch-action: none;
+  border-radius: 6px;
+  outline-offset: -2px;
+}
+.side-split span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--line-strong);
+  position: relative;
+}
+.side-split span::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  width: 36px;
+  height: 5px;
+  margin-left: -18px;
+  border-radius: 3px;
+  background: var(--line-strong);
+}
+.side-split:hover span,
+.side-split:hover span::after,
+.side-split.dragging span,
+.side-split.dragging span::after,
+.side-split:focus-visible span::after {
+  background: var(--accent);
+}
+.sec-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  min-height: 0;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.sec-toggle:hover {
+  color: var(--ink);
+}
+.sec-toggle .chev {
+  width: 10px;
+  font-size: 10px;
+}
+/* card shortcuts: compact grid under the card, wraps instead of truncating */
+.chart-list .chips {
+  display: none;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  padding: 0 var(--s3) var(--s3);
+  gap: 4px;
+}
+.chart-list li:hover .chips,
+.chart-list li.active .chips {
+  display: grid;
+}
+.chart-list .chips button {
+  min-width: 0;
+  padding: 3px 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  border-radius: 6px;
+}
+
+/* sky panel header: fold toggle + expand to the main area */
+.side-pane-head {
+  display: flex;
+  align-items: center;
+}
+.side-pane-head .sec-toggle {
+  flex: 1;
+}
+.sky-expand {
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--muted);
+  padding: 1px 8px;
+  min-height: 0;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.sky-expand:hover {
+  color: var(--ink);
+  background: var(--panel-2);
+}
+/* full-size sky: lightbox over the whole window */
+.lightbox-back {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.lightbox {
+  width: min(1400px, 100%);
+  height: min(900px, 100%);
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  overflow: hidden;
+}
+.lightbox-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 24px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.lightbox-head h2 {
+  margin: 0 0 2px;
+}
+.lightbox-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 24px 24px;
+}
+.sky.sky-wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  align-items: start;
+  font-size: 14px;
+  max-height: none;
+  overflow: visible;
+}
+.sky-wide .sky-hero {
+  padding: 20px;
+}
+.sky-wide .sky-date {
+  font-size: 22px;
+}
+.sky-wide .sky-moon-line {
+  font-size: 18px;
+}
+.sky-wide .sky-col > .sky-sub:first-child {
+  margin-top: 0;
+}

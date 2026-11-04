@@ -40,6 +40,9 @@ portable:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  # Charts, settings and readings live in %APPDATA%\AstroFree; updates and
+  # uninstalling never delete them.
+  deleteAppDataOnUninstall: false
 linux:
   target: [AppImage, deb]
   category: Science

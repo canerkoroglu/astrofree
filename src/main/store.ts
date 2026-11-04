@@ -9,21 +9,92 @@ import type { AppSettings, ChartRecord, Interpretation, ProviderId, StoredChat }
 const dir = () => app.getPath('userData')
 const file = (name: string) => join(dir(), name)
 
+/**
+ * Read a data file. A missing file gives the fallback. A file that exists but
+ * cannot be parsed is never treated as empty (the next save would overwrite
+ * the user's records): it is moved aside as <name>.corrupt-<time> and the
+ * previous good copy (<name>.bak) is restored.
+ */
 async function readJson<T>(name: string, fallback: T): Promise<T> {
+  const target = file(name)
+  let text: string
   try {
-    return JSON.parse(await fs.readFile(file(name), 'utf8')) as T
+    text = await fs.readFile(target, 'utf8')
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') return restoreFromBak(name, fallback)
+    throw e
+  }
+  try {
+    return JSON.parse(text) as T
+  } catch {
+    const aside = `${target}.corrupt-${new Date().toISOString().replace(/[:.]/g, '-')}`
+    await fs.rename(target, aside).catch(() => undefined)
+    console.error(`[store] ${name} okunamadı; ${basename(aside)} olarak saklandı`)
+    return restoreFromBak(name, fallback)
+  }
+}
+
+/** Use <name>.bak when the main file is gone or broken; put it back in place. */
+async function restoreFromBak<T>(name: string, fallback: T): Promise<T> {
+  try {
+    const text = await fs.readFile(`${file(name)}.bak`, 'utf8')
+    const data = JSON.parse(text) as T
+    await fs.writeFile(file(name), text, 'utf8')
+    console.error(`[store] ${name} yedeğinden (.bak) geri yüklendi`)
+    return data
   } catch {
     return fallback
   }
 }
 
+/** fs.rename with a few retries: on Windows antivirus or indexers can hold the file briefly. */
+async function renameRetry(from: string, to: string): Promise<void> {
+  for (let i = 0; ; i++) {
+    try {
+      return await fs.rename(from, to)
+    } catch (e) {
+      const code = (e as NodeJS.ErrnoException).code
+      if (i >= 5 || !['EPERM', 'EBUSY', 'EACCES'].includes(code ?? '')) throw e
+      await new Promise((r) => setTimeout(r, 50 * (i + 1)))
+    }
+  }
+}
+
 // Write to a temp file and rename so a crash never leaves half a file behind.
+// The previous version is kept as <name>.bak.
 async function writeJson(name: string, data: unknown): Promise<void> {
   await fs.mkdir(dir(), { recursive: true })
   const target = file(name)
   const tmp = `${target}.${process.pid}.tmp`
   await fs.writeFile(tmp, JSON.stringify(data, null, 2), 'utf8')
-  await fs.rename(tmp, target)
+  await fs.copyFile(target, `${target}.bak`).catch(() => undefined)
+  await renameRetry(tmp, target)
+}
+
+const DATA_FILES = ['charts.json', 'interpretations.json', 'settings.json', 'chats.json']
+
+/**
+ * Before a new version runs for the first time, copy the data files to
+ * snapshots/<old>-to-<new>/ (the last 5 are kept). Data lives in the user
+ * folder, which installers and updates do not touch; this is an extra net.
+ */
+export async function snapshotOnUpgrade(version: string): Promise<void> {
+  try {
+    const meta = await readJson<{ lastVersion?: string }>('meta.json', {})
+    if (meta.lastVersion === version) return
+    if (meta.lastVersion) {
+      const root = join(dir(), 'snapshots')
+      const dest = join(root, `${meta.lastVersion}-to-${version}`)
+      await fs.mkdir(dest, { recursive: true })
+      for (const f of DATA_FILES) await fs.copyFile(file(f), join(dest, f)).catch(() => undefined)
+      const all = (await fs.readdir(root)).sort()
+      const stats = await Promise.all(all.map(async (n) => ({ n, t: (await fs.stat(join(root, n))).mtimeMs })))
+      for (const { n } of stats.sort((a, b) => b.t - a.t).slice(5)) await fs.rm(join(root, n), { recursive: true, force: true })
+    }
+    await writeJson('meta.json', { ...meta, lastVersion: version })
+  } catch (e) {
+    console.error('[store] sürüm öncesi kopya alınamadı', e) // i18n-ignore
+  }
 }
 
 // Every read-modify-write goes through one queue so concurrent IPC calls

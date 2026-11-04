@@ -64,6 +64,12 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Gökyüzü ana alanda açık.": "The sky is open in the main area.",
+    "Tam ekranda göster": "Show full size",
+    "Küçült": "Minimise",
+    "Anlık gökyüzü; zamanı ilerlettikçe güncellenir.": "The sky right now; it updates as you move time.",
+    "Kişiler ve gökyüzü arasındaki bölme": "Divider between people and sky",
+    "Sürükleyerek yüksekliği ayarlayın · çift tıklama: varsayılan": "Drag to resize · double-click: default",
     "Paylaşım kartı": "Share card",
     "Instagram, WhatsApp…": "Instagram, WhatsApp…",
     "Gönderi 4:5": "Post 4:5",

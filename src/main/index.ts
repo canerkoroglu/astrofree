@@ -299,6 +299,7 @@ function buildMenu(): void {
 }
 
 app.whenReady().then(async () => {
+  await store.snapshotOnUpgrade(app.getVersion())
   setMainLang((await store.getSettings()).uiLanguage)
   void ensureShellPath()
   registerIpc()

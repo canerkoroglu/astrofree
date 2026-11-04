@@ -18,6 +18,15 @@ app.commandLine.appendSwitch('lang', process.env.E2E_LANG || 'tr')
 const root = path.resolve(__dirname, '../..')
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'astrofree-e2e-'))
 app.setPath('userData', path.join(tmp, 'profile'))
+// Data-safety check: a broken data file with a good .bak must be recovered
+// (interpretations.json here, so the first-run flow for an empty chart list still runs),
+// and a version change must leave a snapshot of the data files.
+const profile = path.join(tmp, 'profile')
+fs.mkdirSync(profile, { recursive: true })
+const RECOVERED = { id: 'recovered-1', chartId: 'nobody', title: 'Kurtarılan yorum', content: 'x', provider: 'test', createdAt: 1 }
+fs.writeFileSync(path.join(profile, 'interpretations.json'), '[{"id": "half-writ')
+fs.writeFileSync(path.join(profile, 'interpretations.json.bak'), JSON.stringify([RECOVERED]))
+fs.writeFileSync(path.join(profile, 'meta.json'), JSON.stringify({ lastVersion: '0.0.1' }))
 let n = 0
 // Save dialogs answer themselves so exports can run unattended.
 dialog.showSaveDialog = async (_w, o) => ({ canceled: false, filePath: path.join(tmp, `export-${n++}-${path.basename((o && o.defaultPath) || 'x')}`) })
@@ -45,6 +54,19 @@ const timeout = setTimeout(() => finish('timeout'), 10 * 60 * 1000)
 
 function finish(reason) {
   clearTimeout(timeout)
+  try {
+    const files = fs.readdirSync(profile)
+    const snap = path.join(profile, 'snapshots')
+    const snaps = fs.existsSync(snap) ? fs.readdirSync(snap) : []
+    const interps = JSON.parse(fs.readFileSync(path.join(profile, 'interpretations.json'), 'utf8'))
+    results.push(
+      (files.some((f) => f.startsWith('interpretations.json.corrupt-')) && interps.some((c) => c.id === 'recovered-1') ? 'PASS' : 'FAIL') +
+        ' Bozuk veri dosyası kenara alındı, .bak yedeğinden kurtarıldı'
+    )
+    results.push((snaps.some((n) => n.startsWith('0.0.1-to-')) && files.includes('charts.json.bak') ? 'PASS' : 'FAIL') + ' Sürüm yükseltmesinde veri kopyası ve .bak — ' + snaps.join(','))
+  } catch (e) {
+    results.push('FAIL veri güvenliği denetimi: ' + e.message)
+  }
   const failed = results.filter((r) => r.startsWith('FAIL'))
   for (const r of results) console.log(r)
   const passed = results.filter((r) => r.startsWith('PASS')).length

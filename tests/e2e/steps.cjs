@@ -41,6 +41,10 @@ function steps({ ai, tmp, mock }) {
   step('mansion check', `(()=>{const t=document.querySelector('.natal-info').innerText;return ok('Ay durağı ve Ay lordu',t.includes("23. Sa'd Bula")&&t.includes('Jüpiter'))})()`)
   step('today', `c('.view-tabs button','Bugün')`, 2500)
   step('today check', `(()=>{const r=document.querySelector('.today');if(!r)return ok('Bugün ekranı',false,'yok');const t=r.innerText;return ok('Bugün ekranı',t.includes('Bugün etkili transitler')&&t.includes('Önümüzdeki 30 gün')&&!t.includes('Hesaplanıyor')&&!!r.querySelector('.reading-disclaimer'),t.slice(0,160).replace(/\\n/g,' | '))})()`)
+  step('sky full', `(()=>{document.querySelector('.sky-expand').click();return 1})()`, 600)
+  step('sky full check', `ok('Gökyüzü tam ekran (lightbox)',!!document.querySelector('.lightbox .sky-wide .sky-hero')&&document.querySelectorAll('.lightbox .sky-col').length===3)`)
+  step('sky full close', `(()=>{c('.lightbox-head button','⤡');return 1})()`, 400)
+  step('sky full closed', `ok('Gökyüzü küçültme',!document.querySelector('.lightbox'))`)
   step('reading', `c('.view-tabs button','Temel Yorum')`, 1000)
   step('reading check', `(()=>{const r=document.querySelector('.reading');if(!r)return ok('Temel yorum',false,'sayfa yok');const t=r.innerText;return ok('Temel yorum (çevrimdışı)',t.includes('Oğlak Güneşi')&&t.includes('Kova Ay')&&t.includes('Aslan Yükselen')&&r.querySelectorAll('.reading-item').length>=10&&r.querySelectorAll('.reading-disclaimer').length===2,t.slice(0,120).replace(/\\n/g,' | '))})()`)
   step('reading tone', `(()=>{const ps=[...document.querySelectorAll('.reading .reading-card p, .reading .reading-body p:not(.muted)')].map(p=>p.innerText);const bad=ps.filter(x=>x.split(/[.;]/).filter(c=>c.trim().length>12).some(c=>!/(abil|ebil|olabil|edebil)/.test(c)));return ok('Temel yorum olasılık diliyle',ps.length>20&&bad.length===0,bad.slice(0,2).join(' // '))})()`)
@@ -118,7 +122,7 @@ function steps({ ai, tmp, mock }) {
       step('contrast ' + theme + v, `(()=>{const bad=${CONTRAST}.filter(x=>!x.includes('[disabled]'));return ok('Kontrast (${theme}, ${v})',bad.length===0,bad.slice(0,3).join(' || '))})()`)
     }
   }
-  step('interp', `window.astro.interp.add({id:'i1',chartId:'x',title:'t',content:'c',provider:'test',createdAt:Date.now()}).then(a=>ok('Yorum arşivi',a.length===1))`)
+  step('interp', `window.astro.interp.add({id:'i1',chartId:'x',title:'t',content:'c',provider:'test',createdAt:Date.now()}).then(a=>ok('Yorum arşivi',a.some(i=>i.id==='i1')))`)
   if (ai) {
     step('claude', `aiAsk('claude-code','','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Claude Code — '+r)`)
     step('codex', `aiAsk('codex','gpt-5.6-luna','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Codex — '+r)`)

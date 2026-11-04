@@ -110,6 +110,63 @@ export default function App() {
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
   const [showShare, setShowShare] = useState(false)
+  // The sky panel can be opened full size as a lightbox over the window.
+  const [skyFull, setSkyFull] = useState(false)
+  // Sidebar sections the user folded away (remembered per device).
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('sidebar-collapsed') || '{}')
+    } catch {
+      return {}
+    }
+  })
+  // Height of the people list in the sidebar, % of the space shared with the sky panel.
+  const panesRef = useRef<HTMLDivElement>(null)
+  const [listPct, setListPct] = useState<number>(() => {
+    try {
+      const v = Number(localStorage.getItem('sidebar-split'))
+      return v >= 15 && v <= 85 ? v : 55
+    } catch {
+      return 55
+    }
+  })
+  const saveListPct = (v: number) => {
+    const c = Math.min(85, Math.max(15, v))
+    setListPct(c)
+    try {
+      localStorage.setItem('sidebar-split', String(c))
+    } catch {
+      /* storage unavailable */
+    }
+  }
+  const startSplitDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const box = panesRef.current?.getBoundingClientRect()
+    if (!box) return
+    e.preventDefault()
+    const el = e.currentTarget
+    el.setPointerCapture(e.pointerId)
+    el.classList.add('dragging')
+    const move = (ev: PointerEvent) => saveListPct(((ev.clientY - box.top) / box.height) * 100)
+    const up = () => {
+      el.classList.remove('dragging')
+      el.removeEventListener('pointermove', move)
+      el.removeEventListener('pointerup', up)
+      el.removeEventListener('pointercancel', up)
+    }
+    el.addEventListener('pointermove', move)
+    el.addEventListener('pointerup', up)
+    el.addEventListener('pointercancel', up)
+  }
+  const toggleSection = (k: string) =>
+    setCollapsed((c) => {
+      const n = { ...c, [k]: !c[k] }
+      try {
+        localStorage.setItem('sidebar-collapsed', JSON.stringify(n))
+      } catch {
+        /* storage unavailable */
+      }
+      return n
+    })
   const [sky, setSky] = useState<SkyReport | null>(null)
   const [hours, setHours] = useState<PlanetaryHours | null>(null)
   const [starPos, setStarPos] = useState<{ name: string; lon: number }[]>([])
@@ -778,15 +835,18 @@ export default function App() {
             ))}
           </div>
         )}
-        <ul className="chart-list">
+        <div className="side-panes" ref={panesRef}>
+        <ul className="chart-list side-pane" style={collapsed.sky ? undefined : { flex: `0 0 ${listPct}%` }}>
           {(['person', 'event'] as const).map((kind) => {
             const group = visible.filter((c) => (c.kind ?? 'person') === kind)
             if (!group.length) return null
             return [
               <li key={`h-${kind}`} className="list-head">
-                {kind === 'person' ? t('Kişiler') : t('Olaylar')} <span className="muted">{group.length}</span>
+                <button className="sec-toggle" aria-expanded={!collapsed[kind]} onClick={() => toggleSection(kind)}>
+                  <span className="chev">{collapsed[kind] ? '▸' : '▾'}</span> {kind === 'person' ? t('Kişiler') : t('Olaylar')} <span className="muted">{group.length}</span>
+                </button>
               </li>,
-              ...group.map((c) => (
+              ...group.filter((c) => !collapsed[kind] || c.id === working.id).map((c) => (
                 <li key={c.id} className={c.id === working.id ? 'active' : ''}>
                   <div className="item-row">
                     <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
@@ -826,7 +886,48 @@ export default function App() {
             </li>
           )}
         </ul>
-        <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
+        {!collapsed.sky && (
+          <div
+            className="side-split"
+            role="separator"
+            aria-orientation="horizontal"
+            aria-label={t('Kişiler ve gökyüzü arasındaki bölme')}
+            aria-valuenow={Math.round(listPct)}
+            aria-valuemin={15}
+            aria-valuemax={85}
+            tabIndex={0}
+            title={t('Sürükleyerek yüksekliği ayarlayın · çift tıklama: varsayılan')}
+            onPointerDown={startSplitDrag}
+            onDoubleClick={() => saveListPct(55)}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowUp') (e.preventDefault(), saveListPct(listPct - 5))
+              if (e.key === 'ArrowDown') (e.preventDefault(), saveListPct(listPct + 5))
+            }}
+          >
+            <span />
+          </div>
+        )}
+        <section className={`side-sky side-pane${collapsed.sky ? ' folded' : ''}`}>
+          <div className="list-head side-pane-head">
+            <button className="sec-toggle" aria-expanded={!collapsed.sky} onClick={() => toggleSection('sky')}>
+              <span className="chev">{collapsed.sky ? '▸' : '▾'}</span> {t('Gökyüzü')}
+            </button>
+            <button
+              className="sky-expand"
+              title={t('Tam ekranda göster')}
+              aria-label={t('Tam ekranda göster')}
+              onClick={() => setSkyFull(true)}
+            >
+              ⤢ {t('Tam ekran')}
+            </button>
+          </div>
+          {!collapsed.sky && (
+            <div className="side-pane-body">
+              <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
+            </div>
+          )}
+        </section>
+        </div>
         <div className="side-actions">
           <button onClick={() => menuRef.current('import')}>{t('İçe aktar')}</button>
           <button onClick={() => menuRef.current('export')} disabled={!charts.length}>
@@ -1069,6 +1170,28 @@ export default function App() {
         </div>}
       </main>
 
+      {skyFull && (
+        <div
+          className="lightbox-back"
+          onMouseDown={(e) => e.target === e.currentTarget && setSkyFull(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setSkyFull(false)}
+        >
+          <div className="lightbox sky-lightbox" role="dialog" aria-label={t('Gökyüzü')}>
+            <div className="lightbox-head">
+              <div>
+                <h2>{t('Gökyüzü')}</h2>
+                <div className="muted small">{t('Anlık gökyüzü; zamanı ilerlettikçe güncellenir.')}</div>
+              </div>
+              <button autoFocus onClick={() => setSkyFull(false)}>
+                ⤡ {t('Küçült')}
+              </button>
+            </div>
+            <div className="lightbox-body">
+              <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} wide />
+            </div>
+          </div>
+        </div>
+      )}
       {showShare && computed && <ShareCard natal={computed.natal} rec={working} settings={settings} onClose={() => setShowShare(false)} />}
       {showChat && (
         <aside className="chatside">

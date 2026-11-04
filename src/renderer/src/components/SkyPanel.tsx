@@ -45,7 +45,8 @@ export default function SkyPanel({
   jd,
   tz,
   lon,
-  onJump
+  onJump,
+  wide = false
 }: {
   report: SkyReport | null
   hours: PlanetaryHours | null
@@ -53,8 +54,10 @@ export default function SkyPanel({
   tz: TzSpec
   lon: number
   onJump: (jd: number) => void
+  /** Full-size layout (lightbox): sections side by side, planetary hours open. */
+  wide?: boolean
 }) {
-  const [showHours, setShowHours] = useState(false)
+  const [showHours, setShowHours] = useState(wide)
   if (!report) return <div className="sky muted small pad">{t('Gökyüzü hesaplanıyor…')}</div>
 
   const local = (tt: number) => jdToLocal(tt, tz, lon)
@@ -83,7 +86,8 @@ export default function SkyPanel({
   const events = [...report.events, ...report.nextEclipses.filter((e) => !report.events.includes(e))]
 
   return (
-    <div className="sky">
+    <div className={wide ? 'sky sky-wide' : 'sky'}>
+      <div className="sky-col">
       <div className="sky-hero">
         <MoonIcon angle={ph.angle} />
         <div className="sky-hero-text">
@@ -140,6 +144,8 @@ export default function SkyPanel({
         </div>
       )}
 
+      </div>
+      <div className="sky-col">
       <div className="sky-sub">{t('Retro gezegenler')}</div>
       {report.retro.length === 0 && <div className="muted small">{t('Şu an retro gezegen yok')}</div>}
       {report.retro.map((r) => {
@@ -165,6 +171,8 @@ export default function SkyPanel({
         )
       })}
 
+      </div>
+      <div className="sky-col">
       <div className="sky-sub">{t('Yaklaşan olaylar')}</div>
       <ul className="timeline">
         {events.map((e, i) => {
@@ -192,6 +200,7 @@ export default function SkyPanel({
           )
         })}
       </ul>
+      </div>
     </div>
   )
 }
