@@ -4277,3 +4277,10 @@ button.head-edit {
   margin: 2px 0 0;
   color: var(--muted);
 }
+
+.ai-disclaimer {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 6px 0 0;
+  line-height: 1.4;
+}

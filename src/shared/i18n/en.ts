@@ -64,6 +64,9 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Yapay zekâ yanıtları hata içerebilir; kişisel keşif amaçlıdır, kesin bilgi ya da profesyonel tavsiye değildir.": "AI answers can contain mistakes; they are for personal exploration, not certainty or professional advice.",
+    "Kaydedilen yorumlar kişisel keşif amaçlıdır; kesin bilgi ya da profesyonel tavsiye değildir.": "Saved readings are for personal exploration, not certainty or professional advice.",
+    "Astrolojik yorumlar kişisel keşif amaçlıdır; kesin bilgi ya da tıbbi, hukuki, psikolojik veya finansal tavsiye değildir.": "Astrological readings are for personal exploration, not certainty or medical, legal, psychological or financial advice.",
     "Bu doğum haritasının genel bir yorumunu yap: önce en güçlü temalar, sonra Güneş, Ay, Yükselen ve öne çıkan açılar.": "Give a general reading of this birth chart: first the strongest themes, then the Sun, Moon, Ascendant and the main aspects.",
     "Doğum saati bilinmediği için Yükselen ve ev yorumları gösterilmiyor.": "The birth time is unknown, so the Ascendant and house readings are not shown.",
     "Element dengesi": "Element balance",

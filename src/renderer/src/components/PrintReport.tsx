@@ -45,6 +45,7 @@ export default function PrintReport({
             ))}
         </section>
       )}
+      <p className="print-foot">{t('Astrolojik yorumlar kişisel keşif amaçlıdır; kesin bilgi ya da tıbbi, hukuki, psikolojik veya finansal tavsiye değildir.')}</p>
       <p className="print-foot">{t('AstroFree · Swiss Ephemeris')}</p>
     </div>
   )

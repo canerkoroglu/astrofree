@@ -32,6 +32,7 @@ export default function Interpretations({
   }
   return (
     <div className="interp">
+      <p className="ai-disclaimer">{t('Kaydedilen yorumlar kişisel keşif amaçlıdır; kesin bilgi ya da profesyonel tavsiye değildir.')}</p>
       {[...items]
         .sort((a, b) => b.createdAt - a.createdAt)
         .map((it) => (

@@ -344,6 +344,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             </button>
           )}
         </div>
+        <div className="ai-disclaimer">{t('Yapay zekâ yanıtları hata içerebilir; kişisel keşif amaçlıdır, kesin bilgi ya da profesyonel tavsiye değildir.')}</div>
         {showCtx && <pre className="ctx">{lastKb ? `${context}\n\n${lastKb}` : context}</pre>}
       </div>
     </div>
