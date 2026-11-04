@@ -1,7 +1,7 @@
 {
   "name": "astro-free",
   "productName": "AstroFree",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Doğum haritası, transit ve progresyon analizi; Claude Code / Codex / Gemini / DeepSeek ile yorum ve sohbet.",
   "main": "./out/main/index.js",
   "author": {
