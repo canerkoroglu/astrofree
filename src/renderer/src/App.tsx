@@ -9,6 +9,7 @@ import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BasicReading from './components/BasicReading'
 import TodayView from './components/TodayView'
+import ShareCard from './components/ShareCard'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
@@ -108,6 +109,7 @@ export default function App() {
   const [filter, setFilter] = useState('')
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
+  const [showShare, setShowShare] = useState(false)
   const [sky, setSky] = useState<SkyReport | null>(null)
   const [hours, setHours] = useState<PlanetaryHours | null>(null)
   const [starPos, setStarPos] = useState<{ name: string; lon: number }[]>([])
@@ -913,6 +915,9 @@ export default function App() {
               </button>
               {exportOpen && (
                 <div className="pop-menu" onMouseLeave={() => setExportOpen(false)}>
+                  <button onClick={() => (setExportOpen(false), setShowShare(true))} disabled={!computed}>
+                    {t('Paylaşım kartı')} <span className="muted small">{t('Instagram, WhatsApp…')}</span>
+                  </button>
                   <button onClick={() => (setExportOpen(false), void exportPng())}>
                     {t('Çark görseli (PNG)')}
                   </button>
@@ -1064,6 +1069,7 @@ export default function App() {
         </div>}
       </main>
 
+      {showShare && computed && <ShareCard natal={computed.natal} rec={working} settings={settings} onClose={() => setShowShare(false)} />}
       {showChat && (
         <aside className="chatside">
           <ChatPanel

@@ -4288,3 +4288,46 @@ button.head-edit {
   font-weight: 650;
   margin-right: 4px;
 }
+
+/* ---- share card ----------------------------------------------------------- */
+.modal.share-card {
+  width: min(860px, calc(100vw - 32px));
+}
+.share-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 18px;
+  align-items: start;
+}
+.share-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 10px;
+}
+.share-preview img {
+  max-width: 100%;
+  max-height: 62vh;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.18);
+}
+.share-options fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.share-source {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 900px;
+  pointer-events: none;
+}
+@media (max-width: 720px) {
+  .share-layout {
+    grid-template-columns: 1fr;
+  }
+}

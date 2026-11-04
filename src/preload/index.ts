@@ -60,6 +60,8 @@ const api = {
   exporter: {
     png: (rect: { x: number; y: number; width: number; height: number }, name: string): Promise<boolean> =>
       ipcRenderer.invoke('export:png', rect, name),
+    pngData: (dataUrl: string, name: string): Promise<boolean> => ipcRenderer.invoke('export:pngData', dataUrl, name),
+    copyImage: (dataUrl: string): Promise<boolean> => ipcRenderer.invoke('export:copyImage', dataUrl),
     pdf: (name: string): Promise<boolean> => ipcRenderer.invoke('export:pdf', name)
   },
 

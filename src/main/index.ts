@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, clipboard, ClipboardItem, dialog, ipcMain, Menu, nativeImage, nativeTheme, shell } from 'electron'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import type {
@@ -157,6 +157,20 @@ function registerIpc(): void {
     const r = await dialog.showSaveDialog(win!, { title: tm('Haritayı kaydet'), defaultPath: `${name}.png`, filters: [{ name: 'PNG', extensions: ['png'] }] })
     if (r.canceled || !r.filePath) return false
     await writeFile(r.filePath, img.toPNG())
+    return true
+  })
+  ipcMain.handle('export:pngData', async (_e, dataUrl: string, name: string) => {
+    const img = nativeImage.createFromDataURL(dataUrl)
+    if (img.isEmpty()) return false
+    const r = await dialog.showSaveDialog(win!, { title: tm('Görseli kaydet'), defaultPath: `${name}.png`, filters: [{ name: 'PNG', extensions: ['png'] }] })
+    if (r.canceled || !r.filePath) return false
+    await writeFile(r.filePath, img.toPNG())
+    return true
+  })
+  ipcMain.handle('export:copyImage', async (_e, dataUrl: string) => {
+    const img = nativeImage.createFromDataURL(dataUrl)
+    if (img.isEmpty()) return false
+    await clipboard.write([new ClipboardItem({ 'image/png': new Blob([new Uint8Array(img.toPNG())], { type: 'image/png' }) })])
     return true
   })
   ipcMain.handle('export:pdf', async (_e, name: string) => {
