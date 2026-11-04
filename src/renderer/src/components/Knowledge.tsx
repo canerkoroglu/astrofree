@@ -1,4 +1,5 @@
-import { t } from '../lib/i18n'
+import { getLang, t } from '../lib/i18n'
+import { glossaryFor } from '@shared/meanings/glossary'
 import { useMemo, useRef, useState } from 'react'
 import { appendEntry, fileTitle, removeEntry, replaceEntry, serializeEntry, type KbEntry, type KbFile } from '@shared/knowledge'
 import { describeKeys, shortCategory, type KbMatch } from '../lib/kb'
@@ -6,6 +7,7 @@ import { MarkdownBlock } from './Interpretations'
 import KbEntryEditor, { type KbDraft } from './KbEntryEditor'
 
 const RELEVANT = '__relevant__'
+const GLOSSARY = '__glossary__'
 const MY_NOTES = 'Notlarım.md' // i18n-ignore
 
 const fold = (s: string) => s.toLocaleLowerCase('tr').normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -44,12 +46,20 @@ export default function Knowledge({
   const reasons = useMemo(() => new Map(matches.map((m) => [m.entry.id, m.reasons])), [matches])
 
   const q = fold(query.trim())
+  const inGlossary = view === GLOSSARY
+  const glossary = useMemo(() => {
+    const all = glossaryFor(getLang())
+    if (!q) return all
+    return all.map((g) => ({ ...g, terms: g.terms.filter(([term, def]) => fold(`${term} ${def}`).includes(q)) })).filter((g) => g.terms.length)
+  }, [q])
+  const glossaryCount = useMemo(() => glossaryFor(getLang()).reduce((n, g) => n + g.terms.length, 0), [])
   const shown = useMemo(() => {
+    if (view === GLOSSARY) return []
     if (q) return entries.filter((e) => fold(`${e.title} ${e.section} ${e.category} ${e.tags.join(' ')} ${e.body}`).includes(q))
     if (view === RELEVANT) return matches.map((m) => m.entry)
     return entries.filter((e) => e.file === view)
   }, [q, view, entries, matches])
-  const doc = !q && view !== RELEVANT && !counts.get(view) ? files.find((f) => f.name === view) : undefined
+  const doc = !q && view !== RELEVANT && view !== GLOSSARY && !counts.get(view) ? files.find((f) => f.name === view) : undefined
   const sections = useMemo(() => [...new Set(shown.map((e) => e.section).filter(Boolean))], [shown])
   // "Koç burcundaki yıldızlar", "Boğa burcundaki yıldızlar"… → "Koç", "Boğa"… for the jump chips.
   const sectionLabel = useMemo(() => {
@@ -111,7 +121,7 @@ export default function Knowledge({
     />
   )
 
-  if (!files.length) {
+  if (!files.length && !inGlossary) {
     return (
       <div className="kb kb-empty-wrap">
         <div className="kb-empty">
@@ -126,6 +136,7 @@ export default function Knowledge({
               {t('+ İlk notu ekle')}
             </button>
             <button onClick={importFiles}>{t('Dosyadan içe aktar…')}</button>
+            <button onClick={() => go(GLOSSARY)}>{t('Astroloji sözlüğü')}</button>
           </div>
         </div>
         {editor}
@@ -139,11 +150,15 @@ export default function Knowledge({
         <button className="primary kb-new" onClick={() => setEditing('new')}>
           {t('+ Yeni not')}
         </button>
-        <input type="search" className="kb-search" placeholder={t('Notlarda ara…')} value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input type="search" className="kb-search" placeholder={inGlossary ? t('Sözlükte ara…') : t('Notlarda ara…')} value={query} onChange={(e) => setQuery(e.target.value)} />
 
         <button className={`kb-nav${view === RELEVANT && !q ? ' on' : ''}`} onClick={() => go(RELEVANT)}>
           <span>{t('Bu harita için')}</span>
           <span className="kb-count">{matches.length}</span>
+        </button>
+        <button className={`kb-nav${inGlossary ? ' on' : ''}`} onClick={() => go(GLOSSARY)} title={t('Uygulamada geçen astroloji terimlerinin açıklamaları')}>
+          <span>{t('Astroloji sözlüğü')}</span>
+          <span className="kb-count">{glossaryCount}</span>
         </button>
 
         <div className="kb-nav-head">{t('Konular')}</div>
@@ -184,9 +199,11 @@ export default function Knowledge({
       <section className="kb-main" ref={mainRef}>
         <header className="kb-head">
           <div className="kb-head-text">
-            <h3>{q ? t('Arama sonuçları') : view === RELEVANT ? t('Bu harita için') : shortCategory(titleOf(view))}</h3>
+            <h3>{inGlossary ? t('Astroloji sözlüğü') : q ? t('Arama sonuçları') : view === RELEVANT ? t('Bu harita için') : shortCategory(titleOf(view))}</h3>
             <p className="muted small">
-              {q
+              {inGlossary
+                ? t('Uygulamada geçen {n} terimin kısa açıklaması. Tanımlar astroloji geleneğini aktarır.', { n: glossary.reduce((n, g) => n + g.terms.length, 0) })
+                : q
                 ? t('{n} not bulundu', { n: shown.length })
                 : view === RELEVANT
                   ? t('Açık haritadaki Ay durağı, sabit yıldız kavuşumları ve hassas derecelere göre seçilen {n} not. Sohbette yapay zekâ da bunları kullanır.', { n: shown.length })
@@ -195,14 +212,24 @@ export default function Knowledge({
                     : t('{n} not', { n: shown.length })}
             </p>
           </div>
-          {!q && view !== RELEVANT && !rawFile && (
+          {!q && view !== RELEVANT && !inGlossary && !rawFile && (
             <button className="link small" title={t('Bu konunun tamamını düz metin (Markdown) olarak düzenle')} onClick={() => setRawFile({ name: view, text: fileText(view) })}>
               {t('Gelişmiş düzenleme')}
             </button>
           )}
         </header>
 
-        {sections.length > 1 && !q && !rawFile && view !== RELEVANT && (
+        {inGlossary && !q && (
+          <nav className="kb-sections">
+            {glossary.map((g) => (
+              <button key={g.title} className="chip-sign" onClick={() => document.getElementById(`kb-gl-${g.title}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' })}>
+                {g.title}
+              </button>
+            ))}
+          </nav>
+        )}
+
+        {sections.length > 1 && !q && !rawFile && view !== RELEVANT && !inGlossary && (
           <nav className="kb-sections">
             {sections.map((s) => (
               <button key={s} className="chip-sign" onClick={() => document.getElementById(`kb-sec-${s}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' })}>
@@ -212,7 +239,27 @@ export default function Knowledge({
           </nav>
         )}
 
-        {rawFile ? (
+        {inGlossary ? (
+          glossary.length ? (
+            glossary.map((g) => (
+              <section key={g.title} className="kb-glossary">
+                <h4 className="kb-section" id={`kb-gl-${g.title}`}>
+                  {g.title}
+                </h4>
+                <dl>
+                  {g.terms.map(([term, def]) => (
+                    <div key={term} className="kb-term">
+                      <dt>{term}</dt>
+                      <dd>{def}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            ))
+          ) : (
+            <div className="kb-none muted">{t('Bu aramayla eşleşen terim yok.')}</div>
+          )
+        ) : rawFile ? (
           <div className="kb-editor">
             <p className="muted small">
               {t('Her “### Başlık” bir nottur. Başlığın hemen altındaki “- anahtarlar:” satırı notun ne zaman öne çıkacağını belirler.')}

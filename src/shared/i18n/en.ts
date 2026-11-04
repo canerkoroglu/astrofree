@@ -64,6 +64,11 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Astroloji sözlüğü": "Astrology glossary",
+    "Sözlükte ara…": "Search the glossary…",
+    "Uygulamada geçen astroloji terimlerinin açıklamaları": "Explanations of the astrology terms used in the app",
+    "Uygulamada geçen {n} terimin kısa açıklaması. Tanımlar astroloji geleneğini aktarır.": "Short explanations of {n} terms used in the app. The definitions describe the astrological tradition.",
+    "Bu aramayla eşleşen terim yok.": "No term matches this search.",
     "Ay nakshatrası {n} ({l}); doğumda {l} dönemi işliyor.": "Moon nakshatra {n} ({l}); the {l} period is running at birth.",
     "Gezegen D1 ve D9’da aynı burçta; geleneksel olarak güçlü sayılır.": "The planet is in the same sign in D1 and D9; traditionally considered strong.",
     "Lahiri ayanamsası ile sidereal konumlar; Rahu = Kuzey Ay Düğümü, Ketu = Güney Ay Düğümü. Dasha dönemleri geleneksel bir zamanlama çerçevesidir, kesin olayları göstermez.": "Sidereal positions with the Lahiri ayanamsa; Rahu = North Node, Ketu = South Node. Dasha periods are a traditional timing framework and do not show definite events.",
