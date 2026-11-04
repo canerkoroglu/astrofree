@@ -1,4 +1,5 @@
 import { t } from '../lib/i18n'
+import { M, pointTexts } from '../lib/meanings'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
@@ -41,6 +42,8 @@ interface Props {
   onWheel?: (deltaY: number, shift: boolean) => void
   /** Ask the AI about a point or an aspect (prompt text). */
   onAsk?: (prompt: string) => void
+  /** False when the birth time is unknown: house texts are left out. */
+  timeKnown?: boolean
 }
 
 interface Ring {
@@ -103,7 +106,7 @@ function spread(points: ChartPoint[], minSep: number): Placed[] {
   return out
 }
 
-export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel, onAsk }: Props) {
+export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel, onAsk, timeKnown = true }: Props) {
   const [selected, setSelected] = useState<{ ring: number; key: string } | null>(null)
   const [hoverAspect, setHoverAspect] = useState<number | null>(null)
   // Plain wheel scrolls the page; Alt/Option + wheel steps time. A native
@@ -339,6 +342,19 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
             ×
           </button>
           <PointDetails point={selPoint} layer={selLayer} aspects={aspects.filter((x) => x.a === selPoint || x.b === selPoint)} />
+          {(() => {
+            const texts = pointTexts(selPoint, selLayer, natal, timeKnown)
+            return texts.length ? (
+              <div className="pc-meaning">
+                {texts.map((x, i) => (
+                  <p key={i}>{x}</p>
+                ))}
+                <p className="pc-disclaimer" title={M().disclaimer}>
+                  {t('Genel eğilimdir; kesin bilgi değildir.')}
+                </p>
+              </div>
+            ) : null
+          })()}
           {onAsk && (
             <div className="pc-actions">
               <button

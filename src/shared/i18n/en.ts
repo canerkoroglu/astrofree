@@ -57,11 +57,26 @@ Rules:
 - Rely only on the data provided; never invent positions or aspects. Use the given numbers when calculation is needed.
 - Lead with the strongest themes (tight aspects, angular planets, rulers), then go into detail.
 - For transits, use the applying/separating flag and orb to talk about timing.
-- Use the language of tendencies and potential rather than certain prediction; refer health, legal and financial questions to professionals.
+- Never state anything as certain: phrase every interpretation as a possibility ("may", "can", "might", "tends to"); speak of tendencies and potential, not prediction.
+- Refer health, legal, psychological and financial questions to professionals.
+- End longer readings with a one-line reminder that astrology is for personal exploration, not professional advice.
 - Use tidy, readable Markdown with headings and bullet points.
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Bu doğum haritasının genel bir yorumunu yap: önce en güçlü temalar, sonra Güneş, Ay, Yükselen ve öne çıkan açılar.": "Give a general reading of this birth chart: first the strongest themes, then the Sun, Moon, Ascendant and the main aspects.",
+    "Doğum saati bilinmediği için Yükselen ve ev yorumları gösterilmiyor.": "The birth time is unknown, so the Ascendant and house readings are not shown.",
+    "Element dengesi": "Element balance",
+    "Genel eğilimdir; kesin bilgi değildir.": "A general tendency, not a certainty.",
+    "Metni kopyala": "Copy text",
+    "Natal haritanın {n}. evine düşüyor; {k} konuları öne çıkabilir.": "Falls in house {n} of the natal chart; themes of {k} may come to the fore.",
+    "Orb’u en dar (en güçlü kabul edilen) ana açılar.": "Major aspects with the tightest orbs (considered the strongest).",
+    "Temel Yorum": "Basic Reading",
+    "Temel kavramlar": "Basic concepts",
+    "Temel yorum": "Basic reading",
+    "Yapay zekâ gerektirmeyen, çevrimdışı temel yorum": "An offline basic reading that needs no AI",
+    "Yapay zekâ ile derinleştir": "Go deeper with AI",
+    "Öne çıkan açılar": "Main aspects",
   " — önce soldan bir kişi seçin": " — select a person on the left first",
   "(isteğe bağlı)": "(optional)",
   "+ Kişi": "+ Person",

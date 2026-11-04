@@ -2475,6 +2475,24 @@ textarea {
   box-shadow: 0 12px 28px rgb(0 0 0 / 0.2);
   z-index: 4;
 }
+.point-card {
+  max-height: calc(100% - 16px);
+  overflow-y: auto;
+}
+.pc-meaning {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  line-height: 1.5;
+}
+.pc-meaning p {
+  margin: 0 0 6px;
+}
+.pc-disclaimer {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+}
 .pc-close {
   position: absolute;
   top: 4px;
@@ -4193,4 +4211,69 @@ button.head-edit {
 .modal fieldset + fieldset,
 .modal > div > fieldset + fieldset {
   margin-top: 16px;
+}
+
+/* ---- built-in reading ---------------------------------------------------- */
+.reading-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.reading-head h2 {
+  margin: 0 0 2px;
+}
+.reading-actions {
+  display: flex;
+  gap: 8px;
+}
+.reading-disclaimer {
+  border-left: 3px solid var(--accent);
+  background: var(--panel-2);
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.reading-note {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.reading-big3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+.reading-card p,
+.reading-body p {
+  margin: 6px 0 0;
+  line-height: 1.55;
+}
+.reading-body {
+  padding: 0 6px 6px;
+}
+.reading-item {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.reading-item:first-of-type {
+  border-top: none;
+}
+.reading-item h4 {
+  margin: 0;
+  font-size: 14px;
+}
+.reading-glossary {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.reading-glossary dt {
+  font-weight: 650;
+}
+.reading-glossary dd {
+  margin: 2px 0 0;
+  color: var(--muted);
 }

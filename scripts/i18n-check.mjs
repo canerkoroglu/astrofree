@@ -9,7 +9,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const root = new URL('..', import.meta.url).pathname
-const SKIP = [/src\/shared\/i18n\//, /assets\/world/, /\.d\.ts$/]
+const SKIP = [/src\/shared\/i18n\//, /src\/shared\/meanings\//, /assets\/world/, /\.d\.ts$/]
 const files = []
 const walk = (d) => {
   for (const f of readdirSync(d)) {

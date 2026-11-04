@@ -7,6 +7,7 @@ import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
+import BasicReading from './components/BasicReading'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
@@ -78,7 +79,7 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'info' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+type View = 'chart' | 'info' | 'reading' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
 
 export default function App() {
@@ -930,6 +931,9 @@ export default function App() {
           <button className={view === 'info' ? 'on' : ''} onClick={() => setView('info')}>
             {t('Natal Bilgiler')}
           </button>
+          <button className={view === 'reading' ? 'on' : ''} onClick={() => setView('reading')} title={t('Yapay zekâ gerektirmeyen, çevrimdışı temel yorum')}>
+            {t('Temel Yorum')}
+          </button>
           <button className={view === 'calendar' ? 'on' : ''} onClick={() => setView('calendar')}>
             {t('Transit Takvimi')}
           </button>
@@ -956,6 +960,7 @@ export default function App() {
         {view === 'info' && computed && (
           <NatalInfo natal={computed.natal} rec={working} settings={settings} natalJd={natalJd} eventJd={eventJd} patterns={patterns} stars={starConj} />
         )}
+        {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} />}
         {view === 'calendar' && computed && (
           <TransitCalendar
             natal={computed.natal}
@@ -1006,7 +1011,7 @@ export default function App() {
         )}
         {view === 'kb' && <Knowledge files={kbFiles} entries={kbEntries} matches={kbMatches} starNames={starPos.map((st) => st.name)} onReload={reloadKb} onAsk={ask} />}
         {view === 'chart' && computed && (
-          <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} />
+          <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} timeKnown={!working.timeUnknown} />
         )}
 
         {view === 'chart' && <div className="bottom">
