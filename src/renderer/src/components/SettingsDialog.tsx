@@ -405,7 +405,7 @@ export default function SettingsDialog({
                 </fieldset>
               )
             })}
-            <label>
+            <label className="ai-system-prompt">
               {t('Sistem talimatı (boş bırakılırsa varsayılan kullanılır)')}
               <textarea
                 rows={6}

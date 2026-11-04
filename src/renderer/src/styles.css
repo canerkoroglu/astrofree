@@ -4167,3 +4167,6 @@ button.head-edit {
 .msg.error {
   white-space: pre-line;
 }
+.modal label.ai-system-prompt {
+  margin-top: 18px;
+}
