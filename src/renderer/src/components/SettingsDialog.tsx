@@ -6,7 +6,7 @@ import { t } from '../lib/i18n'
 import AiSetupGuide from './AiSetupGuide'
 import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
-import { AdvancedApiSettings, LocalServerSettings } from './AiProviderSettings'
+import { AdvancedApiSettings, ApiKeyTest, LocalServerSettings } from './AiProviderSettings'
 import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
 import { ASPECTS, AYANAMSAS, HOUSE_SYSTEMS, OPTIONAL_POINTS, POINT, glyph } from '../lib/astro'
@@ -393,6 +393,9 @@ export default function SettingsDialog({
                       <input value={c.model} placeholder={t('varsayılan')} onChange={(e) => setProv(p.id, { model: e.target.value })} />
                     </label>
                   </div>
+                  )}
+                  {p.kind === 'api' && p.id !== 'local' && (
+                    <ApiKeyTest id={p.id} cfg={c} apiKey={keys[p.id] ?? ''} hasKey={!!hasKey[p.id]} onChange={(patch) => setProv(p.id, patch)} />
                   )}
                   {p.kind === 'api' && <AdvancedApiSettings id={p.id} cfg={c} onChange={(patch) => setProv(p.id, patch)} />}
                 </fieldset>

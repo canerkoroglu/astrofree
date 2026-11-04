@@ -191,3 +191,36 @@ export function AdvancedApiSettings({ id, cfg, onChange }: { id: ProviderId; cfg
     </details>
   )
 }
+
+/** "Test key" for a cloud API provider: lists its models, so a wrong key, no credit or a blocked network shows up here, not mid-chat. */
+export function ApiKeyTest({ id, cfg, apiKey, hasKey, onChange }: { id: ProviderId; cfg: ProviderConfig; apiKey: string; hasKey: boolean; onChange: Patch }) {
+  const [busy, setBusy] = useState(false)
+  const [res, setRes] = useState<{ ok: boolean; text: string; models?: string[] } | null>(null)
+  const test = async () => {
+    setBusy(true)
+    setRes(null)
+    const r = await window.astro.ai.testKey(id, apiKey.trim() || null, cfg.baseUrl, cfg.headers)
+    setBusy(false)
+    if (r.error) return setRes({ ok: false, text: r.error })
+    setRes({ ok: true, text: t('Anahtar çalışıyor · {n} model', { n: r.models?.length ?? 0 }), models: r.models })
+  }
+  return (
+    <>
+      <div className="ls-test">
+        <button disabled={busy || (!hasKey && !apiKey.trim())} onClick={() => void test()}>
+          {busy ? t('Bağlanıyor…') : t('Anahtarı test et')}
+        </button>
+        {res && <span className={res.ok ? 'ls-ok small' : 'error small pre-line'}>{res.text}</span>}
+      </div>
+      {res?.ok && !!res.models?.length && (
+        <div className="ls-models">
+          {res.models.slice(0, 24).map((m) => (
+            <button key={m} className={`chip-sign${cfg.model === m ? ' on' : ''}`} onClick={() => onChange({ model: m })}>
+              {m}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}

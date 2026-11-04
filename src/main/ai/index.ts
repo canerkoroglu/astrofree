@@ -6,9 +6,9 @@ import { join } from 'node:path'
 import { PROVIDERS } from '@shared/defaults'
 import type { AiChatRequest, AiEvent, ProviderId, ProviderStatus } from '@shared/types'
 import { getSecret, getSettings, secretStatus } from '../store'
-import { listModels, runApi } from './api'
+import { listModels, runApi, testApiKey } from './api'
 import { runCli } from './cli'
-import { claudeDesktopInstalled, ensureShellPath, resolveCommand, runVersion } from './proc'
+import { desktopAppInstalled, ensureShellPath, resolveCommand, runVersion } from './proc'
 
 const running = new Map<string, AbortController>()
 
@@ -79,13 +79,16 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
       const cmd = settings.ai.providers[p.id as ProviderId].command || p.id.replace('-cli', '')
       const exe = resolveCommand(cmd)
       if (!exe) {
-        const desktopOnly = p.id === 'claude-code' && claudeDesktopInstalled()
+        // The chat apps people usually have are not the command line tools AstroFree drives.
+        const desktop = p.id === 'claude-code' ? desktopAppInstalled('claude') : p.id === 'codex' ? desktopAppInstalled('chatgpt') : false
         return {
           id: p.id,
           kind: 'cli',
           available: false,
-          detail: desktopOnly
-            ? tm('Claude masaüstü uygulaması kurulu, ama AstroFree sohbet için ayrı bir araç olan Claude Code (`claude` komutu) kullanır; onu da kurmanız gerekir.')
+          detail: desktop
+            ? p.id === 'claude-code'
+              ? tm('Claude masaüstü uygulaması kurulu, ama AstroFree sohbet için ayrı bir araç olan Claude Code (`claude` komutu) kullanır; onu da kurmanız gerekir.')
+              : tm('ChatGPT uygulaması kurulu, ama AstroFree sohbet için ayrı bir araç olan Codex CLI (`codex` komutu) kullanır; onu da kurmanız gerekir.')
             : tm('"{cmd}" komutu bu bilgisayarda bulunamadı.', { cmd })
         }
       }
@@ -100,6 +103,19 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
 export async function serverModels(baseUrl: string, key: string | null, headers?: string): Promise<{ models?: string[]; error?: string }> {
   try {
     return { models: await listModels(baseUrl, key || (await getSecret('local')), headers) }
+  } catch (e) {
+    return { error: String((e as Error).message) }
+  }
+}
+
+/** Validate an API key (typed, or the stored one) for the settings screen. */
+export async function apiKeyTest(provider: ProviderId, key: string | null, baseUrl?: string, headers?: string): Promise<{ models?: string[]; error?: string }> {
+  const k = key?.trim() || (await getSecret(provider))
+  if (!k) return { error: tm('Önce API anahtarını girin.') }
+  try {
+    const settings = await getSettings()
+    const cfg = { ...settings.ai.providers[provider], ...(baseUrl !== undefined ? { baseUrl } : {}), ...(headers !== undefined ? { headers } : {}) }
+    return { models: await testApiKey(provider, cfg, k) }
   } catch (e) {
     return { error: String((e as Error).message) }
   }

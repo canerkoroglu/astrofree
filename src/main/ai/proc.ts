@@ -1,7 +1,7 @@
 // Process helpers for running the user's AI CLIs (claude, codex, gemini) from a
 // GUI app: recover the login-shell PATH and resolve Windows .cmd shims.
 import { execFile, spawn, type ChildProcess, type SpawnOptions } from 'node:child_process'
-import { existsSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { delimiter, isAbsolute, join } from 'node:path'
 
@@ -78,16 +78,29 @@ function registryPath(key: string): Promise<string> {
   })
 }
 
-/** Is the Claude desktop (chat) app installed? It is not the `claude` command line tool. */
-export function claudeDesktopInstalled(): boolean {
+/**
+ * Is a vendor's desktop chat app installed? Those apps are not the `claude` / `codex` command line
+ * tools, which is the most common reason a "not found" surprises people.
+ */
+export function desktopAppInstalled(app: 'claude' | 'chatgpt'): boolean {
   const env = (k: string) => process.env[k] ?? ''
-  const places =
-    process.platform === 'win32'
+  if (process.platform === 'darwin') {
+    const name = app === 'claude' ? 'Claude.app' : 'ChatGPT.app'
+    return ['/Applications', join(homedir(), 'Applications')].some((d) => existsSync(join(d, name)))
+  }
+  if (process.platform !== 'win32') return false
+  const dirs =
+    app === 'claude'
       ? [join(env('LOCALAPPDATA'), 'AnthropicClaude'), join(env('LOCALAPPDATA'), 'Programs', 'Claude'), join(env('ProgramFiles'), 'Claude')]
-      : process.platform === 'darwin'
-        ? ['/Applications/Claude.app', join(homedir(), 'Applications', 'Claude.app')]
-        : []
-  return places.some((p) => p && existsSync(p))
+      : [join(env('LOCALAPPDATA'), 'Programs', 'ChatGPT'), join(env('ProgramFiles'), 'ChatGPT')]
+  if (dirs.some((d) => d && existsSync(d))) return true
+  // Microsoft Store (MSIX) installs keep a per-user data folder named after the package.
+  const store = app === 'claude' ? /^(Claude|Anthropic)[._]/i : /^OpenAI\.ChatGPT/i
+  try {
+    return readdirSync(join(env('LOCALAPPDATA'), 'Packages')).some((n) => store.test(n))
+  } catch {
+    return false
+  }
 }
 
 /** Find an executable on PATH (honouring PATHEXT on Windows). */

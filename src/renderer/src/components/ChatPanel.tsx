@@ -264,7 +264,16 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           </div>
         ))}
         {status && <div className="msg status">{status}</div>}
-        {error && <div className="msg error">{error}</div>}
+        {error && (
+          <div className="msg error">
+            {error}
+            <div className="msg-error-actions">
+              <button className="link" onClick={() => setGuide(true)}>
+                {t('Nasıl bağlanırım?')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="composer">

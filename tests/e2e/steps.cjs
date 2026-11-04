@@ -9,7 +9,7 @@ window.aiAsk=(provider,model,q)=>new Promise(res=>{const id='t'+Math.random();le
 
 const CONTRAST = require('./contrast.cjs')
 
-function steps({ ai, tmp }) {
+function steps({ ai, tmp, mock }) {
   const S = []
   const step = (name, js, wait) => S.push({ name, js, wait })
   step('helpers', HELPERS, 100)
@@ -70,12 +70,16 @@ function steps({ ai, tmp }) {
   step('back to chart', `c('.view-tabs button','Harita')`, 500)
   step('settings open', `(()=>{document.querySelector('button[aria-label="Ayarlar"]').click();return 1})()`, 500)
   step('settings ai', `c('.modal .seg button, .modal button','Yapay zekâ')`, 400)
+  step('key test ui', `(async()=>{const f=[...document.querySelectorAll('.modal fieldset')].find(x=>x.querySelector('legend').textContent.startsWith('OpenAI'));const i=f.querySelector('input[type=password]');setv(i,'sk-test');await new Promise(r=>setTimeout(r,50));const base=[...f.querySelectorAll('label')].find(l=>l.textContent.startsWith('Base URL')).querySelector('input');setv(base,'http://127.0.0.1:${mock}/401');await new Promise(r=>setTimeout(r,50));[...f.querySelectorAll('button')].find(b=>b.textContent.startsWith('Anahtarı test et')).click();await new Promise(r=>setTimeout(r,800));const e=f.querySelector('.ls-test .error');f.scrollIntoView();return ok('Ayarlar: Anahtarı test et hatayı gösteriyor',!!e&&/anahtar/i.test(e.textContent),e?.textContent)})()`, 300)
   step('guide open', `(()=>{const m=document.querySelector('.modal');if(!m)return 'FAIL ayarlar açılmadı: '+document.querySelectorAll('button[aria-label="Ayarlar"]').length;if(!m.querySelector('.ai-guide-link'))return 'FAIL sekme: '+[...m.querySelectorAll('.tabs button.on')].map(b=>b.textContent).join();c('.modal button.link','Bağlantı rehberi');return 1})()`, 400)
   step('guide check', `(()=>{const g=document.querySelector('.ai-guide');if(!g)return ok('Yapay zekâ bağlantı rehberi açılıyor',false,'yok');const tx=g.innerText;const tabs=[...g.querySelectorAll('[role=tab]')].map(b=>b.textContent);c('.ai-guide [role=tab]','Windows');return ok('Yapay zekâ bağlantı rehberi açılıyor (masaüstü uygulaması uyarısı, 4 yol, işletim sistemi sekmeleri)',tx.includes('Claude masaüstü uygulaması')&&g.querySelectorAll('section').length===5&&tabs.length===3)})()`, 300)
   step('guide windows', `(()=>{const tx=document.querySelector('.ai-guide').innerText;return ok('Rehberde Windows komutları',tx.includes('install.ps1')&&tx.includes('where.exe claude'))})()`)
   step('guide contrast', `(()=>{const bad=${CONTRAST}.filter(x=>!x.includes('[disabled]'));return ok('Kontrast (bağlantı rehberi)',bad.length===0,bad.slice(0,3).join(' || '))})()`)
   step('guide close', `c('.ai-guide footer button','Kapat')`, 300)
   step('guide closed', `(()=>{const r=ok('Rehber kapanınca ayarlar açık kalıyor',!document.querySelector('.ai-guide')&&!!document.querySelector('.ai-guide-link'));c('.modal .actions button','Vazgeç');return r})()`, 400)
+  // Provider error messages: a fake server returns each HTTP status; the app must explain it in plain words.
+  step('api errors', `(async()=>{const b='http://127.0.0.1:${mock}';const T=(p,code)=>window.astro.ai.testKey(p,'sk-test',b+'/'+code);const r={};for(const c of [200,401,402,429,400]) r[c]=await T('openai',c);const down=await window.astro.ai.testKey('deepseek','sk-test','http://127.0.0.1:1');const dns=await window.astro.ai.testKey('openai','sk-test','https://api.astrofree-e2e.invalid/v1');const none=await window.astro.ai.testKey('anthropic','',undefined);const checks=[['model listesi (sohbet modelleri)',JSON.stringify(r[200].models)==='["gpt-5.5","gpt-5-mini"]'],['401 anahtar',/anahtar/i.test(r[401].error||'')],['402 bakiye',/bakiye/.test(r[402].error||'')&&/aboneliklerden ayrı/.test(r[402].error)],['429 sınır',/İstek sınırına/.test(r[429].error||'')],['400 ülke',/ülkeden/.test(r[400].error||'')],['kapalı yerel sunucu',/Sunucu çalışıyor mu/.test(down.error||'')],['internet yok',/İnternet bağlantınızı/.test(dns.error||'')],['anahtar yok',/Önce API anahtarını/.test(none.error||'')]];const bad=checks.filter(c=>!c[1]).map(c=>c[0]);return ok('API hata mesajları anlaşılır (8 durum)',bad.length===0,bad.join(', ')+' '+JSON.stringify({r,down,dns}).slice(0,300))})()`)
+  step('cli missing', `(async()=>{const s=await window.astro.settings.get();const keep=JSON.parse(JSON.stringify(s.ai.providers));s.ai.providers['claude-code'].command='claude-e2e-yok';s.ai.providers.codex.command='codex-e2e-yok';await window.astro.settings.set(s);const st=await window.astro.ai.detect();s.ai.providers=keep;await window.astro.settings.set(s);const cc=st.find(x=>x.id==='claude-code'),cx=st.find(x=>x.id==='codex');return ok('Komut bulunamayınca açıklama (Claude Code, Codex)',!cc.available&&!cx.available&&/(bulunamadı|masaüstü uygulaması)/.test(cc.detail)&&/(bulunamadı|ChatGPT uygulaması)/.test(cx.detail),cc.detail+' | '+cx.detail)})()`)
   step('house system back', `window.astro.settings.get().then(s=>{s.houseSystem='B';return window.astro.settings.set(s)}).then(()=>{location.reload();return 1})`, 3000)
   step('helpers5', HELPERS, 100)
   step('reopen', `(()=>{c('.chart-list .item .nm','Muhammad');return 1})()`, 1500)

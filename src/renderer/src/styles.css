@@ -4163,3 +4163,7 @@ button.head-edit {
   white-space: nowrap;
   font-size: 12px;
 }
+.pre-line,
+.msg.error {
+  white-space: pre-line;
+}

@@ -22,6 +22,23 @@ let n = 0
 // Save dialogs answer themselves so exports can run unattended.
 dialog.showSaveDialog = async (_w, o) => ({ canceled: false, filePath: path.join(tmp, `export-${n++}-${path.basename((o && o.defaultPath) || 'x')}`) })
 
+// A fake AI server that answers /<status>/models with that HTTP status, for the error-message checks.
+const mock = require('node:http').createServer((req, res) => {
+  const status = Number(req.url.split('/')[1]) || 200
+  const bodies = {
+    401: { error: { message: 'Incorrect API key provided' } },
+    402: { error: { message: 'Insufficient Balance' } },
+    429: { error: { message: 'Rate limit reached' } },
+    400: { error: { message: 'User location is not supported for the API use.' } },
+    200: { data: [{ id: 'gpt-5.5' }, { id: 'text-embedding-3-small' }, { id: 'gpt-5-mini' }] }
+  }
+  res.writeHead(status, { 'content-type': 'application/json' })
+  res.end(JSON.stringify(bodies[status] ?? {}))
+})
+mock.listen(0, '127.0.0.1')
+process.env.E2E_MOCK_PORT = ''
+mock.on('listening', () => (process.env.E2E_MOCK_PORT = String(mock.address().port)))
+
 const { steps } = require('./steps.cjs')
 const results = []
 const timeout = setTimeout(() => finish('timeout'), 10 * 60 * 1000)
@@ -45,7 +62,7 @@ app.on('browser-window-created', (_e, win) => {
   })
   win.webContents.once('did-finish-load', async () => {
     await new Promise((r) => setTimeout(r, 2500))
-    const ctx = { ai: process.env.E2E_AI === '1', tmp: tmp.replace(/\\/g, '/') }
+    const ctx = { ai: process.env.E2E_AI === '1', tmp: tmp.replace(/\\/g, '/'), mock: Number(process.env.E2E_MOCK_PORT) }
     for (const s of steps(ctx)) {
       try {
         const v = await win.webContents.executeJavaScript(s.js)

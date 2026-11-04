@@ -30,7 +30,7 @@ function Cmd({ children }: { children: string }) {
 export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => void; onRecheck?: () => void }) {
   const [os, setOs] = useState<Os>(currentOs)
   const terminal = os === 'win' ? 'PowerShell' : 'Terminal'
-  const which = os === 'win' ? 'where.exe claude' : 'which claude'
+  const which = os === 'win' ? 'where.exe claude codex' : 'which claude codex'
   return (
     <div className="modal-back" onClick={onClose}>
       <div className="modal wide ai-guide" role="dialog" aria-modal="true" aria-label={t('Yapay zekâ bağlantı rehberi')} onClick={(e) => e.stopPropagation()}>
@@ -76,6 +76,7 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
 
         <section>
           <h3>{t('2. ChatGPT hesabıyla (Codex)')}</h3>
+          <p className="guide-note">{t('ChatGPT uygulaması tek başına yetmez: AstroFree, Codex CLI adlı komut satırı aracını (`codex` komutu) kullanır.')}</p>
           <ol>
             <li>
               {t('Node.js kuruluyken:')}
@@ -93,6 +94,10 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
           <p>
             {t('Anthropic, OpenAI, Google Gemini ya da DeepSeek sitesinden bir API anahtarı alın ve Ayarlar → Yapay zekâ bölümünde ilgili sağlayıcıya girin. Kurulum gerekmez; kullanım ücretini sağlayıcı ayrıca faturalar.')}
           </p>
+          <ul>
+            <li>{t('API kullanımı, Claude Pro veya ChatGPT Plus aboneliğine dahil değildir; sağlayıcının geliştirici panelinde ayrıca ödeme yöntemi ya da kredi gerekir.')}</li>
+            <li>{t('Anahtarı girdikten sonra “Anahtarı test et”e basın: anahtar yanlışsa, bakiye yoksa ya da ağ engelliyorsa orada görürsünüz.')}</li>
+          </ul>
         </section>
 
         <section>
@@ -101,6 +106,10 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
             {t('Ollama’yı (ollama.com) kurun, bir model indirin ve Ayarlar → Yapay zekâ → Yerel sunucu bölümünde “Bağlantıyı test et”e basın. İnternet ve hesap gerekmez; güçlü bir bilgisayar gerekir.')}
           </p>
           <Cmd>ollama pull qwen3:8b</Cmd>
+          <ul>
+            <li>{t('LM Studio’da Developer sekmesinden sunucuyu başlatmayı unutmayın; llama.cpp için llama-server çalışıyor olmalı.')}</li>
+            <li>{t('Sunucu başka bir bilgisayardaysa, orada ağdan erişime açın (Ollama: OLLAMA_HOST=0.0.0.0) ve güvenlik duvarında portu açın.')}</li>
+          </ul>
         </section>
 
         <section>
@@ -108,11 +117,12 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
           <ul>
             <li>{t('AstroFree’yi tamamen kapatıp yeniden açın; yeni kurulan programlar bazen ancak böyle görünür.')}</li>
             <li>
-              {t('{app} içinde komutun yerini öğrenin ve çıkan yolu Ayarlar → Yapay zekâ → Claude Code → “Komut / yol” alanına yapıştırın:', { app: terminal })}
+              {t('{app} içinde komutun yerini öğrenin ve çıkan yolu Ayarlar → Yapay zekâ → ilgili araç (Claude Code / Codex) → “Komut / yol” alanına yapıştırın:', { app: terminal })}
               <Cmd>{which}</Cmd>
             </li>
             {os === 'win' && <li>{t('Claude Code’u WSL (Linux alt sistemi) içine kurduysanız Windows programları onu göremez; Windows’a ayrıca kurun.')}</li>}
             <li>{t('Komut çalışıyor ama yanıt gelmiyorsa bir kez terminalde çalıştırıp giriş yaptığınızdan emin olun.')}</li>
+            <li>{t('Şirket bilgisayarında proxy ya da güvenlik yazılımı bağlantıyı engelleyebilir; hata mesajı bunu söylüyorsa API anahtarı ya da yerel model yolunu deneyin.')}</li>
           </ul>
         </section>
 

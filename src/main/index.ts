@@ -12,7 +12,7 @@ import type {
   StoredChat,
   TransitSearchRequest
 } from '@shared/types'
-import { cancelChat, detectProviders, serverModels, startChat } from './ai'
+import { apiKeyTest, cancelChat, detectProviders, serverModels, startChat } from './ai'
 import { ensureShellPath } from './ai/proc'
 import { computeMany } from './ephemeris'
 import { skyReport } from './events'
@@ -188,6 +188,7 @@ function registerIpc(): void {
 
   ipcMain.handle('ai:detect', () => detectProviders())
   ipcMain.handle('ai:models', (_e, baseUrl: string, key: string | null, headers?: string) => serverModels(baseUrl, key, headers))
+  ipcMain.handle('ai:testKey', (_e, provider: ProviderId, key: string | null, baseUrl?: string, headers?: string) => apiKeyTest(provider, key, baseUrl, headers))
   ipcMain.on('ai:start', (e, req: AiChatRequest) => void startChat(req, e.sender))
   ipcMain.on('ai:cancel', (_e, id: string) => cancelChat(id))
 

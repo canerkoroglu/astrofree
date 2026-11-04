@@ -27,18 +27,51 @@ async function* sse(res: Response): AsyncGenerator<string> {
   }
 }
 
+/** Plain-language advice for the HTTP errors people actually hit (wrong key, no credit, rate limit…). */
+function httpHint(status: number, text: string, local: boolean): string | null {
+  const t = text.toLowerCase()
+  if (/location is not supported|unsupported_country|country, region, or territory/.test(t))
+    return tm('Bu sağlayıcı bulunduğunuz ülkeden hizmet vermiyor. Başka bir sağlayıcı ya da yerel model deneyin.')
+  if (status === 401 || /invalid[_ ]api[_ ]key|incorrect api key|api key not valid|authentication/.test(t))
+    return local
+      ? tm('Sunucu anahtar istiyor ya da anahtar yanlış (Ayarlar → Yapay zekâ → API anahtarı).')
+      : tm('API anahtarı geçersiz. Anahtarı sağlayıcının sitesinden kopyalayıp yeniden girin; başında/sonunda boşluk kalmadığından emin olun.')
+  if (status === 402 || /insufficient[_ ]balance|credit balance|insufficient_quota|billing|exceeded your current quota/.test(t))
+    return tm('Hesapta bakiye ya da kota yok. API kullanımı, Claude Pro / ChatGPT Plus gibi aboneliklerden ayrı ücretlendirilir; sağlayıcının sitesinden ödeme yöntemi ekleyin veya kredi yükleyin.')
+  if (status === 403)
+    return tm('Bu anahtarın bu modele ya da hizmete erişim izni yok. Modeli değiştirin veya sağlayıcı panelinde anahtarın izinlerini kontrol edin.')
+  if (status === 404)
+    return local
+      ? tm('Adres veya model adı yanlış olabilir (OpenAI uyumlu sunucularda adres genellikle /v1 ile biter).')
+      : tm('Model bulunamadı. Model adını kontrol edin ya da boş bırakıp varsayılanı kullanın.')
+  if (status === 429) return tm('İstek sınırına takıldınız (çok sık istek ya da dakikalık/günlük kota). Biraz bekleyip tekrar deneyin.')
+  if (status === 529 || status === 503 || /overloaded/.test(t)) return tm('Sağlayıcının sunucuları şu an yoğun. Birkaç dakika sonra tekrar deneyin.')
+  if (status >= 500) return tm('Sağlayıcı tarafında geçici bir hata oluştu. Biraz sonra tekrar deneyin.')
+  return null
+}
+
+const isLocalUrl = (url: string) => {
+  try {
+    const h = new URL(url).hostname
+    return /^(localhost|127\.|0\.0\.0\.0|\[?::1\]?$|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h) || h.endsWith('.local') || !h.includes('.')
+  } catch {
+    return false
+  }
+}
+
 async function failIfBad(res: Response, label: string): Promise<void> {
   if (res.ok) return
   let msg = `${label} HTTP ${res.status}`
+  let body = ''
   try {
-    const body = await res.text()
+    body = await res.text()
     const j = JSON.parse(body)
     msg += ': ' + (j.error?.message ?? j.message ?? body).toString().slice(0, 500)
   } catch {
-    /* keep status only */
+    if (body && body.length < 300) msg += ': ' + body.trim()
   }
-  if (res.status === 404) msg += '\n' + tm('Adres veya model adı yanlış olabilir (OpenAI uyumlu sunucularda adres genellikle /v1 ile biter).')
-  throw new Error(msg)
+  const hint = httpHint(res.status, body, isLocalUrl(res.url))
+  throw new Error(hint ? `${hint}\n(${msg})` : msg)
 }
 
 /** Chart data, cut to the configured size for small context windows. */
@@ -75,17 +108,29 @@ function withTimeout(signal: AbortSignal, cfg: ProviderConfig, fallbackSec: numb
   return AbortSignal.any([signal, AbortSignal.timeout(sec * 1000)])
 }
 
-/** fetch() with readable errors for unreachable servers and timeouts. */
+/** fetch() with readable errors for unreachable servers, proxies and timeouts. */
 async function request(url: string, init: RequestInit & { signal: AbortSignal }, outer: AbortSignal): Promise<Response> {
   try {
     return await fetch(url, init)
   } catch (e) {
     if (outer.aborted) throw e
     const err = e as Error & { cause?: { code?: string } }
+    const local = isLocalUrl(url)
     if (err.name === 'TimeoutError') throw new Error(tm('Sunucu zamanında yanıt vermedi ({url}). Ayarlar → Gelişmiş bölümünden zaman aşımını artırabilirsiniz.', { url }))
     const code = err.cause?.code ?? ''
-    if (/ECONNREFUSED|ENOTFOUND|EAI_AGAIN|ECONNRESET|EHOSTUNREACH/.test(code) || /fetch failed/i.test(err.message)) {
-      throw new Error(tm('Sunucuya bağlanılamadı: {url}. Sunucu çalışıyor mu, adres ve port doğru mu?', { url }) + (code ? ` (${code})` : ''))
+    if (/CERT|SELF_SIGNED|UNABLE_TO_VERIFY|ERR_TLS/.test(code)) {
+      throw new Error(
+        (local
+          ? tm('Sunucunun güvenlik sertifikası doğrulanamadı: {url}. Kendi imzaladığınız bir sertifika kullanıyorsanız HTTPS yerine HTTP deneyin.', { url })
+          : tm('Güvenli bağlantı kurulamadı: {url}. Şirket ağındaysanız bir proxy ya da güvenlik yazılımı bağlantıyı engelliyor olabilir.', { url })) + ` (${code})`
+      )
+    }
+    if (/ECONNREFUSED|ENOTFOUND|EAI_AGAIN|ECONNRESET|EHOSTUNREACH|ENETUNREACH|ETIMEDOUT/.test(code) || /fetch failed/i.test(err.message)) {
+      throw new Error(
+        (local
+          ? tm('Sunucuya bağlanılamadı: {url}. Sunucu çalışıyor mu, adres ve port doğru mu?', { url })
+          : tm('{url} adresine ulaşılamadı. İnternet bağlantınızı kontrol edin; şirket ağında proxy ya da güvenlik duvarı engelliyor olabilir.', { url })) + (code ? ` (${code})` : '')
+      )
     }
     throw e
   }
@@ -291,4 +336,36 @@ export async function runApi(
     default:
       throw new Error(tm('Bilinmeyen sağlayıcı: {p}', { p: req.provider }))
   }
+}
+
+/** Check an API key by listing the provider's models (no tokens are spent). */
+export async function testApiKey(provider: string, cfg: ProviderConfig, key: string): Promise<string[]> {
+  const ctrl = new AbortController()
+  const signal = AbortSignal.any([ctrl.signal, AbortSignal.timeout(10000)])
+  let url: string
+  let headers: Record<string, string>
+  let label: string
+  if (provider === 'anthropic') {
+    url = `${trimSlash(cfg.baseUrl || 'https://api.anthropic.com')}/v1/models?limit=100`
+    headers = { 'x-api-key': key, 'anthropic-version': '2023-06-01' }
+    label = 'Anthropic'
+  } else if (provider === 'gemini') {
+    url = `${trimSlash(cfg.baseUrl || 'https://generativelanguage.googleapis.com/v1beta')}/models?pageSize=200`
+    headers = { 'x-goog-api-key': key }
+    label = 'Gemini'
+  } else {
+    const base = trimSlash(cfg.baseUrl || (provider === 'deepseek' ? 'https://api.deepseek.com' : 'https://api.openai.com/v1'))
+    url = `${base}/models`
+    headers = { authorization: `Bearer ${key}`, ...parseHeaders(cfg.headers) }
+    label = provider === 'deepseek' ? 'DeepSeek' : 'OpenAI'
+  }
+  const res = await request(url, { signal, headers }, ctrl.signal)
+  await failIfBad(res, label)
+  const j = (await res.json()) as { data?: { id?: string }[]; models?: { name?: string; supportedGenerationMethods?: string[] }[] }
+  const ids =
+    provider === 'gemini'
+      ? (j.models ?? []).filter((m) => !m.supportedGenerationMethods || m.supportedGenerationMethods.includes('generateContent')).map((m) => m.name?.replace(/^models\//, ''))
+      : (j.data ?? []).map((m) => m.id)
+  const chat = ids.filter((x): x is string => !!x && (provider !== 'openai' || /^(gpt|o\d|chatgpt)/.test(x)) && !/embed|tts|whisper|dall-e|image|audio|realtime|moderation|transcribe/i.test(x))
+  return [...new Set(chat)].sort((a, b) => b.localeCompare(a))
 }
