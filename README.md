@@ -9,7 +9,7 @@ daha fazlası; haritayı **Claude Code, Codex, Gemini, DeepSeek** veya diğer ya
 > built on the Swiss Ephemeris. It draws natal, transit, progressed, solar-arc, synastry, composite/Davison and
 > return charts, steps time minute by minute with a live-updating wheel, and lets you discuss the chart on
 > screen with Claude Code, Codex, Gemini, DeepSeek or any OpenAI-compatible API. The interface is fully
-> available in Turkish and English (Settings → General → Language). It is free, non-commercial and licensed under
+> available in Turkish, English and Spanish (Settings → General → Language). It is free, non-commercial and licensed under
 > AGPL-3.0-or-later. Website: https://astrofree.cklabs.tr · Installation guides:
 > [macOS](docs/install/en/macos.md) · [Windows](docs/install/en/windows.md) · [Linux](docs/install/en/linux.md).
 
@@ -55,7 +55,7 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
 - **Yapay zekâ ile sohbet** — ekrandaki haritanın tam verisi her mesajla gönderilir; zamanı oynattıkça
   yorum güncel transitleri izler.
 - **Hesap yok, abonelik yok, reklam yok** — verileriniz yalnızca kendi bilgisayarınızda durur.
-- **Türkçe ve İngilizce arayüz**, yeni dil eklemek tek dosya.
+- **Türkçe, İngilizce ve İspanyolca arayüz**, yeni dil eklemek tek dosya.
 
 ## Özellikler
 

@@ -7,12 +7,13 @@
 //   2. import it below and add it to LOCALES;
 //   3. run `npm run i18n:check` to list strings still missing.
 import { en } from './en'
+import { es } from './es'
 import { tr } from './tr'
 import type { DateOrder, Locale } from './types'
 
 export type { DateOrder, Locale }
 
-export const LOCALES: Locale[] = [tr, en]
+export const LOCALES: Locale[] = [tr, en, es]
 export const SOURCE = tr
 
 export function getLocale(code: string | undefined): Locale {
