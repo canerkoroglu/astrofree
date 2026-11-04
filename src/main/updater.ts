@@ -1,12 +1,15 @@
 // Background auto-update from GitHub Releases (electron-updater). Windows
 // installer and Linux AppImage only: macOS needs a Developer ID signature for
-// Squirrel.Mac, and the portable .exe cannot replace itself.
+// Squirrel.Mac, and the portable .exe cannot replace itself. Store and Scoop
+// installs are updated by their package manager.
 import { app, ipcMain, type BrowserWindow } from 'electron'
 
 export function startAutoUpdate(win: BrowserWindow): void {
   const supported =
     app.isPackaged &&
-    (process.platform === 'win32' ? !process.env.PORTABLE_EXECUTABLE_DIR : process.platform === 'linux' && !!process.env.APPIMAGE)
+    (process.platform === 'win32'
+      ? !process.env.PORTABLE_EXECUTABLE_DIR && !process.windowsStore && !/[\\/]scoop[\\/]apps[\\/]/i.test(app.getPath('exe'))
+      : process.platform === 'linux' && !!process.env.APPIMAGE)
   if (!supported) return
   void (async () => {
     try {
