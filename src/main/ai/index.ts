@@ -8,7 +8,7 @@ import type { AiChatRequest, AiEvent, ProviderId, ProviderStatus } from '@shared
 import { getSecret, getSettings, secretStatus } from '../store'
 import { listModels, runApi } from './api'
 import { runCli } from './cli'
-import { ensureShellPath, resolveCommand, runVersion } from './proc'
+import { claudeDesktopInstalled, ensureShellPath, resolveCommand, runVersion } from './proc'
 
 const running = new Map<string, AbortController>()
 
@@ -56,7 +56,8 @@ async function codexModels(): Promise<string[]> {
 }
 
 export async function detectProviders(): Promise<ProviderStatus[]> {
-  await ensureShellPath()
+  // Re-read PATH each time, so a CLI installed while the app is open is found on "check again".
+  await ensureShellPath(true)
   const settings = await getSettings()
   const keys = await secretStatus()
   return Promise.all(
@@ -77,7 +78,17 @@ export async function detectProviders(): Promise<ProviderStatus[]> {
       }
       const cmd = settings.ai.providers[p.id as ProviderId].command || p.id.replace('-cli', '')
       const exe = resolveCommand(cmd)
-      if (!exe) return { id: p.id, kind: 'cli', available: false, detail: tm('"{cmd}" bulunamadı', { cmd }) }
+      if (!exe) {
+        const desktopOnly = p.id === 'claude-code' && claudeDesktopInstalled()
+        return {
+          id: p.id,
+          kind: 'cli',
+          available: false,
+          detail: desktopOnly
+            ? tm('Claude masaüstü uygulaması kurulu, ama AstroFree sohbet için ayrı bir araç olan Claude Code (`claude` komutu) kullanır; onu da kurmanız gerekir.')
+            : tm('"{cmd}" komutu bu bilgisayarda bulunamadı.', { cmd })
+        }
+      }
       const version = await runVersion(exe)
       const models = p.id === 'codex' ? await codexModels() : undefined
       return { id: p.id, kind: 'cli', available: true, detail: version || exe, models }

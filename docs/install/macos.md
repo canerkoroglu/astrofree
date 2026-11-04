@@ -77,7 +77,7 @@ Uygulamalar klasöründeki eski sürümün üzerine sürükleyin ("Değiştir").
 |---|---|
 | Uygulama açılmıyor, simge zıplayıp kayboluyor | Yanlış mimari indirilmiş olabilir; arm64/x64 dosyasını kontrol edin. |
 | Astrolojik semboller kare görünüyor | Uygulamayı tamamen kapatıp açın; sorun sürerse bir hata kaydı açın. |
-| Claude Code / Codex "bulunamadı" | Terminal'de `which claude` veya `which codex` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
+| Claude Code / Codex "bulunamadı" | `which claude` çıktısını Ayarlar → Yapay zekâ → Komut / yol alanına yazın. Claude masaüstü uygulaması Claude Code değildir; ayrıntı: [Yapay zekâ bağlantı rehberi](../ai-setup.md). |
 | Bildirimler gelmiyor |  → Sistem Ayarları → Bildirimler → AstroFree → İzin Ver. |
 
 Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

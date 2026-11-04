@@ -79,7 +79,7 @@ AstroFree onto the old copy in Applications (choose **Replace**). Your data is k
 |---|---|
 | The app does not open; the Dock icon bounces and disappears | You may have downloaded the wrong architecture; check arm64 vs x64. |
 | Astrological symbols show as boxes | Quit the app completely and reopen it; if it persists, open an issue. |
-| Claude Code / Codex "not found" | Run `which claude` or `which codex` in Terminal and paste the result into **Settings → AI → Command**. |
+| Claude Code / Codex "not found" | `which claude` → paste into **Settings → AI → Command / path**. Details: [AI connection guide](../../en/ai-setup.md). |
 | No notifications |  → System Settings → Notifications → AstroFree → Allow notifications. |
 
 Report a problem: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

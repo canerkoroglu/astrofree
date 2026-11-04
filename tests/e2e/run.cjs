@@ -54,6 +54,11 @@ app.on('browser-window-created', (_e, win) => {
         results.push(`FAIL step error: ${s.name ?? s.js.slice(0, 60)} — ${String(err.message || err).slice(0, 200)}`)
       }
       await new Promise((r) => setTimeout(r, s.wait ?? 300))
+      // E2E_SHOTS=dir saves a PNG after each step named in E2E_SHOT_STEPS (comma separated).
+      if (process.env.E2E_SHOTS && (process.env.E2E_SHOT_STEPS ?? '').split(',').includes(s.name)) {
+        const img = await win.webContents.capturePage()
+        require('node:fs').writeFileSync(path.join(process.env.E2E_SHOTS, s.name.replace(/\W+/g, '-') + '.png'), img.toPNG())
+      }
     }
     finish()
   })

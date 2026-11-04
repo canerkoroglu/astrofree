@@ -85,6 +85,6 @@ rm -r ~/.config/AstroFree
 | Uygulama açılmıyor, terminalde "sandbox" hatası | Bazı dağıtımlar kullanıcı ad alanlarını kısıtlar (Ubuntu 24.04 AppArmor). `./AstroFree-*.AppImage --no-sandbox` ile deneyin. |
 | Wayland'da bulanık görünüm | `--ozone-platform-hint=auto` bayrağıyla başlatın. |
 | Bildirimler gelmiyor | Masaüstünüzde bir bildirim hizmeti (ör. GNOME, KDE, dunst) çalıştığından emin olun. |
-| Claude Code "bulunamadı" | `which claude` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
+| Claude Code "bulunamadı" | `which claude` çıktısını Ayarlar → Yapay zekâ → Komut / yol alanına yazın. Claude masaüstü uygulaması Claude Code değildir; ayrıntı: [Yapay zekâ bağlantı rehberi](../ai-setup.md). |
 
 Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

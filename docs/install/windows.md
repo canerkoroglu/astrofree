@@ -56,7 +56,7 @@ Portable sürüm için `.exe` dosyasını silmeniz yeterlidir.
 |---|---|
 | "Yine de çalıştır" düğmesi yok | Kurumsal bilgisayarlarda SmartScreen politikası engelliyor olabilir; BT yöneticinize danışın veya portable sürümü deneyin. |
 | Antivirüs dosyayı karantinaya aldı | İmzasız yeni sürümlerde yanlış alarm görülebilir. Dosyayı yalnızca resmi GitHub sayfasından indirdiğinizden emin olup istisna ekleyin. |
-| Claude Code / Codex "bulunamadı" | PowerShell'de `where.exe claude` çıktısını Ayarlar → Yapay zekâ → Komut alanına yazın. |
+| Claude Code / Codex "bulunamadı" | `where.exe claude` çıktısını Ayarlar → Yapay zekâ → Komut / yol alanına yazın. Claude masaüstü uygulaması Claude Code değildir; ayrıntı: [Yapay zekâ bağlantı rehberi](../ai-setup.md). |
 | Ekran bulanık görünüyor | .exe → Özellikler → Uyumluluk → Yüksek DPI ayarları → "Uygulama" ölçeklendirmesini seçin. |
 
 Hata bildirmek için: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

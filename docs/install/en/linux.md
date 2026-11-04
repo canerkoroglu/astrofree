@@ -89,6 +89,6 @@ rm -r ~/.config/AstroFree
 | The app does not start; the terminal shows a "sandbox" error | Some distributions restrict user namespaces (e.g. AppArmor on Ubuntu 24.04). Try `./AstroFree-*.AppImage --no-sandbox`. |
 | Blurry window on Wayland | Start it with `--ozone-platform-hint=auto`. |
 | No notifications | Make sure a notification service is running on your desktop (GNOME, KDE, dunst…). |
-| Claude Code "not found" | Paste the output of `which claude` into **Settings → AI → Command**. |
+| Claude Code "not found" | `which claude` → paste into **Settings → AI → Command / path**. Details: [AI connection guide](../../en/ai-setup.md). |
 
 Report a problem: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

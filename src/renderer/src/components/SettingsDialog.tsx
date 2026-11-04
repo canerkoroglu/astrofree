@@ -3,6 +3,7 @@ import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, 
 
 const SAMPLE = { y: 2026, m: 1, d: 17 }
 import { t } from '../lib/i18n'
+import AiSetupGuide from './AiSetupGuide'
 import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
 import { AdvancedApiSettings, LocalServerSettings } from './AiProviderSettings'
@@ -102,6 +103,7 @@ export default function SettingsDialog({
   focus?: 'zone' | 'about'
 }) {
   const [s, setS] = useState<AppSettings>(settings)
+  const [guide, setGuide] = useState(false)
   const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : focus === 'about' ? 'about' : 'chart')
   const zoneRef = useRef<HTMLFieldSetElement>(null)
   useEffect(() => {
@@ -319,6 +321,13 @@ export default function SettingsDialog({
 
         {tab === 'ai' && (
           <div>
+            <p className="ai-guide-link small">
+              {t('Claude, ChatGPT, API anahtarı ya da yerel model: hangisini nasıl bağlayacağınızı adım adım görün.')}{' '}
+              <button className="link" onClick={() => setGuide(true)}>
+                {t('Bağlantı rehberi')}
+              </button>
+            </p>
+            {guide && <AiSetupGuide onClose={() => setGuide(false)} />}
             <div className="form-grid">
               <label>
                 {t('Yanıt dili')}

@@ -133,6 +133,10 @@ transit→natal açılar, progresyonlar…) gönderilir. "Gönderilen veri" bağ
 | Claude, OpenAI, Gemini, DeepSeek API | HTTPS akışı | Ayarlar → Yapay zekâ'dan API anahtarı |
 | Yerel / özel sunucu | OpenAI uyumlu `/v1/chat/completions` akışı | Ollama, llama.cpp, LM Studio, LiteLLM, vLLM vb.; anahtar isteğe bağlı |
 
+Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı rehberi](docs/ai-setup.md) ·
+[AI connection guide](docs/en/ai-setup.md). Not: Claude masaüstü uygulaması Claude Code değildir; `claude` komutunun
+ayrıca kurulması gerekir.
+
 - CLI sağlayıcıları bilgisayarınızdaki mevcut oturumu kullanır; AstroFree hiçbir kimlik bilgisini görmez.
   Ajanlar boş bir çalışma klasöründe, dosya erişimi ve araçları kapalı olarak çalıştırılır.
 - API anahtarları işletim sisteminin anahtar zinciriyle (Electron `safeStorage`) şifrelenip yalnızca yerel olarak saklanır.

@@ -14,12 +14,24 @@ let pathReady: Promise<void> | null = null
  * installed via Homebrew, npm or nvm are invisible. Ask the login shell for
  * its PATH once and merge it with common install locations.
  */
-export function ensureShellPath(): Promise<void> {
-  if (pathReady) return pathReady
+export function ensureShellPath(refresh = false): Promise<void> {
+  if (pathReady && !refresh) return pathReady
   pathReady = new Promise<void>((resolve) => {
     const home = homedir()
+    const env = (k: string) => process.env[k] ?? ''
     const extra = isWin
-      ? [join(process.env.APPDATA ?? '', 'npm'), join(home, '.local', 'bin'), join(home, 'AppData', 'Local', 'Programs')]
+      ? [
+          join(home, '.local', 'bin'), // Claude Code native installer
+          join(home, '.claude', 'local'),
+          join(env('APPDATA'), 'npm'), // npm install -g
+          join(env('LOCALAPPDATA'), 'Microsoft', 'WinGet', 'Links'),
+          join(env('LOCALAPPDATA'), 'pnpm'),
+          join(home, 'scoop', 'shims'),
+          join(home, '.bun', 'bin'),
+          join(env('LOCALAPPDATA'), 'Volta', 'bin'),
+          env('NVM_SYMLINK'),
+          join(env('ProgramFiles'), 'nodejs')
+        ]
       : [
           '/opt/homebrew/bin',
           '/usr/local/bin',
@@ -34,7 +46,14 @@ export function ensureShellPath(): Promise<void> {
       process.env.PATH = [...new Set(parts.filter(Boolean))].join(delimiter)
       resolve()
     }
-    if (isWin) return merge('')
+    if (isWin) {
+      // A program inherits PATH from when Explorer started, so a CLI installed
+      // afterwards stays invisible until sign-out. Read the current value from the registry.
+      void Promise.all([registryPath('HKCU\\Environment'), registryPath('HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment')]).then(
+        (p) => merge(p.filter(Boolean).join(delimiter))
+      )
+      return
+    }
     const shell = process.env.SHELL || '/bin/zsh'
     execFile(
       shell,
@@ -47,6 +66,28 @@ export function ensureShellPath(): Promise<void> {
     )
   })
   return pathReady
+}
+
+/** The Path value under a registry key, with %VARIABLES% expanded ('' when unreadable). */
+function registryPath(key: string): Promise<string> {
+  return new Promise((resolve) => {
+    execFile('reg', ['query', key, '/v', 'Path'], { timeout: 5000, encoding: 'utf8', windowsHide: true }, (err, stdout) => {
+      const m = !err && /^\s*Path\s+REG_(?:EXPAND_)?SZ\s+(.*)$/im.exec(stdout ?? '')
+      resolve(m ? m[1].trim().replace(/%([^%]+)%/g, (all, k: string) => process.env[k] ?? all) : '')
+    })
+  })
+}
+
+/** Is the Claude desktop (chat) app installed? It is not the `claude` command line tool. */
+export function claudeDesktopInstalled(): boolean {
+  const env = (k: string) => process.env[k] ?? ''
+  const places =
+    process.platform === 'win32'
+      ? [join(env('LOCALAPPDATA'), 'AnthropicClaude'), join(env('LOCALAPPDATA'), 'Programs', 'Claude'), join(env('ProgramFiles'), 'Claude')]
+      : process.platform === 'darwin'
+        ? ['/Applications/Claude.app', join(homedir(), 'Applications', 'Claude.app')]
+        : []
+  return places.some((p) => p && existsSync(p))
 }
 
 /** Find an executable on PATH (honouring PATHEXT on Windows). */

@@ -56,7 +56,7 @@ For the portable version, just delete the `.exe`.
 |---|---|
 | There is no "Run anyway" button | SmartScreen may be locked down by company policy; ask your IT administrator or try the portable version. |
 | Antivirus quarantined the file | New unsigned releases can trigger false positives. Make sure you downloaded it from the official GitHub page, then add an exception. |
-| Claude Code / Codex "not found" | Run `where.exe claude` in PowerShell and paste the result into **Settings → AI → Command**. |
+| Claude Code / Codex "not found" | The Claude desktop app is not Claude Code; see the [AI connection guide](../../en/ai-setup.md). |
 | The window looks blurry | .exe → Properties → Compatibility → Change high DPI settings → scaling performed by "Application". |
 
 Report a problem: [GitHub Issues](https://github.com/canerkoroglu/astrofree/issues) · astrofree@cklabs.tr

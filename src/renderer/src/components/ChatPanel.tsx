@@ -1,4 +1,5 @@
 import { t } from '../lib/i18n'
+import AiSetupGuide from './AiSetupGuide'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -70,6 +71,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   const [error, setError] = useState('')
   const [statuses, setStatuses] = useState<ProviderStatus[]>([])
   const [showCtx, setShowCtx] = useState(false)
+  const [guide, setGuide] = useState(false)
   const [attach, setAttach] = useState(true)
   const listRef = useRef<HTMLDivElement>(null)
   const loadedKey = useRef<string | null>(null)
@@ -81,9 +83,11 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   const st = statuses.find((s) => s.id === provider)
   const models = [...new Set([...(st?.models ?? []), ...info.models].filter(Boolean))]
 
-  useEffect(() => {
+  const recheck = () => {
+    setStatuses([])
     void window.astro.ai.detect().then(setStatuses)
-  }, [settings.ai.providers])
+  }
+  useEffect(recheck, [settings.ai.providers])
 
   // Load the stored conversation for this chart.
   useEffect(() => {
@@ -195,7 +199,30 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           ))}
         </datalist>
       </div>
-      <div className={st && !st.available ? 'chat-status warn' : 'chat-status'}>{st ? st.detail : t('Kontrol ediliyor…')}</div>
+      {st && !st.available ? (
+        <div className="chat-status warn unavailable">
+          <span>{st.detail}</span>
+          <span className="chat-status-actions">
+            <button className="link" onClick={() => setGuide(true)}>
+              {t('Nasıl bağlanırım?')}
+            </button>
+            <button className="link" onClick={recheck}>
+              {t('Tekrar kontrol et')}
+            </button>
+          </span>
+        </div>
+      ) : (
+        <div className="chat-status">{st ? st.detail : t('Kontrol ediliyor…')}</div>
+      )}
+      {guide && (
+        <AiSetupGuide
+          onClose={() => setGuide(false)}
+          onRecheck={() => {
+            setGuide(false)
+            recheck()
+          }}
+        />
+      )}
 
       <div className="quick">
         {QUICK.filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
