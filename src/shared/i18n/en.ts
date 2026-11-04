@@ -917,5 +917,8 @@ Rules:
     "Yerel sunucu için model seçilmemiş. Ayarlar → Yapay zekâ → \"Modelleri getir\" ile seçin.": "No model chosen for the local server. Pick one with Settings → AI → \"Fetch models\".",
     "Yerel sunucu": "Local server",
     "{url} · {n} model": "{url} · {n} models",
+    "bu enlemde tanımsız; Porphyry kullanıldı": "undefined at this latitude; Porphyry used",
+    "Kutup dairesi: Porphyry kullanıldı": "Polar circle: Porphyry used",
+    "Placidus, Koch ve Gauquelin kutup dairelerinin içinde (enlem ≥ 90° − 23,4°) matematiksel olarak tanımsızdır; Swiss Ephemeris bu durumda Porphyry ev başlangıçlarını kullanır.": "Placidus, Koch and Gauquelin have no solution inside the polar circles (latitude ≥ 90° − 23.4°); Swiss Ephemeris then uses Porphyry cusps.",
   }
 }

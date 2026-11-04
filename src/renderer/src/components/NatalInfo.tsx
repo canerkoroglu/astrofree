@@ -143,6 +143,11 @@ export default function NatalInfo({
           </div>
           <div className="muted small">
             {houseName} · {settings.zodiac === 'tropical' ? t('Tropikal') : 'Sidereal'}
+            {natal.houseFallback && (
+              <span className="badge warn" title={t('Placidus, Koch ve Gauquelin kutup dairelerinin içinde (enlem ≥ 90° − 23,4°) matematiksel olarak tanımsızdır; Swiss Ephemeris bu durumda Porphyry ev başlangıçlarını kullanır.')}>
+                {t('Kutup dairesi: Porphyry kullanıldı')}
+              </span>
+            )}
           </div>
         </div>
         <div className="ni-cards">

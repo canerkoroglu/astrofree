@@ -838,6 +838,11 @@ export default function App() {
               {working.name || t('İsimsiz')}
               {working.kind === 'event' && <span className="badge">{t('Olay')}</span>}
               {working.timeUnknown && <span className="badge warn" title={t('12:00 kullanıldı; yükselen ve evler güvenilmez')}>{t('Saat bilinmiyor')}</span>}
+              {computed?.natal.houseFallback && (
+                <span className="badge warn" title={t('Placidus, Koch ve Gauquelin kutup dairelerinin içinde (enlem ≥ 90° − 23,4°) matematiksel olarak tanımsızdır; Swiss Ephemeris bu durumda Porphyry ev başlangıçlarını kullanır.')}>
+                  {t('Kutup dairesi: Porphyry kullanıldı')}
+                </span>
+              )}
               {working.rodden && !working.timeUnknown && <span className="badge" title={t('Rodden veri güvenilirliği')}>{working.rodden}</span>}
               <button
                 className="head-edit"

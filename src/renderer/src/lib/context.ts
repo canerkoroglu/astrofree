@@ -74,8 +74,9 @@ function natalSection(c: Computed, rec: ChartRecord, s: AppSettings): string {
   const zod =
     s.zodiac === 'sidereal'
       ? `Sidereal (${AYANAMSAS.find((a) => a[0] === s.sidMode)?.[1] ?? s.sidMode}, ayanamsa ${l.ayanamsa.toFixed(2)}°)`
-      : 'Tropikal'
-  out.push(`${t('Ev sistemi')}: ${t(hs)} · ${t('Zodyak')}: ${zod} · ${t('Ay düğümü')}: ${s.nodeType === 'true' ? t('gerçek') : t('ortalama')}`)
+      : t('Tropikal')
+  const fb = l.houseFallback ? ` (${t('bu enlemde tanımsız; Porphyry kullanıldı')})` : ''
+  out.push(`${t('Ev sistemi')}: ${t(hs)}${fb} · ${t('Zodyak')}: ${zod} · ${t('Ay düğümü')}: ${s.nodeType === 'true' ? t('gerçek') : t('ortalama')}`)
 
   out.push('\n## Gezegenler ve noktalar')
   for (const p of l.points) {

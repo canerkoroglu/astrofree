@@ -47,9 +47,16 @@ function computeOne(swe: Swe, req: EphemRequest): EphemResult {
 
   const nut = swe.calc_ut(req.jdUT, SE_ECL_NUT, 0)
   const eps: number = nut[0]
-  const ayanamsa: number = sidereal ? swe.get_ayanamsa_ut(req.jdUT) : 0
+  // The shift Swiss Ephemeris actually applies to sidereal positions (ayanamsa including nutation), measured on
+  // the Sun so that derived charts (houses from an ARMC) move exactly like the planets.
+  const ayanamsa: number = sidereal
+    ? norm(swe.calc_ut(req.jdUT, 0, SEFLG_SWIEPH)[0] - swe.calc_ut(req.jdUT, 0, SEFLG_SWIEPH | SEFLG_SIDEREAL)[0])
+    : 0
 
   const hsys = req.houseSystem || 'P'
+  // Placidus, Koch and Gauquelin have no solution inside the polar circles; Swiss Ephemeris then quietly
+  // returns Porphyry cusps (swehouse.c: |lat| >= 90° − ε). Report it so the chart can say so.
+  const houseFallback = 'PKG'.includes(hsys) && Math.abs(req.lat) >= 90 - eps ? 'O' : undefined
   let h: { cusps: Float64Array; ascmc: Float64Array }
   if (req.armc !== undefined) {
     h = swe.houses_armc(norm(req.armc), req.lat, eps, hsys)
@@ -70,7 +77,8 @@ function computeOne(swe: Swe, req: EphemRequest): EphemResult {
     armc: h.ascmc[2],
     vertex: h.ascmc[3],
     eps,
-    ayanamsa
+    ayanamsa,
+    ...(houseFallback ? { houseFallback } : {})
   }
 }
 

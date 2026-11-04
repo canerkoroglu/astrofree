@@ -79,6 +79,8 @@ export interface EphemResult {
   vertex: number
   eps: number
   ayanamsa: number
+  /** House system actually used when the requested one is undefined here (polar circles → 'O' Porphyry). */
+  houseFallback?: string
   error?: string
 }
 

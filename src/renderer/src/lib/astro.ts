@@ -230,6 +230,8 @@ export interface Layer {
   armc: number
   eps: number
   ayanamsa: number
+  /** Set when the chosen house system has no solution at this latitude ('O' = Porphyry used). */
+  houseFallback?: string
 }
 
 export function houseOf(lon: number, cusps: number[]): number {
@@ -294,7 +296,7 @@ export function buildLayer(kind: LayerKind, label: string, r: EphemResult, setti
   const order = Object.fromEntries(POINTS.map((p, i) => [p.key, i]))
   pts.sort((a, b) => order[a.key] - order[b.key])
   for (const p of pts) p.retro = p.speed < 0 && !['node', 'snode', 'lilith', 'asc', 'mc'].includes(p.key)
-  return { kind, label, jdUT: r.jdUT, points: pts, cusps: r.cusps, asc: r.asc, mc: r.mc, armc: r.armc, eps: r.eps, ayanamsa: r.ayanamsa }
+  return { kind, label, jdUT: r.jdUT, points: pts, cusps: r.cusps, asc: r.asc, mc: r.mc, armc: r.armc, eps: r.eps, ayanamsa: r.ayanamsa, houseFallback: r.houseFallback }
 }
 
 /** Shift a layer by a fixed arc (solar arc directions). */
