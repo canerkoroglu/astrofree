@@ -234,6 +234,16 @@ export interface Layer {
   houseFallback?: string
 }
 
+/**
+ * Is an ecliptic longitude above the horizon? Measured from the real ascendant, not from house numbers:
+ * in whole-sign, equal, Morinus and meridian houses the 7th–12th houses do not follow the horizon.
+ */
+export const isAboveHorizon = (lon: number, asc: number) => norm360(lon - asc) >= 180
+
+/** Do house cusps 1 and 10 coincide with the ascendant and MC (quadrant systems)? */
+export const cuspsAreAngles = (l: { cusps: number[]; asc: number; mc: number }) =>
+  l.cusps.length === 12 && Math.abs(diff180(l.cusps[0], l.asc)) < 0.01 && Math.abs(diff180(l.cusps[9], l.mc)) < 0.01
+
 export function houseOf(lon: number, cusps: number[]): number {
   if (cusps.length !== 12) return 0
   for (let i = 0; i < 12; i++) {
@@ -284,7 +294,7 @@ export function buildLayer(kind: LayerKind, label: string, r: EphemResult, setti
   const sun = pts.find((p) => p.key === 'sun')
   const moon = pts.find((p) => p.key === 'moon')
   if (settings.points.fortune && sun && moon && r.cusps.length === 12) {
-    const dayChart = sun.house >= 7
+    const dayChart = isAboveHorizon(sun.lon, r.asc)
     pts.push(mk('fortune', dayChart ? r.asc + moon.lon - sun.lon : r.asc + sun.lon - moon.lon))
   }
   if (settings.points.vertex && r.cusps.length === 12) pts.push(mk('vertex', r.vertex))

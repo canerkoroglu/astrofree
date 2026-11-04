@@ -3,6 +3,7 @@ import { t } from '../lib/i18n'
 import { useMemo } from 'react'
 import type { AppSettings, ChartRecord } from '@shared/types'
 import {
+  cuspsAreAngles,
   balance,
   elementName,
   findAspects,
@@ -21,6 +22,7 @@ import { fmtCoord, fmtOrb } from '../lib/astro'
 import type { Pattern } from '../lib/patterns'
 import { midpointHits } from '../lib/midpoints'
 import {
+  isDayChart,
   almuten,
   currentFirdar,
   essentialDignity,
@@ -183,7 +185,7 @@ export default function NatalInfo({
             <div className="ni-card">
               <div className="muted small">{t('Ay fazı')}</div>
               <div className="ni-big">{moonPhase(sun.lon, moon.lon).name}</div>
-              <div className="muted small">{sun.house >= 7 ? t('Gündüz haritası') : t('Gece haritası')}</div>
+              <div className="muted small">{isDayChart(natal) ? t('Gündüz haritası') : t('Gece haritası')}</div>
             </div>
           )}
           {moon && (
@@ -514,13 +516,14 @@ export default function NatalInfo({
           </thead>
           <tbody>
             {natal.cusps.map((c, i) => {
+              const anglesAtCusps = cuspsAreAngles(natal)
               const ruler = rulerOf(splitDeg(c).sign)
               const inside = natal.points.filter((p) => p.house === i + 1 && !['asc', 'mc'].includes(p.key))
               return (
                 <tr key={i}>
                   <td className="num">
                     {i + 1}
-                    {i === 0 ? ' (ASC)' : i === 9 ? ' (MC)' : ''}
+                    {anglesAtCusps && (i === 0 ? ' (ASC)' : i === 9 ? ' (MC)' : '')}
                   </td>
                   <SignCell lon={c} />
                   <td className="num-l">{degMin(c)}</td>

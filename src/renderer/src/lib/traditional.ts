@@ -1,7 +1,7 @@
 // Traditional techniques: essential dignities (Egyptian terms, Dorothean
 // triplicities, Chaldean faces), almuten, sect, annual profections, firdaria
 // and the Hermetic lots.
-import { norm360, POINT, splitDeg, type ChartPoint, type Layer } from './astro'
+import { isAboveHorizon, norm360, POINT, splitDeg, type ChartPoint, type Layer } from './astro'
 
 type P = 'sun' | 'moon' | 'mercury' | 'venus' | 'mars' | 'jupiter' | 'saturn'
 export const SEVEN: P[] = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn']
@@ -111,7 +111,7 @@ export function almuten(lon: number, day: boolean): { key: P; points: number } {
 
 export function isDayChart(natal: Layer): boolean {
   const sun = natal.points.find((p) => p.key === 'sun')
-  return !!sun && sun.house >= 7
+  return !!sun && isAboveHorizon(sun.lon, natal.asc)
 }
 
 /** Planets in sect: diurnal Sun, Jupiter, Saturn; nocturnal Moon, Venus, Mars. */

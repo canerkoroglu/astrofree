@@ -920,5 +920,6 @@ Rules:
     "bu enlemde tanımsız; Porphyry kullanıldı": "undefined at this latitude; Porphyry used",
     "Kutup dairesi: Porphyry kullanıldı": "Polar circle: Porphyry used",
     "Placidus, Koch ve Gauquelin kutup dairelerinin içinde (enlem ≥ 90° − 23,4°) matematiksel olarak tanımsızdır; Swiss Ephemeris bu durumda Porphyry ev başlangıçlarını kullanır.": "Placidus, Koch and Gauquelin have no solution inside the polar circles (latitude ≥ 90° − 23.4°); Swiss Ephemeris then uses Porphyry cusps.",
+    "(Bu ev sisteminde 1. ve 10. ev başlangıçları Yükselen ve MC ile aynı değildir; Yükselen ve MC yukarıdaki gerçek derecelerindedir.)": "(In this house system the 1st and 10th house cusps are not the Ascendant and MC; the Ascendant and MC are at their true degrees listed above.)",
   }
 }

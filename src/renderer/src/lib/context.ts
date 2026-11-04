@@ -2,6 +2,7 @@
 import { mansionOf, moonChartLord } from './kb'
 import type { AppSettings, ChartRecord, Place, TzSpec } from '@shared/types'
 import {
+  cuspsAreAngles,
   AYANAMSAS,
   balance,
   dignity,
@@ -25,6 +26,7 @@ import { t } from './i18n'
 import { fmtLocal, fmtOffset, jdToLocal, offsetAt, revjul, tzLabel } from './time'
 import type { Pattern } from './patterns'
 import {
+  isDayChart,
   almuten,
   currentFirdar,
   essentialDignity,
@@ -85,6 +87,7 @@ function natalSection(c: Computed, rec: ChartRecord, s: AppSettings): string {
   }
 
   out.push('\n## ' + t('Ev başlangıçları ve yöneticileri'))
+  if (l.cusps.length === 12 && !cuspsAreAngles(l)) out.push(t('(Bu ev sisteminde 1. ve 10. ev başlangıçları Yükselen ve MC ile aynı değildir; Yükselen ve MC yukarıdaki gerçek derecelerindedir.)'))
   l.cusps.forEach((cusp, i) => {
     const sign = splitDeg(cusp).sign
     const ruler = rulerOf(sign)
@@ -122,7 +125,7 @@ function natalSection(c: Computed, rec: ChartRecord, s: AppSettings): string {
   const moon = l.points.find((p) => p.key === 'moon')
   if (sun && moon) {
     const ph = moonPhase(sun.lon, moon.lon)
-    out.push(`- ${t('Ay fazı')}: ${ph.name} (${ph.angle.toFixed(0)}°) · ${sun.house >= 7 ? t('Gündüz haritası') : t('Gece haritası')}`)
+    out.push(`- ${t('Ay fazı')}: ${ph.name} (${ph.angle.toFixed(0)}°) · ${isDayChart(l) ? t('Gündüz haritası') : t('Gece haritası')}`)
     const mn = mansionOf(moon.lon)
     out.push(`- ${t('Ay durağı')}: ${mn.n}. ${mn.name} (${fmtPosText(mn.start)} – ${fmtPosText(mn.end)})`)
     out.push(`- ${t("Ay'a göre harita lordu")}: ${POINT[moonChartLord(moon.lon)].name}`)
