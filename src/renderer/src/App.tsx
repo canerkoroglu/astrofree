@@ -14,7 +14,7 @@ import Onboarding from './components/Onboarding'
 import Shortcuts from './components/Shortcuts'
 import PrintReport from './components/PrintReport'
 import SkyPanel from './components/SkyPanel'
-import SettingsDialog from './components/SettingsDialog'
+import SettingsDialog, { type SettingsFocus } from './components/SettingsDialog'
 import { AspectGrid, AspectList, HousesTable, PositionsTable } from './components/Tables'
 import TimeControls, { STEPS } from './components/TimeControls'
 import TransitCalendar, { calendarText } from './components/TransitCalendar'
@@ -100,7 +100,7 @@ export default function App() {
   const [aspectLayer, setAspectLayer] = useState(-1)
   const [editor, setEditor] = useState<ChartRecord | null>(null)
   const [showSettings, setShowSettings] = useState(false)
-  const [settingsFocus, setSettingsFocus] = useState<'zone' | 'about' | undefined>()
+  const [settingsFocus, setSettingsFocus] = useState<SettingsFocus | undefined>()
   const [exportOpen, setExportOpen] = useState(false)
   const [zoneOpen, setZoneOpen] = useState(false)
   const [filter, setFilter] = useState('')
@@ -1061,6 +1061,10 @@ export default function App() {
             inject={inject}
             knowledge={knowledgeFor}
             knowledgeCount={kbFiles.length}
+            onOpenSettings={(f) => {
+              setSettingsFocus(f)
+              setShowSettings(true)
+            }}
           />
         </aside>
       )}

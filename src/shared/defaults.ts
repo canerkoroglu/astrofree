@@ -58,7 +58,7 @@ export const PROVIDERS: {
   },
   {
     id: 'local',
-    label: 'Yerel / özel sunucu',
+    label: 'Yerel sunucu',
     kind: 'api',
     hint: 'Ollama, llama.cpp, LM Studio, LiteLLM, vLLM gibi OpenAI uyumlu bir sunucu; bilgisayarınızda ya da ağınızda çalışan modeller (ör. Qwen). API anahtarı isteğe bağlıdır.',
     models: []

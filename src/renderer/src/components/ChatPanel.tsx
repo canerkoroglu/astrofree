@@ -1,5 +1,6 @@
 import { t } from '../lib/i18n'
 import AiSetupGuide from './AiSetupGuide'
+import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -20,6 +21,8 @@ interface Props {
   knowledge?: (question: string) => string
   /** Number of knowledge files, to show the toggle only when there is a base. */
   knowledgeCount?: number
+  /** Open Settings at this provider's section (address, key, model). */
+  onOpenSettings?: (focus: SettingsFocus) => void
 }
 
 const QUICK: { label: string; needs?: string; prompt: string }[] = [
@@ -61,7 +64,7 @@ function Markdown({ text }: { text: string }) {
   return <div className="md" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0 }: Props) {
+export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0, onOpenSettings }: Props) {
   const [lastKb, setLastKb] = useState('')
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
   const [messages, setMessages] = useState<AiMessage[]>([])
@@ -187,7 +190,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             return (
               <option key={p.id} value={p.id}>
                 {s ? (s.available ? '● ' : '○ ') : ''}
-                {p.label}
+                {t(p.label)}
               </option>
             )
           })}
@@ -203,6 +206,11 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
         <div className="chat-status warn unavailable">
           <span>{st.detail}</span>
           <span className="chat-status-actions">
+            {onOpenSettings && info.kind === 'api' && (
+              <button className="link" onClick={() => onOpenSettings(`ai:${provider}`)}>
+                {provider === 'local' ? t('Adres ve port') : t('API anahtarı gir')}
+              </button>
+            )}
             <button className="link" onClick={() => setGuide(true)}>
               {t('Nasıl bağlanırım?')}
             </button>
@@ -212,7 +220,17 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           </span>
         </div>
       ) : (
-        <div className="chat-status">{st ? st.detail : t('Kontrol ediliyor…')}</div>
+        <div className="chat-status">
+          {st ? st.detail : t('Kontrol ediliyor…')}
+          {st && provider === 'local' && onOpenSettings && (
+            <>
+              {' · '}
+              <button className="link" onClick={() => onOpenSettings('ai:local')}>
+                {t('Adres ve port')}
+              </button>
+            </>
+          )}
+        </div>
       )}
       {guide && (
         <AiSetupGuide
@@ -252,7 +270,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
                     disabled={savedIdx.has(i) || (!!runId && i === messages.length - 1)}
                     onClick={async () => {
                       const q = [...messages.slice(0, i)].reverse().find((x) => x.role === 'user')?.content ?? ''
-                      await onSave(m.content, q, `${info.label}${cfg.model ? ' · ' + cfg.model : ''}`)
+                      await onSave(m.content, q, `${t(info.label)}${cfg.model ? ' · ' + cfg.model : ''}`)
                       setSavedIdx((s) => new Set(s).add(i))
                     }}
                   >

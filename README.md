@@ -131,7 +131,7 @@ transit→natal açılar, progresyonlar…) gönderilir. "Gönderilen veri" bağ
 | Codex (CLI) | `codex exec --json`, salt okunur, kalıcı oturum yok | `codex login` |
 | Gemini (CLI) | `gemini -o stream-json` | `gemini` ile giriş ya da Gemini API anahtarı |
 | Claude, OpenAI, Gemini, DeepSeek API | HTTPS akışı | Ayarlar → Yapay zekâ'dan API anahtarı |
-| Yerel / özel sunucu | OpenAI uyumlu `/v1/chat/completions` akışı | Ollama, llama.cpp, LM Studio, LiteLLM, vLLM vb.; anahtar isteğe bağlı |
+| Yerel sunucu | OpenAI uyumlu `/v1/chat/completions` akışı | Ollama, llama.cpp, LM Studio, LiteLLM, vLLM vb.; anahtar isteğe bağlı |
 
 Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı rehberi](docs/ai-setup.md) ·
 [AI connection guide](docs/en/ai-setup.md). Not: Claude masaüstü uygulaması Claude Code değildir; `claude` komutunun
@@ -147,9 +147,9 @@ ayrıca kurulması gerekir.
 İnternete veri göndermeden, bilgisayarınızda ya da ağınızda çalışan bir modelle (ör. Qwen) sohbet edebilirsiniz.
 
 1. Sunucuyu başlatın, örneğin `ollama serve` ve `ollama pull qwen3:8b`.
-2. **Ayarlar → Yapay zekâ → Yerel / özel sunucu**: sunucu türünü seçin (adres ve port kendiliğinden dolar) ya da
+2. **Ayarlar → Yapay zekâ → Yerel sunucu**: sunucu türünü seçin (adres ve port kendiliğinden dolar) ya da
    protokol, sunucu, port ve yolu elle girin.
-3. **Bağlantıyı test et ve modelleri getir** ile modeli seçin; sohbet panelinde sağlayıcı olarak "Yerel / özel sunucu"yu seçin.
+3. **Bağlantıyı test et ve modelleri getir** ile modeli seçin; sohbet panelinde sağlayıcı olarak "Yerel sunucu"yu seçin.
 
 | Sunucu | Varsayılan adres |
 |---|---|

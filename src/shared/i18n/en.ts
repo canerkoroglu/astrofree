@@ -974,5 +974,7 @@ Rules:
     "Önce API anahtarını girin.": "Enter the API key first.",
     "Anahtar çalışıyor · {n} model": "Key works · {n} models",
     "Anahtarı test et": "Test key",
+    "Adres ve port": "Address and port",
+    "API anahtarı gir": "Enter API key",
   }
 }

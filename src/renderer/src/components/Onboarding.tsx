@@ -110,7 +110,7 @@ export default function Onboarding({
                   const st = statuses.find((x) => x.id === p.id)
                   return (
                     <button key={p.id} className={`ob-provider ${settings.ai.provider === p.id ? 'selected' : ''}`} onClick={() => setProvider(p.id)}>
-                      <span className="ob-pname">{p.label}</span>
+                      <span className="ob-pname">{t(p.label)}</span>
                       <span className={st?.available ? 'ob-ok small' : 'muted small'}>
                         {st?.available ? (p.kind === 'cli' ? t('Kurulu') : t('Anahtar kayıtlı')) : p.kind === 'cli' ? t('Bulunamadı') : t('Anahtar gerekli')}
                       </span>

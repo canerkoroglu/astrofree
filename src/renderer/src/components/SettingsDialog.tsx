@@ -25,6 +25,8 @@ function themeColor(key: string): string {
   return '#' + m.slice(0, 3).map((v) => Math.round(Number(v)).toString(16).padStart(2, '0')).join('')
 }
 
+export type SettingsFocus = 'zone' | 'about' | `ai:${ProviderId}`
+
 const WEBSITE = 'https://astrofree.cklabs.tr'
 const REPO = 'https://github.com/canerkoroglu/astrofree'
 
@@ -99,16 +101,18 @@ export default function SettingsDialog({
   settings: AppSettings
   onSave: (s: AppSettings) => void
   onClose: () => void
-  /** Open straight at a section, e.g. the time zone settings. */
-  focus?: 'zone' | 'about'
+  /** Open straight at a section, e.g. the time zone settings or one AI provider. */
+  focus?: SettingsFocus
 }) {
   const [s, setS] = useState<AppSettings>(settings)
   const [guide, setGuide] = useState(false)
-  const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : focus === 'about' ? 'about' : 'chart')
+  const [tab, setTab] = useState<Tab>(focus === 'zone' ? 'general' : focus === 'about' ? 'about' : focus?.startsWith('ai:') ? 'ai' : 'chart')
   const zoneRef = useRef<HTMLFieldSetElement>(null)
+  const focusProvider = focus?.startsWith('ai:') ? focus.slice(3) : null
   useEffect(() => {
     if (focus === 'zone') zoneRef.current?.scrollIntoView({ block: 'start' })
-  }, [focus])
+    if (focusProvider) document.getElementById(`ai-provider-${focusProvider}`)?.scrollIntoView({ block: 'start' })
+  }, [focus, focusProvider])
   const [keys, setKeys] = useState<Record<string, string>>({})
   const [hasKey, setHasKey] = useState<Record<string, boolean>>({})
   const [backupMsg, setBackupMsg] = useState('')
@@ -347,8 +351,8 @@ export default function SettingsDialog({
             {PROVIDERS.map((p) => {
               const c = s.ai.providers[p.id]
               return (
-                <fieldset key={p.id}>
-                  <legend>{p.label}</legend>
+                <fieldset key={p.id} id={`ai-provider-${p.id}`} className={focusProvider === p.id ? 'focus-flash' : ''}>
+                  <legend>{t(p.label)}</legend>
                   <div className="muted small">{t(p.hint)}</div>
                   {p.id === 'local' ? (
                     <LocalServerSettings
