@@ -1076,7 +1076,7 @@ export default function App() {
             setView('chart')
           }} />
         )}
-        {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} />}
+        {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} />}
         {view === 'calendar' && computed && (
           <TransitCalendar
             natal={computed.natal}

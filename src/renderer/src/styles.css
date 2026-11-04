@@ -4542,3 +4542,20 @@ button.head-edit {
 .sky-wide .sky-col > .sky-sub:first-child {
   margin-top: 0;
 }
+
+.syn-balance {
+  display: flex;
+  gap: 18px;
+  margin: 8px 0 4px;
+  font-size: 13px;
+}
+.syn-group {
+  margin-top: 12px;
+}
+.syn-group > h4 {
+  margin: 0;
+  font-size: 14px;
+}
+.synastry .reading-body > button {
+  margin-top: 12px;
+}

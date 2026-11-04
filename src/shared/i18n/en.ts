@@ -64,6 +64,15 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Sinastri: {a} ve {b}": "Synastry: {a} and {b}",
+    "İki haritanın kişisel gezegenleri arasındaki ana açılar (orb ≤ 5°). Bir ilişkinin nasıl yaşanacağını hiçbir harita belirlemez; bunlar yalnızca üzerine konuşulabilecek temalardır.": "Major aspects between the personal planets of the two charts (orb ≤ 5°). No chart decides how a relationship will go; these are only themes worth talking about.",
+    "Uyum alanları": "Areas of harmony",
+    "Gelişim alanları": "Areas of growth",
+    "Kolay akabilecek, birbirini destekleyebilecek temalar.": "Themes that may flow easily and support each other.",
+    "Sürtünme yaratabilecek ama birlikte büyümeye de alan açabilecek temalar.": "Themes that may create friction but can also make room to grow together.",
+    "Bu iki haritanın sinastrisini yorumla: güçlü yanlar, olası zorluklar ve birlikte büyüme alanları.": "Interpret the synastry of these two charts: strengths, possible challenges and areas to grow together.",
+    "Sinastriyi yapay zekâ ile derinleştir": "Go deeper into the synastry with AI",
+    "Partner": "Partner",
     "Gökyüzü ana alanda açık.": "The sky is open in the main area.",
     "Tam ekranda göster": "Show full size",
     "Küçült": "Minimise",

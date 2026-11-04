@@ -7,17 +7,26 @@ import { balance, elementName, findAspects, fmtOrb, glyph, POINT, SIGNS, signGly
 import { aspectText, houseText, M, READING_POINTS, signText } from '../lib/meanings'
 
 const MAJOR = ['conjunction', 'opposition', 'trine', 'square', 'sextile']
+/** Personal points compared in synastry. */
+const SYN_KEYS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'asc']
+/** A conjunction with one of these is counted with the challenging contacts. */
+const HARD_CONJ = ['mars', 'saturn']
 
 export default function BasicReading({
   natal,
   rec,
   settings,
-  onAsk
+  onAsk,
+  synastry,
+  partner
 }: {
   natal: Layer
   rec: ChartRecord
   settings: AppSettings
   onAsk?: (prompt: string) => void
+  /** The partner's chart as an outer layer, when the synastry layer is on. */
+  synastry?: Layer | null
+  partner?: ChartRecord | null
 }) {
   const m = M()
   const [copied, setCopied] = useState(false)
@@ -33,6 +42,24 @@ export default function BasicReading({
         .slice(0, 12),
     [natal, settings]
   )
+
+  // Synastry: partner's personal points to the person's personal points, major aspects, tightest first.
+  const syn = useMemo(() => {
+    if (!synastry) return null
+    const keys = SYN_KEYS.filter((k) => !(['asc'].includes(k) && (rec.timeUnknown || partner?.timeUnknown)))
+    const list = findAspects(
+      synastry.points.filter((p) => keys.includes(p.key)),
+      natal.points.filter((p) => keys.includes(p.key)),
+      settings,
+      true
+    )
+      .filter((a) => MAJOR.includes(a.aspect.key) && a.orb <= 5)
+      .sort((x, y) => x.orb - y.orb)
+    const soft = list.filter((a) => a.aspect.kind === 'soft' || (a.aspect.key === 'conjunction' && !HARD_CONJ.some((k) => k === a.a.key || k === a.b.key)))
+    const hard = list.filter((a) => !soft.includes(a))
+    return { soft: soft.slice(0, 8), hard: hard.slice(0, 8), nSoft: soft.length, nHard: hard.length }
+  }, [synastry, natal, settings, rec.timeUnknown, partner?.timeUnknown])
+  const partnerName = partner?.name || synastry?.label || t('Partner')
 
   const bal = balance(natal.points).elements
   const els = Object.entries(bal) as ['fire' | 'earth' | 'air' | 'water', number][]
@@ -180,6 +207,59 @@ export default function BasicReading({
                 </div>
               )
             })}
+          </div>
+        </details>
+      )}
+
+      {syn && (
+        <details open className="synastry">
+          <summary>{t('Sinastri: {a} ve {b}', { a: rec.name || t('İsimsiz'), b: partnerName })}</summary>
+          <div className="reading-body">
+            <p className="muted small">
+              {t('İki haritanın kişisel gezegenleri arasındaki ana açılar (orb ≤ 5°). Bir ilişkinin nasıl yaşanacağını hiçbir harita belirlemez; bunlar yalnızca üzerine konuşulabilecek temalardır.')}
+            </p>
+            <div className="syn-balance">
+              <span>
+                {t('Uyum alanları')}: <b>{syn.nSoft}</b>
+              </span>
+              <span>
+                {t('Gelişim alanları')}: <b>{syn.nHard}</b>
+              </span>
+            </div>
+            {(
+              [
+                ['Uyum alanları', syn.soft, 'Kolay akabilecek, birbirini destekleyebilecek temalar.'],
+                ['Gelişim alanları', syn.hard, 'Sürtünme yaratabilecek ama birlikte büyümeye de alan açabilecek temalar.']
+              ] as const
+            ).map(([title, list, note]) =>
+              list.length ? (
+                <div key={title} className="syn-group">
+                  <h4>{t(title)}</h4>
+                  <p className="muted small">{t(note)}</p>
+                  {list.map((a, i) => {
+                    const x = aspectText(a)
+                    if (!x) return null
+                    return (
+                      <div key={i} className="reading-item">
+                        <h4>
+                          {partnerName}: <span className="glyph">{glyph(a.a.key)}</span> {POINT[a.a.key].name} <span className="glyph">{a.aspect.glyph}</span> {a.aspect.name}{' '}
+                          {rec.name || t('İsimsiz')}: <span className="glyph">{glyph(a.b.key)}</span> {POINT[a.b.key].name} <span className="muted">· {fmtOrb(a.orb)}</span>
+                        </h4>
+                        <p>{x.text}</p>
+                        <p className="muted small">
+                          {POINT[a.a.key].name}: {x.a} · {POINT[a.b.key].name}: {x.b}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : null
+            )}
+            {onAsk && (
+              <button onClick={() => onAsk(t('Bu iki haritanın sinastrisini yorumla: güçlü yanlar, olası zorluklar ve birlikte büyüme alanları.'))}>
+                {t('Sinastriyi yapay zekâ ile derinleştir')}
+              </button>
+            )}
           </div>
         </details>
       )}
