@@ -4284,3 +4284,7 @@ button.head-edit {
   margin: 6px 0 0;
   line-height: 1.4;
 }
+.today-date {
+  font-weight: 650;
+  margin-right: 4px;
+}

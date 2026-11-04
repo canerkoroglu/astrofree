@@ -8,6 +8,7 @@ import ElectionalSearch from './components/ElectionalSearch'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BasicReading from './components/BasicReading'
+import TodayView from './components/TodayView'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
@@ -79,7 +80,7 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'info' | 'reading' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+type View = 'chart' | 'today' | 'info' | 'reading' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
 
 export default function App() {
@@ -928,6 +929,9 @@ export default function App() {
           <button className={view === 'chart' ? 'on' : ''} onClick={() => setView('chart')}>
             {t('Harita')}
           </button>
+          <button className={view === 'today' ? 'on' : ''} onClick={() => setView('today')} title={t('Bugünün gökyüzü ve haritaya etkileri')}>
+            {t('Bugün')}
+          </button>
           <button className={view === 'info' ? 'on' : ''} onClick={() => setView('info')}>
             {t('Natal Bilgiler')}
           </button>
@@ -959,6 +963,12 @@ export default function App() {
         {calcError && <div className="error pad">{t('Hesaplama hatası')}: {calcError}</div>}
         {view === 'info' && computed && (
           <NatalInfo natal={computed.natal} rec={working} settings={settings} natalJd={natalJd} eventJd={eventJd} patterns={patterns} stars={starConj} />
+        )}
+        {view === 'today' && (
+          <TodayView natal={computed?.natal ?? null} rec={working} settings={settings} tz={eventTz} isNow={working.id === NOW_ID} onAsk={ask} onJump={(jd) => {
+            jumpTo(jd)
+            setView('chart')
+          }} />
         )}
         {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} />}
         {view === 'calendar' && computed && (

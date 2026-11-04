@@ -39,6 +39,8 @@ function steps({ ai, tmp, mock }) {
   step('info', `c('.view-tabs button','Natal Bilgiler')`, 1200)
   step('info check', `ok('Natal Bilgiler',document.querySelectorAll('.natal-info details').length>=8)`)
   step('mansion check', `(()=>{const t=document.querySelector('.natal-info').innerText;return ok('Ay durağı ve Ay lordu',t.includes("23. Sa'd Bula")&&t.includes('Jüpiter'))})()`)
+  step('today', `c('.view-tabs button','Bugün')`, 2500)
+  step('today check', `(()=>{const r=document.querySelector('.today');if(!r)return ok('Bugün ekranı',false,'yok');const t=r.innerText;return ok('Bugün ekranı',t.includes('Bugün etkili transitler')&&t.includes('Önümüzdeki 30 gün')&&!t.includes('Hesaplanıyor')&&!!r.querySelector('.reading-disclaimer'),t.slice(0,160).replace(/\\n/g,' | '))})()`)
   step('reading', `c('.view-tabs button','Temel Yorum')`, 1000)
   step('reading check', `(()=>{const r=document.querySelector('.reading');if(!r)return ok('Temel yorum',false,'sayfa yok');const t=r.innerText;return ok('Temel yorum (çevrimdışı)',t.includes('Oğlak Güneşi')&&t.includes('Kova Ay')&&t.includes('Aslan Yükselen')&&r.querySelectorAll('.reading-item').length>=10&&r.querySelectorAll('.reading-disclaimer').length===2,t.slice(0,120).replace(/\\n/g,' | '))})()`)
   step('reading tone', `(()=>{const ps=[...document.querySelectorAll('.reading .reading-card p, .reading .reading-body p:not(.muted)')].map(p=>p.innerText);const bad=ps.filter(x=>x.split(/[.;]/).filter(c=>c.trim().length>12).some(c=>!/(abil|ebil|olabil|edebil)/.test(c)));return ok('Temel yorum olasılık diliyle',ps.length>20&&bad.length===0,bad.slice(0,2).join(' // '))})()`)
