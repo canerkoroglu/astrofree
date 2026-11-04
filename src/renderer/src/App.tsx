@@ -11,6 +11,8 @@ import BasicReading from './components/BasicReading'
 import TodayView from './components/TodayView'
 import ShareCard from './components/ShareCard'
 import ReportDialog from './components/ReportDialog'
+import WhatsNewDialog from './components/WhatsNewDialog'
+import { whatsNewSince, type WhatsNew } from '@shared/whatsnew'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
@@ -112,6 +114,8 @@ export default function App() {
   const [view, setView] = useState<View>('chart')
   const [showShare, setShowShare] = useState(false)
   const [showReport, setShowReport] = useState(false)
+  const [appVersion, setAppVersion] = useState('')
+  const [whatsNew, setWhatsNew] = useState<{ version: string; notes: WhatsNew[] } | null>(null)
   // The sky panel can be opened full size as a lightbox over the window.
   const [skyFull, setSkyFull] = useState(false)
   // Sidebar sections the user folded away (remembered per device).
@@ -219,7 +223,15 @@ export default function App() {
       setInterps(await window.astro.interp.list())
       setKbFiles(await window.astro.kb.list())
       setWorking(nowChart(s))
-      setObOpen(!s.onboarded && list.length === 0)
+      const firstRun = !s.onboarded && list.length === 0
+      setObOpen(firstRun)
+      const { version } = await window.astro.info()
+      if (!firstRun && s.seenVersion !== version) {
+        const notes = whatsNewSince(s.seenVersion, version)
+        if (notes.length) setWhatsNew({ version, notes })
+        else void window.astro.settings.set({ ...s, seenVersion: version })
+      }
+      setAppVersion(version)
       window.setTimeout(() => void window.astro.checkUpdate().then(setUpdate), 4000)
     })()
   }, [])
@@ -1259,13 +1271,23 @@ export default function App() {
           onAddPerson={() => setEditor(blankChart(settings))}
           onDone={() => {
             setObOpen(false)
-            saveSettings({ ...settings, onboarded: true })
+            saveSettings({ ...settings, onboarded: true, seenVersion: appVersion || settings.seenVersion })
           }}
         />
       )}
       {!obOpen && !termsAccepted(settings) && <TermsDialog settings={settings} onAccept={saveSettings} />}
       {showKeys && <Shortcuts onClose={() => setShowKeys(false)} />}
       {showReport && <ReportDialog onClose={() => setShowReport(false)} />}
+      {whatsNew && !obOpen && (
+        <WhatsNewDialog
+          version={whatsNew.version}
+          notes={whatsNew.notes}
+          onClose={() => {
+            setWhatsNew(null)
+            saveSettings({ ...settings, seenVersion: whatsNew.version })
+          }}
+        />
+      )}
       {showSettings && (
         <SettingsDialog
           settings={settings}

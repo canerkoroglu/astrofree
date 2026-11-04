@@ -64,6 +64,9 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Yenilikler": "What’s new",
+    "AstroFree {v} ile gelen yenilikler": "What’s new in AstroFree {v}",
+    "Harika, devam": "Great, continue",
     "(kayıtlı hata yok)": "(no errors recorded)",
     "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. GitHub hesabınız yoksa metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderebilirsiniz.": "Your birth data, charts and chats are not included. Nothing is sent automatically: “Open on GitHub” opens a new issue page in your browser and it is sent only when you confirm. Without a GitHub account, copy the text and email it to astrofree@cklabs.tr.",
     "Eklenecek bilgiler (düzenleyebilirsiniz)": "Information to include (you can edit it)",

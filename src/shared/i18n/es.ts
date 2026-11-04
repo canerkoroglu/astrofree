@@ -64,6 +64,9 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Yenilikler": "Novedades",
+    "AstroFree {v} ile gelen yenilikler": "Novedades de AstroFree {v}",
+    "Harika, devam": "Genial, continuar",
     "(kayıtlı hata yok)": "(no hay errores registrados)",
     "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. GitHub hesabınız yoksa metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderebilirsiniz.": "No se incluyen sus datos de nacimiento, cartas ni chats. Nada se envía automáticamente: “Abrir en GitHub” abre una página de incidencia nueva en el navegador y solo se envía cuando usted lo confirma. Si no tiene cuenta de GitHub, copie el texto y envíelo por correo a astrofree@cklabs.tr.",
     "Eklenecek bilgiler (düzenleyebilirsiniz)": "Información que se incluirá (puede editarla)",
