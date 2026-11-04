@@ -22,6 +22,7 @@ import { parseChartsFile } from './importers'
 import { startNotifier } from './notifier'
 import { startAutoUpdate } from './updater'
 import * as store from './store'
+import { logError, reportInfo, watchErrors } from './errorlog'
 import { electionalSearch, ephemSeries, findReturn, fixedStars, planetaryHours, transitSearch } from './tools'
 
 /** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
@@ -61,6 +62,7 @@ function createWindow(): void {
     if (/^https?:\/\//.test(url)) shell.openExternal(url)
     return { action: 'deny' }
   })
+  watchErrors(win)
   win.webContents.on('will-navigate', (e, url) => {
     if (url !== win?.webContents.getURL()) {
       e.preventDefault()
@@ -158,6 +160,13 @@ function registerIpc(): void {
     if (r.canceled || !r.filePath) return false
     await writeFile(r.filePath, img.toPNG())
     return true
+  })
+  ipcMain.handle('app:reportInfo', () => reportInfo())
+  ipcMain.handle('app:logError', (_e, source: string, message: string) => logError(String(source).slice(0, 40), String(message).slice(0, 4000)))
+  // Opens a new GitHub issue with the text the user saw and edited; only this fixed address is allowed.
+  ipcMain.handle('app:openIssue', (_e, title: string, body: string) => {
+    const url = `${REPO}/issues/new?title=${encodeURIComponent(String(title).slice(0, 200))}&body=${encodeURIComponent(String(body).slice(0, 6000))}`
+    void shell.openExternal(url)
   })
   ipcMain.handle('export:pngData', async (_e, dataUrl: string, name: string) => {
     const img = nativeImage.createFromDataURL(dataUrl)
@@ -285,6 +294,7 @@ function buildMenu(): void {
       label: tm('Yardım'),
       submenu: [
         { label: tm('Klavye kısayolları') + '   ?', click: () => win?.webContents.send('menu', 'shortcuts') },
+        { label: tm('Sorun bildir…'), click: () => win?.webContents.send('menu', 'report') },
         { label: tm('AstroFree hakkında'), click: () => win?.webContents.send('menu', 'about') },
         { label: tm('Web sitesi'), click: () => void shell.openExternal(WEBSITE) },
         { label: tm('GitHub sayfası'), click: () => void shell.openExternal(REPO) },
@@ -297,6 +307,8 @@ function buildMenu(): void {
   ]
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
+
+watchErrors()
 
 app.whenReady().then(async () => {
   await store.snapshotOnUpgrade(app.getVersion())

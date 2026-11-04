@@ -10,6 +10,7 @@ import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BasicReading from './components/BasicReading'
 import TodayView from './components/TodayView'
 import ShareCard from './components/ShareCard'
+import ReportDialog from './components/ReportDialog'
 import ChatPanel from './components/ChatPanel'
 import Interpretations from './components/Interpretations'
 import NatalInfo, { type StarConj } from './components/NatalInfo'
@@ -110,6 +111,7 @@ export default function App() {
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
   const [showShare, setShowShare] = useState(false)
+  const [showReport, setShowReport] = useState(false)
   // The sky panel can be opened full size as a lightbox over the window.
   const [skyFull, setSkyFull] = useState(false)
   // Sidebar sections the user folded away (remembered per device).
@@ -519,6 +521,7 @@ export default function App() {
     } else if (cmd === 'import') void window.astro.charts.importFile().then((all) => all && setCharts(all))
     else if (cmd === 'export') void window.astro.charts.exportAll(charts)
     else if (cmd === 'shortcuts') setShowKeys(true)
+    else if (cmd === 'report') setShowReport(true)
     else if (cmd === 'about') {
       setSettingsFocus('about')
       setShowSettings(true)
@@ -1262,6 +1265,7 @@ export default function App() {
       )}
       {!obOpen && !termsAccepted(settings) && <TermsDialog settings={settings} onAccept={saveSettings} />}
       {showKeys && <Shortcuts onClose={() => setShowKeys(false)} />}
+      {showReport && <ReportDialog onClose={() => setShowReport(false)} />}
       {showSettings && (
         <SettingsDialog
           settings={settings}

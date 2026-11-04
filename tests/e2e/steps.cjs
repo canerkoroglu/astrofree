@@ -75,6 +75,7 @@ function steps({ ai, tmp, mock }) {
   step('share story check', `(()=>{const i=document.querySelector('.share-preview img');return ok('Paylaşım kartı: hikâye boyutu',!!i&&i.naturalHeight===1920)})()`)
   step('share save', `window.astro.exporter.pngData(document.querySelector('.share-preview img').src,'kart').then(r=>ok('Paylaşım kartı kaydı',r===true))`)
   step('share close', `c('.modal.share-card .actions button','Kapat')`, 300)
+  step('report info', `window.astro.report.info().then(r=>ok('Sorun bildir: sistem bilgisi',r.system.startsWith('AstroFree')&&!r.system.includes('/Users/')))`)
   step('backup', `window.astro.backup.run('${tmp}/backup').then(p=>ok('Yedek',!!p))`)
   step('kb save', `window.astro.kb.save('test.md','# Test notları\\n\\n### Kova durağı\\n- anahtarlar: durak:23\\nDeneme metni.\\n').then(()=>window.astro.kb.list()).then(l=>ok('Bilgi bankası dosyası',l.length===1&&l[0].text.includes('durak:23')))`)
   step('kb reload', `(()=>{location.reload();return 1})()`, 3000)

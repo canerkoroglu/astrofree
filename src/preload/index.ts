@@ -115,6 +115,11 @@ const api = {
     ipcRenderer.on('open-chart', listener)
     return () => ipcRenderer.removeListener('open-chart', listener)
   },
+  report: {
+    info: (): Promise<{ system: string; errors: string }> => ipcRenderer.invoke('app:reportInfo'),
+    log: (source: string, message: string): Promise<void> => ipcRenderer.invoke('app:logError', source, message),
+    openIssue: (title: string, body: string): Promise<void> => ipcRenderer.invoke('app:openIssue', title, body)
+  },
   onMenu: (fn: (cmd: string) => void): (() => void) => {
     const listener = (_: unknown, cmd: string) => fn(cmd)
     ipcRenderer.on('menu', listener)

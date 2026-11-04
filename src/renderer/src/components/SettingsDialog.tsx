@@ -1,3 +1,4 @@
+import ReportDialog from './ReportDialog'
 import { getLocale, LOCALES } from '@shared/i18n'
 import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, offsetAt, systemZone } from '../lib/time'
 
@@ -33,6 +34,7 @@ const REPO = 'https://github.com/canerkoroglu/astrofree'
 /** Name, version, owner, links and licence (the AGPL "Appropriate Legal Notices"). */
 function About() {
   const [version, setVersion] = useState('')
+  const [report, setReport] = useState(false)
   useEffect(() => {
     void window.astro.info().then((i) => setVersion(i.version))
   }, [])
@@ -64,6 +66,12 @@ function About() {
         <dd>
           <a href="mailto:astrofree@cklabs.tr">astrofree@cklabs.tr</a>
         </dd>
+        <dt>{t('Sorun mu var?')}</dt>
+        <dd>
+          <button className="link" onClick={() => setReport(true)}>
+            {t('Sorun bildir…')}
+          </button>
+        </dd>
         <dt>{t('Lisans')}</dt>
         <dd>
           GNU AGPL-3.0-or-later ·{' '}
@@ -88,6 +96,7 @@ function About() {
         {t('Astrolojik hesaplar, yorumlar ve yapay zekâ çıktıları kişisel keşif amaçlıdır; tıbbi, hukuki, finansal ya da başka bir profesyonel tavsiye değildir. Web sitesindeki kullanım koşulları resmi sürümler için geçerlidir.')}
       </p>
       <p className="muted small">Swiss Ephemeris © Astrodienst AG · GeoNames (CC BY 4.0) · Open-Meteo (CC BY 4.0) · Natural Earth</p>
+      {report && <ReportDialog onClose={() => setReport(false)} />}
     </div>
   )
 }

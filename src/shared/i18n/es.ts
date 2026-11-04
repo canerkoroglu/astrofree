@@ -64,6 +64,17 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "(kayıtlı hata yok)": "(no hay errores registrados)",
+    "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. GitHub hesabınız yoksa metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderebilirsiniz.": "No se incluyen sus datos de nacimiento, cartas ni chats. Nada se envía automáticamente: “Abrir en GitHub” abre una página de incidencia nueva en el navegador y solo se envía cuando usted lo confirma. Si no tiene cuenta de GitHub, copie el texto y envíelo por correo a astrofree@cklabs.tr.",
+    "Eklenecek bilgiler (düzenleyebilirsiniz)": "Información que se incluirá (puede editarla)",
+    "GitHub’da aç": "Abrir en GitHub",
+    "Ne oldu? Ne yapıyordunuz?": "¿Qué pasó? ¿Qué estaba haciendo?",
+    "Son hatalar": "Errores recientes",
+    "Sorun bildir": "Informar de un problema",
+    "Sorun bildirimi": "Informe de problema",
+    "Sorun bildir…": "Informar de un problema…",
+    "Sorun mu var?": "¿Tiene un problema?",
+    "Örn. Windows’ta “Transit Takvimi”ne tıklayınca pencere boş kalıyor.": "P. ej. en Windows la ventana se queda en blanco al pulsar “Calendario de tránsitos”.",
     "Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.": "La IA es opcional: aunque no la conecte, la pestaña “Lectura básica” interpreta su carta sin conexión.",
     "“Temel Yorum” sekmesi yapay zekâ olmadan haritanın temel yorumunu, “Bugün” sekmesi günün transitlerini gösterir.": "La pestaña “Lectura básica” muestra una lectura básica de la carta sin IA; la pestaña “Hoy”, los tránsitos del día.",
     "Astroloji sözlüğü": "Glosario de astrología",

@@ -64,6 +64,17 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "(kayıtlı hata yok)": "(no errors recorded)",
+    "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. GitHub hesabınız yoksa metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderebilirsiniz.": "Your birth data, charts and chats are not included. Nothing is sent automatically: “Open on GitHub” opens a new issue page in your browser and it is sent only when you confirm. Without a GitHub account, copy the text and email it to astrofree@cklabs.tr.",
+    "Eklenecek bilgiler (düzenleyebilirsiniz)": "Information to include (you can edit it)",
+    "GitHub’da aç": "Open on GitHub",
+    "Ne oldu? Ne yapıyordunuz?": "What happened? What were you doing?",
+    "Son hatalar": "Recent errors",
+    "Sorun bildir": "Report a problem",
+    "Sorun bildirimi": "Problem report",
+    "Sorun bildir…": "Report a problem…",
+    "Sorun mu var?": "Having a problem?",
+    "Örn. Windows’ta “Transit Takvimi”ne tıklayınca pencere boş kalıyor.": "E.g. on Windows the window stays blank when I click “Transit Calendar”.",
     "Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.": "AI is optional: even without it, the “Basic Reading” tab interprets your chart offline.",
     "“Temel Yorum” sekmesi yapay zekâ olmadan haritanın temel yorumunu, “Bugün” sekmesi günün transitlerini gösterir.": "The “Basic Reading” tab shows a basic reading of the chart without AI; the “Today” tab shows the day's transits.",
     "Astroloji sözlüğü": "Astrology glossary",
