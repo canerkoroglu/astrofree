@@ -8,6 +8,29 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
+    version: '0.2.1',
+    items: {
+      tr: [
+        'Sohbet oturumları: her harita için birden çok sohbet; yeni sohbet açın, eskilere dönün, adlandırın ya da silin. Sohbetler yedeğe de dahil.',
+        'Daha hızlı ve daha az token: harita verisi yalnızca değişince gönderilir, uzun sohbetlerde eski mesajlar kısaltılır ve sağlayıcının önbelleği kullanılır.',
+        'Her yanıtın altında gerçek token kullanımı ve önbellekten okunan oran; beklerken geçen süre görünür.',
+        'Claude Code için varsayılan model Sonnet (daha hızlı); Codex daha kısa düşünerek yanıt verir.'
+      ],
+      en: [
+        'Chat sessions: several chats per chart; start a new one, go back to older ones, rename or delete them. Chats are included in backups.',
+        'Faster and fewer tokens: chart data is sent only when it changes, older messages are shortened in long chats, and the provider’s cache is used.',
+        'Real token usage and the share read from the cache under every answer; the waiting time is shown.',
+        'Sonnet is the default model for Claude Code (faster); Codex thinks more briefly before answering.'
+      ],
+      es: [
+        'Sesiones de chat: varios chats por carta; empiece uno nuevo, vuelva a los anteriores, cámbieles el nombre o elimínelos. Los chats se incluyen en las copias de seguridad.',
+        'Más rápido y con menos tokens: los datos de la carta solo se envían cuando cambian, los mensajes antiguos se acortan en chats largos y se usa la caché del proveedor.',
+        'Uso real de tokens y la parte leída de la caché bajo cada respuesta; se muestra el tiempo de espera.',
+        'Sonnet es el modelo predeterminado de Claude Code (más rápido); Codex piensa menos antes de responder.'
+      ]
+    }
+  },
+  {
     version: '0.2.0',
     items: {
       tr: [
