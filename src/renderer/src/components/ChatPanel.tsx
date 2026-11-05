@@ -4,7 +4,7 @@ import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { PROVIDERS } from '@shared/defaults'
+import { aiLanguageOf, PROVIDERS } from '@shared/defaults'
 import { buildConversation, lastSentContext, requestTokens } from '@shared/aiHistory'
 import { getLocale } from '@shared/i18n'
 import type { AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
@@ -161,14 +161,14 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
 
   // Size of the next request (what pressing Send would cost, roughly).
   const nextSize = useMemo(() => {
-    const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
+    const system = settings.ai.systemPrompt.trim() || getLocale(aiLanguageOf(settings)).systemPrompt
     const ctx = contextToAttach()
     const next: AiMessage[] = [...messages, { role: 'user', content: input || ' ', ...(ctx ? { context: ctx } : {}) }]
     const sent = requestTokens(system, next)
     // Everything before the new question was in the previous request too: likely served from the cache.
     const repeat = messages.length ? requestTokens(system, messages) : 0
     return { tokens: sent, repeat: Math.min(repeat, sent), withChart: !!ctx, shortened: buildConversation(next).shortened }
-  }, [messages, input, attach, context, live, settings.ai.systemPrompt, settings.ai.language])
+  }, [messages, input, attach, context, live, settings.ai.systemPrompt, settings.ai.language, settings.uiLanguage])
   const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toLocaleString(document.documentElement.lang || undefined, { maximumFractionDigits: 1 })}k` : String(n))
 
   const newSession = () => {
@@ -248,7 +248,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
     setRunId(id)
     setStarted(Date.now())
     setStatus(t('{p} yanıtlıyor…', { p: info.label }))
-    const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
+    const system = settings.ai.systemPrompt.trim() || getLocale(aiLanguageOf(settings)).systemPrompt
     window.astro.ai.start({
       id,
       provider,

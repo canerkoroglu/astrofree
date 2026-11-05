@@ -8,7 +8,7 @@ import AiSetupGuide from './AiSetupGuide'
 import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
 import { AdvancedApiSettings, ApiKeyTest, LocalServerSettings } from './AiProviderSettings'
-import { DEFAULT_ASPECTS, PROVIDERS, SYSTEM_PROMPT_EN, SYSTEM_PROMPT_TR } from '@shared/defaults'
+import { aiLanguageOf, DEFAULT_ASPECTS, PROVIDERS } from '@shared/defaults'
 import type { AppSettings, AspectKey, ProviderId } from '@shared/types'
 import { ASPECTS, AYANAMSAS, HOUSE_SYSTEMS, OPTIONAL_POINTS, POINT, glyph } from '../lib/astro'
 import PlaceSearch from './PlaceSearch'
@@ -344,7 +344,8 @@ export default function SettingsDialog({
             <div className="form-grid">
               <label>
                 {t('Yanıt dili')}
-                <select value={s.ai.language} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value } })}>
+                <select value={s.ai.language || 'auto'} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value } })}>
+                  <option value="auto">{t('Arayüz diliyle aynı ({lang})', { lang: getLocale(s.uiLanguage).name })}</option>
                   {LOCALES.map((l) => (
                     <option key={l.code} value={l.code}>
                       {l.name}
@@ -419,7 +420,7 @@ export default function SettingsDialog({
               <textarea
                 rows={6}
                 value={s.ai.systemPrompt}
-                placeholder={s.ai.language === 'en' ? SYSTEM_PROMPT_EN : SYSTEM_PROMPT_TR}
+                placeholder={getLocale(aiLanguageOf(s)).systemPrompt}
                 onChange={(e) => setS({ ...s, ai: { ...s.ai, systemPrompt: e.target.value } })}
               />
             </label>
@@ -440,7 +441,7 @@ export default function SettingsDialog({
                     value={s.uiLanguage}
                     onChange={(e) => {
                       const lang = e.target.value
-                      setS({ ...s, uiLanguage: lang, ai: { ...s.ai, language: lang } })
+                      setS({ ...s, uiLanguage: lang })
                     }}
                   >
                     {LOCALES.map((l) => (

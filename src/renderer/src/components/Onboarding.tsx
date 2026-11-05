@@ -56,7 +56,7 @@ export default function Onboarding({
                     } catch {
                       /* storage unavailable */
                     }
-                    onSettings({ ...settings, uiLanguage: lang, ai: { ...settings.ai, language: lang } })
+                    onSettings({ ...settings, uiLanguage: lang })
                   }}
                 >
                   {LOCALES.map((l) => (

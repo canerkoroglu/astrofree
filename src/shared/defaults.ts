@@ -153,7 +153,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   returnPlace: 'natal',
   ai: {
     provider: 'claude-code',
-    language: 'tr',
+    language: 'auto',
     systemPrompt: '',
     useKnowledge: true,
     providers: {
@@ -188,8 +188,10 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
     ...(v < 2 ? { houseSystem: 'B' } : {}),
     // v3 added the time zone mode: earlier installs follow the system zone.
     ...(v < 3 ? { timezoneMode: 'system' as const, dateOrder: 'auto' as const } : {}),
-    settingsVersion: 3
+    settingsVersion: 4
   }
+  // v4: the AI answers in the interface language unless the user picked another one.
+  const aiLanguage = v < 4 && (!ai.language || ai.language === (stored.uiLanguage ?? 'tr')) ? 'auto' : ai.language
   return {
     ...structuredClone(d),
     ...stored,
@@ -198,6 +200,9 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
     aspects,
     aspectColors: { ...(stored.aspectColors ?? {}) },
     defaultPlace: { ...d.defaultPlace, ...(stored.defaultPlace ?? {}) },
-    ai: { ...d.ai, ...ai, providers }
+    ai: { ...d.ai, ...ai, language: aiLanguage ?? 'auto', providers }
   }
 }
+
+/** Language the AI answers in: the chosen one, or the interface language ('auto'). */
+export const aiLanguageOf = (s: Pick<AppSettings, 'uiLanguage' | 'ai'>) => (!s.ai.language || s.ai.language === 'auto' ? s.uiLanguage : s.ai.language)

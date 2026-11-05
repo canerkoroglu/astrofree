@@ -206,7 +206,7 @@ export default function App() {
       // First run: speak the system language.
       if (!s.onboarded && list0.length === 0 && !localStorageFlag('lang-picked')) {
         const loc = pickLocale(navigator.languages)
-        s = { ...s, uiLanguage: loc.code, ai: { ...s.ai, language: loc.code } }
+        s = { ...s, uiLanguage: loc.code }
       }
       // Follow the computer's time zone (travel, DST rules) unless set by hand.
       if (s.timezoneMode === 'system') {
