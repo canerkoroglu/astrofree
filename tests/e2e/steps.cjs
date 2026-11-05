@@ -78,6 +78,7 @@ function steps({ ai, tmp, mock }) {
   step('share save', `window.astro.exporter.pngData(document.querySelector('.share-preview img').src,'kart').then(r=>ok('Paylaşım kartı kaydı',r===true))`)
   step('share close', `c('.modal.share-card .actions button','Kapat')`, 300)
   step('report info', `window.astro.report.info().then(r=>ok('Sorun bildir: sistem bilgisi',r.system.startsWith('AstroFree')&&!r.system.includes('/Users/')))`)
+  step('chat sessions', `(async()=>{const A=window.astro.chats;const m=(q)=>[{role:'user',content:q},{role:'assistant',content:'cevap'}];await A.save('e2e-k',{id:'s1',title:'',createdAt:1,updatedAt:1,messages:m('Kariyerim nasıl?')});await A.save('e2e-k',{id:'s2',title:'',createdAt:2,updatedAt:2,messages:m('İlişkilerim?')});let c=await A.list('e2e-k');const two=c.sessions.length===2&&c.activeId==='s2'&&c.sessions[1].title==='Kariyerim nasıl?';c=await A.rename('e2e-k','s1','Kariyer');const ren=c.sessions.some(x=>x.id==='s1'&&x.title==='Kariyer');c=await A.remove('e2e-k','s2');return ok('Sohbet oturumları: kaydet, listele, ad değiştir, sil',two&&ren&&c.sessions.length===1&&c.activeId==='s1')})()`)
   step('backup', `window.astro.backup.run('${tmp}/backup').then(p=>ok('Yedek',!!p))`)
   step('kb save', `window.astro.kb.save('test.md','# Test notları\\n\\n### Kova durağı\\n- anahtarlar: durak:23\\nDeneme metni.\\n').then(()=>window.astro.kb.list()).then(l=>ok('Bilgi bankası dosyası',l.length===1&&l[0].text.includes('durak:23')))`)
   step('kb reload', `(()=>{location.reload();return 1})()`, 3000)

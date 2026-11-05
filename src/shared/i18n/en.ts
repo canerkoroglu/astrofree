@@ -64,6 +64,14 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Bu sohbet oturumu silinsin mi?": "Delete this chat session?",
+    "Adsız sohbet": "Untitled chat",
+    "Yeni sohbet": "New chat",
+    "Bu haritanın sohbet oturumları": "Chat sessions for this chart",
+    "{n} oturum": "{n} sessions",
+    "Oturumun adını değiştir": "Rename session",
+    "Oturumu sil": "Delete session",
+    "Bu sohbet saklanır; yeni, boş bir oturum açılır": "This chat is kept; a new, empty session opens",
     "GitHub kayıtları herkese açıktır ve arama motorlarında görünebilir. Göndermeden önce metni gözden geçirin; kişisel bilgi yazmayın.": "GitHub issues are public and may appear in search engines. Review the text before sending and do not include personal information.",
     "Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez; kullanıcı adı, klasör yolları, e-posta adresleri ve anahtara benzeyen metinler maskelenir. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. Herkese açık kayıt istemiyorsanız metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderin.": "Your birth data, charts and chats are not included; user names, folder paths, email addresses and key-like text are masked. Nothing is sent automatically: “Open on GitHub” opens a new issue page in your browser and it is sent only when you confirm. If you do not want a public issue, copy the text and email it to astrofree@cklabs.tr.",
     "Yenilikler": "What’s new",

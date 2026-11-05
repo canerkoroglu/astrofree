@@ -17,7 +17,8 @@ import type {
   SkyReport,
   TransitHit,
   TransitSearchRequest,
-  StoredChat
+  ChartChats,
+  ChatSession
 } from '@shared/types'
 
 const api = {
@@ -84,8 +85,11 @@ const api = {
   },
 
   chats: {
-    get: (key: string): Promise<StoredChat | null> => ipcRenderer.invoke('chats:get', key),
-    set: (key: string, chat: StoredChat | null): Promise<void> => ipcRenderer.invoke('chats:set', key, chat)
+    list: (key: string): Promise<ChartChats> => ipcRenderer.invoke('chats:list', key),
+    save: (key: string, session: ChatSession): Promise<ChartChats> => ipcRenderer.invoke('chats:save', key, session),
+    rename: (key: string, id: string, title: string): Promise<ChartChats> => ipcRenderer.invoke('chats:rename', key, id, title),
+    remove: (key: string, id: string): Promise<ChartChats> => ipcRenderer.invoke('chats:remove', key, id),
+    setActive: (key: string, id: string | null): Promise<void> => ipcRenderer.invoke('chats:active', key, id)
   },
 
   geo: {

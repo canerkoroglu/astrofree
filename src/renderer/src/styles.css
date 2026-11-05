@@ -4676,3 +4676,37 @@ button.head-edit {
   font-size: 12.5px;
   margin: 10px 0;
 }
+
+/* ---- chat sessions ---- */
+.chat-sessions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.chat-sessions select,
+.chat-sessions .session-title-input {
+  flex: 1;
+  min-width: 0;
+}
+.chat-sessions .session-count {
+  white-space: nowrap;
+}
+.chat-sessions .icon-btn {
+  border: none;
+  background: none;
+  padding: 2px 6px;
+  min-height: 0;
+  color: var(--muted);
+  border-radius: 6px;
+}
+.chat-sessions .icon-btn:hover:not(:disabled) {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.chat-sessions .small-btn {
+  padding: 3px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}

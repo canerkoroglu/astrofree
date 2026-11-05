@@ -4,7 +4,7 @@ import { promises as fs } from 'node:fs'
 import { basename } from 'node:path'
 import { join } from 'node:path'
 import { mergeSettings } from '@shared/defaults'
-import type { AppSettings, ChartRecord, Interpretation, ProviderId, StoredChat } from '@shared/types'
+import type { AiMessage, AppSettings, ChartChats, ChartRecord, ChatSession, Interpretation, ProviderId, StoredChat } from '@shared/types'
 
 const dir = () => app.getPath('userData')
 const file = (name: string) => join(dir(), name)
@@ -126,7 +126,7 @@ export const removeChart = (id: string) =>
   serial(async () => {
     const all = (await listCharts()).filter((c) => c.id !== id)
     await writeJson('charts.json', all)
-    const chats = await readJson<Record<string, StoredChat>>('chats.json', {})
+    const chats = await readJson<ChatFile>('chats.json', {})
     if (chats[id]) {
       delete chats[id]
       await writeJson('chats.json', chats)
@@ -164,6 +164,19 @@ export const importData = (data: unknown) =>
       }
       await writeJson('interpretations.json', existing)
     }
+    const chats = (data as { chats?: Record<string, ChartChats> } | null)?.chats
+    if (backup && chats && typeof chats === 'object') {
+      // Restore sessions that are missing; never overwrite existing ones.
+      const file = await readJson<ChatFile>('chats.json', {})
+      for (const [key0, v] of Object.entries(chats)) {
+        const key = remap.get(key0) ?? key0
+        const cur = normalizeChats(file[key])
+        const have = new Set(cur.sessions.map((x) => x.id))
+        const add = normalizeChats(v).sessions.filter((x) => !have.has(x.id) && Array.isArray(x.messages))
+        if (add.length) file[key] = { sessions: [...cur.sessions, ...add], activeId: cur.activeId ?? add[0].id }
+      }
+      await writeJson('chats.json', file)
+    }
     if (backup?.knowledge?.length) {
       // Restore knowledge files that are missing; never overwrite the user's current ones.
       await fs.mkdir(knowledgeDir(), { recursive: true })
@@ -191,18 +204,78 @@ export const setSettings = (s: AppSettings) =>
 
 // ---- chats ---------------------------------------------------------------
 
-export async function getChat(key: string): Promise<StoredChat | null> {
-  const chats = await readJson<Record<string, StoredChat>>('chats.json', {})
-  return chats[key] ?? null
+type ChatFile = Record<string, StoredChat | ChartChats>
+
+/** Title from the first question: "Kariyer potansiyelimi yorumla…" */
+export const sessionTitle = (messages: AiMessage[]) => {
+  const q = messages.find((m) => m.role === 'user')?.content.replace(/\s+/g, ' ').trim() ?? ''
+  return q.length > 60 ? q.slice(0, 57).trimEnd() + '…' : q
 }
 
-export const setChat = (key: string, chat: StoredChat | null) =>
+/** Convert the old one-conversation-per-chart format. */
+function normalizeChats(v: StoredChat | ChartChats | undefined): ChartChats {
+  if (!v) return { sessions: [], activeId: null }
+  if ('sessions' in v) return { sessions: [...v.sessions].sort((a, b) => b.updatedAt - a.updatedAt), activeId: v.activeId }
+  if (!v.messages?.length) return { sessions: [], activeId: null }
+  const s: ChatSession = { id: 'legacy', title: sessionTitle(v.messages), createdAt: v.updatedAt, updatedAt: v.updatedAt, messages: v.messages }
+  return { sessions: [s], activeId: s.id }
+}
+
+export async function listChats(key: string): Promise<ChartChats> {
+  return normalizeChats((await readJson<ChatFile>('chats.json', {}))[key])
+}
+
+/** Insert or update a session (empty sessions are not stored) and make it the active one. */
+export const saveChatSession = (key: string, session: ChatSession) =>
   serial(async () => {
-    const chats = await readJson<Record<string, StoredChat>>('chats.json', {})
-    if (chat && chat.messages.length) chats[key] = chat
-    else delete chats[key]
-    await writeJson('chats.json', chats)
+    const all = await readJson<ChatFile>('chats.json', {})
+    const cur = normalizeChats(all[key])
+    const rest = cur.sessions.filter((x) => x.id !== session.id)
+    const sessions = session.messages.length ? [{ ...session, title: session.title || sessionTitle(session.messages) }, ...rest] : rest
+    all[key] = { sessions, activeId: session.id }
+    if (!sessions.length) delete all[key]
+    await writeJson('chats.json', all)
+    scheduleBackup()
+    return normalizeChats(all[key])
   })
+
+export const renameChatSession = (key: string, id: string, title: string) =>
+  serial(async () => {
+    const all = await readJson<ChatFile>('chats.json', {})
+    const cur = normalizeChats(all[key])
+    all[key] = { ...cur, sessions: cur.sessions.map((x) => (x.id === id ? { ...x, title: title.trim().slice(0, 120) || x.title } : x)) }
+    await writeJson('chats.json', all)
+    scheduleBackup()
+    return normalizeChats(all[key])
+  })
+
+export const removeChatSession = (key: string, id: string) =>
+  serial(async () => {
+    const all = await readJson<ChatFile>('chats.json', {})
+    const cur = normalizeChats(all[key])
+    const sessions = cur.sessions.filter((x) => x.id !== id)
+    if (sessions.length) all[key] = { sessions, activeId: cur.activeId === id ? sessions[0].id : cur.activeId }
+    else delete all[key]
+    await writeJson('chats.json', all)
+    scheduleBackup()
+    return normalizeChats(all[key])
+  })
+
+export const setActiveChatSession = (key: string, id: string | null) =>
+  serial(async () => {
+    const all = await readJson<ChatFile>('chats.json', {})
+    const cur = normalizeChats(all[key])
+    if (cur.sessions.length) {
+      all[key] = { ...cur, activeId: id }
+      await writeJson('chats.json', all)
+    }
+  })
+
+/** Every chart's sessions, for backups. */
+export async function allChats(): Promise<Record<string, ChartChats>> {
+  const all = await readJson<ChatFile>('chats.json', {})
+  return Object.fromEntries(Object.entries(all).map(([k, v]) => [k, normalizeChats(v)]))
+}
 
 // ---- API keys (encrypted with the OS keychain when available) ------------
 
@@ -323,7 +396,8 @@ export async function backupData() {
     createdAt: new Date().toISOString(),
     charts: await listCharts(),
     interpretations: await listInterpretations(),
-    knowledge: await listKnowledge()
+    knowledge: await listKnowledge(),
+    chats: await allChats()
   }
 }
 

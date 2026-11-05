@@ -6,7 +6,7 @@ import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
 import { getLocale } from '@shared/i18n'
-import type { AiMessage, AppSettings, ProviderId, ProviderStatus } from '@shared/types'
+import type { AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
 
 interface Props {
   chatKey: string
@@ -64,6 +64,8 @@ function Markdown({ text }: { text: string }) {
   return <div className="md" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
+const newSessionMeta = () => ({ id: crypto.randomUUID(), createdAt: Date.now(), title: '' })
+
 export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0, onOpenSettings }: Props) {
   const [lastKb, setLastKb] = useState('')
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
@@ -78,6 +80,11 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   const [attach, setAttach] = useState(true)
   const listRef = useRef<HTMLDivElement>(null)
   const loadedKey = useRef<string | null>(null)
+  // Chat sessions of this chart; the open one is `session`.
+  const [sessions, setSessions] = useState<ChatSession[]>([])
+  const [session, setSession] = useState<{ id: string; createdAt: number; title: string }>(() => newSessionMeta())
+  const [renaming, setRenaming] = useState<string | null>(null)
+  const loadedMessages = useRef<AiMessage[] | null>(null)
   const runIdRef = useRef<string | null>(null)
 
   const provider = settings.ai.provider
@@ -92,23 +99,69 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   }
   useEffect(recheck, [settings.ai.providers])
 
-  // Load the stored conversation for this chart.
+  // Load this chart's sessions and open the last active one.
+  const openSession = (s: ChatSession | null) => {
+    setSavedIdx(new Set())
+    setError('')
+    setRenaming(null)
+    if (s) {
+      setSession({ id: s.id, createdAt: s.createdAt, title: s.title })
+      setMessages(s.messages)
+      loadedMessages.current = s.messages
+    } else {
+      setSession(newSessionMeta())
+      setMessages([])
+      loadedMessages.current = []
+    }
+  }
   useEffect(() => {
     loadedKey.current = null
-    setSavedIdx(new Set())
-    setMessages([])
-    setError('')
-    void window.astro.chats.get(chatKey).then((c) => {
-      setMessages(c?.messages ?? [])
+    setSessions([])
+    openSession(null)
+    void window.astro.chats.list(chatKey).then((c) => {
+      setSessions(c.sessions)
+      openSession(c.sessions.find((x) => x.id === c.activeId) ?? null)
       loadedKey.current = chatKey
     })
   }, [chatKey])
 
+  // Save the open session after each completed exchange (not on load, not mid-stream).
   useEffect(() => {
-    if (loadedKey.current === chatKey && !runId) {
-      void window.astro.chats.set(chatKey, { messages, updatedAt: Date.now() })
-    }
+    if (loadedKey.current !== chatKey || runId || !messages.length || messages === loadedMessages.current) return
+    loadedMessages.current = messages
+    void window.astro.chats
+      .save(chatKey, { id: session.id, title: session.title, createdAt: session.createdAt, updatedAt: Date.now(), provider, messages })
+      .then((c) => setSessions(c.sessions))
   }, [messages, runId, chatKey])
+
+  const newSession = () => {
+    if (runId) return
+    openSession(null)
+    void window.astro.chats.setActive(chatKey, null)
+  }
+  const switchSession = (id: string) => {
+    if (runId) return
+    const s = sessions.find((x) => x.id === id)
+    if (!s) return newSession()
+    openSession(s)
+    void window.astro.chats.setActive(chatKey, id)
+  }
+  const deleteSession = async () => {
+    if (runId || !sessions.some((x) => x.id === session.id)) return newSession()
+    if (!confirm(t('Bu sohbet oturumu silinsin mi?'))) return
+    const c = await window.astro.chats.remove(chatKey, session.id)
+    setSessions(c.sessions)
+    openSession(null)
+  }
+  const renameSession = async (title: string) => {
+    setRenaming(null)
+    if (!title.trim() || !sessions.some((x) => x.id === session.id)) return
+    setSession((s) => ({ ...s, title: title.trim() }))
+    const c = await window.astro.chats.rename(chatKey, session.id, title)
+    setSessions(c.sessions)
+  }
+  const sessionLabel = (s: ChatSession) => `${s.title || t('Adsız sohbet')} · ${new Date(s.updatedAt).toLocaleDateString(document.documentElement.lang || undefined)}`
+  const stored = sessions.some((x) => x.id === session.id)
 
   useEffect(() => {
     return window.astro.ai.onEvent((e) => {
@@ -201,6 +254,40 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             <option key={m} value={m} />
           ))}
         </datalist>
+      </div>
+      <div className="chat-sessions">
+        {renaming !== null ? (
+          <input
+            autoFocus
+            className="session-title-input"
+            value={renaming}
+            onChange={(e) => setRenaming(e.target.value)}
+            onBlur={() => void renameSession(renaming)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') void renameSession(renaming)
+              if (e.key === 'Escape') setRenaming(null)
+            }}
+          />
+        ) : (
+          <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={t('Bu haritanın sohbet oturumları')}>
+            {!stored && <option value="">{t('Yeni sohbet')}</option>}
+            {sessions.map((x) => (
+              <option key={x.id} value={x.id}>
+                {sessionLabel(x)}
+              </option>
+            ))}
+          </select>
+        )}
+        <span className="muted small session-count">{t('{n} oturum', { n: sessions.length })}</span>
+        <button className="icon-btn" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
+          ✎
+        </button>
+        <button className="icon-btn" disabled={!!runId || !stored} title={t('Oturumu sil')} aria-label={t('Oturumu sil')} onClick={() => void deleteSession()}>
+          🗑
+        </button>
+        <button className="primary small-btn" disabled={!!runId || !messages.length} onClick={newSession} title={t('Bu sohbet saklanır; yeni, boş bir oturum açılır')}>
+          + {t('Yeni sohbet')}
+        </button>
       </div>
       {st && !st.available ? (
         <div className="chat-status warn unavailable">
@@ -325,16 +412,7 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           <button className="link small" onClick={() => setShowCtx(!showCtx)}>
             {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
           </button>
-          <button
-            className="link small"
-            disabled={!!runId || !messages.length}
-            onClick={() => {
-              setMessages([])
-              setError('')
-            }}
-          >
-            {t('Temizle')}
-          </button>
+
           <span className="grow" />
           {runId ? (
             <button onClick={stop}>{t('■ Durdur')}</button>

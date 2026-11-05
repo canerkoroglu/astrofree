@@ -9,7 +9,7 @@ import type {
   EphemRequest,
   Interpretation,
   ProviderId,
-  StoredChat,
+  ChatSession,
   TransitSearchRequest
 } from '@shared/types'
 import { apiKeyTest, cancelChat, detectProviders, serverModels, startChat } from './ai'
@@ -200,8 +200,11 @@ function registerIpc(): void {
   ipcMain.handle('secrets:set', (_e, p: ProviderId, key: string) => store.setSecret(p, key))
   ipcMain.handle('secrets:status', () => store.secretStatus())
 
-  ipcMain.handle('chats:get', (_e, key: string) => store.getChat(key))
-  ipcMain.handle('chats:set', (_e, key: string, chat: StoredChat | null) => store.setChat(key, chat))
+  ipcMain.handle('chats:list', (_e, key: string) => store.listChats(key))
+  ipcMain.handle('chats:save', (_e, key: string, session: ChatSession) => store.saveChatSession(key, session))
+  ipcMain.handle('chats:rename', (_e, key: string, id: string, title: string) => store.renameChatSession(key, id, title))
+  ipcMain.handle('chats:remove', (_e, key: string, id: string) => store.removeChatSession(key, id))
+  ipcMain.handle('chats:active', (_e, key: string, id: string | null) => store.setActiveChatSession(key, id))
 
   ipcMain.handle('geo:search', (_e, q: string, lang: string) => searchPlaces(q, lang))
   ipcMain.handle('geo:zone', (_e, lat: number, lon: number) => zoneAt(lat, lon))

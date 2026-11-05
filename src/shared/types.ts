@@ -219,9 +219,27 @@ export interface GeoResult extends Place {
   population?: number
 }
 
+/** Old single-conversation format (before 0.2.1); read and converted on load. */
 export interface StoredChat {
   messages: AiMessage[]
   updatedAt: number
+}
+
+/** One chat session about a chart. */
+export interface ChatSession {
+  id: string
+  title: string
+  createdAt: number
+  updatedAt: number
+  /** Provider that answered last (for display). */
+  provider?: string
+  messages: AiMessage[]
+}
+
+/** All chat sessions of one chart, newest first. */
+export interface ChartChats {
+  sessions: ChatSession[]
+  activeId: string | null
 }
 
 // ---- Sky events ------------------------------------------------------------
