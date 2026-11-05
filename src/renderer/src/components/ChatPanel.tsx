@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
+import { compactHistory, requestTokens } from '@shared/aiHistory'
 import { getLocale } from '@shared/i18n'
 import type { AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
 
@@ -133,6 +134,14 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
       .save(chatKey, { id: session.id, title: session.title, createdAt: session.createdAt, updatedAt: Date.now(), provider, messages })
       .then((c) => setSessions(c.sessions))
   }, [messages, runId, chatKey])
+
+  // Size of the next request (what pressing Send would cost, roughly).
+  const nextSize = useMemo(() => {
+    const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
+    const next: AiMessage[] = [...messages, { role: 'user', content: input || ' ' }]
+    return { tokens: requestTokens(system, attach ? context : '', next), shortened: compactHistory(next).shortened }
+  }, [messages, input, attach, context, settings.ai.systemPrompt, settings.ai.language])
+  const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toLocaleString(document.documentElement.lang || undefined, { maximumFractionDigits: 1 })}k` : String(n))
 
   const newSession = () => {
     if (runId) return
@@ -414,6 +423,13 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           </button>
 
           <span className="grow" />
+          <span
+            className="muted small token-meter"
+            title={t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.')}
+          >
+            ≈ {fmtK(nextSize.tokens)} {t('token')}
+            {nextSize.shortened > 0 ? ` · ${t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened })}` : ''}
+          </span>
           {runId ? (
             <button onClick={stop}>{t('■ Durdur')}</button>
           ) : (

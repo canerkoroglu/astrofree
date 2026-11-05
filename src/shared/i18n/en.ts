@@ -64,6 +64,9 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.": "Approximate data sent when you press Send: instructions, chart data, chat history and your question. Older messages are sent shortened; the instructions and history are read from the provider’s cache, so the repeated part is faster and cheaper.",
+    "token": "tokens",
+    "{n} eski mesaj kısaltıldı": "{n} older messages shortened",
     "Bu sohbet oturumu silinsin mi?": "Delete this chat session?",
     "Adsız sohbet": "Untitled chat",
     "Yeni sohbet": "New chat",

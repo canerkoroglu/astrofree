@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { PROVIDERS } from '@shared/defaults'
+import { compactHistory } from '@shared/aiHistory'
 import type { AiChatRequest, AiEvent, ProviderId, ProviderStatus } from '@shared/types'
 import { getSecret, getSettings, secretStatus } from '../store'
 import { listModels, runApi, testApiKey } from './api'
@@ -27,6 +28,8 @@ export async function startChat(req: AiChatRequest, sender: WebContents): Promis
     const cfg = settings.ai.providers[req.provider]
     const kind = PROVIDERS.find((p) => p.id === req.provider)?.kind
     const emit = (e: { type: 'delta' | 'status'; text: string }) => send({ id: req.id, ...e })
+    // Long chats: older messages go shortened, the newest ones whole (src/shared/aiHistory.ts).
+    req = { ...req, messages: compactHistory(req.messages).messages }
     if (kind === 'cli') {
       // Gemini CLI can authenticate with the same key as the Gemini API provider.
       const key = req.provider === 'gemini-cli' ? await getSecret('gemini') : null

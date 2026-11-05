@@ -137,6 +137,10 @@ Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı r
 [AI connection guide](docs/en/ai-setup.md). Not: Claude masaüstü uygulaması Claude Code değildir; `claude` komutunun
 ayrıca kurulması gerekir.
 
+- Sohbetler harita başına **oturumlar** olarak saklanır (yeni sohbet, ad değiştirme, silme) ve otomatik yedeğe dahildir.
+- Uzun sohbetlerde son 12 mesaj tam, daha eskileri kısaltılarak gönderilir; talimat ve geçmiş isteğin başında sabit
+  durduğu için sağlayıcıların önbelleği (prompt caching) tekrar eden kısmı daha hızlı ve ucuz işler. Gönder düğmesinin
+  yanında bir sonraki isteğin yaklaşık token boyutu görünür.
 - CLI sağlayıcıları bilgisayarınızdaki mevcut oturumu kullanır; AstroFree hiçbir kimlik bilgisini görmez.
   Ajanlar boş bir çalışma klasöründe, dosya erişimi ve araçları kapalı olarak çalıştırılır.
 - API anahtarları işletim sisteminin anahtar zinciriyle (Electron `safeStorage`) şifrelenip yalnızca yerel olarak saklanır.

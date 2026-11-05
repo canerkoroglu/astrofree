@@ -19,8 +19,9 @@ function workDir(): string {
 
 export function buildTranscript(req: AiChatRequest, includeSystem: boolean): string {
   const parts: string[] = []
+  // Stable parts first (instructions, earlier messages), changing chart data last, so the
+  // tool's own prompt cache can reuse the beginning of the previous request.
   if (includeSystem) parts.push(`<instructions>\n${req.system}\n</instructions>`)
-  if (req.context) parts.push(`<chart_data>\n${req.context}\n</chart_data>`)
   const history = req.messages.slice(0, -1)
   if (history.length) {
     parts.push(
@@ -29,6 +30,7 @@ export function buildTranscript(req: AiChatRequest, includeSystem: boolean): str
         '\n</previous_conversation>'
     )
   }
+  if (req.context) parts.push(`<chart_data>\n${req.context}\n</chart_data>`)
   const last = req.messages[req.messages.length - 1]
   parts.push(last ? last.content : '')
   return parts.join('\n\n')

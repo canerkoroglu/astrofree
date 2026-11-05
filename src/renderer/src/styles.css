@@ -4710,3 +4710,8 @@ button.head-edit {
   font-size: 12px;
   white-space: nowrap;
 }
+
+.token-meter {
+  white-space: nowrap;
+  cursor: help;
+}

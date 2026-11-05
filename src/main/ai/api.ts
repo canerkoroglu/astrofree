@@ -1,6 +1,7 @@
 // Streaming chat over provider HTTP APIs (Anthropic, OpenAI-compatible incl. local servers, Gemini).
 import { tm } from '../i18n'
-import type { AiChatRequest, ProviderConfig } from '@shared/types'
+import type { AiChatRequest, AiMessage, ProviderConfig } from '@shared/types'
+import { questionWithContext } from '@shared/aiHistory'
 import type { Emit } from './cli'
 
 /** Yield the `data:` payload of each server-sent event in a fetch response. */
@@ -82,9 +83,16 @@ function contextOf(req: AiChatRequest, cfg: ProviderConfig): string {
   return c.slice(0, limit) + '\n\n' + tm('[Veri {n} karakterde kesildi.]', { n: String(limit) })
 }
 
-const systemWithContext = (req: AiChatRequest, cfg: ProviderConfig) => {
+/**
+ * Messages with the chart data attached to the newest question. Instructions and
+ * earlier messages stay byte-identical between requests, so providers can cache them.
+ */
+function messagesWithContext(req: AiChatRequest, cfg: ProviderConfig): AiMessage[] {
   const c = contextOf(req, cfg)
-  return c ? `${req.system}\n\n<chart_data>\n${c}\n</chart_data>` : req.system
+  const msgs = req.messages
+  const last = msgs[msgs.length - 1]
+  if (!last || last.role !== 'user') return msgs
+  return [...msgs.slice(0, -1), { ...last, content: questionWithContext(last.content, c) }]
 }
 
 const trimSlash = (s: string) => s.replace(/\/+$/, '')
@@ -197,8 +205,13 @@ async function anthropic(req: AiChatRequest, cfg: ProviderConfig, key: string, e
         max_tokens: cfg.maxTokens || 16000,
         ...(cfg.temperature !== undefined ? { temperature: cfg.temperature } : {}),
         stream: true,
-        system: systemWithContext(req, cfg),
-        messages: req.messages.map((m) => ({ role: m.role, content: m.content }))
+        // Cache breakpoints: the instructions, and the history up to the message before the new question.
+        system: [{ type: 'text', text: req.system, cache_control: { type: 'ephemeral' } }],
+        messages: messagesWithContext(req, cfg).map((m, i, all) =>
+          i === all.length - 2
+            ? { role: m.role, content: [{ type: 'text', text: m.content, cache_control: { type: 'ephemeral' } }] }
+            : { role: m.role, content: m.content }
+        )
       })
     },
     signal
@@ -238,7 +251,7 @@ async function openaiCompatible(
         stream: true,
         ...(cfg.temperature !== undefined ? { temperature: cfg.temperature } : {}),
         ...(cfg.maxTokens ? { max_tokens: cfg.maxTokens } : {}),
-        messages: [{ role: 'system', content: systemWithContext(req, cfg) }, ...req.messages]
+        messages: [{ role: 'system', content: req.system }, ...messagesWithContext(req, cfg)]
       })
     },
     signal
@@ -276,8 +289,8 @@ async function gemini(req: AiChatRequest, cfg: ProviderConfig, key: string, emit
       signal: withTimeout(signal, cfg, 180),
       headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemWithContext(req, cfg) }] },
-        contents: req.messages.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+        systemInstruction: { parts: [{ text: req.system }] },
+        contents: messagesWithContext(req, cfg).map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
         ...(Object.keys(generationConfig).length ? { generationConfig } : {})
       })
     },

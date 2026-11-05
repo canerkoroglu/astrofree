@@ -64,6 +64,9 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.": "Datos aproximados que se envían al pulsar Enviar: instrucciones, datos de la carta, historial del chat y su pregunta. Los mensajes antiguos se envían acortados; las instrucciones y el historial se leen de la caché del proveedor, así que la parte repetida es más rápida y barata.",
+    "token": "tokens",
+    "{n} eski mesaj kısaltıldı": "{n} mensajes antiguos acortados",
     "Bu sohbet oturumu silinsin mi?": "¿Eliminar esta sesión de chat?",
     "Adsız sohbet": "Chat sin título",
     "Yeni sohbet": "Nuevo chat",
