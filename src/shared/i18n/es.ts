@@ -64,6 +64,7 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Yeni": "Nuevo",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Con esta pregunta se enviaron los datos de la carta en pantalla; no se vuelven a enviar en las preguntas siguientes salvo que la carta cambie.",
     "Sağlayıcının bildirdiği değerler: gönderilen token, bunun ne kadarının önbellekten okunduğu (daha hızlı ve ucuz) ve yanıtın uzunluğu.": "Valores que informa el proveedor: tokens enviados, cuántos se leyeron de la caché (más rápido y barato) y la longitud de la respuesta.",
     "Yanıt yazılıyor…": "Escribiendo la respuesta…",

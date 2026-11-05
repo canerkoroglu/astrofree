@@ -317,7 +317,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             }}
           />
         ) : (
-          <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={t('Bu haritanın sohbet oturumları')}>
+          <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={`${t('Bu haritanın sohbet oturumları')} · ${t('{n} oturum', { n: sessions.length })}`}>
             {!stored && <option value="">{t('Yeni sohbet')}</option>}
             {sessions.map((x) => (
               <option key={x.id} value={x.id}>
@@ -326,7 +326,6 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             ))}
           </select>
         )}
-        <span className="muted small session-count">{t('{n} oturum', { n: sessions.length })}</span>
         <button className="icon-btn" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
           ✎
         </button>
@@ -334,7 +333,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
           🗑
         </button>
         <button className="primary small-btn" disabled={!!runId || !messages.length} onClick={newSession} title={t('Bu sohbet saklanır; yeni, boş bir oturum açılır')}>
-          + {t('Yeni sohbet')}
+          + {t('Yeni')}
         </button>
       </div>
       {st && !st.available ? (
@@ -482,12 +481,17 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
           <span className="grow" />
           <span
             className="muted small token-meter"
-            title={t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.')}
+            title={[
+              t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.'),
+              nextSize.repeat > 0 ? t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) }) : '',
+              nextSize.withChart ? `📎 ${t('harita verisiyle')}` : '',
+              nextSize.shortened > 0 ? t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened }) : ''
+            ]
+              .filter(Boolean)
+              .join('\n')}
           >
             ≈ {fmtK(nextSize.tokens)} {t('token')}
-            {nextSize.repeat > 0 ? ` · ${t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) })}` : ''}
-            {nextSize.withChart ? ` · ${t('harita verisiyle')}` : ''}
-            {nextSize.shortened > 0 ? ` · ${t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened })}` : ''}
+            {nextSize.withChart ? ' 📎' : ''}
           </span>
           {runId ? (
             <button onClick={stop}>{t('■ Durdur')}</button>

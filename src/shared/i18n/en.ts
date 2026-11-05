@@ -64,6 +64,7 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Yeni": "New",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "The data of the chart on screen was sent with this question; it is not sent again with later questions unless the chart changes.",
     "Sağlayıcının bildirdiği değerler: gönderilen token, bunun ne kadarının önbellekten okunduğu (daha hızlı ve ucuz) ve yanıtın uzunluğu.": "Values reported by the provider: tokens sent, how much of it was read from the cache (faster and cheaper) and the length of the answer.",
     "Yanıt yazılıyor…": "Writing the answer…",

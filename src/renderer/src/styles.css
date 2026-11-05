@@ -4681,14 +4681,21 @@ button.head-edit {
 .chat-sessions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 6px 12px;
   border-bottom: 1px solid var(--line);
+  min-width: 0;
+  overflow: hidden;
 }
 .chat-sessions select,
 .chat-sessions .session-title-input {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  width: 0;
+  text-overflow: ellipsis;
+}
+.chat-sessions > button {
+  flex: none;
 }
 .chat-sessions .session-count {
   white-space: nowrap;
