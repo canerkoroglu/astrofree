@@ -3,12 +3,12 @@
 // the chat follows the chart as the user steps through time.
 import { tm } from '../i18n'
 import { app } from 'electron'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { AiChatRequest, ProviderConfig } from '@shared/types'
+import type { AiChatRequest, AiUsage, ProviderConfig } from '@shared/types'
 import { ensureShellPath, resolveCommand, spawnCommand, splitArgs } from './proc'
 
-export type Emit = (e: { type: 'delta' | 'status'; text: string }) => void
+export type Emit = (e: { type: 'delta' | 'status'; text: string } | { type: 'usage'; usage: AiUsage }) => void
 
 function workDir(): string {
   // An empty folder, so the agents have no project files to wander into.
@@ -17,23 +17,25 @@ function workDir(): string {
   return dir
 }
 
+/**
+ * The conversation as one text for the command-line tools. Append-only: each
+ * request starts with exactly the text of the one before it (instructions,
+ * then USER/ASSISTANT turns in order), so the tools' prompt caches can reuse it.
+ */
 export function buildTranscript(req: AiChatRequest, includeSystem: boolean): string {
   const parts: string[] = []
-  // Stable parts first (instructions, earlier messages), changing chart data last, so the
-  // tool's own prompt cache can reuse the beginning of the previous request.
   if (includeSystem) parts.push(`<instructions>\n${req.system}\n</instructions>`)
-  const history = req.messages.slice(0, -1)
-  if (history.length) {
-    parts.push(
-      '<previous_conversation>\n' +
-        history.map((m) => `${m.role === 'user' ? 'USER' : 'ASSISTANT'}:\n${m.content}`).join('\n\n') +
-        '\n</previous_conversation>'
-    )
-  }
+  parts.push('The conversation so far follows; answer the last USER message.')
+  for (const m of req.messages) parts.push(`${m.role === 'user' ? 'USER' : 'ASSISTANT'}:\n${m.content}`)
   if (req.context) parts.push(`<chart_data>\n${req.context}\n</chart_data>`)
-  const last = req.messages[req.messages.length - 1]
-  parts.push(last ? last.content : '')
   return parts.join('\n\n')
+}
+
+/** Claude Code's system prompt for one request, written next to the other temporary files. */
+function systemFile(req: AiChatRequest): string {
+  const f = join(workDir(), `system-${req.id.replace(/[^\w-]/g, '')}.txt`)
+  writeFileSync(f, req.context ? `${req.system}\n\n<chart_data>\n${req.context}\n</chart_data>` : req.system, 'utf8')
+  return f
 }
 
 interface CliSpec {
@@ -73,13 +75,16 @@ function claudeSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
     '--disable-slash-commands',
     '--no-session-persistence',
     '--setting-sources', '',
-    '--system-prompt', req.system
+    // Instructions plus the newest chart data, from a file: the system prompt is its own block
+    // in Claude's prompt cache, so follow-up questions about the same chart read it from the cache.
+    '--system-prompt-file', systemFile(req)
   ]
-  if (req.model) args.push('--model', req.model)
+  // Without a choice, Sonnet: much quicker to answer than Claude Code's default (often Opus) for chat like this.
+  args.push('--model', req.model || 'sonnet')
   args.push(...splitArgs(cfg.extraArgs))
   return {
     args,
-    stdin: buildTranscript(req, false),
+    stdin: buildTranscript({ ...req, context: '' }, false),
     // Allow launching while the app itself runs inside a Claude Code session.
     env: { CLAUDECODE: undefined, CLAUDE_CODE_ENTRYPOINT: undefined },
     parse(line, emit, st) {
@@ -96,6 +101,11 @@ function claudeSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
       } else if (o.type === 'result') {
         if (o.is_error) st.error = String(o.result || o.subtype || tm('Claude Code hatası'))
         else if (typeof o.result === 'string') st.final = o.result
+        const u = o.usage
+        if (u) {
+          const cached = Number(u.cache_read_input_tokens ?? 0)
+          emit({ type: 'usage', usage: { input: Number(u.input_tokens ?? 0) + Number(u.cache_creation_input_tokens ?? 0) + cached, cached, output: Number(u.output_tokens ?? 0) } })
+        }
       }
     },
     explain(stderr) {
@@ -112,6 +122,8 @@ function claudeSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
 function codexSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
   const args = ['exec', '--skip-git-repo-check', '--ephemeral', '--json', '--color', 'never', '-s', 'read-only']
   if (req.model) args.push('-m', req.model)
+  // Low reasoning effort unless the user set one: answers start much sooner, enough for chart chat.
+  if (!/model_reasoning_effort/.test(cfg.extraArgs ?? '')) args.push('-c', 'model_reasoning_effort="low"')
   args.push(...splitArgs(cfg.extraArgs), '-')
   return {
     args,
@@ -123,6 +135,9 @@ function codexSpec(req: AiChatRequest, cfg: ProviderConfig): CliSpec {
         // Codex reports whole messages rather than token deltas.
         emit({ type: 'delta', text: (st.gotText ? '\n\n' : '') + o.item.text })
         st.gotText = true
+      } else if (o.type === 'turn.completed' && o.usage) {
+        const u = o.usage
+        emit({ type: 'usage', usage: { input: Number(u.input_tokens ?? 0), cached: Number(u.cached_input_tokens ?? 0), output: Number(u.output_tokens ?? 0) } })
       } else if (o.type === 'item.started' && o.item?.type === 'reasoning') {
         emit({ type: 'status', text: tm('Codex düşünüyor…') })
       } else if (o.type === 'error' || o.type === 'turn.failed') {
@@ -237,9 +252,13 @@ export async function runCli(
   child.stdin?.on('error', () => undefined)
   child.stdin?.end(spec.stdin, 'utf8')
 
-  const code: number | null = await new Promise((resolve, reject) => {
+  const code: number | null = await new Promise<number | null>((resolve, reject) => {
     child.on('error', reject)
     child.on('close', (c) => resolve(c))
+  }).finally(() => {
+    // The per-request system prompt file (Claude Code) is not needed any more.
+    const i = spec.args.indexOf('--system-prompt-file')
+    if (i >= 0) rmSync(spec.args[i + 1], { force: true })
   })
   signal.removeEventListener('abort', onAbort)
   if (buf.trim()) spec.parse(buf.trim(), emit, st)

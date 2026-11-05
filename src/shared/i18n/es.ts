@@ -64,6 +64,15 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Con esta pregunta se enviaron los datos de la carta en pantalla; no se vuelven a enviar en las preguntas siguientes salvo que la carta cambie.",
+    "Sağlayıcının bildirdiği değerler: gönderilen token, bunun ne kadarının önbellekten okunduğu (daha hızlı ve ucuz) ve yanıtın uzunluğu.": "Valores que informa el proveedor: tokens enviados, cuántos se leyeron de la caché (más rápido y barato) y la longitud de la respuesta.",
+    "Yanıt yazılıyor…": "Escribiendo la respuesta…",
+    "girdi": "entrada",
+    "harita verisi eklendi": "datos de la carta adjuntos",
+    "harita verisiyle": "con datos de la carta",
+    "çıktı": "salida",
+    "önbellekten": "de la caché",
+    "≈ {n} tekrar (önbellek)": "≈ {n} repetidos (caché)",
     "Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.": "Datos aproximados que se envían al pulsar Enviar: instrucciones, datos de la carta, historial del chat y su pregunta. Los mensajes antiguos se envían acortados; las instrucciones y el historial se leen de la caché del proveedor, así que la parte repetida es más rápida y barata.",
     "token": "tokens",
     "{n} eski mesaj kısaltıldı": "{n} mensajes antiguos acortados",

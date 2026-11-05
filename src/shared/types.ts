@@ -188,6 +188,19 @@ export interface AppSettings {
 export interface AiMessage {
   role: 'user' | 'assistant'
   content: string
+  /** User messages: chart data sent with this question (only when it changed since the last one). */
+  context?: string
+  /** User messages: knowledge-base entries matched to this question. */
+  knowledge?: string
+  /** Assistant messages: token usage reported by the provider. */
+  usage?: AiUsage
+}
+
+/** Token counts as reported by the provider (cached = read from its prompt cache). */
+export interface AiUsage {
+  input: number
+  cached: number
+  output: number
 }
 
 export interface AiChatRequest {
@@ -196,7 +209,7 @@ export interface AiChatRequest {
   model?: string
   /** Standing instructions (persona, rules, language). */
   system: string
-  /** Chart data for the current screen, refreshed on every turn. */
+  /** Extra chart data for the newest question (normally empty: chart data travels on the messages). */
   context: string
   messages: AiMessage[]
 }
@@ -204,6 +217,7 @@ export interface AiChatRequest {
 export type AiEvent =
   | { id: string; type: 'delta'; text: string }
   | { id: string; type: 'status'; text: string }
+  | { id: string; type: 'usage'; usage: AiUsage }
   | { id: string; type: 'done' }
   | { id: string; type: 'error'; message: string }
 

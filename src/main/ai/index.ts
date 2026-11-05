@@ -4,11 +4,11 @@ import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { PROVIDERS } from '@shared/defaults'
-import { compactHistory } from '@shared/aiHistory'
+import { buildConversation } from '@shared/aiHistory'
 import type { AiChatRequest, AiEvent, ProviderId, ProviderStatus } from '@shared/types'
 import { getSecret, getSettings, secretStatus } from '../store'
 import { listModels, runApi, testApiKey } from './api'
-import { runCli } from './cli'
+import { runCli, type Emit } from './cli'
 import { desktopAppInstalled, ensureShellPath, resolveCommand, runVersion } from './proc'
 
 const running = new Map<string, AbortController>()
@@ -27,9 +27,14 @@ export async function startChat(req: AiChatRequest, sender: WebContents): Promis
     const settings = await getSettings()
     const cfg = settings.ai.providers[req.provider]
     const kind = PROVIDERS.find((p) => p.id === req.provider)?.kind
-    const emit = (e: { type: 'delta' | 'status'; text: string }) => send({ id: req.id, ...e })
-    // Long chats: older messages go shortened, the newest ones whole (src/shared/aiHistory.ts).
-    req = { ...req, messages: compactHistory(req.messages).messages }
+    const emit: Emit = (e) => send({ id: req.id, ...e } as AiEvent)
+    // Chart data on the messages (sent again only when it changed), old messages shortened:
+    // see src/shared/aiHistory.ts. The data limit for small-context models applies to each copy.
+    const limit = cfg.contextLimit ?? 0
+    const cutCtx = (c?: string) => (c && limit && c.length > limit ? c.slice(0, limit) + '\n\n' + tm('[Veri {n} karakterde kesildi.]', { n: String(limit) }) : c)
+    const msgs = req.messages.map((m) => (m.context ? { ...m, context: cutCtx(m.context) } : m))
+    const conv = buildConversation(msgs, cutCtx(req.context) ?? '', req.provider === 'claude-code')
+    req = { ...req, messages: conv.messages, context: conv.context }
     if (kind === 'cli') {
       // Gemini CLI can authenticate with the same key as the Gemini API provider.
       const key = req.provider === 'gemini-cli' ? await getSecret('gemini') : null

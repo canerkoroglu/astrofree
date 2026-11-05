@@ -1213,6 +1213,7 @@ export default function App() {
           <ChatPanel
             chatKey={working.id}
             context={context}
+            live={live}
             layers={working.id === NOW_ID ? ['sky', ...outers] : ['natal', ...outers]}
             settings={settings}
             onSettings={saveSettings}

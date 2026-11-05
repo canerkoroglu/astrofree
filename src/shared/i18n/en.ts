@@ -64,6 +64,15 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "The data of the chart on screen was sent with this question; it is not sent again with later questions unless the chart changes.",
+    "Sağlayıcının bildirdiği değerler: gönderilen token, bunun ne kadarının önbellekten okunduğu (daha hızlı ve ucuz) ve yanıtın uzunluğu.": "Values reported by the provider: tokens sent, how much of it was read from the cache (faster and cheaper) and the length of the answer.",
+    "Yanıt yazılıyor…": "Writing the answer…",
+    "girdi": "input",
+    "harita verisi eklendi": "chart data attached",
+    "harita verisiyle": "with chart data",
+    "çıktı": "output",
+    "önbellekten": "from cache",
+    "≈ {n} tekrar (önbellek)": "≈ {n} repeated (cache)",
     "Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.": "Approximate data sent when you press Send: instructions, chart data, chat history and your question. Older messages are sent shortened; the instructions and history are read from the provider’s cache, so the repeated part is faster and cheaper.",
     "token": "tokens",
     "{n} eski mesaj kısaltıldı": "{n} older messages shortened",

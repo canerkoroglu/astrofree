@@ -4,6 +4,8 @@ const HELPERS = `
 window.c=(sel,txt)=>{const b=[...document.querySelectorAll(sel)].find(b=>b.textContent.trim().startsWith(txt)); if(!b) throw new Error('bulunamadı: '+txt); b.click(); return true};
 window.setv=(el,v)=>{const proto=el.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}))};
 window.ok=(name,cond,detail='')=>(cond?'PASS ':'FAIL ')+name+(detail?' — '+detail:'');
+window.aiConv=(provider,model,messages)=>new Promise(res=>{const id='t'+Math.random();let txt='',usage=null;const off=window.astro.ai.onEvent(e=>{if(e.id!==id)return;if(e.type==='delta')txt+=e.text;if(e.type==='usage')usage=e.usage;if(e.type==='done'){off();res({ok:true,txt,usage})}if(e.type==='error'){off();res({ok:false,txt:e.message,usage})}});window.astro.ai.start({id,provider,model,system:'Kısa yanıt ver.',context:'',messages});setTimeout(()=>{off();res({ok:false,txt:'TIMEOUT',usage})},180000)});
+window.aiCache=async(provider,model)=>{const chart=Array.from({length:120},(_,i)=>'- Nokta '+i+': '+(i*7%360)+'° — örnek harita satırı, önbellek denemesi için sabit metin.').join('\\n');const q1={role:'user',content:'Bu veride kaç satır var? Sadece sayıyı yaz.',context:chart};const a=await aiConv(provider,model,[q1]);if(!a.ok)return 'FAIL '+provider+' önbellek: '+a.txt.slice(0,150);const b=await aiConv(provider,model,[q1,{role:'assistant',content:a.txt},{role:'user',content:'Teşekkürler. Sadece "tamam" yaz.'}]);if(!b.ok)return 'FAIL '+provider+' önbellek (2. tur): '+b.txt.slice(0,150);const u1=a.usage,u2=b.usage;const d=u2?('1. tur '+(u1?u1.input+'/'+u1.cached:'?')+' · 2. tur '+u2.input+' girdi, '+u2.cached+' önbellekten'):'kullanım bilgisi yok';return (u2&&u2.cached>0?'PASS ':'FAIL ')+provider+' — 2. turda önbellek isabeti: '+d};
 window.aiAsk=(provider,model,q)=>new Promise(res=>{const id='t'+Math.random();let txt='';const off=window.astro.ai.onEvent(e=>{if(e.id!==id)return;if(e.type==='delta')txt+=e.text;if(e.type==='done'){off();res('OK: '+txt.trim().slice(0,120))}if(e.type==='error'){off();res('ERR: '+e.message.slice(0,200))}});window.astro.ai.start({id,provider,model,system:'Kısa yanıt ver.',context:'',messages:[{role:'user',content:q}]});setTimeout(()=>{off();res('TIMEOUT')},120000)});
 'ok'`
 
@@ -137,6 +139,8 @@ function steps({ ai, tmp, mock }) {
   if (ai) {
     step('claude', `aiAsk('claude-code','','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Claude Code — '+r)`)
     step('codex', `aiAsk('codex','gpt-5.6-luna','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Codex — '+r)`)
+    step('claude cache', `aiCache('claude-code','')`, 500)
+    step('codex cache', `aiCache('codex','gpt-5.6-luna')`, 500)
   } else step('ai', `'SKIP AI sağlayıcıları (E2E_AI=1 ile çalıştırın)'`)
   return S
 }

@@ -5,13 +5,15 @@ import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
-import { compactHistory, requestTokens } from '@shared/aiHistory'
+import { buildConversation, lastSentContext, requestTokens } from '@shared/aiHistory'
 import { getLocale } from '@shared/i18n'
 import type { AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
 
 interface Props {
   chatKey: string
   context: string
+  /** Live mode: the context changes by itself as the clock runs. */
+  live?: boolean
   layers: string[] // e.g. ['natal', 'transit']
   settings: AppSettings
   onSettings: (s: AppSettings) => void
@@ -67,13 +69,20 @@ function Markdown({ text }: { text: string }) {
 
 const newSessionMeta = () => ({ id: crypto.randomUUID(), createdAt: Date.now(), title: '' })
 
-export default function ChatPanel({ chatKey, context, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0, onOpenSettings }: Props) {
+export default function ChatPanel({ chatKey, context, live = false, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0, onOpenSettings }: Props) {
   const [lastKb, setLastKb] = useState('')
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
   const [messages, setMessages] = useState<AiMessage[]>([])
   const [input, setInput] = useState('')
   const [runId, setRunId] = useState<string | null>(null)
   const [status, setStatus] = useState('')
+  const [started, setStarted] = useState(0)
+  const [, tick] = useState(0)
+  useEffect(() => {
+    if (!started) return
+    const id = window.setInterval(() => tick((n) => n + 1), 1000)
+    return () => window.clearInterval(id)
+  }, [started])
   const [error, setError] = useState('')
   const [statuses, setStatuses] = useState<ProviderStatus[]>([])
   const [showCtx, setShowCtx] = useState(false)
@@ -135,12 +144,31 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
       .then((c) => setSessions(c.sessions))
   }, [messages, runId, chatKey])
 
+  // When to attach chart data to the next question: when it differs from what the conversation
+  // already has. In live mode the clock alone changes it every minute; then it is refreshed at
+  // most every 30 minutes (a manual time or layer change still goes out at once: live turns off).
+  const ctxSentAt = useRef(0)
+  useEffect(() => {
+    ctxSentAt.current = 0
+  }, [chatKey, session.id])
+  const contextToAttach = (): string | undefined => {
+    if (!attach || !context) return undefined
+    const last = lastSentContext(messages)
+    if (context === last) return undefined
+    if (live && last && Date.now() - ctxSentAt.current < 30 * 60 * 1000) return undefined
+    return context
+  }
+
   // Size of the next request (what pressing Send would cost, roughly).
   const nextSize = useMemo(() => {
     const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
-    const next: AiMessage[] = [...messages, { role: 'user', content: input || ' ' }]
-    return { tokens: requestTokens(system, attach ? context : '', next), shortened: compactHistory(next).shortened }
-  }, [messages, input, attach, context, settings.ai.systemPrompt, settings.ai.language])
+    const ctx = contextToAttach()
+    const next: AiMessage[] = [...messages, { role: 'user', content: input || ' ', ...(ctx ? { context: ctx } : {}) }]
+    const sent = requestTokens(system, next)
+    // Everything before the new question was in the previous request too: likely served from the cache.
+    const repeat = messages.length ? requestTokens(system, messages) : 0
+    return { tokens: sent, repeat: Math.min(repeat, sent), withChart: !!ctx, shortened: buildConversation(next).shortened }
+  }, [messages, input, attach, context, live, settings.ai.systemPrompt, settings.ai.language])
   const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toLocaleString(document.documentElement.lang || undefined, { maximumFractionDigits: 1 })}k` : String(n))
 
   const newSession = () => {
@@ -183,9 +211,15 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
           return [...m, { role: 'assistant', content: e.text }]
         })
       } else if (e.type === 'status') setStatus(e.text)
-      else {
+      else if (e.type === 'usage') {
+        setMessages((m) => {
+          const last = m[m.length - 1]
+          return last?.role === 'assistant' ? [...m.slice(0, -1), { ...last, usage: e.usage }] : m
+        })
+      } else {
         if (e.type === 'error') setError(e.message)
         setStatus('')
+        setStarted(0)
         setRunId(null)
         runIdRef.current = null
       }
@@ -199,23 +233,28 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
   const send = (text: string) => {
     const msg = text.trim()
     if (!msg || runId) return
-    const next: AiMessage[] = [...messages, { role: 'user', content: msg }]
+    const kb = attach && settings.ai.useKnowledge && knowledge ? knowledge(msg) : ''
+    setLastKb(kb)
+    // Chart data rides on the question only when it differs from what this conversation already has,
+    // so follow-ups reuse the provider's cached copy.
+    const ctx = contextToAttach()
+    if (ctx) ctxSentAt.current = Date.now()
+    const next: AiMessage[] = [...messages, { role: 'user', content: msg, ...(ctx ? { context: ctx } : {}), ...(kb ? { knowledge: kb } : {}) }]
     setMessages(next)
     setInput('')
     setError('')
     const id = crypto.randomUUID()
     runIdRef.current = id
     setRunId(id)
+    setStarted(Date.now())
     setStatus(t('{p} yanıtlıyor…', { p: info.label }))
     const system = settings.ai.systemPrompt.trim() || getLocale(settings.ai.language).systemPrompt
-    const kb = attach && settings.ai.useKnowledge && knowledge ? knowledge(msg) : ''
-    setLastKb(kb)
     window.astro.ai.start({
       id,
       provider,
       model: cfg.model || undefined,
       system,
-      context: attach ? (kb ? `${context}\n\n${kb}` : context) : '',
+      context: '',
       messages: next
     })
   }
@@ -355,8 +394,22 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
         {messages.map((m, i) => (
           <div key={i} className={`msg ${m.role}`}>
             {m.role === 'assistant' ? <Markdown text={m.content} /> : <div className="user-text">{m.content}</div>}
+            {m.role === 'user' && m.context && (
+              <div className="msg-tag" title={t('Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.')}>
+                {t('harita verisi eklendi')}
+              </div>
+            )}
             {m.role === 'assistant' && (
               <div className="msg-actions">
+                {m.usage && (
+                  <span
+                    className="muted small msg-usage"
+                    title={t('Sağlayıcının bildirdiği değerler: gönderilen token, bunun ne kadarının önbellekten okunduğu (daha hızlı ve ucuz) ve yanıtın uzunluğu.')}
+                  >
+                    {fmtK(m.usage.input)} {t('girdi')}
+                    {m.usage.input > 0 ? ` · %${Math.round((m.usage.cached / m.usage.input) * 100)} ${t('önbellekten')}` : ''} · {fmtK(m.usage.output)} {t('çıktı')}
+                  </span>
+                )}
                 <button className="link small" onClick={() => navigator.clipboard.writeText(m.content)}>
                   {t('Kopyala')}
                 </button>
@@ -377,7 +430,11 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             )}
           </div>
         ))}
-        {status && <div className="msg status">{status}</div>}
+        {runId && started > 0 && (
+          <div className="msg status">
+            {status || t('Yanıt yazılıyor…')} <span className="muted">· {Math.round((Date.now() - started) / 1000)} {t('sn')}</span>
+          </div>
+        )}
         {error && (
           <div className="msg error">
             {error}
@@ -428,6 +485,8 @@ export default function ChatPanel({ chatKey, context, layers, settings, onSettin
             title={t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.')}
           >
             ≈ {fmtK(nextSize.tokens)} {t('token')}
+            {nextSize.repeat > 0 ? ` · ${t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) })}` : ''}
+            {nextSize.withChart ? ` · ${t('harita verisiyle')}` : ''}
             {nextSize.shortened > 0 ? ` · ${t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened })}` : ''}
           </span>
           {runId ? (

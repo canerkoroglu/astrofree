@@ -1,6 +1,6 @@
 // Streaming chat over provider HTTP APIs (Anthropic, OpenAI-compatible incl. local servers, Gemini).
 import { tm } from '../i18n'
-import type { AiChatRequest, AiMessage, ProviderConfig } from '@shared/types'
+import type { AiChatRequest, AiMessage, AiUsage, ProviderConfig } from '@shared/types'
 import { questionWithContext } from '@shared/aiHistory'
 import type { Emit } from './cli'
 
@@ -217,11 +217,18 @@ async function anthropic(req: AiChatRequest, cfg: ProviderConfig, key: string, e
     signal
   )
   await failIfBad(res, 'Anthropic')
+  const usage: AiUsage = { input: 0, cached: 0, output: 0 }
   for await (const data of sse(res)) {
     const o = JSON.parse(data)
     if (o.type === 'content_block_delta' && o.delta?.type === 'text_delta') emit({ type: 'delta', text: o.delta.text })
+    else if (o.type === 'message_start' && o.message?.usage) {
+      const u = o.message.usage
+      usage.cached = Number(u.cache_read_input_tokens ?? 0)
+      usage.input = Number(u.input_tokens ?? 0) + Number(u.cache_creation_input_tokens ?? 0) + usage.cached
+    } else if (o.type === 'message_delta' && o.usage) usage.output = Number(o.usage.output_tokens ?? 0)
     else if (o.type === 'error') throw new Error(o.error?.message ?? tm('Anthropic hatası'))
   }
+  if (usage.input) emit({ type: 'usage', usage })
 }
 
 async function openaiCompatible(
@@ -251,6 +258,8 @@ async function openaiCompatible(
         stream: true,
         ...(cfg.temperature !== undefined ? { temperature: cfg.temperature } : {}),
         ...(cfg.maxTokens ? { max_tokens: cfg.maxTokens } : {}),
+        // Token counts (incl. cache hits) in the last chunk; local servers get no unknown fields.
+        ...(req.provider !== 'local' ? { stream_options: { include_usage: true } } : {}),
         messages: [{ role: 'system', content: req.system }, ...messagesWithContext(req, cfg)]
       })
     },
@@ -264,6 +273,11 @@ async function openaiCompatible(
     if (data === '[DONE]') break
     const o = JSON.parse(data)
     if (o.error) throw new Error(o.error.message ?? tm('API hatası'))
+    if (o.usage?.prompt_tokens) {
+      const u = o.usage
+      const cached = Number(u.prompt_tokens_details?.cached_tokens ?? u.prompt_cache_hit_tokens ?? 0)
+      emit({ type: 'usage', usage: { input: Number(u.prompt_tokens), cached, output: Number(u.completion_tokens ?? 0) } })
+    }
     const delta = o.choices?.[0]?.delta
     if ((delta?.reasoning_content || delta?.reasoning) && !thinking) {
       thinking = true
@@ -297,13 +311,16 @@ async function gemini(req: AiChatRequest, cfg: ProviderConfig, key: string, emit
     signal
   )
   await failIfBad(res, 'Gemini')
+  let gUsage: any = null
   for await (const data of sse(res)) {
     const o = JSON.parse(data)
     if (o.error) throw new Error(o.error.message ?? tm('Gemini hatası'))
+    if (o.usageMetadata?.promptTokenCount) gUsage = o.usageMetadata
     for (const part of o.candidates?.[0]?.content?.parts ?? []) {
       if (part.text && !part.thought) emit({ type: 'delta', text: part.text })
     }
   }
+  if (gUsage) emit({ type: 'usage', usage: { input: Number(gUsage.promptTokenCount), cached: Number(gUsage.cachedContentTokenCount ?? 0), output: Number(gUsage.candidatesTokenCount ?? 0) } })
 }
 
 /** Model ids an OpenAI-compatible server offers (GET /models). */

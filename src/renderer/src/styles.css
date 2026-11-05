@@ -4715,3 +4715,15 @@ button.head-edit {
   white-space: nowrap;
   cursor: help;
 }
+
+.msg-tag {
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: right;
+  cursor: help;
+}
+.msg-usage {
+  margin-right: auto;
+  cursor: help;
+}
