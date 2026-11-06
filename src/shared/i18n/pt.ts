@@ -64,6 +64,17 @@ Regras:
 - Os dados do mapa podem ter rótulos em turco; traduza-os em silêncio.
 - Responda em português do Brasil.`,
   strings: {
+    "Grup": "Grupo",
+    "Yeni grup…": "Novo grupo…",
+    "Aile": "Família",
+    "Arkadaşlar": "Amigos",
+    "Danışanlar": "Clientes",
+    "Ünlüler": "Famosos",
+    "İş": "Trabalho",
+    "Grupsuz": "Sem grupo",
+    "Listeyi böl": "Dividir a lista",
+    "Türe göre": "Por tipo",
+    "Gruba göre": "Por grupo",
     "Arayüz diliyle aynı ({lang})": "Igual à interface ({lang})",
     "Yeni": "Novo",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Os dados do mapa na tela foram enviados com esta pergunta; não são reenviados nas perguntas seguintes, a menos que o mapa mude.",

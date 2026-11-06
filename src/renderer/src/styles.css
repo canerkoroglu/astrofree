@@ -4734,3 +4734,35 @@ button.head-edit {
   margin-right: auto;
   cursor: help;
 }
+
+/* ---- chart groups ---- */
+.group-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.group-chips button {
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 12.5px;
+}
+.group-chips button.on {
+  background: var(--primary);
+  color: var(--primary-ink);
+  border-color: var(--primary);
+}
+.group-chips .group-new {
+  width: 130px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+}
+.sidebar .group-by {
+  display: flex;
+}
+.sidebar .group-by button {
+  flex: 1;
+  font-size: 11.5px;
+  padding: 3px 6px;
+}

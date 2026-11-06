@@ -9,6 +9,7 @@ import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BasicReading from './components/BasicReading'
 import TodayView from './components/TodayView'
+import { customGroups, GROUP_PRESETS, groupLabel } from './lib/groups'
 import ShareCard from './components/ShareCard'
 import ReportDialog from './components/ReportDialog'
 import WhatsNewDialog from './components/WhatsNewDialog'
@@ -113,6 +114,22 @@ export default function App() {
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
   const [showShare, setShowShare] = useState(false)
+  // How the sidebar list is split: by kind (people/events) or by the charts' groups.
+  const [groupBy, setGroupBy] = useState<'kind' | 'group'>(() => {
+    try {
+      return localStorage.getItem('sidebar-groupby') === 'group' ? 'group' : 'kind'
+    } catch {
+      return 'kind'
+    }
+  })
+  const changeGroupBy = (v: 'kind' | 'group') => {
+    setGroupBy(v)
+    try {
+      localStorage.setItem('sidebar-groupby', v)
+    } catch {
+      /* storage unavailable */
+    }
+  }
   const [showReport, setShowReport] = useState(false)
   const [appVersion, setAppVersion] = useState('')
   const [whatsNew, setWhatsNew] = useState<{ version: string; notes: WhatsNew[] } | null>(null)
@@ -641,8 +658,23 @@ export default function App() {
   const allTags = [...new Set(charts.flatMap((c) => c.tags ?? []))].sort((a, b) => a.localeCompare(b, 'tr'))
   const visible = charts
     .filter((c) => !tagFilter || (c.tags ?? []).includes(tagFilter))
-    .filter((c) => !q || `${c.name} ${(c.tags ?? []).join(' ')} ${c.notes ?? ''} ${c.place.name}`.toLocaleLowerCase('tr').includes(q))
+    .filter((c) => !q || `${c.name} ${(c.tags ?? []).join(' ')} ${c.group ? groupLabel(c.group) : ''} ${c.notes ?? ''} ${c.place.name}`.toLocaleLowerCase('tr').includes(q))
     .sort((a, b) => a.name.localeCompare(b.name, 'tr'))
+  // Sidebar list sections: by kind (people / events) or by group.
+  const listSections: { key: string; label: string; items: ChartRecord[] }[] =
+    groupBy === 'group'
+      ? [
+          ...[...GROUP_PRESETS.map(([id]) => id), ...customGroups(charts)].map((g) => ({
+            key: `g:${g}`,
+            label: groupLabel(g),
+            items: visible.filter((c) => c.group === g)
+          })),
+          { key: 'g:', label: t('Grupsuz'), items: visible.filter((c) => !c.group) }
+        ]
+      : [
+          { key: 'person', label: t('Kişiler'), items: visible.filter((c) => (c.kind ?? 'person') === 'person') },
+          { key: 'event', label: t('Olaylar'), items: visible.filter((c) => c.kind === 'event') }
+        ]
 
   return (
     <div className={showChat ? 'app' : 'app no-chat'}>
@@ -841,6 +873,16 @@ export default function App() {
           </button>
         </div>
         <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
+        {charts.some((c) => c.group) && (
+          <div className="seg group-by" role="radiogroup" aria-label={t('Listeyi böl')}>
+            <button role="radio" aria-checked={groupBy === 'kind'} className={groupBy === 'kind' ? 'on' : ''} onClick={() => changeGroupBy('kind')}>
+              {t('Türe göre')}
+            </button>
+            <button role="radio" aria-checked={groupBy === 'group'} className={groupBy === 'group' ? 'on' : ''} onClick={() => changeGroupBy('group')}>
+              {t('Gruba göre')}
+            </button>
+          </div>
+        )}
         {allTags.length > 0 && (
           <div className="tag-filter">
             {allTags.map((t) => (
@@ -852,16 +894,17 @@ export default function App() {
         )}
         <div className="side-panes" ref={panesRef}>
         <ul className="chart-list side-pane" style={collapsed.sky ? undefined : { flex: `0 0 ${listPct}%` }}>
-          {(['person', 'event'] as const).map((kind) => {
-            const group = visible.filter((c) => (c.kind ?? 'person') === kind)
+          {listSections.map(({ key: secKey, label, items: group }) => {
             if (!group.length) return null
             return [
-              <li key={`h-${kind}`} className="list-head">
-                <button className="sec-toggle" aria-expanded={!collapsed[kind]} onClick={() => toggleSection(kind)}>
-                  <span className="chev">{collapsed[kind] ? '▸' : '▾'}</span> {kind === 'person' ? t('Kişiler') : t('Olaylar')} <span className="muted">{group.length}</span>
+              <li key={`h-${secKey}`} className="list-head">
+                <button className="sec-toggle" aria-expanded={!collapsed[secKey]} onClick={() => toggleSection(secKey)}>
+                  <span className="chev">{collapsed[secKey] ? '▸' : '▾'}</span> {label} <span className="muted">{group.length}</span>
                 </button>
               </li>,
-              ...group.filter((c) => !collapsed[kind] || c.id === working.id).map((c) => (
+              ...group.filter((c) => !collapsed[secKey] || c.id === working.id).map((c) => {
+                const kind = c.kind ?? 'person'
+                return (
                 <li key={c.id} className={c.id === working.id ? 'active' : ''}>
                   <div className="item-row">
                     <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
@@ -891,7 +934,8 @@ export default function App() {
                     {kind === 'person' && <button onClick={() => openChart(c, 'progressed')}>{t('Progresyon')}</button>}
                   </div>
                 </li>
-              ))
+                )
+              })
             ]
           })}
           {!visible.length && (

@@ -34,6 +34,8 @@ export interface ChartRecord {
   place: Place
   notes?: string
   tags?: string[]
+  /** One group for the sidebar: a preset id (family, friends, clients, famous, work) or the user's own name. */
+  group?: string
   /** Person (default) or an event chart (wedding, company founding, move…). */
   kind?: 'person' | 'event'
   /** Birth time unknown: noon is used and houses/angles are unreliable. */

@@ -64,6 +64,17 @@ Rules:
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
   strings: {
+    "Grup": "Group",
+    "Yeni grup…": "New group…",
+    "Aile": "Family",
+    "Arkadaşlar": "Friends",
+    "Danışanlar": "Clients",
+    "Ünlüler": "Famous people",
+    "İş": "Work",
+    "Grupsuz": "No group",
+    "Listeyi böl": "Split the list",
+    "Türe göre": "By type",
+    "Gruba göre": "By group",
     "Arayüz diliyle aynı ({lang})": "Same as the interface ({lang})",
     "Yeni": "New",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "The data of the chart on screen was sent with this question; it is not sent again with later questions unless the chart changes.",

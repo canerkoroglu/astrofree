@@ -64,6 +64,17 @@ export const ru: Locale = {
 - В данных карты могут быть подписи на турецком; переводи их молча.
 - Отвечай по-русски.`,
   strings: {
+    "Grup": "Группа",
+    "Yeni grup…": "Новая группа…",
+    "Aile": "Семья",
+    "Arkadaşlar": "Друзья",
+    "Danışanlar": "Клиенты",
+    "Ünlüler": "Знаменитости",
+    "İş": "Работа",
+    "Grupsuz": "Без группы",
+    "Listeyi böl": "Разделить список",
+    "Türe göre": "По типу",
+    "Gruba göre": "По группе",
     "Arayüz diliyle aynı ({lang})": "Как в интерфейсе ({lang})",
     "Yeni": "Новый",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Данные карты на экране отправлены с этим вопросом; со следующими вопросами они отправляются снова, только если карта изменится.",

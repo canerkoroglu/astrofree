@@ -64,6 +64,17 @@ Regeln:
 - Die Horoskopdaten können türkische Bezeichnungen enthalten; übersetze sie stillschweigend.
 - Antworte auf Deutsch.`,
   strings: {
+    "Grup": "Gruppe",
+    "Yeni grup…": "Neue Gruppe…",
+    "Aile": "Familie",
+    "Arkadaşlar": "Freunde",
+    "Danışanlar": "Klienten",
+    "Ünlüler": "Prominente",
+    "İş": "Arbeit",
+    "Grupsuz": "Ohne Gruppe",
+    "Listeyi böl": "Liste aufteilen",
+    "Türe göre": "Nach Art",
+    "Gruba göre": "Nach Gruppe",
     "Arayüz diliyle aynı ({lang})": "Wie die Oberfläche ({lang})",
     "Yeni": "Neu",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Die Daten des angezeigten Horoskops wurden mit dieser Frage gesendet; sie werden bei späteren Fragen nur erneut gesendet, wenn sich das Horoskop ändert.",

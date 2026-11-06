@@ -64,6 +64,17 @@ Règles :
 - Les données du thème peuvent contenir des libellés en turc ; traduis-les sans le dire.
 - Réponds en français.`,
   strings: {
+    "Grup": "Groupe",
+    "Yeni grup…": "Nouveau groupe…",
+    "Aile": "Famille",
+    "Arkadaşlar": "Amis",
+    "Danışanlar": "Clients",
+    "Ünlüler": "Célébrités",
+    "İş": "Travail",
+    "Grupsuz": "Sans groupe",
+    "Listeyi böl": "Diviser la liste",
+    "Türe göre": "Par type",
+    "Gruba göre": "Par groupe",
     "Arayüz diliyle aynı ({lang})": "Comme l’interface ({lang})",
     "Yeni": "Nouveau",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Les données du thème affiché ont été envoyées avec cette question ; elles ne sont renvoyées avec les questions suivantes que si le thème change.",

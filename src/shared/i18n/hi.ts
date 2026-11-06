@@ -64,6 +64,17 @@ export const hi: Locale = {
 - कुंडली डेटा में तुर्की लेबल हो सकते हैं; उनका चुपचाप अनुवाद करो।
 - हिन्दी में उत्तर दो।`,
   strings: {
+    "Grup": "समूह",
+    "Yeni grup…": "नया समूह…",
+    "Aile": "परिवार",
+    "Arkadaşlar": "मित्र",
+    "Danışanlar": "ग्राहक",
+    "Ünlüler": "प्रसिद्ध लोग",
+    "İş": "काम",
+    "Grupsuz": "बिना समूह",
+    "Listeyi böl": "सूची बाँटें",
+    "Türe göre": "प्रकार से",
+    "Gruba göre": "समूह से",
     "Arayüz diliyle aynı ({lang})": "इंटरफ़ेस जैसी ({lang})",
     "Yeni": "नया",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "स्क्रीन पर दिख रही कुंडली का डेटा इस प्रश्न के साथ भेजा गया; कुंडली न बदले तो अगले प्रश्नों के साथ दोबारा नहीं भेजा जाता।",

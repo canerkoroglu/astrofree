@@ -64,6 +64,17 @@ Reglas:
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
   strings: {
+    "Grup": "Grupo",
+    "Yeni grup…": "Nuevo grupo…",
+    "Aile": "Familia",
+    "Arkadaşlar": "Amigos",
+    "Danışanlar": "Clientes",
+    "Ünlüler": "Famosos",
+    "İş": "Trabajo",
+    "Grupsuz": "Sin grupo",
+    "Listeyi böl": "Dividir la lista",
+    "Türe göre": "Por tipo",
+    "Gruba göre": "Por grupo",
     "Arayüz diliyle aynı ({lang})": "Igual que la interfaz ({lang})",
     "Yeni": "Nuevo",
     "Bu soruyla ekrandaki haritanın verisi gönderildi; harita değişmedikçe sonraki sorularda yeniden gönderilmez.": "Con esta pregunta se enviaron los datos de la carta en pantalla; no se vuelven a enviar en las preguntas siguientes salvo que la carta cambie.",

@@ -1,4 +1,5 @@
 import { t } from '../lib/i18n'
+import { customGroups, GROUP_PRESETS, groupLabel } from '../lib/groups'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChartRecord, TzSpec } from '@shared/types'
 import { fmtPos, glyph, SIGNS, signGlyph, splitDeg } from '../lib/astro'
@@ -39,6 +40,7 @@ export default function ChartEditor({
   const [rec, setRec] = useState<ChartRecord>({ kind: 'person', ...initial })
   const [zoneText, setZoneText] = useState(initial.tz.kind === 'zone' ? initial.tz.zone : initial.place.zone ?? '')
   const [tzOpen, setTzOpen] = useState(initial.tz.kind !== 'zone')
+  const [groupDraft, setGroupDraft] = useState('')
   const [moreOpen, setMoreOpen] = useState(!!(initial.notes || initial.tags?.length))
   const [tagDraft, setTagDraft] = useState('')
   const [preview, setPreview] = useState<Preview | null>(null)
@@ -252,6 +254,44 @@ export default function ChartEditor({
                   )}
                 </div>
               )}
+            </section>
+
+            <section className="ed-sec ed-group">
+              <div className="ed-sec-title">
+                {t('Grup')} <span className="muted small">{t('(isteğe bağlı)')}</span>
+              </div>
+              <div className="group-chips" role="radiogroup" aria-label={t('Grup')}>
+                {[...GROUP_PRESETS.map(([id]) => id), ...customGroups(existing)].map((g) => (
+                  <button
+                    type="button"
+                    key={g}
+                    role="radio"
+                    aria-checked={rec.group === g}
+                    className={rec.group === g ? 'on' : ''}
+                    onClick={() => setRec({ ...rec, group: rec.group === g ? undefined : g })}
+                  >
+                    {groupLabel(g)}
+                  </button>
+                ))}
+                <input
+                  className="group-new"
+                  value={groupDraft}
+                  placeholder={t('Yeni grup…')}
+                  onChange={(e) => setGroupDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && groupDraft.trim()) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setRec({ ...rec, group: groupDraft.trim() })
+                      setGroupDraft('')
+                    }
+                  }}
+                  onBlur={() => {
+                    if (groupDraft.trim()) setRec({ ...rec, group: groupDraft.trim() })
+                    setGroupDraft('')
+                  }}
+                />
+              </div>
             </section>
 
             <section className="ed-sec">
