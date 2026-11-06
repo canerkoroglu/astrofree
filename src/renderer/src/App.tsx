@@ -1251,7 +1251,15 @@ export default function App() {
           </div>
         </div>
       )}
-      {showShare && computed && <ShareCard natal={computed.natal} rec={working} settings={settings} onClose={() => setShowShare(false)} />}
+      {showShare && computed && <ShareCard
+          natal={computed.natal}
+          rec={working}
+          settings={settings}
+          events={sky ? [...sky.events, ...sky.nextEclipses.filter((e) => !sky.events.includes(e))].filter((e) => e.jd > nowJd() - 1).sort((a, b) => a.jd - b.jd).slice(0, 30) : []}
+          tz={eventTz}
+          lon={settings.defaultPlace.lon}
+          onClose={() => setShowShare(false)}
+        />}
       {showChat && (
         <aside className="chatside">
           <ChatPanel

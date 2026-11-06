@@ -4766,3 +4766,15 @@ button.head-edit {
   font-size: 11.5px;
   padding: 3px 6px;
 }
+
+.share-options .share-kind {
+  display: flex;
+  margin-bottom: 10px;
+}
+.share-options .share-kind button {
+  flex: 1;
+}
+.share-options > label select {
+  width: 100%;
+  margin-top: 4px;
+}
