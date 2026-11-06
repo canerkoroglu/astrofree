@@ -96,7 +96,8 @@ export default function NatalInfo({
   natalJd,
   eventJd,
   patterns,
-  stars
+  stars,
+  partner
 }: {
   natal: Layer
   rec: ChartRecord
@@ -105,6 +106,8 @@ export default function NatalInfo({
   eventJd: number
   patterns: Pattern[]
   stars: StarConj[]
+  /** Synastry partner, if that layer is on (Vedic matching). */
+  partner?: { name: string; layer: Layer } | null
 }) {
   const sect = sectInfo(natal)
   const prof = profection(natal, natalJd, eventJd)
@@ -461,7 +464,7 @@ export default function NatalInfo({
         </div>
       </details>
 
-      <VedicInfo natal={natal} rec={rec} settings={settings} eventJd={eventJd} />
+      {settings.showVedic && <VedicInfo natal={natal} rec={rec} settings={settings} eventJd={eventJd} partner={partner} />}
 
       <details>
         <summary>{t('Orta noktalar')}</summary>

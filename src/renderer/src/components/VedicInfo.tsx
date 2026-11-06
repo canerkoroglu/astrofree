@@ -1,15 +1,55 @@
 // Vedic section of Natal Bilgiler: nakshatras, navamsa (D9) and Vimshottari dasha (Lahiri).
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, ChartRecord } from '@shared/types'
-import { t } from '../lib/i18n'
+import { t, weekdays } from '../lib/i18n'
 import { glyph, POINT, SIGNS, signGlyph, splitDeg, type Layer } from '../lib/astro'
 import { fmtDate, jdToLocal } from '../lib/time'
 import { nakshatraOf, navamsaSign, siderealLahiri, vimshottari } from '../lib/vedic'
+import { ashtakoota, panchang, VARA_LORD } from '../lib/vedicExtra'
+import VedicChart from './VedicChart'
 
 const KEYS = ['asc', 'sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'node', 'snode']
 
-export default function VedicInfo({ natal, rec, settings, eventJd }: { natal: Layer; rec: ChartRecord; settings: AppSettings; eventJd: number }) {
+export default function VedicInfo({
+  natal,
+  rec,
+  settings,
+  eventJd,
+  partner
+}: {
+  natal: Layer
+  rec: ChartRecord
+  settings: AppSettings
+  eventJd: number
+  /** Synastry partner, for Ashtakoota matching. */
+  partner?: { name: string; layer: Layer } | null
+}) {
   const [sid, setSid] = useState<{ key: string; lon: number }[] | null>(null)
+  const [partnerMoon, setPartnerMoon] = useState<number | null>(null)
+  const [swap, setSwap] = useState(false)
+  const [style, setStyle] = useState<'north' | 'south'>(() => {
+    try {
+      return localStorage.getItem('vedic-chart-style') === 'south' ? 'south' : 'north'
+    } catch {
+      return 'north'
+    }
+  })
+  const pickStyle = (v: 'north' | 'south') => {
+    setStyle(v)
+    try {
+      localStorage.setItem('vedic-chart-style', v)
+    } catch {
+      /* storage unavailable */
+    }
+  }
+  useEffect(() => {
+    if (!partner) return setPartnerMoon(null)
+    let alive = true
+    void siderealLahiri(partner.layer, settings).then((r) => alive && setPartnerMoon(r.find((p) => p.key === 'moon')?.lon ?? null))
+    return () => {
+      alive = false
+    }
+  }, [partner?.layer.jdUT, settings.zodiac, settings.sidMode])
   const [openMd, setOpenMd] = useState<number | null>(null)
   const natalKey = `${natal.jdUT}|${settings.zodiac}|${settings.sidMode}`
 
@@ -38,10 +78,101 @@ export default function VedicInfo({ natal, rec, settings, eventJd }: { natal: La
     </>
   )
 
+  const sun = sid?.find((p) => p.key === 'sun')
+  const pc = sun && moon ? panchang(sun.lon, moon.lon) : null
+  const vara = VARA_LORD[new Date(Date.UTC(rec.local.y, rec.local.m - 1, rec.local.d)).getUTCDay()]
+  const match = moon && partnerMoon !== null ? (swap ? ashtakoota(partnerMoon, moon.lon) : ashtakoota(moon.lon, partnerMoon)) : null
+  const chartPoints = rows.filter((p) => KEYS.includes(p.key))
+
   if (!sid) return null
   return (
     <details>
-      <summary>{t('Vedik (Jyotiş)')}</summary>
+      <summary>
+        {t('Vedik (Jyotiş)')} <span className="badge">{t('Gelişmiş')}</span>
+      </summary>
+      <div className="ni-grid vedic-grid">
+        <div>
+          <div className="vedic-chart-head">
+            <h4>{t('Rāśi (D1)')}</h4>
+            <div className="seg">
+              <button className={style === 'north' ? 'on' : ''} onClick={() => pickStyle('north')} disabled={rec.timeUnknown}>
+                {t('Kuzey Hint')}
+              </button>
+              <button className={style === 'south' ? 'on' : ''} onClick={() => pickStyle('south')}>
+                {t('Güney Hint')}
+              </button>
+            </div>
+          </div>
+          <VedicChart style={rec.timeUnknown ? 'south' : style} points={chartPoints} />
+        </div>
+        {pc && (
+          <div>
+            <h4>{t('Doğum Panchangı')}</h4>
+            <table className="data ni">
+              <tbody>
+                <tr>
+                  <td>{t('Tithi')}</td>
+                  <td>
+                    {pc.paksha === 'shukla' ? 'Shukla' : 'Krishna'} {pc.tithi} <span className="muted small">({pc.tithiNo}/30)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{t('Vara (gün)')}</td>
+                  <td>
+                    {weekdays()[new Date(Date.UTC(rec.local.y, rec.local.m - 1, rec.local.d)).getUTCDay()]} <span className="muted small">({name(vara)})</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{t('Nakshatra')}</td>
+                  <td>
+                    {pc.nakshatra} · {t('Pada')} {pc.pada}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{t('Yoga')}</td>
+                  <td>{pc.yoga}</td>
+                </tr>
+                <tr>
+                  <td>{t('Karana')}</td>
+                  <td>{pc.karana}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="muted small">{t('Gün, yerel takvim tarihine göredir; geleneksel Panchang günü gün doğumunda başlar.')}</p>
+          </div>
+        )}
+      </div>
+      {match && partner && (
+        <div className="vedic-match">
+          <div className="vedic-chart-head">
+            <h4>
+              {t('Kundli eşleştirme (Ashtakoota)')}: {rec.name || t('İsimsiz')} · {partner.name}
+            </h4>
+            <button className="link small" onClick={() => setSwap(!swap)} title={t('Gelenekte Varna, Vashya ve Gana puanları damat/gelin sırasına göre hesaplanır.')}>
+              {t('Sırayı değiştir')}
+            </button>
+          </div>
+          <table className="data ni">
+            <tbody>
+              {match.kootas.map((k) => (
+                <tr key={k.key}>
+                  <td>{k.name}</td>
+                  <td className="num">
+                    {k.score} / {k.max}
+                  </td>
+                </tr>
+              ))}
+              <tr className="vedic-total">
+                <td>{t('Toplam')}</td>
+                <td className="num">{match.total} / 36</td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="muted small">
+            {t('Geleneksel Guna Milan puanlamasıdır (18 ve üstü geleneksel olarak uygun sayılır). Bir ilişkinin nasıl yaşanacağını hiçbir puan belirlemez; yalnızca üzerine konuşulabilecek bir çerçeve sunabilir.')}
+          </p>
+        </div>
+      )}
       <p className="muted small ni-note">
         {t('Lahiri ayanamsası ile sidereal konumlar; Rahu = Kuzey Ay Düğümü, Ketu = Güney Ay Düğümü. Dasha dönemleri geleneksel bir zamanlama çerçevesidir, kesin olayları göstermez.')}
       </p>

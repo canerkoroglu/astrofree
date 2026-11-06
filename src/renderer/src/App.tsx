@@ -1127,7 +1127,19 @@ export default function App() {
 
         {calcError && <div className="error pad">{t('Hesaplama hatası')}: {calcError}</div>}
         {view === 'info' && computed && (
-          <NatalInfo natal={computed.natal} rec={working} settings={settings} natalJd={natalJd} eventJd={eventJd} patterns={patterns} stars={starConj} />
+          <NatalInfo
+            natal={computed.natal}
+            rec={working}
+            settings={settings}
+            natalJd={natalJd}
+            eventJd={eventJd}
+            patterns={patterns}
+            stars={starConj}
+            partner={(() => {
+              const l = computed.outers.find((o) => o.kind === 'synastry')
+              return l ? { name: partner?.name || l.label, layer: l } : null
+            })()}
+          />
         )}
         {view === 'today' && (
           <TodayView natal={computed?.natal ?? null} rec={working} settings={settings} tz={eventTz} isNow={working.id === NOW_ID} onAsk={ask} onJump={(jd) => {

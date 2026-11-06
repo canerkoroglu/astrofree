@@ -31,7 +31,7 @@ function steps({ ai, tmp, mock }) {
   step('first chart reading', `ok('İlk kişi Temel Yorum’da açılıyor',!!document.querySelector('.reading')&&document.querySelector('.view-tabs button.on').textContent==='Temel Yorum')`)
   step('to chart', `c('.view-tabs button','Harita')`, 600)
   step('natal table', `(()=>{const r=[...document.querySelectorAll('table.data tr')].find(r=>r.textContent.includes('Güneş'));return ok('Natal konum tablosu',!!r&&r.textContent.includes('27°'),r?r.textContent.slice(0,50):'satır yok')})()`)
-  step('partner', `window.astro.charts.save({id:'p2',name:'Test Partner',local:{y:1990,m:5,d:3,h:9,mi:20,s:0},tz:{kind:'zone',zone:'Europe/Istanbul'},place:{name:'İzmir',lat:38.42,lon:27.14,zone:'Europe/Istanbul'},createdAt:1,updatedAt:1}).then(()=>{location.reload();return 1})`, 3000)
+  step('partner', `window.astro.charts.save({id:'p2',name:'Test Partner',local:{y:1990,m:5,d:3,h:9,mi:20,s:0},tz:{kind:'zone',zone:'Europe/Istanbul'},place:{name:'İzmir',lat:38.42,lon:27.14,zone:'Europe/Istanbul'},createdAt:1,updatedAt:1}).then(()=>window.astro.settings.get()).then(s=>window.astro.settings.set({...s,showVedic:true})).then(()=>{location.reload();return 1})`, 3000)
   step('helpers2', HELPERS, 100)
   step('open ali', `c('.chart-list .item .nm','Muhammad')`, 1200)
   for (const k of ['Transit', 'Progresyon', 'Solar Ark', 'Güneş Dönüşü', 'Ay Dönüşü', 'Sinastri']) {
@@ -43,7 +43,7 @@ function steps({ ai, tmp, mock }) {
   step('info', `c('.view-tabs button','Natal Bilgiler')`, 1200)
   step('info check', `ok('Natal Bilgiler',document.querySelectorAll('.natal-info details').length>=8)`)
   step('mansion check', `(()=>{const t=document.querySelector('.natal-info').innerText;return ok('Ay durağı ve Ay lordu',t.includes("23. Sa'd Bula")&&t.includes('Jüpiter'))})()`)
-  step('vedic check', `(()=>{const d=[...document.querySelectorAll('.natal-info details')].find(x=>x.querySelector('summary').innerText.includes('Vedik'));if(!d)return ok('Vedik bölüm',false,'yok');d.open=true;const t=d.innerText;return ok('Vedik bölüm: nakshatra, D9, dasha',t.includes('Shravana')&&d.querySelectorAll('.dasha-list > li').length===10&&!!d.querySelector('.dasha-list li.current'),t.slice(0,120).replace(/\\n/g,' | '))})()`)
+  step('vedic check', `(()=>{const d=[...document.querySelectorAll('.natal-info details')].find(x=>x.querySelector('summary').innerText.includes('Vedik'));if(!d)return ok('Vedik bölüm',false,'yok');d.open=true;const t=d.innerText;return ok('Vedik bölüm: nakshatra, D9, dasha, çark, Panchang',t.includes('Shravana')&&d.querySelectorAll('.dasha-list > li').length===10&&!!d.querySelector('.dasha-list li.current')&&!!d.querySelector('svg.vedic-chart')&&t.includes('Tithi'),t.slice(0,120).replace(/\\n/g,' | '))})()`)
   step('today', `c('.view-tabs button','Bugün')`, 2500)
   step('today check', `(()=>{const r=document.querySelector('.today');if(!r)return ok('Bugün ekranı',false,'yok');const t=r.innerText;return ok('Bugün ekranı',t.includes('Bugün etkili transitler')&&t.includes('Önümüzdeki 30 gün')&&!t.includes('Hesaplanıyor')&&!!r.querySelector('.reading-disclaimer'),t.slice(0,160).replace(/\\n/g,' | '))})()`)
   step('sky full', `(()=>{document.querySelector('.sky-expand').click();return 1})()`, 600)

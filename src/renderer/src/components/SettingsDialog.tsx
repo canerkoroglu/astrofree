@@ -590,6 +590,17 @@ export default function SettingsDialog({
                 onChange={(p) => setS({ ...s, defaultPlace: p, defaultZone: p.zone ?? s.defaultZone })}
               />
             </fieldset>
+            <fieldset className="advanced-features">
+              <legend>
+                {t('Gelişmiş özellikler')} <span className="badge">{t('Gelişmiş')}</span>
+              </legend>
+              <label className="inline">
+                <input type="checkbox" checked={!!s.showVedic} onChange={(e) => setS({ ...s, showVedic: e.target.checked })} /> {t('Vedik (Jyotiş) araçları')}
+              </label>
+              <p className="muted small">
+                {t('Natal Bilgiler’e sidereal (Lahiri) nakshatra ve navamsa tablosu, Vimshottari dasha, Kuzey/Güney Hint çarkı, doğum Panchangı ve sinastri partneriyle kundli eşleştirmesi ekler.')}
+              </p>
+            </fieldset>
           </div>
         )}
 

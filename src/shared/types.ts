@@ -173,6 +173,8 @@ export interface AppSettings {
   theme: 'light' | 'dark' | 'system'
   backupDir: string
   onboarded: boolean
+  /** Advanced: show the Vedic (Jyotish) tools in Natal Info. */
+  showVedic?: boolean
   /** Last version whose “what's new” notes the user has seen. */
   seenVersion?: string
   /** Language code from src/shared/i18n (tr, en, …). */
