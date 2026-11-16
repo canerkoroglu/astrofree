@@ -34,4 +34,8 @@ export interface Locale {
   compass: { n: string; s: string; e: string; w: string }
   /** Instructions for the AI interpreter in this language. */
   systemPrompt: string
+  /** Appended to the instructions for the chosen answer level. */
+  aiLevel: { amateur: string; professional: string }
+  /** Always appended (even to a custom system prompt): what to do when someone seems to be in crisis. */
+  aiSafety: string
 }

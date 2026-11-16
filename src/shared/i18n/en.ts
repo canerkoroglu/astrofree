@@ -63,7 +63,51 @@ Rules:
 - Use tidy, readable Markdown with headings and bullet points.
 - The chart data may contain Turkish labels; translate them silently.
 - Answer in English.`,
+  aiLevel: {
+    amateur: `Answer level: amateur.
+The person asking is not an astrologer. They mostly ask about their own life (love and relationships, work and career, money, health and wellbeing, family, what the future may hold) or about timing: when to start a new job, sign a contract, move, travel, cut or dye their hair.
+- Use warm, plain, everyday language. Avoid jargon; when a term is unavoidable (e.g. "retrograde"), explain it in a few words the first time.
+- Answer the question itself first, in two or three sentences, then give the main reasons briefly. Say what the placements may mean in daily life instead of listing degrees, orbs and aspect names.
+- Keep it short and practical: a few headings or bullet points, concrete suggestions the person can act on, no technical tables.
+- Questions about the future: describe likely themes and supportive or challenging periods as tendencies, never as fixed events.
+- "When should I…?" questions: use the coming-days data (sky events, the Moon calendar with void-of-course times, transits to the chart) and name concrete dates or date ranges, each with a short reason in plain words (e.g. waxing Moon, Moon not void, Mercury not retrograde, a supportive transit). Never guess dates or planet positions beyond the period the data covers; for those, suggest the app's Transit Calendar and Electional tabs.
+- Health: you may talk about energy, stress and self-care tendencies, but never diagnose or suggest treatment; for any health complaint recommend seeing a doctor.`,
+    professional: `Answer level: professional.
+The person asking knows astrology. Use standard technical terms without explaining them, and back every statement with the factors behind it: positions with degrees, aspects with orbs and whether they are applying or separating, house rulers, dignities, time lords and aspect patterns when given. Weigh conflicting testimonies and name the techniques you use; depth matters more than brevity.`
+  },
+  aiSafety: `Safety: if the person seems to be in crisis or mentions self-harm, suicide, violence or danger, set astrology aside. Answer with warmth and understanding; encourage them to call their local emergency number or a crisis line right away and to talk to someone they trust. In that case give no chart reading, dates or predictions.`,
   strings: {
+    "38n15 · 38°15'K · 38.25": "38n15 · 38°15'N · 38.25",
+    "85w46 · 28°57'D · -85.77": "85w46 · 28°57'E · -85.77",
+    "Europe/Istanbul": "Europe/London",
+    "danışan, aile, ünlü… (Enter)": "client, family, celebrity… (Enter)",
+    "Yanıtlar nasıl olsun?": "How should answers sound?",
+    "Sade, gündelik bir dil; aşk, iş, sağlık ve “ne zaman?” soruları için.": "Plain, everyday language; for questions about love, work, health and “when?”.",
+    "Teknik terimler, dereceler, orb’lar ve teknikler; astrologlar için.": "Technical terms, degrees, orbs and techniques; for astrologers.",
+    "Sohbette Gönder düğmesinin yanından istediğiniz zaman değiştirebilirsiniz.": "You can change this any time next to the Send button in the chat.",
+    "Yapay zekâ aracı": "AI tool",
+    "# AY TAKVİMİ: burçlar ve boşluk (void of course) zamanları": "# MOON CALENDAR: signs and void-of-course times",
+    "- {from} – {to}: Ay {sign} burcunda": "- {from} – {to}: Moon in {sign}",
+    "; boşluk başlangıcı {from}": "; void of course from {from}",
+    "Bugün nasıl?": "How is today?",
+    "Bugün gökyüzü nasıl bir gün gösteriyor? Sade bir dille, bugün nelere dikkat etmek iyi olur?": "What kind of day does today's sky point to? In plain words, what would be good to keep in mind today?",
+    "Ben nasıl biriyim?": "What am I like?",
+    "Haritama göre nasıl bir insanım? Güçlü yanlarımı ve zorlanabileceğim konuları sade bir dille anlat.": "What kind of person am I, according to my chart? Describe my strengths and the areas I may struggle with in plain words.",
+    "Önümüzdeki 2 ay": "Next 2 months",
+    "Önümüzdeki iki ayda hayatımda hangi konular öne çıkabilir? Sade bir dille, haftalara göre anlat.": "Which topics may come to the fore in my life over the next two months? Explain in plain words, week by week.",
+    "Aşk": "Love",
+    "Aşk hayatım ve ilişkilerim hakkında haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?": "What does my chart say about my love life and relationships? What should I keep in mind in the coming weeks?",
+    "İş ve para": "Work and money",
+    "İş, kariyer ve para konusunda güçlü yanlarım neler? Önümüzdeki haftalarda yeni bir iş ya da başlangıç için uygun zamanlar var mı?": "What are my strengths in work, career and money? Are there good times in the coming weeks for a new job or a new start?",
+    "Sağlık ve enerji": "Health and energy",
+    "Enerjim, stresim ve kendime bakımım için haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?": "What does my chart say about my energy, stress and self-care? What should I keep in mind in the coming weeks?",
+    "Uyumumuz": "Our match",
+    "Bu iki kişi birbiriyle nasıl anlaşır? İlişkinin güçlü yanlarını ve dikkat edilmesi gerekenleri sade bir dille anlat.": "How do these two people get along? Describe the strengths of the relationship and what needs care, in plain words.",
+    "Uygun günler": "Good days",
+    "Önümüzdeki 30 günde sözleşme imzalamak, yeni bir işe başlamak ya da saç kestirmek gibi işler için hangi günler daha uygun olabilir? Her biri için kısa bir neden yaz.": "Over the next 30 days, which days may be better for things like signing a contract, starting a new job or getting a haircut? Give a short reason for each.",
+    "Amatör": "Amateur",
+    "Profesyonel": "Professional",
+    "Yanıt düzeyi: Amatör sade, gündelik bir dille; Profesyonel teknik terimler ve ayrıntıyla yanıtlar.": "Answer level: Amateur replies in plain, everyday language; Professional with technical terms and detail.",
     "Gelişmiş özellikler": "Advanced features",
     "Vedik (Jyotiş) araçları": "Vedic (Jyotish) tools",
     "Natal Bilgiler’e sidereal (Lahiri) nakshatra ve navamsa tablosu, Vimshottari dasha, Kuzey/Güney Hint çarkı, doğum Panchangı ve sinastri partneriyle kundli eşleştirmesi ekler.": "Adds to Natal Info a sidereal (Lahiri) nakshatra and navamsa table, Vimshottari dasha, North/South Indian charts, the birth Panchang and kundli matching with the synastry partner.",

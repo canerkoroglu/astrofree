@@ -141,12 +141,16 @@ export interface ProviderConfig {
   hideThinking?: boolean
 }
 
+/** How the AI pitches its answers: plain everyday language, or technical for astrologers. */
+export type AiLevel = 'amateur' | 'professional'
+
 export interface AiSettings {
   provider: ProviderId
   providers: Record<ProviderId, ProviderConfig>
   /** Answer language (locale code). */
   language: string
   systemPrompt: string
+  level: AiLevel
   /** Add matching knowledge-base entries to what is sent with each message. */
   useKnowledge: boolean
 }
@@ -301,6 +305,15 @@ export interface SkyReport {
   sunLon: number
   /** Void-of-course Moon: last major aspect before the next sign change. */
   voc: { start: number; end: number; lastBody: number; lastAspect: number } | null
+}
+
+/** One stay of the Moon in a sign, from `start` (or the request date) until it leaves at `end`. */
+export interface MoonStay {
+  start: number
+  end: number
+  sign: number
+  /** Void of course from here until `end` (its last major aspect in the sign; `start` when it makes none). */
+  voc: number
 }
 
 // ---- Searches ----------------------------------------------------------------

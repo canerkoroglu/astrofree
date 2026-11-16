@@ -2331,6 +2331,16 @@ textarea {
   border-color: var(--accent);
   box-shadow: inset 0 0 0 1px var(--accent);
 }
+.ob-levels {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.ob-levels .ob-provider {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  white-space: normal;
+}
 .ob-pname {
   font-weight: 600;
 }
@@ -2763,6 +2773,9 @@ table.ni th {
 .chat-head {
   padding: var(--s5) var(--s5) var(--s2);
   gap: var(--s2);
+}
+.composer-row select.chat-level {
+  flex-shrink: 0;
 }
 .chat-status {
   padding: 0 var(--s5) var(--s3);

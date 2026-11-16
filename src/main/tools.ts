@@ -4,6 +4,7 @@ import type {
   ElectionRequest,
   ElectionWindow,
   FixedStarPos,
+  MoonStay,
   PlanetaryHours,
   TransitHit,
   TransitSearchRequest
@@ -124,6 +125,26 @@ export async function findReturn(body: number, targetLon: number, jdStart: numbe
     prev = g
   }
   return null
+}
+
+/** The Moon's sign stays from jd over `days`, each with the time it turns void of course. */
+export async function moonStays(jd: number, days: number, sidMode: number | null): Promise<MoonStay[]> {
+  const swe = await getSwe()
+  const calc = lonFn(swe, sidMode)
+  const lon = (t: number, b: number) => calc(t, b)[0]
+  const sign = (t: number) => Math.floor(norm(lon(t, 1)) / 30)
+  const out: MoonStay[] = []
+  let start = jd
+  let s = sign(jd)
+  for (let t = jd + 0.1; start < jd + days; t += 0.1) {
+    if (sign(t) === s) continue
+    const end = bisect(t - 0.1, t, (x) => sign(x) !== s)
+    const v = voidOfCourse(end - 0.2, lon)
+    out.push({ start, end, sign: s, voc: Math.max(v?.start ?? end, start) })
+    start = end
+    s = sign(t)
+  }
+  return out
 }
 
 export const STAR_NAMES = [

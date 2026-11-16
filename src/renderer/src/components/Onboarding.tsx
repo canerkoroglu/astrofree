@@ -2,7 +2,7 @@ import { LOCALES } from '@shared/i18n'
 import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
 import { PROVIDERS } from '@shared/defaults'
-import type { AppSettings, ProviderId, ProviderStatus } from '@shared/types'
+import type { AiLevel, AppSettings, ProviderId, ProviderStatus } from '@shared/types'
 import { acceptTerms, termsAccepted, TermsCheckbox } from './TermsAck'
 
 /** First-run guide: language and theme, the first chart, the AI interpreter. */
@@ -27,6 +27,7 @@ export default function Onboarding({
 
   const agreed = termsAccepted(settings)
   const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
+  const setLevel = (level: AiLevel) => onSettings({ ...settings, ai: { ...settings.ai, level } })
   const steps = [t('Hoş geldiniz'), t('İlk harita'), t('Yapay zekâ'), t('Hazır')]
 
   return (
@@ -104,6 +105,19 @@ export default function Onboarding({
             <h2>{t('Yorumlar için bir yapay zekâ seçin')}</h2>
             <p>{t('Bilgisayarınızda kurulu bir AI aracı varsa onu kullanabilirsiniz; ek bir anahtar gerekmez. Sonra Ayarlar’dan değiştirebilirsiniz.')}</p>
             <p className="ob-note">{t('Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.')}</p>
+            <h3>{t('Yanıtlar nasıl olsun?')}</h3>
+            <div className="ob-providers ob-levels">
+              <button className={`ob-provider ${settings.ai.level === 'amateur' ? 'selected' : ''}`} onClick={() => setLevel('amateur')}>
+                <span className="ob-pname">{t('Amatör')}</span>
+                <span className="muted small">{t('Sade, gündelik bir dil; aşk, iş, sağlık ve “ne zaman?” soruları için.')}</span>
+              </button>
+              <button className={`ob-provider ${settings.ai.level === 'professional' ? 'selected' : ''}`} onClick={() => setLevel('professional')}>
+                <span className="ob-pname">{t('Profesyonel')}</span>
+                <span className="muted small">{t('Teknik terimler, dereceler, orb’lar ve teknikler; astrologlar için.')}</span>
+              </button>
+            </div>
+            <p className="muted small">{t('Sohbette Gönder düğmesinin yanından istediğiniz zaman değiştirebilirsiniz.')}</p>
+            <h3>{t('Yapay zekâ aracı')}</h3>
             {!statuses && <p className="muted">{t('Kontrol ediliyor…')}</p>}
             {statuses && (
               <div className="ob-providers">

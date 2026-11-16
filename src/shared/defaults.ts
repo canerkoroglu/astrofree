@@ -1,3 +1,4 @@
+import { getLocale } from './i18n'
 import type { AppSettings, AspectKey, AspectSetting, ProviderId } from './types'
 
 export const PROVIDERS: {
@@ -75,26 +76,6 @@ export const LOCAL_PRESETS: { id: string; label: string; url: string; hint: stri
   { id: 'custom', label: 'Özel', url: '', hint: 'OpenAI uyumlu herhangi bir /v1 adresi' }
 ]
 
-export const SYSTEM_PROMPT_TR = `Sen deneyimli, psikolojik ve geleneksel tekniklere hâkim bir astrologsun.
-Kullanıcıya verilen harita verilerini (gezegen konumları, evler, açılar, transitler, progresyonlar) temel alarak yorum yaparsın.
-Kurallar:
-- Yalnızca sağlanan verilere dayan; veride olmayan konum veya açı uydurma. Hesaplama gerekiyorsa verilen sayıları kullan.
-- Önce en güçlü temaları (sıkı orb'lu açılar, köşe evlerdeki gezegenler, yöneticiler) öne çıkar, sonra ayrıntıya in.
-- Transitlerde yaklaşan/ayrılan bilgisini ve orb'u dikkate alarak zamanlama hakkında konuş.
-- Kesin kehanet yerine eğilim ve potansiyel dilini kullan; sağlık, hukuk ve finans konularında profesyonel desteğe yönlendir.
-- Başlıklar ve maddelerle düzenli, okunaklı Markdown kullan.
-- Türkçe yanıt ver.`
-
-export const SYSTEM_PROMPT_EN = `You are an experienced astrologer fluent in both psychological and traditional techniques.
-You interpret the chart data the user provides (planet positions, houses, aspects, transits, progressions).
-Rules:
-- Rely only on the data provided; never invent positions or aspects. Use the given numbers when calculation is needed.
-- Lead with the strongest themes (tight aspects, angular planets, rulers), then go into detail.
-- For transits, use the applying/separating flag and orb to talk about timing.
-- Use the language of tendencies and potential rather than certain prediction; refer health, legal and financial questions to professionals.
-- Use tidy, readable Markdown with headings and bullet points.
-- Answer in English.`
-
 function asp(enabled: boolean, orb: number, outerOrb: number): AspectSetting {
   return { enabled, orb, outerOrb }
 }
@@ -155,14 +136,16 @@ export const DEFAULT_SETTINGS: AppSettings = {
     provider: 'claude-code',
     language: 'auto',
     systemPrompt: '',
+    level: 'amateur',
     useKnowledge: true,
     providers: {
       'claude-code': { model: '', command: 'claude', extraArgs: '' },
       codex: { model: '', command: 'codex', extraArgs: '' },
       'gemini-cli': { model: '', command: 'gemini', extraArgs: '' },
-      anthropic: { model: 'claude-opus-5-5', baseUrl: 'https://api.anthropic.com' },
-      openai: { model: 'gpt-5.5', baseUrl: 'https://api.openai.com/v1' },
-      gemini: { model: 'gemini-2.5-pro', baseUrl: 'https://generativelanguage.googleapis.com/v1beta' },
+      // Cost-effective defaults for pay-per-token APIs; stronger models are one click away in the chat's model list.
+      anthropic: { model: 'claude-sonnet-5-5', baseUrl: 'https://api.anthropic.com' },
+      openai: { model: 'gpt-5-mini', baseUrl: 'https://api.openai.com/v1' },
+      gemini: { model: 'gemini-2.5-flash', baseUrl: 'https://generativelanguage.googleapis.com/v1beta' },
       deepseek: { model: 'deepseek-chat', baseUrl: 'https://api.deepseek.com' },
       local: { model: '', baseUrl: 'http://localhost:11434/v1', preset: 'ollama', timeoutSec: 300, hideThinking: true }
     }
@@ -206,3 +189,9 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
 
 /** Language the AI answers in: the chosen one, or the interface language ('auto'). */
 export const aiLanguageOf = (s: Pick<AppSettings, 'uiLanguage' | 'ai'>) => (!s.ai.language || s.ai.language === 'auto' ? s.uiLanguage : s.ai.language)
+
+/** Standing instructions sent to the AI: the user's own or the language's default, the answer level and the safety rule. */
+export function aiSystemPrompt(s: Pick<AppSettings, 'uiLanguage' | 'ai'>): string {
+  const loc = getLocale(aiLanguageOf(s))
+  return `${s.ai.systemPrompt.trim() || loc.systemPrompt}\n\n${loc.aiLevel[s.ai.level]}\n\n${loc.aiSafety}`
+}

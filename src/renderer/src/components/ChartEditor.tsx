@@ -313,7 +313,7 @@ export default function ChartEditor({
                     ))}
                     <input
                       value={tagDraft}
-                      placeholder={(rec.tags ?? []).length ? '' : 'danışan, aile, ünlü… (Enter)'}
+                      placeholder={(rec.tags ?? []).length ? '' : t('danışan, aile, ünlü… (Enter)')}
                       onChange={(e) => (e.target.value.endsWith(',') ? addTag(e.target.value.slice(0, -1)) : setTagDraft(e.target.value))}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && tagDraft.trim()) {

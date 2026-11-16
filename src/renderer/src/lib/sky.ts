@@ -1,5 +1,5 @@
 // Wording for sky events, shared by the sky panel and the AI context.
-import type { SkyEvent, SkyReport, TzSpec } from '@shared/types'
+import type { MoonStay, SkyEvent, SkyReport, TzSpec } from '@shared/types'
 import { fmtPos, fmtPosText, glyph, moonPhase, POINTS, SIGNS, splitDeg } from './astro'
 import { t } from './i18n'
 import { fmtDate, fmtLocal, jdToLocal } from './time'
@@ -70,4 +70,13 @@ export function skyContext(r: SkyReport, tz: TzSpec, lon: number): string {
   for (const e of r.events) out.push(`- ${d(e.jd)}: ${eventText(e)}, ${fmtPosText(e.lon)}`)
   for (const e of r.nextEclipses) if (!r.events.includes(e)) out.push(`- ${t('Sonraki')}: ${eventText(e)} ${d(e.jd)}, ${fmtPosText(e.lon)}`)
   return out.join('\n')
+}
+
+/** The Moon's signs and void-of-course times for the coming days (timing questions). */
+export function moonText(stays: MoonStay[], tz: TzSpec, lon: number): string {
+  const d = (jd: number) => fmtLocal(jdToLocal(jd, tz, lon))
+  return [
+    t('# AY TAKVİMİ: burçlar ve boşluk (void of course) zamanları'),
+    ...stays.map((s) => t('- {from} – {to}: Ay {sign} burcunda', { from: d(s.start), to: d(s.end), sign: SIGNS[s.sign].name }) + (s.voc < s.end ? t('; boşluk başlangıcı {from}', { from: d(s.voc) }) : ''))
+  ].join('\n')
 }

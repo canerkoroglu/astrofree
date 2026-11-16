@@ -4,10 +4,9 @@ import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { aiLanguageOf, PROVIDERS } from '@shared/defaults'
+import { aiSystemPrompt, PROVIDERS } from '@shared/defaults'
 import { buildConversation, lastSentContext, requestTokens } from '@shared/aiHistory'
-import { getLocale } from '@shared/i18n'
-import type { AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
+import type { AiLevel, AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
 
 interface Props {
   chatKey: string
@@ -60,6 +59,25 @@ const QUICK: { label: string; needs?: string; prompt: string }[] = [
   },
   { label: 'Kariyer', needs: 'natal', prompt: 'Haritaya göre kariyer ve meslek potansiyelini yorumla (MC, 10. ev, 6. ev, 2. ev ve yöneticileri).' },
   { label: 'İlişkiler', needs: 'natal', prompt: 'Haritaya göre ilişki ve ortaklık dinamiklerini yorumla (7. ev, Venüs, Mars, Ay, DC yöneticisi).' }
+]
+
+/** Shortcuts at the amateur level: everyday life questions instead of techniques. */
+const QUICK_AMATEUR: typeof QUICK = [
+  { label: 'Bugün nasıl?', needs: 'sky', prompt: 'Bugün gökyüzü nasıl bir gün gösteriyor? Sade bir dille, bugün nelere dikkat etmek iyi olur?' },
+  { label: 'Ben nasıl biriyim?', needs: 'natal', prompt: 'Haritama göre nasıl bir insanım? Güçlü yanlarımı ve zorlanabileceğim konuları sade bir dille anlat.' },
+  { label: 'Önümüzdeki 2 ay', needs: 'natal', prompt: 'Önümüzdeki iki ayda hayatımda hangi konular öne çıkabilir? Sade bir dille, haftalara göre anlat.' },
+  { label: 'Aşk', needs: 'natal', prompt: 'Aşk hayatım ve ilişkilerim hakkında haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?' },
+  {
+    label: 'İş ve para',
+    needs: 'natal',
+    prompt: 'İş, kariyer ve para konusunda güçlü yanlarım neler? Önümüzdeki haftalarda yeni bir iş ya da başlangıç için uygun zamanlar var mı?'
+  },
+  { label: 'Sağlık ve enerji', needs: 'natal', prompt: 'Enerjim, stresim ve kendime bakımım için haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?' },
+  { label: 'Uyumumuz', needs: 'synastry', prompt: 'Bu iki kişi birbiriyle nasıl anlaşır? İlişkinin güçlü yanlarını ve dikkat edilmesi gerekenleri sade bir dille anlat.' },
+  {
+    label: 'Uygun günler',
+    prompt: 'Önümüzdeki 30 günde sözleşme imzalamak, yeni bir işe başlamak ya da saç kestirmek gibi işler için hangi günler daha uygun olabilir? Her biri için kısa bir neden yaz.'
+  }
 ]
 
 function Markdown({ text }: { text: string }) {
@@ -161,14 +179,14 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
 
   // Size of the next request (what pressing Send would cost, roughly).
   const nextSize = useMemo(() => {
-    const system = settings.ai.systemPrompt.trim() || getLocale(aiLanguageOf(settings)).systemPrompt
+    const system = aiSystemPrompt(settings)
     const ctx = contextToAttach()
     const next: AiMessage[] = [...messages, { role: 'user', content: input || ' ', ...(ctx ? { context: ctx } : {}) }]
     const sent = requestTokens(system, next)
     // Everything before the new question was in the previous request too: likely served from the cache.
     const repeat = messages.length ? requestTokens(system, messages) : 0
     return { tokens: sent, repeat: Math.min(repeat, sent), withChart: !!ctx, shortened: buildConversation(next).shortened }
-  }, [messages, input, attach, context, live, settings.ai.systemPrompt, settings.ai.language, settings.uiLanguage])
+  }, [messages, input, attach, context, live, settings.ai.systemPrompt, settings.ai.level, settings.ai.language, settings.uiLanguage])
   const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toLocaleString(document.documentElement.lang || undefined, { maximumFractionDigits: 1 })}k` : String(n))
 
   const newSession = () => {
@@ -248,7 +266,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
     setRunId(id)
     setStarted(Date.now())
     setStatus(t('{p} yanıtlıyor…', { p: info.label }))
-    const system = settings.ai.systemPrompt.trim() || getLocale(aiLanguageOf(settings)).systemPrompt
+    const system = aiSystemPrompt(settings)
     window.astro.ai.start({
       id,
       provider,
@@ -281,6 +299,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
   const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
   const setModel = (model: string) =>
     onSettings({ ...settings, ai: { ...settings.ai, providers: { ...settings.ai.providers, [provider]: { ...cfg, model } } } })
+  const setLevel = (level: AiLevel) => onSettings({ ...settings, ai: { ...settings.ai, level } })
 
   return (
     <div className="chat">
@@ -377,7 +396,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       )}
 
       <div className="quick">
-        {QUICK.filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
+        {(settings.ai.level === 'amateur' ? QUICK_AMATEUR : QUICK).filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
           <button key={q.label} disabled={!!runId} onClick={() => send(t(q.prompt))}>
             {t(q.label)}
           </button>
@@ -493,6 +512,15 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             ≈ {fmtK(nextSize.tokens)} {t('token')}
             {nextSize.withChart ? ' 📎' : ''}
           </span>
+          <select
+            className="chat-level"
+            value={settings.ai.level}
+            onChange={(e) => setLevel(e.target.value as AiLevel)}
+            title={t('Yanıt düzeyi: Amatör sade, gündelik bir dille; Profesyonel teknik terimler ve ayrıntıyla yanıtlar.')}
+          >
+            <option value="amateur">{t('Amatör')}</option>
+            <option value="professional">{t('Profesyonel')}</option>
+          </select>
           {runId ? (
             <button onClick={stop}>{t('■ Durdur')}</button>
           ) : (

@@ -18,7 +18,7 @@ export function formatLocal(l: LocalDateTime, seconds: boolean): string {
   return `${fmtDate(l)} ${p2(l.h)}:${p2(l.mi)}${seconds ? ':' + p2(l.s) : ''}`
 }
 
-const fold = (s: string) => s.toLocaleLowerCase('tr').normalize('NFD').replace(/\p{M}/gu, '').replace(/ı/g, 'i')
+const fold = (s: string) => s.toLocaleLowerCase('tr').normalize('NFD').replace(/\p{M}/gu, '').replace(/ı/g, 'i') // i18n-ignore
 
 /**
  * Parse "17.01.1942 18:35", "17/1/1942", "1942-01-17 18:35:20",

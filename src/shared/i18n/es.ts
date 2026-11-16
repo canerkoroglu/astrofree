@@ -63,7 +63,51 @@ Reglas:
 - Usa Markdown ordenado y legible, con títulos y viñetas.
 - Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
 - Responde en español.`,
+  aiLevel: {
+    amateur: `Nivel de respuesta: aficionado.
+Quien pregunta no es astrólogo. Casi siempre pregunta por su propia vida (amor y relaciones, trabajo y carrera, dinero, salud y bienestar, familia, lo que puede traer el futuro) o por el momento adecuado: cuándo empezar un nuevo trabajo, firmar un contrato, mudarse, viajar, cortarse o teñirse el pelo.
+- Usa un lenguaje cálido, sencillo y cotidiano. Evita la jerga; si un término es inevitable (p. ej., «retrógrado»), explícalo en pocas palabras la primera vez.
+- Responde primero a la pregunta en sí, en dos o tres frases, y luego da brevemente las razones principales. Explica qué pueden significar las posiciones en la vida diaria en lugar de enumerar grados, orbes y nombres de aspectos.
+- Sé breve y práctico: pocos títulos o viñetas, sugerencias concretas que la persona pueda aplicar, sin tablas técnicas.
+- Preguntas sobre el futuro: describe los temas probables y los periodos favorables o difíciles como tendencias, nunca como hechos seguros.
+- Preguntas de «¿cuándo debería…?»: usa los datos de los próximos días (eventos del cielo, el calendario lunar con las horas de Luna vacía de curso, tránsitos a la carta) y da fechas o intervalos concretos, cada uno con una razón breve en palabras sencillas (p. ej., Luna creciente, Luna no vacía de curso, Mercurio no retrógrado, un tránsito favorable). Nunca adivines fechas ni posiciones planetarias más allá del periodo que cubren los datos; para eso, recomienda las pestañas Calendario de tránsitos y Elección de momento de la aplicación.
+- Salud: puedes hablar de tendencias de energía, estrés y autocuidado, pero nunca diagnostiques ni sugieras tratamientos; ante cualquier molestia recomienda consultar a un médico.`,
+    professional: `Nivel de respuesta: profesional.
+Quien pregunta conoce la astrología. Usa la terminología técnica habitual sin explicarla y respalda cada afirmación con los factores en que se basa: posiciones con grados, aspectos con orbe y si son aplicativos o separativos, regentes de casas, dignidades, señores del tiempo y figuras de aspectos cuando se den. Sopesa los testimonios contradictorios y nombra las técnicas que utilizas; la profundidad importa más que la brevedad.`
+  },
+  aiSafety: `Seguridad: si la persona parece estar en crisis o menciona autolesiones, suicidio, violencia o peligro, deja la astrología a un lado. Responde con calidez y comprensión; anímala a llamar de inmediato al número de emergencias local o a una línea de crisis y a hablar con alguien de confianza. En ese caso no des lectura de la carta, fechas ni predicciones.`,
   strings: {
+    "38n15 · 38°15'K · 38.25": "38n15 · 38°15'N · 38.25",
+    "85w46 · 28°57'D · -85.77": "85w46 · 28°57'E · -85.77",
+    "Europe/Istanbul": "Europe/Madrid",
+    "danışan, aile, ünlü… (Enter)": "cliente, familia, famoso… (Enter)",
+    "Yanıtlar nasıl olsun?": "¿Cómo deben ser las respuestas?",
+    "Sade, gündelik bir dil; aşk, iş, sağlık ve “ne zaman?” soruları için.": "Lenguaje sencillo y cotidiano; para preguntas sobre amor, trabajo, salud y «¿cuándo?».",
+    "Teknik terimler, dereceler, orb’lar ve teknikler; astrologlar için.": "Términos técnicos, grados, orbes y técnicas; para astrólogos.",
+    "Sohbette Gönder düğmesinin yanından istediğiniz zaman değiştirebilirsiniz.": "Puede cambiarlo cuando quiera junto al botón Enviar del chat.",
+    "Yapay zekâ aracı": "Herramienta de IA",
+    "# AY TAKVİMİ: burçlar ve boşluk (void of course) zamanları": "# CALENDARIO LUNAR: signos y Luna vacía de curso",
+    "- {from} – {to}: Ay {sign} burcunda": "- {from} – {to}: Luna en {sign}",
+    "; boşluk başlangıcı {from}": "; vacía de curso desde {from}",
+    "Bugün nasıl?": "¿Cómo es hoy?",
+    "Bugün gökyüzü nasıl bir gün gösteriyor? Sade bir dille, bugün nelere dikkat etmek iyi olur?": "¿Qué tipo de día muestra el cielo de hoy? Explica con palabras sencillas qué conviene tener en cuenta hoy.",
+    "Ben nasıl biriyim?": "¿Cómo soy?",
+    "Haritama göre nasıl bir insanım? Güçlü yanlarımı ve zorlanabileceğim konuları sade bir dille anlat.": "Según mi carta, ¿qué tipo de persona soy? Describe con palabras sencillas mis puntos fuertes y los temas en los que me puede costar más.",
+    "Önümüzdeki 2 ay": "Próximos 2 meses",
+    "Önümüzdeki iki ayda hayatımda hangi konular öne çıkabilir? Sade bir dille, haftalara göre anlat.": "¿Qué temas pueden destacar en mi vida en los próximos dos meses? Explícalo con palabras sencillas, semana a semana.",
+    "Aşk": "Amor",
+    "Aşk hayatım ve ilişkilerim hakkında haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?": "¿Qué dice mi carta sobre mi vida amorosa y mis relaciones? ¿Qué debería tener en cuenta en las próximas semanas?",
+    "İş ve para": "Trabajo y dinero",
+    "İş, kariyer ve para konusunda güçlü yanlarım neler? Önümüzdeki haftalarda yeni bir iş ya da başlangıç için uygun zamanlar var mı?": "¿Cuáles son mis puntos fuertes en el trabajo, la carrera y el dinero? ¿Hay buenos momentos en las próximas semanas para un nuevo trabajo o un nuevo comienzo?",
+    "Sağlık ve enerji": "Salud y energía",
+    "Enerjim, stresim ve kendime bakımım için haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?": "¿Qué dice mi carta sobre mi energía, mi estrés y mi autocuidado? ¿Qué debería tener en cuenta en las próximas semanas?",
+    "Uyumumuz": "Nuestra compatibilidad",
+    "Bu iki kişi birbiriyle nasıl anlaşır? İlişkinin güçlü yanlarını ve dikkat edilmesi gerekenleri sade bir dille anlat.": "¿Cómo se llevan estas dos personas? Describe con palabras sencillas los puntos fuertes de la relación y lo que requiere cuidado.",
+    "Uygun günler": "Días favorables",
+    "Önümüzdeki 30 günde sözleşme imzalamak, yeni bir işe başlamak ya da saç kestirmek gibi işler için hangi günler daha uygun olabilir? Her biri için kısa bir neden yaz.": "En los próximos 30 días, ¿qué días pueden ser mejores para cosas como firmar un contrato, empezar un nuevo trabajo o cortarse el pelo? Da una razón breve para cada uno.",
+    "Amatör": "Aficionado",
+    "Profesyonel": "Profesional",
+    "Yanıt düzeyi: Amatör sade, gündelik bir dille; Profesyonel teknik terimler ve ayrıntıyla yanıtlar.": "Nivel de respuesta: Aficionado responde con un lenguaje sencillo y cotidiano; Profesional, con términos técnicos y detalle.",
     "Gelişmiş özellikler": "Funciones avanzadas",
     "Vedik (Jyotiş) araçları": "Herramientas védicas (Jyotish)",
     "Natal Bilgiler’e sidereal (Lahiri) nakshatra ve navamsa tablosu, Vimshottari dasha, Kuzey/Güney Hint çarkı, doğum Panchangı ve sinastri partneriyle kundli eşleştirmesi ekler.": "Añade a Datos natales una tabla sideral (Lahiri) de nakshatras y navamsa, Vimshottari dasha, cartas del norte/sur de la India, el Panchang de nacimiento y el emparejamiento kundli con la pareja de sinastría.",

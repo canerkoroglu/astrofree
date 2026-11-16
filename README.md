@@ -138,6 +138,16 @@ Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı r
 [AI connection guide](docs/en/ai-setup.md). Not: Claude masaüstü uygulaması Claude Code değildir; `claude` komutunun
 ayrıca kurulması gerekir.
 
+- Gönder düğmesinin yanındaki **yanıt düzeyi**: **Amatör** (varsayılan) sade, gündelik bir dille hayat sorularına (aşk, iş,
+  sağlık, gelecek) ve "ne zaman yapmalıyım?" sorularına yanıt verir; kısayolları da gündelik sorulardır (Aşk, İş ve para,
+  Uygun günler…). **Profesyonel** teknik terimler, dereceler, orb'lar ve tekniklerle ayrıntılı yanıt verir. Düzey talimatı
+  ve kriz anları için güvenlik kuralı, kendi sistem talimatınızı yazsanız da eklenir.
+- Zamanlama soruları için her haritayla bugünden itibaren yaklaşan günler de gönderilir: 60 günlük gökyüzü olayları
+  (retrolar, burç geçişleri, ay evreleri, tutulmalar) ve haritaya transitler, 30 günlük Ay takvimi (burçlar ve boşluk
+  zamanları). Yapay zekâ böylece somut tarih verebilir; bu veri günde bir kez değişir. Maliyeti düşük tutmak için hızlı
+  gezegenlerin (Güneş, Merkür, Venüs) transitleri 30 günle ve toplam 40 satırla sınırlıdır.
+- Yanıt düzeyi ilk açılış rehberinde de sorulur (Amatör önceden seçili). Ücretli API'lerde varsayılan modeller uygun
+  fiyatlıdır (Claude Sonnet, GPT-5 mini, Gemini Flash); daha güçlü modeller sohbetteki model listesinden seçilebilir.
 - Sohbetler harita başına **oturumlar** olarak saklanır (yeni sohbet, ad değiştirme, silme) ve otomatik yedeğe dahildir.
 - Uzun sohbetlerde son 12 mesaj tam, daha eskileri kısaltılarak gönderilir; talimat ve geçmiş isteğin başında sabit
   durduğu için sağlayıcıların önbelleği (prompt caching) tekrar eden kısmı daha hızlı ve ucuz işler. Gönder düğmesinin

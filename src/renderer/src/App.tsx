@@ -1,7 +1,7 @@
 import { setLang, t } from './lib/i18n'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { AppSettings, ChartRecord, Interpretation, LocalDateTime, PlanetaryHours, SkyReport, TransitHit, TzSpec } from '@shared/types'
+import type { AppSettings, AspectKey, ChartRecord, Interpretation, LocalDateTime, MoonStay, PlanetaryHours, SkyReport, TransitHit, TzSpec } from '@shared/types'
 import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
@@ -25,12 +25,12 @@ import SettingsDialog, { type SettingsFocus } from './components/SettingsDialog'
 import { AspectGrid, AspectList, HousesTable, PositionsTable } from './components/Tables'
 import TimeControls, { STEPS } from './components/TimeControls'
 import TransitCalendar, { calendarText } from './components/TransitCalendar'
-import { diff180, fmtCoord, fmtPosText, HOUSE_SYSTEMS, moonPhase, POINT } from './lib/astro'
+import { ASPECT, diff180, fmtCoord, fmtPosText, HOUSE_SYSTEMS, moonPhase, POINT } from './lib/astro'
 import { chartJd, compositeRecord, computeCharts, davisonRecord, OUTER_LABEL, type Computed, type OuterKind } from './lib/chart'
 import { buildContext, patternsText, starsText, traditionalText } from './lib/context'
 import { findPatterns } from './lib/patterns'
 import { harmonicLayer } from './lib/midpoints'
-import { skyContext } from './lib/sky'
+import { moonText, skyContext } from './lib/sky'
 import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, systemZone, tzLabel, type StepUnit } from './lib/time'
 import { pickLocale } from '@shared/i18n'
 import { parseKnowledge, type KbFile } from '@shared/knowledge'
@@ -87,6 +87,15 @@ type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
 type View = 'chart' | 'today' | 'info' | 'reading' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
+// "When should I…" data sent to the AI, from today on, kept small (it rides on every chat's chart data):
+// sky events and Mars–Pluto transits for TIMING_DAYS; the Moon calendar and Sun/Mercury/Venus transits
+// for SHORT_DAYS; at most TIMING_LINES transits. The Moon is left out of the transits (it has its own calendar).
+const TIMING_DAYS = 60
+const SHORT_DAYS = 30
+const TIMING_LINES = 40
+const TIMING_BODIES = [0, 2, 3, 4, 5, 6, 7, 8, 9]
+const FAST_BODIES = [0, 2, 3]
+const TIMING_ASPECTS = (['conjunction', 'opposition', 'square', 'trine', 'sextile'] as AspectKey[]).map((k) => ({ key: k, angle: ASPECT[k].angle, orb: 1 }))
 
 export default function App() {
   const [settings, setSettings] = useState<AppSettings | null>(null)
@@ -318,6 +327,34 @@ export default function App() {
     }
   }, [skyHour, settings?.zodiac, settings?.sidMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Coming days from today, for timing questions; refreshed once a day and when the chart changes.
+  const today = Math.floor(nowJd() + 0.5) - 0.5
+  const timingPoints =
+    computed && working && working.id !== NOW_ID
+      ? computed.natal.points.filter((p) => STAR_POINTS.includes(p.key) && !(working.timeUnknown && (p.key === 'asc' || p.key === 'mc')))
+      : []
+  const timingKey = `${today}|${timingPoints.map((p) => `${p.key}:${p.lon.toFixed(3)}`).join(',')}`
+  const [upcoming, setUpcoming] = useState<{ key: string; sky: SkyReport; moon: MoonStay[]; hits: TransitHit[] } | null>(null)
+  useEffect(() => {
+    if (!settings) return
+    let alive = true
+    const sid = settings.zodiac === 'sidereal' ? settings.sidMode : null
+    const natal = timingPoints.map((p) => ({ key: p.key, lon: p.lon }))
+    Promise.all([
+      window.astro.sky(today, TIMING_DAYS, sid),
+      window.astro.tools.moon(today, SHORT_DAYS, sid),
+      natal.length ? window.astro.tools.transits({ start: today, end: today + TIMING_DAYS, bodies: TIMING_BODIES, natal, aspects: TIMING_ASPECTS, sidMode: sid }) : []
+    ])
+      .then(([sky, moon, all]) => {
+        const hits = all.filter((h) => !FAST_BODIES.includes(h.body) || (h.exacts[0]?.jd ?? h.start) < today + SHORT_DAYS)
+        if (alive) setUpcoming({ key: timingKey, sky, moon, hits })
+      })
+      .catch(() => alive && setUpcoming(null))
+    return () => {
+      alive = false
+    }
+  }, [timingKey, settings?.zodiac, settings?.sidMode]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Planetary hours for the sky date at the default place.
   useEffect(() => {
     if (!settings) return
@@ -389,7 +426,14 @@ export default function App() {
     const st = starsText(starConj)
     if (st) parts.push(st)
     if (working.id !== NOW_ID) parts.push(traditionalText(computed.natal, computed.natalJd, eventJd))
-    if (sky && (working.id === NOW_ID || outers.includes('transit'))) parts.push(skyContext(sky, eventTz, eventPlace.lon))
+    // Coming days (only once computed for this chart and day).
+    const up = upcoming?.key === timingKey ? upcoming : null
+    const showSky = sky && (working.id === NOW_ID || outers.includes('transit'))
+    if (showSky && !(up && Math.abs(sky.jd - up.sky.jd) < 1)) parts.push(skyContext(sky, eventTz, eventPlace.lon))
+    if (up) {
+      parts.push(skyContext(up.sky, eventTz, eventPlace.lon), moonText(up.moon, eventTz, eventPlace.lon))
+      if (up.hits.length && !calHits.length) parts.push(calendarText(up.hits, working.tz, working.place.lon, TIMING_LINES))
+    }
     if (calHits.length) parts.push(calendarText(calHits, working.tz, working.place.lon))
     if (harmonic !== 1 && shown)
       parts.push(
@@ -397,7 +441,7 @@ export default function App() {
           shown.natal.points.map((p) => `- ${POINT[p.key]?.name ?? p.key}: ${fmtPosText(p.lon)}`).join('\n')
       )
     return parts.join('\n\n')
-  }, [computed, working, settings, eventJd, eventTz, eventPlace, partner, sky, outers, patterns, starConj, calHits, harmonic, shown])
+  }, [computed, working, settings, eventJd, eventTz, eventPlace, partner, sky, upcoming, timingKey, outers, patterns, starConj, calHits, harmonic, shown])
 
   // ---- time --------------------------------------------------------------------
   const effTarget = outers.length ? target : 'natal'
