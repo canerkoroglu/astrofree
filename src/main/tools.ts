@@ -2,10 +2,12 @@
 // fixed stars and planetary hours.
 import type {
   ElectionRequest,
+  DayFact,
   ElectionWindow,
   FixedStarPos,
   MoonStay,
   PlanetaryHours,
+  TimingFacts,
   TransitHit,
   TransitSearchRequest
 } from '@shared/types'
@@ -267,6 +269,80 @@ export async function electionalSearch(req: ElectionRequest): Promise<ElectionWi
   }
   if (cur) out.push(cur)
   return out
+}
+
+const DAY_HOURS = Array.from({ length: 14 }, (_, i) => 8 + i) // 08:00 … 21:00 local
+const TIMING_RETRO = [2, 3, 4] // Mercury, Venus, Mars
+
+/**
+ * Facts for timing questions over a longer range than the chart's "coming days":
+ * per local day the Moon's sign and phase, its void-of-course-free daytime hours
+ * and which of Mercury, Venus and Mars are retrograde; plus stations and eclipses.
+ * `dayStart` is local midnight of the first day as a UT Julian day (one offset for
+ * the whole range: close enough for daytime hours across a DST change).
+ */
+export async function timingFacts(dayStart: number, days: number, sidMode: number | null): Promise<TimingFacts> {
+  const swe = await getSwe()
+  const calc = lonFn(swe, sidMode)
+  const lon = (t: number, b: number) => calc(t, b)[0]
+  const n = Math.max(1, Math.min(Math.round(days), 560))
+  const end = dayStart + n
+
+  const voc: { start: number; end: number }[] = []
+  let t = dayStart - 3
+  for (let guard = 0; guard < 600 && t < end; guard++) {
+    const v = voidOfCourse(t, lon)
+    if (!v) break
+    if (v.start < v.end) voc.push({ start: v.start, end: v.end })
+    t = v.end + 0.05
+  }
+  let vi = 0
+  const inVoc = (x: number) => {
+    while (vi < voc.length && voc[vi].end <= x) vi++
+    return vi < voc.length && x >= voc[vi].start && x < voc[vi].end
+  }
+
+  const out: DayFact[] = []
+  for (let d = 0; d < n; d++) {
+    const midnight = dayStart + d
+    const noon = midnight + 0.5
+    const free = DAY_HOURS.filter((h) => !inVoc(midnight + h / 24))
+    out.push({
+      jd: noon,
+      moonLon: lon(noon, 1),
+      elong: norm(lon(noon, 1) - lon(noon, 0)),
+      freeHours: free.length,
+      freeFrom: free.length ? free[0] : null,
+      freeTo: free.length ? free[free.length - 1] + 1 : null,
+      retro: TIMING_RETRO.filter((b) => calc(noon, b)[1] < 0)
+    })
+  }
+
+  const stations: TimingFacts['stations'] = []
+  for (const b of TIMING_RETRO) {
+    let prev = calc(dayStart - 120, b)[1]
+    // From well before the range to well after it, so periods it cuts through get both ends.
+    for (let x = dayStart - 119; x <= end + 120; x += 1) {
+      const cur = calc(x, b)[1]
+      if (prev < 0 !== cur < 0) stations.push({ jd: bisect(x - 1, x, (y) => calc(y, b)[1] < 0), body: b, retro: cur < 0 })
+      prev = cur
+    }
+  }
+  stations.sort((a, b) => a.jd - b.jd)
+
+  const eclipses: TimingFacts['eclipses'] = []
+  for (const solar of [true, false]) {
+    let x = dayStart - 15
+    for (let guard = 0; guard < 6; guard++) {
+      const r = solar ? swe.sol_eclipse_when_glob(x, SEFLG_SWIEPH, 0, 0) : swe.lun_eclipse_when(x, SEFLG_SWIEPH, 0, 0)
+      const at = r?.tret?.[0]
+      if (!at || at > end + 15) break
+      eclipses.push({ jd: at, solar })
+      x = at + 20
+    }
+  }
+  eclipses.sort((a, b) => a.jd - b.jd)
+  return { days: out, stations, eclipses }
 }
 
 /** Longitudes of several bodies sampled over a range (graphic ephemeris). */

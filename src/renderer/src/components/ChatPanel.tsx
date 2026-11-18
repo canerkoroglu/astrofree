@@ -21,6 +21,8 @@ interface Props {
   inject?: { id: number; text: string } | null
   /** Knowledge-base entries matching the chart and the question, as text. */
   knowledge?: (question: string) => string
+  /** Candidate days and periods for a timing question ('' when the question is not about timing). */
+  timing?: (question: string) => Promise<string>
   /** Number of knowledge files, to show the toggle only when there is a base. */
   knowledgeCount?: number
   /** Open Settings at this provider's section (address, key, model). */
@@ -65,20 +67,26 @@ const QUICK: { label: string; needs?: string; prompt: string }[] = [
 const QUICK_AMATEUR: typeof QUICK = [
   { label: 'Bugün nasıl?', needs: 'sky', prompt: 'Bugün gökyüzü nasıl bir gün gösteriyor? Sade bir dille, bugün nelere dikkat etmek iyi olur?' },
   { label: 'Ben nasıl biriyim?', needs: 'natal', prompt: 'Haritama göre nasıl bir insanım? Güçlü yanlarımı ve zorlanabileceğim konuları sade bir dille anlat.' },
-  { label: 'Önümüzdeki 2 ay', needs: 'natal', prompt: 'Önümüzdeki iki ayda hayatımda hangi konular öne çıkabilir? Sade bir dille, haftalara göre anlat.' },
-  { label: 'Aşk', needs: 'natal', prompt: 'Aşk hayatım ve ilişkilerim hakkında haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?' },
+  { label: 'Önümüzdeki 3 ay', needs: 'natal', prompt: 'Önümüzdeki 3 ayda hayatımda hangi konular öne çıkabilir? Kısa ve sade bir dille anlat.' },
+  { label: 'Aşk', needs: 'natal', prompt: 'Aşk hayatım ve ilişkilerim hakkında haritam neler gösterebilir? Önümüzdeki haftalarda öne çıkabilecek temalar neler?' },
   {
     label: 'İş ve para',
     needs: 'natal',
-    prompt: 'İş, kariyer ve para konusunda güçlü yanlarım neler? Önümüzdeki haftalarda yeni bir iş ya da başlangıç için uygun zamanlar var mı?'
+    prompt: 'İş, kariyer ve para konusunda güçlü yanlarım neler olabilir? Önümüzdeki haftalarda yeni başlangıçlar için daha uygun görülebilecek günler var mı?'
   },
-  { label: 'Sağlık ve enerji', needs: 'natal', prompt: 'Enerjim, stresim ve kendime bakımım için haritam ne söylüyor? Önümüzdeki haftalarda nelere dikkat etmeliyim?' },
+  { label: 'Sağlık ve enerji', needs: 'natal', prompt: 'Enerjim, dinlenme ihtiyacım ve kendime bakım konusunda haritam neler gösterebilir?' },
   { label: 'Uyumumuz', needs: 'synastry', prompt: 'Bu iki kişi birbiriyle nasıl anlaşır? İlişkinin güçlü yanlarını ve dikkat edilmesi gerekenleri sade bir dille anlat.' },
   {
+    label: 'Merkür retrosu',
+    prompt: 'Önümüzdeki 6 ayda Merkür retrosu var mı? Ne zaman başlayıp bitiyor ve geleneksel olarak nelerle ilişkilendiriliyor?'
+  },
+  {
     label: 'Uygun günler',
-    prompt: 'Önümüzdeki 30 günde sözleşme imzalamak, yeni bir işe başlamak ya da saç kestirmek gibi işler için hangi günler daha uygun olabilir? Her biri için kısa bir neden yaz.'
+    prompt: 'Önümüzdeki 30 günde yeni bir işe başlamak ya da önemli bir adım atmak için hangi günler daha uygun görülebilir? Her biri için kısa bir neden yaz.'
   }
 ]
+/** Offered under an amateur-level answer: the same in more depth, still in plain words. */
+const MORE_DETAIL = { label: 'Biraz daha ayrıntılı', prompt: 'Son yanıtı biraz daha ayrıntılı ama yine sade bir dille anlatır mısın?' }
 
 function Markdown({ text }: { text: string }) {
   const html = useMemo(() => DOMPurify.sanitize(marked.parse(text, { async: false }) as string), [text])
@@ -87,7 +95,7 @@ function Markdown({ text }: { text: string }) {
 
 const newSessionMeta = () => ({ id: crypto.randomUUID(), createdAt: Date.now(), title: '' })
 
-export default function ChatPanel({ chatKey, context, live = false, layers, settings, onSettings, onSave, inject, knowledge, knowledgeCount = 0, onOpenSettings }: Props) {
+export default function ChatPanel({ chatKey, context, live = false, layers, settings, onSettings, onSave, inject, knowledge, timing, knowledgeCount = 0, onOpenSettings }: Props) {
   const [lastKb, setLastKb] = useState('')
   const [savedIdx, setSavedIdx] = useState<Set<number>>(new Set())
   const [messages, setMessages] = useState<AiMessage[]>([])
@@ -114,6 +122,8 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
   const [renaming, setRenaming] = useState<string | null>(null)
   const loadedMessages = useRef<AiMessage[] | null>(null)
   const runIdRef = useRef<string | null>(null)
+  /** Dates are being computed: the request has not gone out yet. */
+  const preparing = useRef(false)
 
   const provider = settings.ai.provider
   const cfg = settings.ai.providers[provider]
@@ -248,23 +258,34 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
   }, [messages, status])
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const msg = text.trim()
-    if (!msg || runId) return
+    if (!msg || runIdRef.current) return
     const kb = attach && settings.ai.useKnowledge && knowledge ? knowledge(msg) : ''
     setLastKb(kb)
     // Chart data rides on the question only when it differs from what this conversation already has,
     // so follow-ups reuse the provider's cached copy.
     const ctx = contextToAttach()
     if (ctx) ctxSentAt.current = Date.now()
-    const next: AiMessage[] = [...messages, { role: 'user', content: msg, ...(ctx ? { context: ctx } : {}), ...(kb ? { knowledge: kb } : {}) }]
-    setMessages(next)
+    const question: AiMessage = { role: 'user', content: msg, ...(ctx ? { context: ctx } : {}), ...(kb ? { knowledge: kb } : {}) }
+    setMessages([...messages, question])
     setInput('')
     setError('')
     const id = crypto.randomUUID()
     runIdRef.current = id
     setRunId(id)
     setStarted(Date.now())
+    // "When…?" questions: compute candidate days for the range they name (a second or two at most).
+    let dates = ''
+    if (timing && attach) {
+      setStatus(t('Tarihler hesaplanıyor…'))
+      preparing.current = true
+      dates = await Promise.race([timing(msg).catch(() => ''), new Promise<string>((r) => window.setTimeout(() => r(''), 15000))])
+      preparing.current = false
+      if (runIdRef.current !== id) return // stopped meanwhile
+    }
+    const next: AiMessage[] = [...messages, dates ? { ...question, timing: dates } : question]
+    if (dates) setMessages(next)
     setStatus(t('{p} yanıtlıyor…', { p: info.label }))
     const system = aiSystemPrompt(settings)
     window.astro.ai.start({
@@ -285,7 +306,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
     // overwrite the message we are about to send.
     let timer = 0
     const go = () => {
-      if (loadedKey.current === chatKey) sendRef.current(inject.text)
+      if (loadedKey.current === chatKey) void sendRef.current(inject.text)
       else timer = window.setTimeout(go, 80)
     }
     go()
@@ -293,7 +314,15 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
   }, [inject?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stop = () => {
-    if (runId) window.astro.ai.cancel(runId)
+    if (!runId) return
+    window.astro.ai.cancel(runId)
+    // Still computing dates: nothing was sent yet, so no 'done' event will clear the run.
+    if (preparing.current) {
+      runIdRef.current = null
+      setRunId(null)
+      setStatus('')
+      setStarted(0)
+    }
   }
 
   const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
@@ -396,8 +425,13 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       )}
 
       <div className="quick">
+        {settings.ai.level === 'amateur' && !runId && messages[messages.length - 1]?.role === 'assistant' && (
+          <button className="quick-more" onClick={() => void send(t(MORE_DETAIL.prompt))}>
+            {t(MORE_DETAIL.label)}
+          </button>
+        )}
         {(settings.ai.level === 'amateur' ? QUICK_AMATEUR : QUICK).filter((q) => !q.needs || layers.includes(q.needs)).map((q) => (
-          <button key={q.label} disabled={!!runId} onClick={() => send(t(q.prompt))}>
+          <button key={q.label} disabled={!!runId} onClick={() => void send(t(q.prompt))}>
             {t(q.label)}
           </button>
         ))}
@@ -474,7 +508,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
-              send(input)
+              void send(input)
             }
           }}
         />
@@ -524,7 +558,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
           {runId ? (
             <button onClick={stop}>{t('■ Durdur')}</button>
           ) : (
-            <button className="primary" disabled={!input.trim()} onClick={() => send(input)}>
+            <button className="primary" disabled={!input.trim()} onClick={() => void send(input)}>
               {t('Gönder')}
             </button>
           )}

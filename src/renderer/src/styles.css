@@ -4845,3 +4845,9 @@ button.head-edit {
 .vedic-total td {
   font-weight: 700;
 }
+
+/* "A little more detail" under an amateur-level answer */
+.quick button.quick-more {
+  border-style: dashed;
+  color: var(--accent);
+}

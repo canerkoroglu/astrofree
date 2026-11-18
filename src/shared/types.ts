@@ -200,6 +200,8 @@ export interface AiMessage {
   context?: string
   /** User messages: knowledge-base entries matched to this question. */
   knowledge?: string
+  /** User messages: candidate days and periods computed for a timing question. */
+  timing?: string
   /** Assistant messages: token usage reported by the provider. */
   usage?: AiUsage
 }
@@ -389,4 +391,29 @@ export interface ElectionWindow {
   start: number
   end: number
   moonLon: number
+}
+
+// ---- Timing questions ("when is a good day to…") ----------------------------
+
+/** One local day, sampled over its daytime hours (08:00–21:00). */
+export interface DayFact {
+  /** Local noon, as a UT Julian day. */
+  jd: number
+  moonLon: number
+  /** Moon minus Sun, 0–360 (under 180 = waxing). */
+  elong: number
+  /** Daytime hours (of 14) when the Moon is not void of course. */
+  freeHours: number
+  /** First and last local hour of those, or null when there is none. */
+  freeFrom: number | null
+  freeTo: number | null
+  /** Swiss ids of Mercury, Venus and Mars when retrograde at noon. */
+  retro: number[]
+}
+
+export interface TimingFacts {
+  days: DayFact[]
+  /** Mercury, Venus and Mars stations from ~4 months before the range to ~4 months after it. */
+  stations: { jd: number; body: number; retro: boolean }[]
+  eclipses: { jd: number; solar: boolean }[]
 }

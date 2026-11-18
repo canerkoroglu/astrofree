@@ -138,10 +138,20 @@ Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı r
 [AI connection guide](docs/en/ai-setup.md). Not: Claude masaüstü uygulaması Claude Code değildir; `claude` komutunun
 ayrıca kurulması gerekir.
 
-- Gönder düğmesinin yanındaki **yanıt düzeyi**: **Amatör** (varsayılan) sade, gündelik bir dille hayat sorularına (aşk, iş,
-  sağlık, gelecek) ve "ne zaman yapmalıyım?" sorularına yanıt verir; kısayolları da gündelik sorulardır (Aşk, İş ve para,
-  Uygun günler…). **Profesyonel** teknik terimler, dereceler, orb'lar ve tekniklerle ayrıntılı yanıt verir. Düzey talimatı
+- Gönder düğmesinin yanındaki **yanıt düzeyi**: **Amatör** (varsayılan) kısa (yaklaşık 150 kelime), sade ve teknik terimsiz
+  yanıt verir: önce bir iki cümlelik doğrudan yanıt, sonra en çok 3–5 madde; "ne zaman?" sorularında en çok 3–5 tarih ve
+  her birinin sade nedeni. Yanıtın altındaki **Biraz daha ayrıntılı** düğmesi aynı konuyu biraz açar. Kısayollar gündelik
+  sorulardır (Aşk, İş ve para, Merkür retrosu, Uygun günler…). **Profesyonel** teknik terimler, dereceler, orb'lar ve
+  tekniklerle ayrıntılı yanıt verir. Her iki düzeyde de yanıtlar olasılık diliyle kurulur, "yap/yapma" gibi yönlendirme
+  ve sağlık, hukuk, finans konularında tahmin ya da öneri içermez; her yanıt kısa bir hatırlatmayla biter. Düzey talimatı
   ve kriz anları için güvenlik kuralı, kendi sistem talimatınızı yazsanız da eklenir.
+- **Zamanlama soruları** ("2027'de ne zaman nikâh günü alabiliriz?", "saç boyatmak için uygun bir zaman mı?", "Merkür
+  retrosunda telefon yenilesem?", "önümüzdeki 3 ay"): soru gönderilirken konusu (nikâh, diyet, saç, alışveriş/cihaz,
+  sözleşme, yeni iş, yolculuk, taşınma, sağlık) ve tarih aralığı (yıl, ay adı, "önümüzdeki 3 ay", "gelecek ay"; 8 dilde,
+  en çok 18 ay) bulunur. Aralıktaki her gün geleneksel seçim ölçütleriyle (Ay fazı ve boşluğu, Merkür/Venüs retro ve
+  durakları, tutulmalara uzaklık, Ay burcu, Ay'ın doğum haritasıyla ve varsa sinastri partnerinin haritasıyla açıları)
+  puanlanır; aylara yayılmış birkaç aday gün, "bugün" değerlendirmesi, aralıktaki retro dönemleri ve tutulmalar yalnızca
+  o soruya eklenerek gönderilir. Sağlık ve tıbbi işlem sorularında aday gün hesaplanmaz.
 - Zamanlama soruları için her haritayla bugünden itibaren yaklaşan günler de gönderilir: 60 günlük gökyüzü olayları
   (retrolar, burç geçişleri, ay evreleri, tutulmalar) ve haritaya transitler, 30 günlük Ay takvimi (burçlar ve boşluk
   zamanları). Yapay zekâ böylece somut tarih verebilir; bu veri günde bir kez değişir. Maliyeti düşük tutmak için hızlı

@@ -31,6 +31,7 @@ import { buildContext, patternsText, starsText, traditionalText } from './lib/co
 import { findPatterns } from './lib/patterns'
 import { harmonicLayer } from './lib/midpoints'
 import { moonText, skyContext } from './lib/sky'
+import { detectTiming, timingText } from './lib/timing'
 import { fmtLocal, fmtOffset, jdToLocal, localToJd, nowJd, offsetAt, stepJd, systemZone, tzLabel, type StepUnit } from './lib/time'
 import { pickLocale } from '@shared/i18n'
 import { parseKnowledge, type KbFile } from '@shared/knowledge'
@@ -415,6 +416,33 @@ export default function App() {
   const knowledgeFor = useCallback(
     (question: string) => (kbBase && kbEntries.length ? knowledgeText(matchKnowledge(kbEntries, { ...kbBase, question })) : ''),
     [kbBase, kbEntries]
+  )
+
+  // Timing questions ("best day for our wedding in 2027?"): candidate days and periods for the
+  // range and topic the question names, computed when it is sent and attached to it alone.
+  const timingFor = useCallback(
+    async (question: string): Promise<string> => {
+      if (!settings || !eventPlace) return ''
+      const ask = detectTiming(question, eventTz, eventPlace.lon, nowJd())
+      if (!ask) return ''
+      const sid = settings.zodiac === 'sidereal' ? settings.sidMode : null
+      const syn = computed?.outers.find((o) => o.kind === 'synastry')
+      const own = timingPoints.map((p) => ({ key: p.key, lon: p.lon }))
+      const natal = [
+        ...own,
+        ...(syn ? syn.points.filter((p) => STAR_POINTS.includes(p.key)).map((p) => ({ key: p.key, lon: p.lon, who: partner?.name || syn.label })) : [])
+      ]
+      // Slow transits only for ranges the chart's "coming days" do not cover already.
+      const longRange = ask.start + ask.days > today + TIMING_DAYS
+      const [facts, slow] = await Promise.all([
+        window.astro.tools.timing(ask.start, ask.days, sid),
+        own.length && longRange && (!ask.topic || ask.topic === 'health')
+          ? window.astro.tools.transits({ start: ask.start, end: ask.start + ask.days, bodies: [5, 6, 7, 8, 9], natal: own, aspects: TIMING_ASPECTS, sidMode: sid })
+          : Promise.resolve([] as TransitHit[])
+      ])
+      return timingText(ask, facts, natal, eventTz, eventPlace.lon, nowJd(), slow.length ? calendarText(slow, working?.tz ?? eventTz, working?.place.lon ?? eventPlace.lon, 20) : '')
+    },
+    [settings, eventPlace, eventTz, computed, timingPoints, partner, today, working]
   )
   const chartInterps = useMemo(() => interps.filter((i) => i.chartId === working?.id), [interps, working?.id])
 
@@ -1328,6 +1356,7 @@ export default function App() {
             onSave={saveInterpretation}
             inject={inject}
             knowledge={knowledgeFor}
+            timing={timingFor}
             knowledgeCount={kbFiles.length}
             onOpenSettings={(f) => {
               setSettingsFocus(f)

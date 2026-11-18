@@ -13,6 +13,7 @@ import type {
   FixedStarPos,
   Interpretation,
   MoonStay,
+  TimingFacts,
   PlanetaryHours,
   ProviderStatus,
   SkyReport,
@@ -36,7 +37,8 @@ const api = {
     election: (req: ElectionRequest): Promise<ElectionWindow[]> => ipcRenderer.invoke('tools:election', req),
     hours: (jd: number, lat: number, lon: number, tzOffset: number): Promise<PlanetaryHours | null> =>
       ipcRenderer.invoke('tools:hours', jd, lat, lon, tzOffset),
-    moon: (jd: number, days: number, sid: number | null): Promise<MoonStay[]> => ipcRenderer.invoke('tools:moon', jd, days, sid)
+    moon: (jd: number, days: number, sid: number | null): Promise<MoonStay[]> => ipcRenderer.invoke('tools:moon', jd, days, sid),
+    timing: (dayStart: number, days: number, sid: number | null): Promise<TimingFacts> => ipcRenderer.invoke('tools:timing', dayStart, days, sid)
   },
 
   interp: {

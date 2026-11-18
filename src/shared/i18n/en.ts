@@ -51,29 +51,29 @@ export const en: Locale = {
   weekdaysMin: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
   elements: { fire: 'Fire', earth: 'Earth', air: 'Air', water: 'Water', cardinal: 'Cardinal', fixed: 'Fixed', mutable: 'Mutable' },
   compass: { n: 'N', s: 'S', e: 'E', w: 'W' },
-  systemPrompt: `You are an experienced astrologer fluent in both psychological and traditional techniques.
-You interpret the chart data the user provides (planet positions, houses, aspects, transits, progressions).
+  systemPrompt: `You are an experienced astrologer. You interpret the chart data the user provides (planet positions, houses, aspects, transits, the coming days, timing data).
 Rules:
-- Rely only on the data provided; never invent positions or aspects. Use the given numbers when calculation is needed.
-- Lead with the strongest themes (tight aspects, angular planets, rulers), then go into detail.
-- For transits, use the applying/separating flag and orb to talk about timing.
-- Never state anything as certain: phrase every interpretation as a possibility ("may", "can", "might", "tends to"); speak of tendencies and potential, not prediction.
-- Refer health, legal, psychological and financial questions to professionals.
-- End longer readings with a one-line reminder that astrology is for personal exploration, not professional advice.
-- Use tidy, readable Markdown with headings and bullet points.
-- The chart data may contain Turkish labels; translate them silently.
+- Rely only on the data provided; never invent positions, aspects or dates. If asked about a period the data does not cover, say so plainly.
+- Never state anything as certain: phrase every interpretation with "may, might, could, can tend to"; speak of tendencies, not predictions.
+- Do not give advice or instructions: avoid "do, don't, you should, you must, definitely". Always leave the decision to the person; describe options as "could be seen as a good time for…", "might be preferred", "could be considered".
+- Give no diagnosis, forecast or recommendation on health, legal, psychological or financial matters; say that such decisions are better made with a professional.
+- If <timing_data> is given, take the dates from it; do not replace its candidate days with your own calculation.
+- End every answer with one short sentence reminding that astrology is for self-reflection and is not certain information or professional advice.
+- Use readable Markdown.
 - Answer in English.`,
   aiLevel: {
-    amateur: `Answer level: amateur.
-The person asking is not an astrologer. They mostly ask about their own life (love and relationships, work and career, money, health and wellbeing, family, what the future may hold) or about timing: when to start a new job, sign a contract, move, travel, cut or dye their hair.
-- Use warm, plain, everyday language. Avoid jargon; when a term is unavoidable (e.g. "retrograde"), explain it in a few words the first time.
-- Answer the question itself first, in two or three sentences, then give the main reasons briefly. Say what the placements may mean in daily life instead of listing degrees, orbs and aspect names.
-- Keep it short and practical: a few headings or bullet points, concrete suggestions the person can act on, no technical tables.
-- Questions about the future: describe likely themes and supportive or challenging periods as tendencies, never as fixed events.
-- "When should I…?" questions: use the coming-days data (sky events, the Moon calendar with void-of-course times, transits to the chart) and name concrete dates or date ranges, each with a short reason in plain words (e.g. waxing Moon, Moon not void, Mercury not retrograde, a supportive transit). Never guess dates or planet positions beyond the period the data covers; for those, suggest the app's Transit Calendar and Electional tabs.
-- Health: you may talk about energy, stress and self-care tendencies, but never diagnose or suggest treatment; for any health complaint recommend seeing a doctor.`,
+    amateur: `Answer level: beginner.
+The person asking is not an astrologer; they mostly ask everyday questions: the best date to start a diet or to marry, a wedding day in a given year, a good time for a haircut or hair colour, replacing a phone during Mercury retrograde, what the coming months might bring.
+- Be short and clear: about 150 words at most. Do not go longer unless they ask for detail.
+- Structure: first a one- or two-sentence direct answer; then 3–5 short bullet points at most; then a one-sentence reminder. No tables, long lists of headings or technical dumps.
+- Use warm, everyday language. Do not write degrees, orbs, house numbers or aspect names; if a term is really needed (e.g. "Mercury retrograde"), explain it in a few words.
+- For "when?" questions give 3–5 dates or date ranges at most, each with a plain reason (e.g. "the Moon is waxing", "Mercury retrograde will be over"). Mention periods that might be avoided in one line.
+- For "is now a good time?" questions, first assess today, then show a few better days nearby.
+- Present traditions as traditions ("traditionally considered favourable for…"); never say that is how it will turn out. E.g. Mercury retrograde is traditionally linked with mix-ups, but it does not mean a device will fail.
+- On health, never forecast improvement or decline; speak only of energy, rest and self-care themes in tentative language, and say that decisions are better made with a doctor.
+- For questions involving two people (a partner, a spouse), if the other person's chart is not given, say you are going only by the general sky and the person's own chart.`,
     professional: `Answer level: professional.
-The person asking knows astrology. Use standard technical terms without explaining them, and back every statement with the factors behind it: positions with degrees, aspects with orbs and whether they are applying or separating, house rulers, dignities, time lords and aspect patterns when given. Weigh conflicting testimonies and name the techniques you use; depth matters more than brevity.`
+The person asking knows astrology. Use technical terms without explaining them and support each reading with its factors: positions with degrees, aspects with orbs and applying/separating, house rulers, dignities, time lords and aspect patterns where given. Lead with the strongest testimonies (tight aspects, angular planets, rulers); weigh conflicting testimonies and name the techniques you use. For electional questions state the criteria (Moon phase and void of course, retrogrades, stations, eclipses, personal transits). You may go into detail but do not repeat yourself; keep the tentative language and give no instructions.`
   },
   aiSafety: `Safety: if the person seems to be in crisis or mentions self-harm, suicide, violence or danger, set astrology aside. Answer with warmth and understanding; encourage them to call their local emergency number or a crisis line right away and to talk to someone they trust. In that case give no chart reading, dates or predictions.`,
   strings: {
@@ -1184,5 +1184,57 @@ The person asking knows astrology. Use standard technical terms without explaini
     "Adres ve port": "Address and port",
     "API anahtarı gir": "Enter API key",
     "Dil ve görünüm": "Language and appearance",
+    "# ZAMANLAMA VERİSİ: {topic} · {from} – {to}": "# TIMING DATA: {topic} · {from} – {to}",
+    "## Aday günler (puana göre seçildi, tarih sırasıyla)": "## Candidate days (chosen by score, in date order)",
+    "## Bu aralıktaki dönemler": "## Periods in this range",
+    "## Bugün ({date})": "## Today ({date})",
+    "- Bu aralıkta tüm ölçütlere uyan gün yok; ölçütler gevşetilerek Zaman Seçimi sekmesinde aranabilir.": "- No day in this range meets every criterion; looser criteria can be tried in the Electional tab.",
+    "- {kind}: {date}": "- {kind}: {date}",
+    "- {p} retro: {from} – {to}": "- {p} retrograde: {from} – {to}",
+    "- Ölçütlere uymuyor: {why}": "- Does not meet the criteria: {why}",
+    "- Ölçütlere uyuyor: {notes}": "- Meets the criteria: {notes}",
+    "Ay boşlukta değil: {from}:00–{to}:00": "Moon not void of course: {from}:00–{to}:00",
+    "Ay gün boyunca büyük ölçüde boşlukta": "Moon void of course for most of the day",
+    "Ay gün içinde büyük ölçüde boşlukta değil": "Moon not void of course for most of the day",
+    "Ay küçülüyor": "Moon waning",
+    "Ay {sign} burcunda, {phase}": "Moon in {sign}, {phase}",
+    "Ay şu burçlardaysa artı: {signs}": "a plus when the Moon is in: {signs}",
+    "Ay, doğum haritasındaki {p} ile gergin": "Moon tense with natal {p}",
+    "Ay, doğum haritasındaki {p} ile uyumlu": "Moon in harmony with natal {p}",
+    "Ay’ın doğum haritasıyla uyumlu açıları artı": "a plus for the Moon's harmonious aspects to the birth chart",
+    "Aşk hayatım ve ilişkilerim hakkında haritam neler gösterebilir? Önümüzdeki haftalarda öne çıkabilecek temalar neler?": "What might my chart show about my love life and relationships? Which themes could stand out in the coming weeks?",
+    "Biraz daha ayrıntılı": "A little more detail",
+    "Enerjim, dinlenme ihtiyacım ve kendime bakım konusunda haritam neler gösterebilir?": "What might my chart show about my energy, need for rest and self-care?",
+    "Merkür retrosu": "Mercury retrograde",
+    "Not: Bu tarihler yalnızca geleneksel ölçütlere göre hesaplanmıştır; kesinlik taşımaz ve kişinin kendi koşulları her zaman önce gelir.": "Note: these dates are computed by traditional criteria only; they are not certain, and the person's own circumstances always come first.",
+    "Sağlıktaki gidişat astrolojiyle öngörülemez; aday gün hesaplanmadı. Yalnızca enerji, dinlenme ve kendine bakım temalarından olasılık diliyle söz edilebilir; kararlar doktorla verilir.": "How health develops cannot be foreseen by astrology; no candidate days were computed. Only energy, rest and self-care themes may be mentioned, tentatively; decisions are made with a doctor.",
+    "Son yanıtı biraz daha ayrıntılı ama yine sade bir dille anlatır mısın?": "Could you explain the last answer in a little more detail, still in plain words?",
+    "Tarihler hesaplanıyor…": "Working out dates…",
+    "Tıbbi işlemlerin tarihi astrolojiyle değil, doktorla birlikte belirlenir; bu yüzden aday gün hesaplanmadı. Yanıtta yalnızca bu dönemin genel temalarından, kesinlik taşımadan söz edilebilir.": "Dates for medical procedures are set with a doctor, not by astrology, so no candidate days were computed. The answer may mention only the general themes of this period, without certainty.",
+    "Yeni Ay’a çok yakın": "too close to the New Moon",
+    "alışveriş, özellikle elektronik cihaz": "shopping, especially electronic devices",
+    "bu iş için geleneksel olarak daha az tercih edilen bir Ay burcu": "a Moon sign traditionally less favoured for this",
+    "büyüyor": "waxing",
+    "diyete başlamak": "starting a diet",
+    "genel dönem": "general period",
+    "küçülüyor": "waning",
+    "nikâh, düğün ya da nişan": "wedding, marriage or engagement",
+    "saç kestirmek ya da boyatmak": "a haircut or hair colouring",
+    "sağlık": "health",
+    "sözleşme imzalamak": "signing a contract",
+    "taşınmak": "moving house",
+    "tutulmalara en az 3 gün uzak": "at least 3 days from eclipses",
+    "tutulmaya çok yakın": "too close to an eclipse",
+    "tıbbi bir işlem": "a medical procedure",
+    "yeni bir işe ya da girişime başlamak": "starting a new job or venture",
+    "{p} duraklıyor": "{p} stationing",
+    "{p} retro": "{p} retrograde",
+    "{p} retro değil ve duraklamıyor": "{p} not retrograde and not stationing",
+    "Ölçütler (geleneksel seçim astrolojisi): {list}.": "Criteria (traditional electional astrology): {list}.",
+    "Önümüzdeki 3 ay": "Next 3 months",
+    "Önümüzdeki 3 ayda hayatımda hangi konular öne çıkabilir? Kısa ve sade bir dille anlat.": "Which areas of my life could come to the fore in the next 3 months? Keep it short and simple.",
+    "Önümüzdeki 30 günde yeni bir işe başlamak ya da önemli bir adım atmak için hangi günler daha uygun görülebilir? Her biri için kısa bir neden yaz.": "In the next 30 days, which days could be seen as better for starting a new job or taking an important step? Give a short reason for each.",
+    "Önümüzdeki 6 ayda Merkür retrosu var mı? Ne zaman başlayıp bitiyor ve geleneksel olarak nelerle ilişkilendiriliyor?": "Is there a Mercury retrograde in the next 6 months? When does it start and end, and what is it traditionally associated with?",
+    "İş, kariyer ve para konusunda güçlü yanlarım neler olabilir? Önümüzdeki haftalarda yeni başlangıçlar için daha uygun görülebilecek günler var mı?": "What might my strengths be in work, career and money? Are there days in the coming weeks that could be seen as better for new beginnings?"
   }
 }

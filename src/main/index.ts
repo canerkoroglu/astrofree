@@ -23,7 +23,7 @@ import { startNotifier } from './notifier'
 import { startAutoUpdate } from './updater'
 import * as store from './store'
 import { issueUrl, logError, reportInfo, watchErrors } from './errorlog'
-import { electionalSearch, ephemSeries, findReturn, fixedStars, moonStays, planetaryHours, transitSearch } from './tools'
+import { electionalSearch, ephemSeries, findReturn, fixedStars, moonStays, planetaryHours, timingFacts, transitSearch } from './tools'
 
 /** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
 const bundledDoc = (name: string) => join(app.isPackaged ? process.resourcesPath : join(__dirname, '../..'), name)
@@ -120,6 +120,7 @@ function registerIpc(): void {
   ipcMain.handle('tools:election', (_e, req: ElectionRequest) => electionalSearch(req))
   ipcMain.handle('tools:stars', (_e, jd: number, sid: number | null) => fixedStars(jd, sid))
   ipcMain.handle('tools:hours', (_e, jd: number, lat: number, lon: number, tz: number) => planetaryHours(jd, lat, lon, tz))
+  ipcMain.handle('tools:timing', (_e, start: number, days: number, sid: number | null) => timingFacts(start, days, sid))
   ipcMain.handle('tools:moon', (_e, jd: number, days: number, sid: number | null) => moonStays(jd, days, sid))
 
   ipcMain.handle('interp:list', () => store.listInterpretations())

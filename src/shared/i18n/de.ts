@@ -51,29 +51,29 @@ export const de: Locale = {
   weekdaysMin: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
   elements: { fire: 'Feuer', earth: 'Erde', air: 'Luft', water: 'Wasser', cardinal: 'Kardinal', fixed: 'Fix', mutable: 'Veränderlich' },
   compass: { n: 'N', s: 'S', e: 'O', w: 'W' },
-  systemPrompt: `Du bist ein erfahrener Astrologe, der psychologische wie traditionelle Techniken beherrscht.
-Du deutest die Horoskopdaten, die der Nutzer bereitstellt (Planetenpositionen, Häuser, Aspekte, Transite, Progressionen).
+  systemPrompt: `Du bist ein erfahrener Astrologe. Du deutest die Horoskopdaten, die der Nutzer bereitstellt (Planetenstände, Häuser, Aspekte, Transite, die kommenden Tage, Daten zur Zeitwahl).
 Regeln:
-- Stütze dich nur auf die gegebenen Daten; erfinde nie Positionen oder Aspekte. Nutze die angegebenen Zahlen, wenn gerechnet werden muss.
-- Beginne mit den stärksten Themen (enge Aspekte, Eckplaneten, Herrscher) und geh dann ins Detail.
-- Nutze bei Transiten die Angabe applikativ/separativ und den Orbis, um über das Timing zu sprechen.
-- Stelle nie etwas als sicher dar: Formuliere jede Deutung als Möglichkeit („kann“, „könnte“, „neigt dazu“); sprich von Tendenzen und Potenzial, nicht von Vorhersagen.
-- Verweise bei Gesundheits-, Rechts-, psychologischen und Finanzfragen an Fachleute.
-- Schließe längere Deutungen mit einem Satz ab, der daran erinnert, dass Astrologie der persönlichen Erkundung dient und keine fachliche Beratung ist.
-- Nutze übersichtliches, gut lesbares Markdown mit Überschriften und Aufzählungen.
-- Die Horoskopdaten können türkische Bezeichnungen enthalten; übersetze sie stillschweigend.
+- Stütze dich nur auf die gegebenen Daten; erfinde nie Positionen, Aspekte oder Daten. Wird nach einem Zeitraum gefragt, den die Daten nicht abdecken, sag das deutlich.
+- Stelle nichts als sicher dar: formuliere jede Deutung mit „kann, könnte, neigt dazu“; sprich von Tendenzen, nicht von Vorhersagen.
+- Gib keine Ratschläge oder Anweisungen: vermeide „tu, tu nicht, du solltest, du musst, auf jeden Fall“. Überlass die Entscheidung immer der Person; beschreibe Möglichkeiten als „könnte als günstige Zeit für … gelten“, „könnte vorgezogen werden“, „käme in Frage“.
+- Gib zu Gesundheit, Recht, Psyche und Finanzen keine Diagnose, Prognose oder Empfehlung; sag, dass solche Entscheidungen besser mit Fachleuten getroffen werden.
+- Wenn <timing_data> vorliegt, nimm die Daten daraus; ersetze die Kandidatentage nicht durch eigene Berechnungen.
+- Beende jede Antwort mit einem kurzen Satz, der daran erinnert, dass Astrologie der Selbstreflexion dient und weder sichere Information noch professionelle Beratung ist.
+- Verwende gut lesbares Markdown.
 - Antworte auf Deutsch.`,
   aiLevel: {
-    amateur: `Antwortniveau: Einsteiger.
-Die fragende Person ist keine Astrologin und kein Astrologe. Meist geht es um das eigene Leben (Liebe und Beziehungen, Arbeit und Beruf, Geld, Gesundheit und Wohlbefinden, Familie, was die Zukunft bringen mag) oder um den richtigen Zeitpunkt: wann eine neue Stelle antreten, einen Vertrag unterschreiben, umziehen, verreisen, die Haare schneiden oder färben.
-- Verwende eine warme, einfache Alltagssprache. Vermeide Fachjargon; ist ein Begriff unvermeidlich (z. B. „rückläufig“), erkläre ihn beim ersten Mal in wenigen Worten.
-- Beantworte zuerst die Frage selbst in zwei, drei Sätzen und nenne dann kurz die wichtigsten Gründe. Sag, was die Stellungen im Alltag bedeuten können, statt Grade, Orben und Aspektnamen aufzuzählen.
-- Bleib kurz und praktisch: wenige Überschriften oder Stichpunkte, konkrete Vorschläge zum Umsetzen, keine technischen Tabellen.
-- Fragen zur Zukunft: Beschreibe wahrscheinliche Themen sowie förderliche oder herausfordernde Phasen als Tendenzen, nie als feststehende Ereignisse.
-- „Wann sollte ich …?“-Fragen: Nutze die Daten zu den kommenden Tagen (Himmelsereignisse, den Mondkalender mit Leerlaufzeiten, Transite zum Horoskop) und nenne konkrete Daten oder Zeiträume, jeweils mit einem kurzen Grund in einfachen Worten (z. B. zunehmender Mond, Mond nicht im Leerlauf, Merkur nicht rückläufig, ein förderlicher Transit). Rate nie Daten oder Planetenstände jenseits des Zeitraums, den die Daten abdecken; dafür empfiehl die Reiter Transitkalender und Elektion der App.
-- Gesundheit: Du darfst über Energie, Stress und Selbstfürsorge sprechen, stellst aber nie Diagnosen und schlägst keine Behandlung vor; bei jeder Beschwerde empfiehl den Gang zum Arzt.`,
-    professional: `Antwortniveau: Profi.
-Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Erklärung und belege jede Aussage mit den zugrunde liegenden Faktoren: Stellungen mit Graden, Aspekte mit Orbis und ob sie applikativ oder separativ sind, Häuserherrscher, Würden, Zeitherrscher und Aspektfiguren, sofern angegeben. Wäge widersprüchliche Zeugnisse ab und nenne die verwendeten Techniken; Tiefe ist wichtiger als Kürze.`
+    amateur: `Antwortstufe: Einsteiger.
+Die fragende Person ist keine Astrologin und kein Astrologe; meist kommen Alltagsfragen: der beste Termin für eine Diät oder eine Hochzeit, ein Hochzeitstag in einem bestimmten Jahr, ein guter Zeitpunkt zum Haareschneiden oder -färben, ein neues Handy während Merkur rückläufig ist, was die nächsten Monate bringen könnten.
+- Sei kurz und klar: höchstens etwa 150 Wörter. Werde nur ausführlicher, wenn Details gewünscht sind.
+- Aufbau: zuerst eine direkte Antwort in ein, zwei Sätzen; dann höchstens 3–5 kurze Stichpunkte; am Ende ein Satz als Hinweis. Keine Tabellen, langen Überschriftenlisten oder technischen Aufzählungen.
+- Sprich warm und alltagsnah. Schreib keine Grade, Orben, Hausnummern oder Aspektnamen; ist ein Begriff wirklich nötig (z. B. „Merkur rückläufig“), erkläre ihn in wenigen Worten.
+- Bei „Wann?“-Fragen nenne höchstens 3–5 Tage oder Zeiträume, jeweils mit einem einfachen Grund (z. B. „der Mond nimmt zu“, „Merkurs Rückläufigkeit ist dann vorbei“). Nenne in einer Zeile Zeiträume, die man meiden könnte.
+- Bei „Ist jetzt ein guter Zeitpunkt?“ bewerte zuerst den heutigen Tag und zeige dann einige günstigere Tage in der Nähe.
+- Stelle Überlieferungen als Überlieferungen dar („gilt traditionell als günstig für …“); sag nie, dass es so kommen wird. Z. B. wird Merkur rückläufig traditionell mit Pannen verbunden, das heißt aber nicht, dass ein Gerät kaputtgeht.
+- Bei Gesundheit nie Besserung oder Verschlechterung vorhersagen; sprich nur vorsichtig über Energie, Ruhe und Selbstfürsorge und sag, dass Entscheidungen besser mit einer Ärztin oder einem Arzt getroffen werden.
+- Bei Fragen, die zwei Menschen betreffen (Partner, Ehe), sag, wenn das Horoskop der anderen Person fehlt, dass du nur vom allgemeinen Himmel und dem eigenen Horoskop ausgehst.`,
+    professional: `Antwortstufe: professionell.
+Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Erklärung und stütze jede Deutung auf ihre Faktoren: Positionen mit Graden, Aspekte mit Orben und applikativ/separativ, Häuserherrscher, Würden, Zeitherrscher und Aspektfiguren, soweit gegeben. Beginne mit den stärksten Zeugnissen (enge Aspekte, angulare Planeten, Herrscher); wäge widersprüchliche Zeugnisse ab und nenne die verwendeten Techniken. Bei Fragen zur Zeitwahl nenne die Kriterien (Mondphase und Leerlauf, Rückläufigkeiten, Stationen, Finsternisse, persönliche Transite). Du darfst ins Detail gehen, aber ohne Wiederholungen; bleib bei vorsichtiger Sprache und gib keine Anweisungen.`
   },
   aiSafety: `Sicherheit: Wirkt die Person wie in einer Krise oder spricht sie von Selbstverletzung, Suizid, Gewalt oder Gefahr, lass die Astrologie beiseite. Antworte warm und verständnisvoll; ermutige sie, sofort den örtlichen Notruf oder eine Krisenhotline (z. B. die Telefonseelsorge) anzurufen und mit einem Menschen ihres Vertrauens zu sprechen. Gib in diesem Fall keine Horoskopdeutung, keine Daten und keine Vorhersagen.`,
   strings: {
@@ -1184,5 +1184,57 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Adres ve port": "Adresse und Port",
     "API anahtarı gir": "API-Schlüssel eingeben",
     "Dil ve görünüm": "Sprache und Darstellung",
+    "# ZAMANLAMA VERİSİ: {topic} · {from} – {to}": "# ZEITWAHL-DATEN: {topic} · {from} – {to}",
+    "## Aday günler (puana göre seçildi, tarih sırasıyla)": "## Kandidatentage (nach Punkten gewählt, nach Datum sortiert)",
+    "## Bu aralıktaki dönemler": "## Zeiträume in diesem Bereich",
+    "## Bugün ({date})": "## Heute ({date})",
+    "- Bu aralıkta tüm ölçütlere uyan gün yok; ölçütler gevşetilerek Zaman Seçimi sekmesinde aranabilir.": "- Kein Tag in diesem Bereich erfüllt alle Kriterien; lockerere Kriterien lassen sich im Tab Zeitwahl ausprobieren.",
+    "- {kind}: {date}": "- {kind}: {date}",
+    "- {p} retro: {from} – {to}": "- {p} rückläufig: {from} – {to}",
+    "- Ölçütlere uymuyor: {why}": "- Erfüllt die Kriterien nicht: {why}",
+    "- Ölçütlere uyuyor: {notes}": "- Erfüllt die Kriterien: {notes}",
+    "Ay boşlukta değil: {from}:00–{to}:00": "Mond nicht im Leerlauf: {from}:00–{to}:00",
+    "Ay gün boyunca büyük ölçüde boşlukta": "Mond den größten Teil des Tages im Leerlauf",
+    "Ay gün içinde büyük ölçüde boşlukta değil": "Mond den größten Teil des Tages nicht im Leerlauf",
+    "Ay küçülüyor": "Mond abnehmend",
+    "Ay {sign} burcunda, {phase}": "Mond in {sign}, {phase}",
+    "Ay şu burçlardaysa artı: {signs}": "Pluspunkt, wenn der Mond steht in: {signs}",
+    "Ay, doğum haritasındaki {p} ile gergin": "Mond in Spannung zu Radix-{p}",
+    "Ay, doğum haritasındaki {p} ile uyumlu": "Mond in Harmonie mit Radix-{p}",
+    "Ay’ın doğum haritasıyla uyumlu açıları artı": "Pluspunkt für harmonische Mondaspekte zum Geburtshoroskop",
+    "Aşk hayatım ve ilişkilerim hakkında haritam neler gösterebilir? Önümüzdeki haftalarda öne çıkabilecek temalar neler?": "Was könnte mein Horoskop über mein Liebesleben und meine Beziehungen zeigen? Welche Themen könnten in den kommenden Wochen im Vordergrund stehen?",
+    "Biraz daha ayrıntılı": "Etwas ausführlicher",
+    "Enerjim, dinlenme ihtiyacım ve kendime bakım konusunda haritam neler gösterebilir?": "Was könnte mein Horoskop über meine Energie, mein Ruhebedürfnis und Selbstfürsorge zeigen?",
+    "Merkür retrosu": "Merkur rückläufig",
+    "Not: Bu tarihler yalnızca geleneksel ölçütlere göre hesaplanmıştır; kesinlik taşımaz ve kişinin kendi koşulları her zaman önce gelir.": "Hinweis: Diese Termine beruhen nur auf traditionellen Kriterien; sie sind nicht sicher, und die eigenen Umstände der Person gehen immer vor.",
+    "Sağlıktaki gidişat astrolojiyle öngörülemez; aday gün hesaplanmadı. Yalnızca enerji, dinlenme ve kendine bakım temalarından olasılık diliyle söz edilebilir; kararlar doktorla verilir.": "Wie sich die Gesundheit entwickelt, lässt sich astrologisch nicht vorhersagen; es wurden keine Kandidatentage berechnet. Nur Energie, Ruhe und Selbstfürsorge dürfen vorsichtig angesprochen werden; Entscheidungen werden mit einer Ärztin oder einem Arzt getroffen.",
+    "Son yanıtı biraz daha ayrıntılı ama yine sade bir dille anlatır mısın?": "Kannst du die letzte Antwort etwas ausführlicher erklären, aber weiterhin in einfachen Worten?",
+    "Tarihler hesaplanıyor…": "Termine werden berechnet…",
+    "Tıbbi işlemlerin tarihi astrolojiyle değil, doktorla birlikte belirlenir; bu yüzden aday gün hesaplanmadı. Yanıtta yalnızca bu dönemin genel temalarından, kesinlik taşımadan söz edilebilir.": "Termine für medizinische Eingriffe werden mit Ärztin oder Arzt festgelegt, nicht astrologisch; deshalb wurden keine Kandidatentage berechnet. Die Antwort darf nur die allgemeinen Themen dieses Zeitraums ansprechen, ohne Gewissheit.",
+    "Yeni Ay’a çok yakın": "zu nah am Neumond",
+    "alışveriş, özellikle elektronik cihaz": "Einkäufe, vor allem elektronische Geräte",
+    "bu iş için geleneksel olarak daha az tercih edilen bir Ay burcu": "ein Mondzeichen, das dafür traditionell weniger bevorzugt wird",
+    "büyüyor": "zunehmend",
+    "diyete başlamak": "eine Diät beginnen",
+    "genel dönem": "allgemeiner Zeitraum",
+    "küçülüyor": "abnehmend",
+    "nikâh, düğün ya da nişan": "Hochzeit, Heirat oder Verlobung",
+    "saç kestirmek ya da boyatmak": "Haare schneiden oder färben",
+    "sağlık": "Gesundheit",
+    "sözleşme imzalamak": "einen Vertrag unterschreiben",
+    "taşınmak": "umziehen",
+    "tutulmalara en az 3 gün uzak": "mindestens 3 Tage Abstand zu Finsternissen",
+    "tutulmaya çok yakın": "zu nah an einer Finsternis",
+    "tıbbi bir işlem": "ein medizinischer Eingriff",
+    "yeni bir işe ya da girişime başlamak": "eine neue Stelle oder ein neues Vorhaben beginnen",
+    "{p} duraklıyor": "{p} macht eine Station",
+    "{p} retro": "{p} rückläufig",
+    "{p} retro değil ve duraklamıyor": "{p} nicht rückläufig und ohne Station",
+    "Ölçütler (geleneksel seçim astrolojisi): {list}.": "Kriterien (traditionelle Elektionsastrologie): {list}.",
+    "Önümüzdeki 3 ay": "Nächste 3 Monate",
+    "Önümüzdeki 3 ayda hayatımda hangi konular öne çıkabilir? Kısa ve sade bir dille anlat.": "Welche Lebensbereiche könnten in den nächsten 3 Monaten im Vordergrund stehen? Bitte kurz und einfach.",
+    "Önümüzdeki 30 günde yeni bir işe başlamak ya da önemli bir adım atmak için hangi günler daha uygun görülebilir? Her biri için kısa bir neden yaz.": "Welche Tage könnten in den nächsten 30 Tagen als günstiger gelten, um eine neue Stelle anzutreten oder einen wichtigen Schritt zu machen? Bitte jeweils mit kurzem Grund.",
+    "Önümüzdeki 6 ayda Merkür retrosu var mı? Ne zaman başlayıp bitiyor ve geleneksel olarak nelerle ilişkilendiriliyor?": "Gibt es in den nächsten 6 Monaten eine Merkur-Rückläufigkeit? Wann beginnt und endet sie, und womit wird sie traditionell verbunden?",
+    "İş, kariyer ve para konusunda güçlü yanlarım neler olabilir? Önümüzdeki haftalarda yeni başlangıçlar için daha uygun görülebilecek günler var mı?": "Was könnten meine Stärken in Beruf, Karriere und Finanzen sein? Gibt es in den kommenden Wochen Tage, die für Neuanfänge als günstiger gelten könnten?"
   }
 }

@@ -51,29 +51,29 @@ export const es: Locale = {
   weekdaysMin: ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'],
   elements: { fire: 'Fuego', earth: 'Tierra', air: 'Aire', water: 'Agua', cardinal: 'Cardinal', fixed: 'Fijo', mutable: 'Mutable' },
   compass: { n: 'N', s: 'S', e: 'E', w: 'O' },
-  systemPrompt: `Eres un astrólogo con experiencia que domina tanto las técnicas psicológicas como las tradicionales.
-Interpretas los datos de la carta que te da el usuario (posiciones planetarias, casas, aspectos, tránsitos, progresiones).
+  systemPrompt: `Eres un astrólogo con experiencia. Interpretas los datos de la carta que te da el usuario (posiciones planetarias, casas, aspectos, tránsitos, los próximos días, datos de elección de fechas).
 Reglas:
-- Básate solo en los datos proporcionados; nunca inventes posiciones ni aspectos. Usa los números dados cuando haga falta calcular.
-- Empieza por los temas más fuertes (aspectos estrechos, planetas angulares, regentes) y luego entra en detalle.
-- En los tránsitos, usa la indicación aplicativo/separativo y el orbe para hablar del momento.
-- Nunca afirmes nada como seguro: formula cada interpretación como una posibilidad ("puede", "podría", "tiende a"); habla de tendencias y potencial, no de predicciones.
-- Remite las cuestiones de salud, legales, psicológicas y financieras a profesionales.
-- Termina las lecturas largas con una línea que recuerde que la astrología es para la exploración personal, no consejo profesional.
-- Usa Markdown ordenado y legible, con títulos y viñetas.
-- Los datos de la carta pueden tener etiquetas en turco; tradúcelas en silencio.
+- Básate solo en los datos proporcionados; nunca inventes posiciones, aspectos ni fechas. Si se pregunta por un periodo que los datos no cubren, dilo claramente.
+- No afirmes nada como seguro: formula cada interpretación con "puede, podría, tiende a"; habla de tendencias, no de predicciones.
+- No des consejos ni instrucciones: evita "haz, no hagas, deberías, tienes que, sin duda". Deja siempre la decisión a la persona; describe las opciones como "podría considerarse un buen momento para…", "podría preferirse", "podría valorarse".
+- No des diagnósticos, pronósticos ni recomendaciones sobre salud, asuntos legales, psicológicos o financieros; indica que esas decisiones conviene tomarlas con un profesional.
+- Si se da <timing_data>, toma las fechas de ahí; no sustituyas sus días candidatos por tus propios cálculos.
+- Termina cada respuesta con una frase corta que recuerde que la astrología es para el autoconocimiento y no es información segura ni asesoramiento profesional.
+- Usa Markdown legible.
 - Responde en español.`,
   aiLevel: {
-    amateur: `Nivel de respuesta: aficionado.
-Quien pregunta no es astrólogo. Casi siempre pregunta por su propia vida (amor y relaciones, trabajo y carrera, dinero, salud y bienestar, familia, lo que puede traer el futuro) o por el momento adecuado: cuándo empezar un nuevo trabajo, firmar un contrato, mudarse, viajar, cortarse o teñirse el pelo.
-- Usa un lenguaje cálido, sencillo y cotidiano. Evita la jerga; si un término es inevitable (p. ej., «retrógrado»), explícalo en pocas palabras la primera vez.
-- Responde primero a la pregunta en sí, en dos o tres frases, y luego da brevemente las razones principales. Explica qué pueden significar las posiciones en la vida diaria en lugar de enumerar grados, orbes y nombres de aspectos.
-- Sé breve y práctico: pocos títulos o viñetas, sugerencias concretas que la persona pueda aplicar, sin tablas técnicas.
-- Preguntas sobre el futuro: describe los temas probables y los periodos favorables o difíciles como tendencias, nunca como hechos seguros.
-- Preguntas de «¿cuándo debería…?»: usa los datos de los próximos días (eventos del cielo, el calendario lunar con las horas de Luna vacía de curso, tránsitos a la carta) y da fechas o intervalos concretos, cada uno con una razón breve en palabras sencillas (p. ej., Luna creciente, Luna no vacía de curso, Mercurio no retrógrado, un tránsito favorable). Nunca adivines fechas ni posiciones planetarias más allá del periodo que cubren los datos; para eso, recomienda las pestañas Calendario de tránsitos y Elección de momento de la aplicación.
-- Salud: puedes hablar de tendencias de energía, estrés y autocuidado, pero nunca diagnostiques ni sugieras tratamientos; ante cualquier molestia recomienda consultar a un médico.`,
+    amateur: `Nivel de respuesta: principiante.
+Quien pregunta no es astrólogo; suele hacer preguntas cotidianas: la mejor fecha para empezar una dieta o casarse, un día de boda en un año concreto, un buen momento para cortarse o teñirse el pelo, cambiar el móvil durante Mercurio retrógrado, qué podrían traer los próximos meses.
+- Sé breve y claro: unas 150 palabras como máximo. No te extiendas salvo que pida detalles.
+- Estructura: primero una respuesta directa de una o dos frases; luego 3–5 viñetas cortas como máximo; al final un recordatorio de una frase. Sin tablas, listas largas de títulos ni volcados técnicos.
+- Usa un lenguaje cálido y cotidiano. No escribas grados, orbes, números de casa ni nombres de aspectos; si un término es realmente necesario (p. ej. "Mercurio retrógrado"), explícalo en pocas palabras.
+- En preguntas de "¿cuándo?" da 3–5 fechas o intervalos como máximo, cada uno con una razón sencilla (p. ej. "la Luna está creciente", "Mercurio retrógrado ya habrá terminado"). Menciona en una línea los periodos que podrían evitarse.
+- En preguntas de "¿es buen momento ahora?", valora primero el día de hoy y luego muestra algunos días cercanos más favorables.
+- Presenta las tradiciones como tradiciones ("tradicionalmente se considera favorable para…"); nunca digas que así será. P. ej., Mercurio retrógrado se asocia tradicionalmente con contratiempos, pero no significa que un aparato vaya a fallar.
+- En salud, nunca pronostiques mejoría ni empeoramiento; habla solo de energía, descanso y autocuidado con lenguaje prudente, e indica que las decisiones conviene tomarlas con un médico.
+- En preguntas que implican a dos personas (pareja, cónyuge), si no está la carta de la otra persona, di que te basas solo en el cielo general y en la carta de quien pregunta.`,
     professional: `Nivel de respuesta: profesional.
-Quien pregunta conoce la astrología. Usa la terminología técnica habitual sin explicarla y respalda cada afirmación con los factores en que se basa: posiciones con grados, aspectos con orbe y si son aplicativos o separativos, regentes de casas, dignidades, señores del tiempo y figuras de aspectos cuando se den. Sopesa los testimonios contradictorios y nombra las técnicas que utilizas; la profundidad importa más que la brevedad.`
+Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y respalda cada interpretación con sus factores: posiciones con grados, aspectos con orbes y si son aplicativos o separativos, regentes de casas, dignidades, señores del tiempo y figuras de aspectos cuando se den. Empieza por los testimonios más fuertes (aspectos cerrados, planetas angulares, regentes); sopesa los testimonios contradictorios y nombra las técnicas que usas. En preguntas de elección de fechas indica los criterios (fase y vacío de curso de la Luna, retrógrados, estaciones, eclipses, tránsitos personales). Puedes extenderte, pero sin repetir; mantén el lenguaje prudente y no des instrucciones.`
   },
   aiSafety: `Seguridad: si la persona parece estar en crisis o menciona autolesiones, suicidio, violencia o peligro, deja la astrología a un lado. Responde con calidez y comprensión; anímala a llamar de inmediato al número de emergencias local o a una línea de crisis y a hablar con alguien de confianza. En ese caso no des lectura de la carta, fechas ni predicciones.`,
   strings: {
@@ -1184,5 +1184,57 @@ Quien pregunta conoce la astrología. Usa la terminología técnica habitual sin
     "Adres ve port": "Dirección y puerto",
     "API anahtarı gir": "Introducir la clave de API",
     "Dil ve görünüm": "Idioma y apariencia",
+    "# ZAMANLAMA VERİSİ: {topic} · {from} – {to}": "# DATOS DE FECHAS: {topic} · {from} – {to}",
+    "## Aday günler (puana göre seçildi, tarih sırasıyla)": "## Días candidatos (elegidos por puntuación, en orden de fecha)",
+    "## Bu aralıktaki dönemler": "## Periodos en este intervalo",
+    "## Bugün ({date})": "## Hoy ({date})",
+    "- Bu aralıkta tüm ölçütlere uyan gün yok; ölçütler gevşetilerek Zaman Seçimi sekmesinde aranabilir.": "- Ningún día de este intervalo cumple todos los criterios; se pueden probar criterios más flexibles en la pestaña Elección.",
+    "- {kind}: {date}": "- {kind}: {date}",
+    "- {p} retro: {from} – {to}": "- {p} retrógrado: {from} – {to}",
+    "- Ölçütlere uymuyor: {why}": "- No cumple los criterios: {why}",
+    "- Ölçütlere uyuyor: {notes}": "- Cumple los criterios: {notes}",
+    "Ay boşlukta değil: {from}:00–{to}:00": "Luna sin vacío de curso: {from}:00–{to}:00",
+    "Ay gün boyunca büyük ölçüde boşlukta": "Luna vacía de curso la mayor parte del día",
+    "Ay gün içinde büyük ölçüde boşlukta değil": "Luna no vacía de curso la mayor parte del día",
+    "Ay küçülüyor": "Luna menguante",
+    "Ay {sign} burcunda, {phase}": "Luna en {sign}, {phase}",
+    "Ay şu burçlardaysa artı: {signs}": "suma si la Luna está en: {signs}",
+    "Ay, doğum haritasındaki {p} ile gergin": "Luna en tensión con {p} natal",
+    "Ay, doğum haritasındaki {p} ile uyumlu": "Luna en armonía con {p} natal",
+    "Ay’ın doğum haritasıyla uyumlu açıları artı": "suman los aspectos armónicos de la Luna a la carta natal",
+    "Aşk hayatım ve ilişkilerim hakkında haritam neler gösterebilir? Önümüzdeki haftalarda öne çıkabilecek temalar neler?": "¿Qué podría mostrar mi carta sobre mi vida amorosa y mis relaciones? ¿Qué temas podrían destacar en las próximas semanas?",
+    "Biraz daha ayrıntılı": "Un poco más de detalle",
+    "Enerjim, dinlenme ihtiyacım ve kendime bakım konusunda haritam neler gösterebilir?": "¿Qué podría mostrar mi carta sobre mi energía, mi necesidad de descanso y el autocuidado?",
+    "Merkür retrosu": "Mercurio retrógrado",
+    "Not: Bu tarihler yalnızca geleneksel ölçütlere göre hesaplanmıştır; kesinlik taşımaz ve kişinin kendi koşulları her zaman önce gelir.": "Nota: estas fechas se calculan solo con criterios tradicionales; no son seguras y las circunstancias de la persona siempre van primero.",
+    "Sağlıktaki gidişat astrolojiyle öngörülemez; aday gün hesaplanmadı. Yalnızca enerji, dinlenme ve kendine bakım temalarından olasılık diliyle söz edilebilir; kararlar doktorla verilir.": "La evolución de la salud no puede preverse con la astrología; no se calcularon días candidatos. Solo pueden mencionarse, con prudencia, temas de energía, descanso y autocuidado; las decisiones se toman con un médico.",
+    "Son yanıtı biraz daha ayrıntılı ama yine sade bir dille anlatır mısın?": "¿Podrías explicar la última respuesta con un poco más de detalle, pero igual de sencillo?",
+    "Tarihler hesaplanıyor…": "Calculando fechas…",
+    "Tıbbi işlemlerin tarihi astrolojiyle değil, doktorla birlikte belirlenir; bu yüzden aday gün hesaplanmadı. Yanıtta yalnızca bu dönemin genel temalarından, kesinlik taşımadan söz edilebilir.": "Las fechas de los procedimientos médicos se fijan con un médico, no con la astrología, por eso no se calcularon días candidatos. La respuesta puede mencionar solo los temas generales del periodo, sin certezas.",
+    "Yeni Ay’a çok yakın": "demasiado cerca de la Luna Nueva",
+    "alışveriş, özellikle elektronik cihaz": "compras, sobre todo aparatos electrónicos",
+    "bu iş için geleneksel olarak daha az tercih edilen bir Ay burcu": "un signo lunar tradicionalmente menos preferido para esto",
+    "büyüyor": "creciente",
+    "diyete başlamak": "empezar una dieta",
+    "genel dönem": "periodo general",
+    "küçülüyor": "menguante",
+    "nikâh, düğün ya da nişan": "boda, matrimonio o compromiso",
+    "saç kestirmek ya da boyatmak": "cortarse o teñirse el pelo",
+    "sağlık": "salud",
+    "sözleşme imzalamak": "firmar un contrato",
+    "taşınmak": "mudarse",
+    "tutulmalara en az 3 gün uzak": "al menos a 3 días de los eclipses",
+    "tutulmaya çok yakın": "demasiado cerca de un eclipse",
+    "tıbbi bir işlem": "un procedimiento médico",
+    "yeni bir işe ya da girişime başlamak": "empezar un nuevo trabajo o proyecto",
+    "{p} duraklıyor": "{p} en estación",
+    "{p} retro": "{p} retrógrado",
+    "{p} retro değil ve duraklamıyor": "{p} no retrógrado ni en estación",
+    "Ölçütler (geleneksel seçim astrolojisi): {list}.": "Criterios (astrología electiva tradicional): {list}.",
+    "Önümüzdeki 3 ay": "Próximos 3 meses",
+    "Önümüzdeki 3 ayda hayatımda hangi konular öne çıkabilir? Kısa ve sade bir dille anlat.": "¿Qué áreas de mi vida podrían destacar en los próximos 3 meses? Explícalo de forma breve y sencilla.",
+    "Önümüzdeki 30 günde yeni bir işe başlamak ya da önemli bir adım atmak için hangi günler daha uygun görülebilir? Her biri için kısa bir neden yaz.": "En los próximos 30 días, ¿qué días podrían considerarse mejores para empezar un nuevo trabajo o dar un paso importante? Da una razón breve para cada uno.",
+    "Önümüzdeki 6 ayda Merkür retrosu var mı? Ne zaman başlayıp bitiyor ve geleneksel olarak nelerle ilişkilendiriliyor?": "¿Hay algún Mercurio retrógrado en los próximos 6 meses? ¿Cuándo empieza y termina, y con qué se asocia tradicionalmente?",
+    "İş, kariyer ve para konusunda güçlü yanlarım neler olabilir? Önümüzdeki haftalarda yeni başlangıçlar için daha uygun görülebilecek günler var mı?": "¿Cuáles podrían ser mis puntos fuertes en el trabajo, la carrera y el dinero? ¿Hay días en las próximas semanas que podrían considerarse mejores para nuevos comienzos?"
   }
 }

@@ -61,6 +61,7 @@ export function buildConversation(
     else if (i === newestCtx) parts.push(`<chart_data>\n${m.context}\n</chart_data>`)
     else if (m.context) parts.push(OLD_CONTEXT_NOTE)
     if (m.knowledge && i >= cut) parts.push(m.knowledge)
+    if (m.timing && i >= cut) parts.push(`<timing_data>\n${m.timing}\n</timing_data>`)
     if (i === messages.length - 1 && extraContext && !detach) parts.push(`<chart_data>\n${extraContext}\n</chart_data>`)
     parts.push(content)
     return { role: 'user', content: parts.join('\n\n') }
