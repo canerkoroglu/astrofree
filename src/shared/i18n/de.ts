@@ -1344,6 +1344,10 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Ihr Sonnenzeichen und die meisten Planeten werden trotzdem richtig berechnet.",
     "Saati bulmak için şunlara bakılabilir:": "Hier lässt sich nach der Uhrzeit suchen:",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Finden Sie eine ungefähre Zeit, schalten Sie „Geburtszeit unbekannt\" aus, geben Sie sie ein und wählen Sie als Zeitquelle „C — Unklare Quelle, ungefähr\".",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Aszendent und Häuser (Lebensbereiche) hängen von der Uhrzeit ab; sie durchlaufen an einem Tag alle 12 Zeichen und werden deshalb nicht gezeigt."
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Aszendent und Häuser (Lebensbereiche) hängen von der Uhrzeit ab; sie durchlaufen an einem Tag alle 12 Zeichen und werden deshalb nicht gezeigt.",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Diese Antwort ist für die Stufe Einsteiger lang ({n} Wörter).",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "Diese Antwort enthält eine Anweisung („{w}\"); Entscheidungen liegen immer bei Ihnen.",
+    "Kısalt ve yumuşat": "Kürzen und abmildern",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Kannst du deine letzte Antwort in höchstens 150 Wörtern, in einfacher Sprache und ohne Anweisungen (kein „du solltest\", „unbedingt\" o. Ä.), vorsichtig formuliert neu schreiben?"
   }
 }

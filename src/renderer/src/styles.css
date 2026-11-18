@@ -5104,3 +5104,10 @@ button.gd-day {
   margin: 4px 0 6px;
   padding-left: 18px;
 }
+.answer-check {
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-left: 3px solid var(--warn);
+  background: var(--warn-bg);
+  border-radius: 4px;
+}

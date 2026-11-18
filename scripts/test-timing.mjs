@@ -95,5 +95,16 @@ check('her konu: Ay boşlukta → uygun değil', reasons('travel', { freeHours: 
 check('her konu: tutulmaya yakın → uygun değil', reasons('hair', {}, { ...facts, eclipses: [{ jd: NOW + 2, solar: true }] }).length > 0)
 check('her konu: Yeni Ay günü → uygun değil', reasons('start', { elong: 5 }).length > 0)
 
+// Answer check under beginner-level answers: catches instructions and length, not tentative wording.
+const { checkAnswer } = await import(pathToFileURL(join(src, 'shared/answerCheck.ts')).href)
+const flagged = (text, lang) => checkAnswer(text, lang)
+check('yanıt denetimi: "mutlaka" yakalanıyor', flagged('Bu hafta mutlaka dinlenmelisiniz.', 'tr')?.directive === 'mutlaka', flagged('Bu hafta mutlaka dinlenmelisiniz.', 'tr'))
+check('yanıt denetimi: "yapmalısınız" yakalanıyor', !!flagged('Sözleşmeyi cuma günü imzalamalısınız, bunu yapmalısınız.', 'tr')?.directive)
+check('yanıt denetimi: olasılık dili geçiyor', flagged('Bu hafta dinlenmek için uygun bir dönem olabilir; yeni başlangıçlar tercih edilebilir.', 'tr') === null)
+check('yanıt denetimi: "sakınca" yanlış alarm değil', flagged('Bu tarihte bir sakınca görünmüyor olabilir.', 'tr') === null)
+check('yanıt denetimi: "you should" yakalanıyor', !!flagged('You should sign the contract on Friday.', 'en')?.directive)
+check('yanıt denetimi: İngilizce olasılık dili geçiyor', flagged('Friday may be a good day; it could be considered.', 'en') === null)
+check('yanıt denetimi: uzun yanıt', !!flagged('olabilir '.repeat(300), 'tr')?.tooLong)
+
 console.log(failed ? `\n${failed} test başarısız` : '\nTüm zamanlama testleri geçti')
 process.exit(failed ? 1 : 0)

@@ -1344,6 +1344,10 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Votre signe solaire et la plupart des planètes restent calculés correctement.",
     "Saati bulmak için şunlara bakılabilir:": "Où chercher l'heure :",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Si vous trouvez une heure approximative, désactivez « Heure de naissance inconnue », saisissez-la et choisissez « C — Source peu claire, approximative » comme source de l'heure.",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "L'ascendant et les maisons (domaines de vie) dépendent de l'heure ; ils parcourent les 12 signes en une journée, c'est pourquoi ils ne sont pas affichés."
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "L'ascendant et les maisons (domaines de vie) dépendent de l'heure ; ils parcourent les 12 signes en une journée, c'est pourquoi ils ne sont pas affichés.",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Cette réponse est longue pour le niveau Amateur ({n} mots).",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "Cette réponse contient une formule directive (« {w} ») ; les décisions vous appartiennent toujours.",
+    "Kısalt ve yumuşat": "Raccourcir et adoucir",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Peux-tu réécrire ta dernière réponse en 150 mots au plus, simplement et sans consignes (sans « tu dois », « absolument » ou autre), avec un ton prudent ?"
   }
 }

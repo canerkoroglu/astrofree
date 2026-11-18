@@ -1344,6 +1344,10 @@ export const hi: Locale = {
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "आपकी सूर्य राशि और ज़्यादातर ग्रह फिर भी सही निकलते हैं।",
     "Saati bulmak için şunlara bakılabilir:": "समय यहाँ खोजा जा सकता है:",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "अगर अनुमानित समय मिल जाए, तो \"जन्म समय अज्ञात\" बंद करें, वह समय डालें और समय स्रोत में \"C — अस्पष्ट स्रोत, अनुमानित\" चुनें।",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "लग्न और भाव (जीवन के क्षेत्र) समय पर निर्भर हैं; दिन भर में ये सभी 12 राशियों से गुज़रते हैं, इसलिए नहीं दिखाए जाते।"
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "लग्न और भाव (जीवन के क्षेत्र) समय पर निर्भर हैं; दिन भर में ये सभी 12 राशियों से गुज़रते हैं, इसलिए नहीं दिखाए जाते।",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "शौक़िया स्तर के लिए यह उत्तर लंबा है ({n} शब्द)।",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "इस उत्तर में निर्देश देने वाला वाक्यांश है (\"{w}\"); फ़ैसले हमेशा आपके हैं।",
+    "Kısalt ve yumuşat": "छोटा और नरम करें",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "क्या तुम अपना पिछला उत्तर ज़्यादा से ज़्यादा 150 शब्दों में, सरल भाषा में और बिना निर्देश दिए (\"आपको चाहिए\", \"ज़रूर\" जैसे शब्दों के बिना), संभावना की भाषा में फिर से लिख सकते हो?"
   }
 }

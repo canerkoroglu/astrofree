@@ -1344,6 +1344,10 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Your Sun sign and most planets are still calculated correctly.",
     "Saati bulmak için şunlara bakılabilir:": "Places that may have the time:",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "If you find an approximate time, turn off \"Birth time unknown\", enter it, and choose \"C — Unclear source, approximate\" as the time source.",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "The rising sign and houses (life areas) depend on the time; they pass through all 12 signs in a day, so they are not shown."
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "The rising sign and houses (life areas) depend on the time; they pass through all 12 signs in a day, so they are not shown.",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "This answer is long for the Amateur level ({n} words).",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "This answer contains a directive phrase (\"{w}\"); decisions are always yours.",
+    "Kısalt ve yumuşat": "Shorten and soften",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Could you rewrite your last answer in at most 150 words, in plain language and without directions (no \"you should\", \"definitely\" and the like), using tentative wording?"
   }
 }

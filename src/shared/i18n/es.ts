@@ -1344,6 +1344,10 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Su signo solar y la mayoría de los planetas se calculan igualmente bien.",
     "Saati bulmak için şunlara bakılabilir:": "Dónde se puede buscar la hora:",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Si encuentra una hora aproximada, desactive \"Hora de nacimiento desconocida\", introdúzcala y elija \"C — Fuente poco clara, aproximada\" como fuente de la hora.",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "El ascendente y las casas (áreas de la vida) dependen de la hora; recorren los 12 signos en un día, por eso no se muestran."
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "El ascendente y las casas (áreas de la vida) dependen de la hora; recorren los 12 signos en un día, por eso no se muestran.",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Esta respuesta es larga para el nivel Aficionado ({n} palabras).",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "Esta respuesta contiene una expresión directiva (\"{w}\"); las decisiones siempre son suyas.",
+    "Kısalt ve yumuşat": "Acortar y suavizar",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "¿Puedes reescribir tu última respuesta en 150 palabras como máximo, con lenguaje sencillo y sin indicaciones (sin \"debes\", \"sin duda\" ni similares), con un tono prudente?"
   }
 }

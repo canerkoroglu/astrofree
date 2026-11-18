@@ -4,7 +4,8 @@ import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { aiSystemPrompt, PROVIDERS } from '@shared/defaults'
+import { aiLanguageOf, aiSystemPrompt, PROVIDERS } from '@shared/defaults'
+import { checkAnswer } from '@shared/answerCheck'
 import { buildConversation, lastSentContext, requestTokens } from '@shared/aiHistory'
 import type { AiLevel, AiMessage, AppSettings, ChatSession, ProviderId, ProviderStatus } from '@shared/types'
 
@@ -87,6 +88,8 @@ const QUICK_AMATEUR: typeof QUICK = [
 ]
 /** Offered under an amateur-level answer: the same in more depth, still in plain words. */
 const MORE_DETAIL = { label: 'Biraz daha ayrıntılı', prompt: 'Son yanıtı biraz daha ayrıntılı ama yine sade bir dille anlatır mısın?' }
+/** Offered when a beginner-level answer came out long or directive: the model rewrites it to the rules. */
+const REWRITE = 'Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan ("yapmalısın", "mutlaka" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?'
 
 function Markdown({ text }: { text: string }) {
   const html = useMemo(() => DOMPurify.sanitize(marked.parse(text, { async: false }) as string), [text])
@@ -451,6 +454,26 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
                 {t('harita verisi eklendi')}
               </div>
             )}
+            {m.role === 'assistant' &&
+              settings.ai.level === 'amateur' &&
+              i === messages.length - 1 &&
+              !runId &&
+              (() => {
+                const c = checkAnswer(m.content, aiLanguageOf(settings))
+                // A long answer is fine when the person asked for more detail.
+                const askedDetail = messages[i - 1]?.content === t(MORE_DETAIL.prompt)
+                if (!c || (!c.directive && askedDetail)) return null
+                return (
+                  <div className="answer-check small" role="note">
+                    {c.directive
+                      ? t('Bu yanıt yönlendirici bir ifade içeriyor ("{w}"); kararlar her zaman size aittir.', { w: c.directive })
+                      : t('Bu yanıt Amatör düzey için uzun ({n} kelime).', { n: c.words })}{' '}
+                    <button className="link small" onClick={() => void send(t(REWRITE))}>
+                      {t('Kısalt ve yumuşat')}
+                    </button>
+                  </div>
+                )
+              })()}
             {m.role === 'assistant' && (
               <div className="msg-actions">
                 {m.usage && (

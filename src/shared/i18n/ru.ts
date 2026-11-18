@@ -1344,6 +1344,10 @@ export const ru: Locale = {
     "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Ваш солнечный знак и большинство планет всё равно рассчитываются верно.",
     "Saati bulmak için şunlara bakılabilir:": "Где можно поискать время:",
     "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Если найдёте приблизительное время, выключите «Время рождения неизвестно», введите его и выберите источник «C — Неясный источник, приблизительно».",
-    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Асцендент и дома (сферы жизни) зависят от времени; за сутки они проходят все 12 знаков, поэтому не показываются."
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Асцендент и дома (сферы жизни) зависят от времени; за сутки они проходят все 12 знаков, поэтому не показываются.",
+    "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Ответ длинный для уровня «Любитель» ({n} слов).",
+    "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "В ответе есть указание («{w}»); решения всегда остаются за вами.",
+    "Kısalt ve yumuşat": "Сократить и смягчить",
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Можешь переписать последний ответ не длиннее 150 слов, простым языком и без указаний (без «вам следует», «обязательно» и т. п.), осторожными формулировками?"
   }
 }
