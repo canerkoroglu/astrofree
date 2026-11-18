@@ -5,6 +5,7 @@ import type { AppSettings, AspectKey, ChartRecord, Interpretation, LocalDateTime
 import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
+import GoodDays from './components/GoodDays'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BasicReading from './components/BasicReading'
@@ -86,7 +87,11 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'today' | 'info' | 'reading' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+type View = 'chart' | 'today' | 'info' | 'reading' | 'days' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+// Amateur mode keeps the everyday tabs and layers; professional shows everything.
+const AMATEUR_VIEWS: View[] = ['chart', 'today', 'reading', 'days', 'notes', 'kb']
+const AMATEUR_LAYERS: OuterKind[] = ['transit', 'synastry']
+const AMATEUR_TABS: BottomTab[] = ['positions']
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
 // "When should I…" data sent to the AI, from today on, kept small (it rides on every chat's chart data):
 // sky events and Mars–Pluto transits for TIMING_DAYS; the Moon calendar and Sun/Mercury/Venus transits
@@ -444,6 +449,27 @@ export default function App() {
     },
     [settings, eventPlace, eventTz, computed, timingPoints, partner, today, working]
   )
+
+  // Chart points for the Good Days screen: the person's, plus the synastry partner's when shown.
+  const goodDaysNatal = useMemo(() => {
+    const syn = computed?.outers.find((o) => o.kind === 'synastry')
+    return [
+      ...timingPoints.map((p) => ({ key: p.key, lon: p.lon })),
+      ...(syn ? syn.points.filter((p) => STAR_POINTS.includes(p.key)).map((p) => ({ key: p.key, lon: p.lon, who: partner?.name || syn.label })) : [])
+    ]
+  }, [timingKey, computed, partner]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ---- amateur / professional mode ---------------------------------------------
+  const amateur = settings?.mode === 'amateur'
+  const setMode = (m: AppSettings['mode']) => settings && saveSettings({ ...settings, mode: m, ai: { ...settings.ai, level: m } })
+  // Switching to amateur leaves no professional tab, layer or harmonic behind on screen.
+  useEffect(() => {
+    if (!amateur) return
+    if (!AMATEUR_VIEWS.includes(view)) setView('chart')
+    if (!AMATEUR_TABS.includes(tab)) setTab('positions')
+    if (outers.some((k) => !AMATEUR_LAYERS.includes(k))) setOuters(outers.filter((k) => AMATEUR_LAYERS.includes(k)))
+    if (harmonic !== 1) setHarmonic(1)
+  }, [amateur, view, tab, outers, harmonic])
   const chartInterps = useMemo(() => interps.filter((i) => i.chartId === working?.id), [interps, working?.id])
 
   const context = useMemo(() => {
@@ -755,7 +781,7 @@ export default function App() {
           <Logo size={18} className="brand-logo" /> <span className="brand-name">AstroFree</span>
         </div>
         <div className="seg tgroup tg-layers" role="group" aria-label={t('Katmanlar')}>
-          {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).map((k) => (
+          {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).filter((k) => !amateur || AMATEUR_LAYERS.includes(k)).map((k) => (
             <button
               key={k}
               className={outers.includes(k) ? 'on' : ''}
@@ -782,7 +808,7 @@ export default function App() {
                   </option>
                 ))}
             </select>
-            {partner && working.id !== NOW_ID && (
+            {partner && working.id !== NOW_ID && !amateur && (
               <>
                 <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
                   {t('Kompozit')}
@@ -801,7 +827,7 @@ export default function App() {
             )}
           </div>
         )}
-        <div className="tgroup" role="group" aria-label={t('Görünüm')}>
+        {!amateur && <div className="tgroup" role="group" aria-label={t('Görünüm')}>
         <select className="tg-harmonic" value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
           {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
@@ -821,7 +847,7 @@ export default function App() {
             </option>
           ))}
         </select>
-        </div>
+        </div>}
         <span className="grow" />
         {updateReady ? (
           <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
@@ -879,6 +905,20 @@ export default function App() {
               </div>
             </div>
           )}
+        </div>
+        <div className="seg tgroup tg-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
+          {(['amateur', 'professional'] as const).map((m) => (
+            <button
+              key={m}
+              role="radio"
+              aria-checked={settings.mode === m}
+              className={settings.mode === m ? 'on' : ''}
+              onClick={() => setMode(m)}
+              title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
+            >
+              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
+            </button>
+          ))}
         </div>
         <div className="tgroup">
           <button
@@ -1169,24 +1209,33 @@ export default function App() {
           <button className={view === 'today' ? 'on' : ''} onClick={() => setView('today')} title={t('Bugünün gökyüzü ve haritaya etkileri')}>
             {t('Bugün')}
           </button>
-          <button className={view === 'info' ? 'on' : ''} onClick={() => setView('info')}>
-            {t('Natal Bilgiler')}
-          </button>
+          {!amateur && (
+            <button className={view === 'info' ? 'on' : ''} onClick={() => setView('info')}>
+              {t('Natal Bilgiler')}
+            </button>
+          )}
           <button className={view === 'reading' ? 'on' : ''} onClick={() => setView('reading')} title={t('Yapay zekâ gerektirmeyen, çevrimdışı temel yorum')}>
             {t('Temel Yorum')}
           </button>
-          <button className={view === 'calendar' ? 'on' : ''} onClick={() => setView('calendar')}>
-            {t('Transit Takvimi')}
+          <button className={view === 'days' ? 'on' : ''} onClick={() => setView('days')} title={t('Nikâh, yeni iş, saç, yolculuk… için geleneksel olarak uygun sayılan günler')}>
+            {t('Uygun Günler')}
           </button>
-          <button className={view === 'ephem' ? 'on' : ''} onClick={() => setView('ephem')}>
-            {t('Grafik Efemeris')}
-          </button>
-          <button className={view === 'acg' ? 'on' : ''} onClick={() => setView('acg')}>
-            {t('Astrokartografi')}
-          </button>
-          <button className={view === 'election' ? 'on' : ''} onClick={() => setView('election')}>
-            {t('Zaman Seçimi')}
-          </button>
+          {!amateur && (
+            <>
+              <button className={view === 'calendar' ? 'on' : ''} onClick={() => setView('calendar')}>
+                {t('Transit Takvimi')}
+              </button>
+              <button className={view === 'ephem' ? 'on' : ''} onClick={() => setView('ephem')}>
+                {t('Grafik Efemeris')}
+              </button>
+              <button className={view === 'acg' ? 'on' : ''} onClick={() => setView('acg')}>
+                {t('Astrokartografi')}
+              </button>
+              <button className={view === 'election' ? 'on' : ''} onClick={() => setView('election')}>
+                {t('Zaman Seçimi')}
+              </button>
+            </>
+          )}
           <button className={view === 'notes' ? 'on' : ''} onClick={() => setView('notes')}>
             {t('Yorumlar')}
             {chartInterps.length ? ` (${chartInterps.length})` : ''}
@@ -1219,6 +1268,7 @@ export default function App() {
             setView('chart')
           }} />
         )}
+        {view === 'days' && eventPlace && <GoodDays natal={goodDaysNatal} tz={eventTz} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
         {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} />}
         {view === 'calendar' && computed && (
           <TransitCalendar
@@ -1282,12 +1332,12 @@ export default function App() {
                 ['grid', 'Açı tablosu'],
                 ['houses', 'Evler']
               ] as [BottomTab, string][]
-            ).map(([k, l]) => (
+            ).filter(([k]) => !amateur || AMATEUR_TABS.includes(k)).map(([k, l]) => (
               <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>
                 {t(l)}
               </button>
             ))}
-            {outers.length > 0 && (
+            {outers.length > 0 && !amateur && (
               <select value={aspectLayer} onChange={(e) => setAspectLayer(Number(e.target.value))} title={t('Çarkta ve tabloda gösterilen açılar')}>
                 <option value={-1}>{t('Açılar: Natal ↔ Natal')}</option>
                 {computed?.outers.map((o, i) => (

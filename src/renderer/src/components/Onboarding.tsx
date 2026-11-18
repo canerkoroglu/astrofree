@@ -27,7 +27,8 @@ export default function Onboarding({
 
   const agreed = termsAccepted(settings)
   const setProvider = (id: ProviderId) => onSettings({ ...settings, ai: { ...settings.ai, provider: id } })
-  const setLevel = (level: AiLevel) => onSettings({ ...settings, ai: { ...settings.ai, level } })
+  // One choice sets both the interface mode and the AI's answer level.
+  const setLevel = (level: AiLevel) => onSettings({ ...settings, mode: level, ai: { ...settings.ai, level } })
   const steps = [t('Hoş geldiniz'), t('İlk harita'), t('Yapay zekâ'), t('Hazır')]
 
   return (
@@ -105,18 +106,18 @@ export default function Onboarding({
             <h2>{t('Yorumlar için bir yapay zekâ seçin')}</h2>
             <p>{t('Bilgisayarınızda kurulu bir AI aracı varsa onu kullanabilirsiniz; ek bir anahtar gerekmez. Sonra Ayarlar’dan değiştirebilirsiniz.')}</p>
             <p className="ob-note">{t('Yapay zekâ isteğe bağlıdır: bağlamasanız da “Temel Yorum” sekmesi haritanızı çevrimdışı olarak yorumlar.')}</p>
-            <h3>{t('Yanıtlar nasıl olsun?')}</h3>
+            <h3>{t('AstroFree’yi nasıl kullanacaksınız?')}</h3>
             <div className="ob-providers ob-levels">
-              <button className={`ob-provider ${settings.ai.level === 'amateur' ? 'selected' : ''}`} onClick={() => setLevel('amateur')}>
+              <button className={`ob-provider ${settings.mode === 'amateur' ? 'selected' : ''}`} onClick={() => setLevel('amateur')}>
                 <span className="ob-pname">{t('Amatör')}</span>
-                <span className="muted small">{t('Sade, gündelik bir dil; aşk, iş, sağlık ve “ne zaman?” soruları için.')}</span>
+                <span className="muted small">{t('Sade görünüm ve kısa, gündelik yanıtlar; aşk, iş ve “ne zaman?” soruları için.')}</span>
               </button>
-              <button className={`ob-provider ${settings.ai.level === 'professional' ? 'selected' : ''}`} onClick={() => setLevel('professional')}>
+              <button className={`ob-provider ${settings.mode === 'professional' ? 'selected' : ''}`} onClick={() => setLevel('professional')}>
                 <span className="ob-pname">{t('Profesyonel')}</span>
-                <span className="muted small">{t('Teknik terimler, dereceler, orb’lar ve teknikler; astrologlar için.')}</span>
+                <span className="muted small">{t('Tüm araçlar (progresyon, dönüşler, efemeris, astrokartografi…) ve teknik yanıtlar; astrologlar için.')}</span>
               </button>
             </div>
-            <p className="muted small">{t('Sohbette Gönder düğmesinin yanından istediğiniz zaman değiştirebilirsiniz.')}</p>
+            <p className="muted small">{t('Üst çubuktaki Amatör / Profesyonel düğmesinden istediğiniz zaman değiştirebilirsiniz.')}</p>
             <h3>{t('Yapay zekâ aracı')}</h3>
             {!statuses && <p className="muted">{t('Kontrol ediliyor…')}</p>}
             {statuses && (

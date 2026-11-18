@@ -47,7 +47,7 @@ const NEXT_MONTH = ['gelecek ay', 'önümüzdeki ay', 'next month', 'próximo me
 const AMBIGUOUS_MONTHS = new Set(['may', 'march', 'mai'])
 // i18n-ignore-end
 
-interface Rule {
+export interface Rule {
   phase: 'waxing' | 'waning' | 'any'
   /** Swiss ids that should not be retrograde (and not stationing within 2 days). */
   avoid: number[]
@@ -57,7 +57,7 @@ interface Rule {
   natal: string[]
 }
 // Signs: 0 Aries … 11 Pisces. Traditional electional preferences, kept simple.
-const RULES: Partial<Record<Topic, Rule>> = {
+export const RULES: Partial<Record<Topic, Rule>> = {
   wedding: { phase: 'waxing', avoid: [3, 2], good: [1, 3, 4, 6, 11], bad: [7, 9], natal: ['venus', 'moon', 'sun'] },
   diet: { phase: 'waning', avoid: [], good: [5, 9, 7], bad: [3], natal: ['moon'] },
   hair: { phase: 'waxing', avoid: [], good: [1, 4, 5, 6], bad: [3, 11], natal: ['venus'] },
@@ -69,7 +69,7 @@ const RULES: Partial<Record<Topic, Rule>> = {
 }
 
 // Labels and criteria in the source language; t() translates them where they are written.
-const TOPIC_LABEL: Record<Topic, string> = {
+export const TOPIC_LABEL: Record<Topic, string> = {
   wedding: 'nikâh, düğün ya da nişan',
   diet: 'diyete başlamak',
   hair: 'saç kestirmek ya da boyatmak',
@@ -166,14 +166,14 @@ const sep = (a: number, b: number) => {
   return d > 180 ? 360 - d : d
 }
 
-interface Scored {
+export interface Scored {
   day: DayFact
   score: number
   notes: string[]
   reasons: string[] // why it does not qualify (empty = qualifies)
 }
 
-function scoreDay(f: DayFact, rule: Rule, facts: TimingFacts, natal: { key: string; lon: number; who?: string }[]): Scored {
+export function scoreDay(f: DayFact, rule: Rule, facts: TimingFacts, natal: { key: string; lon: number; who?: string }[]): Scored {
   const sign = Math.floor(f.moonLon / 30) % 12
   const reasons: string[] = []
   const notes: string[] = []
@@ -211,10 +211,10 @@ function scoreDay(f: DayFact, rule: Rule, facts: TimingFacts, natal: { key: stri
   return { day: f, score, notes, reasons }
 }
 
-const bodyName = (swe: number) => POINTS.find((p) => p.swe === swe)?.name ?? ''
+export const bodyName = (swe: number) => POINTS.find((p) => p.swe === swe)?.name ?? ''
 
 /** Best days spread over the range: a few per month at most, two days apart or more. */
-function pick(scored: Scored[], days: number): Scored[] {
+export function pick(scored: Scored[], days: number): Scored[] {
   const perMonth = days > 75 ? 2 : 6
   const total = days > 120 ? 10 : 6
   const out: Scored[] = []
@@ -235,7 +235,7 @@ function pick(scored: Scored[], days: number): Scored[] {
 }
 
 /** Retrograde periods of Mercury, Venus and Mars that overlap the range (null = beyond the data). */
-function retroPeriods(facts: TimingFacts, start: number, end: number): { body: number; from: number | null; to: number | null }[] {
+export function retroPeriods(facts: TimingFacts, start: number, end: number): { body: number; from: number | null; to: number | null }[] {
   const out: { body: number; from: number | null; to: number | null }[] = []
   for (const b of [2, 3, 4]) {
     const st = facts.stations.filter((s) => s.body === b)
@@ -251,6 +251,18 @@ function retroPeriods(facts: TimingFacts, start: number, end: number): { body: n
     if (open !== undefined) out.push({ body: b, from: open, to: null })
   }
   return out.filter((p) => (p.from ?? -Infinity) < end && (p.to ?? Infinity) > start).sort((a, b) => (a.from ?? 0) - (b.from ?? 0))
+}
+
+/** The rules of a topic in words, for the AI and for the Good Days screen. */
+export function criteria(rule: Rule, withChart: boolean): string[] {
+  return [
+    rule.phase === 'waxing' ? t('Ay büyüyor') : rule.phase === 'waning' ? t('Ay küçülüyor') : '',
+    t('Ay gün içinde büyük ölçüde boşlukta değil'),
+    ...rule.avoid.map((b) => t('{p} retro değil ve duraklamıyor', { p: bodyName(b) })),
+    t('tutulmalara en az 3 gün uzak'),
+    rule.good.length ? t('Ay şu burçlardaysa artı: {signs}', { signs: rule.good.map((s) => SIGNS[s].name).join(', ') }) : '',
+    withChart ? t('Ay’ın doğum haritasıyla uyumlu açıları artı') : ''
+  ].filter(Boolean)
 }
 
 /** The text sent to the AI with a timing question. */
@@ -279,14 +291,7 @@ export function timingText(
   ]
 
   if (rule) {
-    const crit = [
-      rule.phase === 'waxing' ? t('Ay büyüyor') : rule.phase === 'waning' ? t('Ay küçülüyor') : '',
-      t('Ay gün içinde büyük ölçüde boşlukta değil'),
-      ...rule.avoid.map((b) => t('{p} retro değil ve duraklamıyor', { p: bodyName(b) })),
-      t('tutulmalara en az 3 gün uzak'),
-      rule.good.length ? t('Ay şu burçlardaysa artı: {signs}', { signs: rule.good.map((s) => SIGNS[s].name).join(', ') }) : '',
-      natal.length ? t('Ay’ın doğum haritasıyla uyumlu açıları artı') : ''
-    ].filter(Boolean)
+    const crit = criteria(rule, natal.length > 0)
     out.push(t('Ölçütler (geleneksel seçim astrolojisi): {list}.', { list: crit.join('; ') }))
     const scored = facts.days.map((f) => scoreDay(f, rule, facts, natal))
     const best = pick(scored, ask.days)

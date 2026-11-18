@@ -183,6 +183,13 @@ function registerIpc(): void {
     await clipboard.write([new ClipboardItem({ 'image/png': new Blob([new Uint8Array(img.toPNG())], { type: 'image/png' }) })])
     return true
   })
+  ipcMain.handle('export:ics', async (_e, content: string, name: string) => {
+    if (typeof content !== 'string' || !content.startsWith('BEGIN:VCALENDAR') || content.length > 2_000_000) return false
+    const r = await dialog.showSaveDialog(win!, { title: tm('Takvimi kaydet'), defaultPath: `${name}.ics`, filters: [{ name: 'iCalendar', extensions: ['ics'] }] })
+    if (r.canceled || !r.filePath) return false
+    await writeFile(r.filePath, content, 'utf8')
+    return true
+  })
   ipcMain.handle('export:pdf', async (_e, name: string) => {
     const pdf = await win!.webContents.printToPDF({ printBackground: true, pageSize: 'A4', margins: { top: 0.4, bottom: 0.4, left: 0.4, right: 0.4 } })
     const r = await dialog.showSaveDialog(win!, { title: tm('Raporu kaydet'), defaultPath: `${name}.pdf`, filters: [{ name: 'PDF', extensions: ['pdf'] }] })

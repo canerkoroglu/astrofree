@@ -4851,3 +4851,151 @@ button.head-edit {
   border-style: dashed;
   color: var(--accent);
 }
+
+/* ---- Uygun Günler ---------------------------------------------------------- */
+.good-days {
+  overflow: auto;
+  flex: 1;
+}
+.gd-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gd-head h2 {
+  margin: 0 0 2px;
+}
+.gd-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 8px;
+}
+.gd-topics button {
+  border-radius: 16px;
+  padding: 4px 12px;
+}
+.gd-topics button.on {
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--panel-2);
+}
+.gd-range {
+  margin-bottom: 10px;
+}
+.gd-today {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+.gd-today.yes {
+  border-color: var(--good);
+}
+.gd-today.no {
+  border-color: var(--warn);
+}
+.gd-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .gd-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.gd-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+.gd-month h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+.gd-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.gd-dow {
+  font-size: 10px;
+  text-align: center;
+  color: var(--muted);
+}
+button.gd-day {
+  padding: 0;
+  height: 26px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+}
+.gd-day.no {
+  color: var(--muted);
+  opacity: 0.55;
+}
+.gd-day.ok {
+  background: color-mix(in srgb, var(--good) 14%, transparent);
+}
+.gd-day.best {
+  background: var(--good);
+  color: var(--paper);
+  font-weight: 700;
+}
+.gd-day.sel {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.gd-legend {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.gd-legend .gd-day {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 9px;
+}
+.gd-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gd-detail {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.gd-detail h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.gd-detail ul {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+}
+.gd-best {
+  list-style: none;
+  padding-left: 0 !important;
+}
+.gd-best li {
+  margin-bottom: 6px;
+}
+.gd-note {
+  margin-top: 14px;
+}
+/* Amatör / Profesyonel switch in the toolbar */
+.tg-mode button {
+  font-size: 12px;
+}

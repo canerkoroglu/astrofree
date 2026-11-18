@@ -590,6 +590,19 @@ export default function SettingsDialog({
                 onChange={(p) => setS({ ...s, defaultPlace: p, defaultZone: p.zone ?? s.defaultZone })}
               />
             </fieldset>
+            <fieldset>
+              <legend>{t('Kullanım modu')}</legend>
+              <label className="inline">
+                <input type="radio" name="ui-mode" checked={s.mode === 'amateur'} onChange={() => setS({ ...s, mode: 'amateur', ai: { ...s.ai, level: 'amateur' } })} /> {t('Amatör')}
+              </label>
+              <label className="inline">
+                <input type="radio" name="ui-mode" checked={s.mode === 'professional'} onChange={() => setS({ ...s, mode: 'professional', ai: { ...s.ai, level: 'professional' } })} />{' '}
+                {t('Profesyonel')}
+              </label>
+              <p className="muted small">
+                {t('Amatör modda yalnızca gündelik sekmeler (Harita, Bugün, Temel Yorum, Uygun Günler) görünür ve yapay zekâ kısa, sade yanıt verir. Profesyonel mod tüm araçları ve teknik yanıtları açar.')}
+              </p>
+            </fieldset>
             <fieldset className="advanced-features">
               <legend>
                 {t('Gelişmiş özellikler')} <span className="badge">{t('Gelişmiş')}</span>
@@ -598,7 +611,8 @@ export default function SettingsDialog({
                 <input type="checkbox" checked={!!s.showVedic} onChange={(e) => setS({ ...s, showVedic: e.target.checked })} /> {t('Vedik (Jyotiş) araçları')}
               </label>
               <p className="muted small">
-                {t('Natal Bilgiler’e sidereal (Lahiri) nakshatra ve navamsa tablosu, Vimshottari dasha, Kuzey/Güney Hint çarkı, doğum Panchangı ve sinastri partneriyle kundli eşleştirmesi ekler.')}
+                {t('Natal Bilgiler’e sidereal (Lahiri) nakshatra ve navamsa tablosu, Vimshottari dasha, Kuzey/Güney Hint çarkı, doğum Panchangı ve sinastri partneriyle kundli eşleştirmesi ekler.')}{' '}
+                {s.mode === 'amateur' ? t('Natal Bilgiler sekmesi Profesyonel modda görünür.') : ''}
               </p>
             </fieldset>
           </div>

@@ -67,7 +67,8 @@ const api = {
       ipcRenderer.invoke('export:png', rect, name),
     pngData: (dataUrl: string, name: string): Promise<boolean> => ipcRenderer.invoke('export:pngData', dataUrl, name),
     copyImage: (dataUrl: string): Promise<boolean> => ipcRenderer.invoke('export:copyImage', dataUrl),
-    pdf: (name: string): Promise<boolean> => ipcRenderer.invoke('export:pdf', name)
+    pdf: (name: string): Promise<boolean> => ipcRenderer.invoke('export:pdf', name),
+    ics: (content: string, name: string): Promise<boolean> => ipcRenderer.invoke('export:ics', content, name)
   },
 
   charts: {

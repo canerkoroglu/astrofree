@@ -179,6 +179,8 @@ export interface AppSettings {
   onboarded: boolean
   /** Advanced: show the Vedic (Jyotish) tools in Natal Info. */
   showVedic?: boolean
+  /** Interface mode: amateur shows the everyday tabs only, professional everything. */
+  mode: AiLevel
   /** Last version whose “what's new” notes the user has seen. */
   seenVersion?: string
   /** Language code from src/shared/i18n (tr, en, …). */

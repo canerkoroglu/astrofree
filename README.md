@@ -145,6 +145,16 @@ ayrıca kurulması gerekir.
   tekniklerle ayrıntılı yanıt verir. Her iki düzeyde de yanıtlar olasılık diliyle kurulur, "yap/yapma" gibi yönlendirme
   ve sağlık, hukuk, finans konularında tahmin ya da öneri içermez; her yanıt kısa bir hatırlatmayla biter. Düzey talimatı
   ve kriz anları için güvenlik kuralı, kendi sistem talimatınızı yazsanız da eklenir.
+- **Amatör / Profesyonel mod** (üst çubuk, Ayarlar → Genel ve ilk açılış rehberi): Amatör modda yalnızca gündelik
+  sekmeler (Harita, Bugün, Temel Yorum, Uygun Günler, Yorumlar, Bilgi Bankası), Transit ve Sinastri katmanları ve konum
+  tablosu görünür; yapay zekâ kısa ve sade yanıt verir. Profesyonel mod tüm araçları (progresyon, dönüşler, solar ark,
+  harmonikler, ev sistemi, Natal Bilgiler, Transit Takvimi, efemeris, astrokartografi, Zaman Seçimi) ve teknik yanıtları
+  açar. Yeni kurulumlar Amatör, önceki sürümden gelenler Profesyonel başlar.
+- **Uygun Günler** sekmesi (yapay zekâ gerekmez): nikâh, yeni iş, sözleşme, alışveriş/cihaz, yolculuk, taşınma, saç ya da
+  diyet için 30 gün – 12 ay ya da gelecek yıl boyunca günler ay takviminde işaretlenir (öne çıkan / ölçütlere uyuyor /
+  uymuyor). Bir güne tıklayınca nedenleri ve "Yapay zekâya sor" düğmesi; "Bugün" değerlendirmesi, aralıktaki retrolar ve
+  tutulmalar. **Takvime aktar** öne çıkan günleri, retro dönemlerini ve tutulmaları `.ics` dosyası olarak kaydeder
+  (telefon, Google, Apple ya da Outlook takvimine eklenebilir). Sohbetteki "ne zaman?" yanıtlarıyla aynı hesaplamayı kullanır.
 - **Zamanlama soruları** ("2027'de ne zaman nikâh günü alabiliriz?", "saç boyatmak için uygun bir zaman mı?", "Merkür
   retrosunda telefon yenilesem?", "önümüzdeki 3 ay"): soru gönderilirken konusu (nikâh, diyet, saç, alışveriş/cihaz,
   sözleşme, yeni iş, yolculuk, taşınma, sağlık) ve tarih aralığı (yıl, ay adı, "önümüzdeki 3 ay", "gelecek ay"; 8 dilde,

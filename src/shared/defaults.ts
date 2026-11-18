@@ -98,7 +98,8 @@ export const DEFAULT_ASPECTS: Record<AspectKey, AspectSetting> = {
 export const TERMS_VERSION = '2026-11-03'
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  settingsVersion: 3,
+  settingsVersion: 5,
+  mode: 'amateur',
   houseSystem: 'B',
   zodiac: 'tropical',
   sidMode: 1,
@@ -171,7 +172,9 @@ export function mergeSettings(stored: Partial<AppSettings> | null | undefined): 
     ...(v < 2 ? { houseSystem: 'B' } : {}),
     // v3 added the time zone mode: earlier installs follow the system zone.
     ...(v < 3 ? { timezoneMode: 'system' as const, dateOrder: 'auto' as const } : {}),
-    settingsVersion: 4
+    // v5 added the interface mode: earlier installs keep the full interface they know.
+    ...(v < 5 && !stored.mode ? { mode: 'professional' as const } : {}),
+    settingsVersion: 5
   }
   // v4: the AI answers in the interface language unless the user picked another one.
   const aiLanguage = v < 4 && (!ai.language || ai.language === (stored.uiLanguage ?? 'tr')) ? 'auto' : ai.language

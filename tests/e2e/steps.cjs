@@ -20,7 +20,7 @@ function steps({ ai, tmp, mock }) {
   step('ob next 1', `c('.onboarding .actions button','Devam')`, 300)
   step('ob next 2', `c('.onboarding .actions button','Devam')`, 500)
   step('ob level pro', `(()=>{const cards=[...document.querySelectorAll('.onboarding .ob-levels .ob-provider')];const amateurFirst=cards.length===2&&cards[0].classList.contains('selected');c('.onboarding .ob-levels .ob-provider','Profesyonel');return amateurFirst?1:'FAIL İlk açılış: Amatör önceden seçili değil'})()`, 400)
-  step('ob level saved', `window.astro.settings.get().then(s=>{const r=ok('İlk açılış: yanıt düzeyi seçimi (varsayılan Amatör, Profesyonel saklanıyor)',s.ai.level==='professional');c('.onboarding .ob-levels .ob-provider','Amatör');return r})`, 400)
+  step('ob level saved', `window.astro.settings.get().then(s=>{return ok('İlk açılış: kullanım modu seçimi (varsayılan Amatör; Profesyonel hem arayüzü hem yanıt düzeyini ayarlıyor)',s.ai.level==='professional'&&s.mode==='professional')})`, 400)
   step('onboarding done', `(()=>{c('.onboarding .actions button','Atla');return 1})()`, 500)
   step('terms saved', `window.astro.settings.get().then(s=>ok('İlk açılış rehberi ve lisans onayı',!document.querySelector('.onboarding')&&!!s.termsAccepted&&!!s.termsAcceptedAt&&!document.querySelector('.terms-dialog')))`)
   step('ephemeris', `window.astro.compute([{jdUT:2430377.5243055555,lat:38.25,lon:-85.7667,houseSystem:'P',sidMode:null,bodies:[0,1,9]}]).then(r=>{const b=r[0].bodies;return ok('Efemeris doğruluğu',Math.abs(b[0].lon-297.2930)<0.001&&Math.abs(b[1].lon-312.4323)<0.002&&Math.abs(r[0].asc-139.5244)<0.01,'Güneş '+b[0].lon.toFixed(4))})`)
@@ -35,7 +35,7 @@ function steps({ ai, tmp, mock }) {
   step('first chart reading', `ok('İlk kişi Temel Yorum’da açılıyor',!!document.querySelector('.reading')&&document.querySelector('.view-tabs button.on').textContent==='Temel Yorum')`)
   step('to chart', `c('.view-tabs button','Harita')`, 600)
   step('natal table', `(()=>{const r=[...document.querySelectorAll('table.data tr')].find(r=>r.textContent.includes('Güneş'));return ok('Natal konum tablosu',!!r&&r.textContent.includes('27°'),r?r.textContent.slice(0,50):'satır yok')})()`)
-  step('partner', `window.astro.charts.save({id:'p2',name:'Test Partner',local:{y:1990,m:5,d:3,h:9,mi:20,s:0},tz:{kind:'zone',zone:'Europe/Istanbul'},place:{name:'İzmir',lat:38.42,lon:27.14,zone:'Europe/Istanbul'},createdAt:1,updatedAt:1}).then(()=>window.astro.settings.get()).then(s=>window.astro.settings.set({...s,showVedic:true})).then(()=>{location.reload();return 1})`, 3000)
+  step('partner', `window.astro.charts.save({id:'p2',name:'Test Partner',local:{y:1990,m:5,d:3,h:9,mi:20,s:0},tz:{kind:'zone',zone:'Europe/Istanbul'},place:{name:'İzmir',lat:38.42,lon:27.14,zone:'Europe/Istanbul'},createdAt:1,updatedAt:1}).then(()=>window.astro.settings.get()).then(s=>window.astro.settings.set({...s,showVedic:true,ai:{...s.ai,level:'amateur'}})).then(()=>{location.reload();return 1})`, 3000)
   step('helpers2', HELPERS, 100)
   step('open ali', `c('.chart-list .item .nm','Muhammad')`, 1200)
   for (const k of ['Transit', 'Progresyon', 'Solar Ark', 'Güneş Dönüşü', 'Ay Dönüşü', 'Sinastri']) {
@@ -171,6 +171,17 @@ function steps({ ai, tmp, mock }) {
       step('contrast ' + theme + v, `(()=>{const bad=${CONTRAST}.filter(x=>!x.includes('[disabled]'));return ok('Kontrast (${theme}, ${v})',bad.length===0,bad.slice(0,3).join(' || '))})()`)
     }
   }
+  // Amateur mode and the Good Days screen.
+  step('mode amateur', `c('.tg-mode button','Amatör')`, 900)
+  step('mode amateur check', `window.astro.settings.get().then(s=>{const tabs=[...document.querySelectorAll('.view-tabs button')].map(b=>b.textContent);const layers=[...document.querySelectorAll('.tg-layers button')].map(b=>b.textContent);return ok('Amatör mod: sade sekmeler ve katmanlar, yanıt düzeyi de Amatör',s.mode==='amateur'&&s.ai.level==='amateur'&&tabs.some(x=>x.startsWith('Uygun Günler'))&&!tabs.some(x=>x.startsWith('Transit Takvimi')||x.startsWith('Grafik Efemeris'))&&layers.join(',')==='Transit,Sinastri'&&!document.querySelector('.tg-harmonic'),tabs.join(',')+' | '+layers.join(','))})`)
+  step('good days', `c('.view-tabs button','Uygun Günler')`, 3500)
+  step('good days check', `ok('Uygun Günler: ay takvimi ve öne çıkan günler',document.querySelectorAll('.gd-month').length>=3&&document.querySelectorAll('.gd-day.best').length>=1&&!!document.querySelector('.gd-today'),document.querySelectorAll('.gd-month').length+' ay, '+document.querySelectorAll('.gd-day.best').length+' öne çıkan')`)
+  step('good days year', `c('.gd-range button','12 ay')`, 4000)
+  step('good days year check', `ok('Uygun Günler: 12 aylık aralık',document.querySelectorAll('.gd-month').length>=12&&document.querySelectorAll('.gd-day.best').length>=4)`)
+  step('good days pick', `(()=>{document.querySelector('.gd-day.best').click();return 1})()`, 400)
+  step('good days detail', `ok('Uygun Günler: gün ayrıntısı',!!document.querySelector('.gd-detail h3')&&[...document.querySelectorAll('.gd-detail button')].some(b=>b.textContent==='Yapay zekâya sor'))`)
+  step('mode pro', `c('.tg-mode button','Profesyonel')`, 900)
+  step('mode pro check', `ok('Profesyonel mod: tüm sekmeler geri geliyor',[...document.querySelectorAll('.view-tabs button')].some(b=>b.textContent.startsWith('Transit Takvimi'))&&document.querySelectorAll('.tg-layers button').length===6)`)
   step('interp', `window.astro.interp.add({id:'i1',chartId:'x',title:'t',content:'c',provider:'test',createdAt:Date.now()}).then(a=>ok('Yorum arşivi',a.some(i=>i.id==='i1')))`)
   if (ai) {
     step('claude', `aiAsk('claude-code','','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Claude Code — '+r)`)
