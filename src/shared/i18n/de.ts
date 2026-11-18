@@ -1281,6 +1281,19 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "Der AstroHermes-API-Schlüssel ist ungültig oder wurde widerrufen. Kopieren Sie ihn erneut von Ihrer AstroHermes-Kontoseite.",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Ihr AstroHermes-Abo ist nicht aktiv, oder das Kontingent dieses Monats ist aufgebraucht. Sie können das auf Ihrer AstroHermes-Kontoseite prüfen.",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Ihr AstroHermes-Tarif enthält dieses Modell nicht. Wählen Sie astrohermes-1-fast oder wechseln Sie den Tarif.",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Ein kostenpflichtiger KI-Dienst speziell für Astrologie. Fügen Sie einfach den API-Schlüssel aus Ihrem AstroHermes-Abo ein (ahr_live_…); die Adresse ist bereits eingestellt."
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Ein kostenpflichtiger KI-Dienst speziell für Astrologie. Fügen Sie einfach den API-Schlüssel aus Ihrem AstroHermes-Abo ein (ahr_live_…); die Adresse ist bereits eingestellt.",
+    "Ay tutulması ({date})": "Mondfinsternis ({date})",
+    "Bu hafta · AstroFree": "Diese Woche · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "Vollmond in {sign} ({date})",
+    "Güneş tutulması ({date})": "Sonnenfinsternis ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "Wochenüberblick: einmal pro Woche die Himmelsereignisse und ein einfacher Hinweis zu Ihrem Horoskop",
+    "Kimin için": "Für wen",
+    "Profesyonel modda": "im Profi-Modus",
+    "Yeni Ay {sign} burcunda ({date})": "Neumond in {sign} ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name}: Für {subject} könnte es eine unterstützende Woche sein.",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name}: Für {subject} könnte die Woche etwas fordernd sein, aber Raum für Wachstum bieten.",
+    "{p} geri harekete başlıyor ({date})": "{p} wird rückläufig ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} wird wieder direktläufig ({date})",
+    "İlk kaydedilen kişi": "Erste gespeicherte Person"
   }
 }

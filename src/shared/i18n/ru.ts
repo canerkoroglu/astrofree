@@ -1281,6 +1281,19 @@ export const ru: Locale = {
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "Ключ API AstroHermes недействителен или отозван. Скопируйте его снова со страницы вашей учётной записи AstroHermes.",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Подписка AstroHermes не активна или лимит этого месяца исчерпан. Проверить это можно на странице вашей учётной записи AstroHermes.",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Ваш тариф AstroHermes не включает эту модель. Выберите astrohermes-1-fast или смените тариф.",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Платный ИИ-сервис, созданный для астрологии. Просто вставьте ключ API из подписки AstroHermes (ahr_live_…); адрес уже задан."
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Платный ИИ-сервис, созданный для астрологии. Просто вставьте ключ API из подписки AstroHermes (ahr_live_…); адрес уже задан.",
+    "Ay tutulması ({date})": "Лунное затмение ({date})",
+    "Bu hafta · AstroFree": "На этой неделе · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "Полнолуние в знаке {sign} ({date})",
+    "Güneş tutulması ({date})": "Солнечное затмение ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "Недельная сводка: раз в неделю — небесные события недели и простая заметка о вашей карте",
+    "Kimin için": "Для кого",
+    "Profesyonel modda": "в профессиональном режиме",
+    "Yeni Ay {sign} burcunda ({date})": "Новолуние в знаке {sign} ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name}: неделя может быть благоприятной для сферы «{subject}».",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name}: неделя может быть немного непростой для сферы «{subject}», но открытой для роста.",
+    "{p} geri harekete başlıyor ({date})": "{p} становится ретроградным ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} снова идёт директно ({date})",
+    "İlk kaydedilen kişi": "Первый сохранённый человек"
   }
 }

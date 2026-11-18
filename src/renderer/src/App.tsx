@@ -1479,6 +1479,7 @@ export default function App() {
       {showSettings && (
         <SettingsDialog
           settings={settings}
+          people={charts.filter((c) => (c.kind ?? 'person') === 'person').map((c) => ({ id: c.id, name: c.name }))}
           focus={settingsFocus}
           onClose={() => {
             setShowSettings(false)

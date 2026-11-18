@@ -105,9 +105,12 @@ export default function SettingsDialog({
   settings,
   onSave,
   onClose,
-  focus
+  focus,
+  people = []
 }: {
   settings: AppSettings
+  /** Saved people, for "whose chart" choices (weekly summary). */
+  people?: { id: string; name: string }[]
   onSave: (s: AppSettings) => void
   onClose: () => void
   /** Open straight at a section, e.g. the time zone settings or one AI provider. */
@@ -528,10 +531,34 @@ export default function SettingsDialog({
               <label className="inline">
                 <input
                   type="checkbox"
+                  checked={s.notifications.weekly !== false}
+                  onChange={(e) => setS({ ...s, notifications: { ...s.notifications, weekly: e.target.checked } })}
+                />
+                {t('Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not')}
+              </label>
+              {s.notifications.weekly !== false && people.length > 1 && (
+                <div className="row">
+                  <label>
+                    {t('Kimin için')}
+                    <select value={s.notifications.weeklyChart ?? ''} onChange={(e) => setS({ ...s, notifications: { ...s.notifications, weeklyChart: e.target.value } })}>
+                      <option value="">{t('İlk kaydedilen kişi')}</option>
+                      {people.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              )}
+              <label className="inline">
+                <input
+                  type="checkbox"
                   checked={s.notifications.enabled}
                   onChange={(e) => setS({ ...s, notifications: { ...s.notifications, enabled: e.target.checked } })}
                 />
                 {t('Kayıtlı kişilere yaklaşan tam transitler için masaüstü bildirimi (Mars–Plüton, 3 gün önceden)')}
+                {s.mode === 'amateur' ? ` · ${t('Profesyonel modda')}` : ''}
               </label>
               <div className="row">
                 <select

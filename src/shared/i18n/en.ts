@@ -1281,6 +1281,19 @@ The person asking knows astrology. Use technical terms without explaining them a
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "The AstroHermes API key is not valid or has been revoked. Copy it again from your AstroHermes account page.",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Your AstroHermes subscription is not active, or this month's allowance is used up. You can check this on your AstroHermes account page.",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Your AstroHermes plan does not include this model. Choose astrohermes-1-fast, or upgrade your plan.",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "A paid AI service made for astrology. Just paste the API key from your AstroHermes subscription (ahr_live_…); the address is set already."
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "A paid AI service made for astrology. Just paste the API key from your AstroHermes subscription (ahr_live_…); the address is set already.",
+    "Ay tutulması ({date})": "Lunar eclipse ({date})",
+    "Bu hafta · AstroFree": "This week · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "Full Moon in {sign} ({date})",
+    "Güneş tutulması ({date})": "Solar eclipse ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "Weekly summary: once a week, the week's sky events and a plain note for your chart",
+    "Kimin için": "For whom",
+    "Profesyonel modda": "in Professional mode",
+    "Yeni Ay {sign} burcunda ({date})": "New Moon in {sign} ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name}: this may be a supportive week for {subject}.",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name}: a week that may feel a little demanding for {subject}, yet open to growth.",
+    "{p} geri harekete başlıyor ({date})": "{p} turns retrograde ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} turns direct again ({date})",
+    "İlk kaydedilen kişi": "First saved person"
   }
 }

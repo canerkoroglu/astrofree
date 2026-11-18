@@ -143,7 +143,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   uiLanguage: 'tr',
   timezoneMode: 'system',
   dateOrder: 'auto',
-  notifications: { enabled: true, scope: 'all', tag: 'takip' },
+  notifications: { enabled: true, scope: 'all', tag: 'takip', weekly: true, weeklyChart: '' },
   returnPlace: 'natal',
   ai: {
     provider: 'claude-code',

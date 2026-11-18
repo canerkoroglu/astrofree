@@ -1281,6 +1281,19 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "La clé d'API AstroHermes n'est pas valide ou a été révoquée. Copiez-la à nouveau depuis la page de votre compte AstroHermes.",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Votre abonnement AstroHermes n'est pas actif, ou le quota de ce mois est épuisé. Vous pouvez le vérifier sur la page de votre compte AstroHermes.",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Votre formule AstroHermes n'inclut pas ce modèle. Choisissez astrohermes-1-fast ou changez de formule.",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Un service d'IA payant conçu pour l'astrologie. Collez simplement la clé d'API de votre abonnement AstroHermes (ahr_live_…) ; l'adresse est déjà réglée."
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Un service d'IA payant conçu pour l'astrologie. Collez simplement la clé d'API de votre abonnement AstroHermes (ahr_live_…) ; l'adresse est déjà réglée.",
+    "Ay tutulması ({date})": "Éclipse de Lune ({date})",
+    "Bu hafta · AstroFree": "Cette semaine · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "Pleine Lune en {sign} ({date})",
+    "Güneş tutulması ({date})": "Éclipse de Soleil ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "Résumé hebdomadaire : une fois par semaine, les événements du ciel et une note simple pour votre thème",
+    "Kimin için": "Pour qui",
+    "Profesyonel modda": "en mode professionnel",
+    "Yeni Ay {sign} burcunda ({date})": "Nouvelle Lune en {sign} ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name} : cette semaine pourrait être porteuse pour {subject}.",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name} : une semaine qui pourrait être un peu exigeante pour {subject}, mais propice à la croissance.",
+    "{p} geri harekete başlıyor ({date})": "{p} devient rétrograde ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} redevient direct ({date})",
+    "İlk kaydedilen kişi": "Première personne enregistrée"
   }
 }

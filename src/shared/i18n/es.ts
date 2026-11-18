@@ -1281,6 +1281,19 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "La clave de API de AstroHermes no es válida o fue revocada. Cópiela de nuevo desde la página de su cuenta de AstroHermes.",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Su suscripción a AstroHermes no está activa o ya usó el cupo de este mes. Puede comprobarlo en la página de su cuenta de AstroHermes.",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Su plan de AstroHermes no incluye este modelo. Elija astrohermes-1-fast o mejore su plan.",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Un servicio de IA de pago creado para la astrología. Solo pegue la clave de API de su suscripción a AstroHermes (ahr_live_…); la dirección ya está configurada."
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Un servicio de IA de pago creado para la astrología. Solo pegue la clave de API de su suscripción a AstroHermes (ahr_live_…); la dirección ya está configurada.",
+    "Ay tutulması ({date})": "Eclipse lunar ({date})",
+    "Bu hafta · AstroFree": "Esta semana · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "Luna llena en {sign} ({date})",
+    "Güneş tutulması ({date})": "Eclipse solar ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "Resumen semanal: una vez por semana, los eventos del cielo y una nota sencilla para su carta",
+    "Kimin için": "Para quién",
+    "Profesyonel modda": "en modo profesional",
+    "Yeni Ay {sign} burcunda ({date})": "Luna nueva en {sign} ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name}: podría ser una semana favorable para {subject}.",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name}: una semana que podría resultar algo exigente para {subject}, pero abierta al crecimiento.",
+    "{p} geri harekete başlıyor ({date})": "{p} empieza a retrogradar ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} vuelve a ir directo ({date})",
+    "İlk kaydedilen kişi": "Primera persona guardada"
   }
 }

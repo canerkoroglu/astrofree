@@ -1281,6 +1281,19 @@ export const hi: Locale = {
     "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "AstroHermes API कुंजी मान्य नहीं है या रद्द कर दी गई है। इसे अपने AstroHermes खाते के पेज से फिर से कॉपी करें।",
     "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "आपकी AstroHermes सदस्यता सक्रिय नहीं है या इस महीने की सीमा ख़त्म हो गई है। इसे अपने AstroHermes खाते के पेज पर देख सकते हैं।",
     "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "आपकी AstroHermes योजना में यह मॉडल शामिल नहीं है। astrohermes-1-fast चुनें या अपनी योजना बढ़ाएँ।",
-    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "ज्योतिष के लिए बनी एक सशुल्क AI सेवा। बस अपनी AstroHermes सदस्यता की API कुंजी (ahr_live_…) चिपकाएँ; पता पहले से तय है।"
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "ज्योतिष के लिए बनी एक सशुल्क AI सेवा। बस अपनी AstroHermes सदस्यता की API कुंजी (ahr_live_…) चिपकाएँ; पता पहले से तय है।",
+    "Ay tutulması ({date})": "चंद्र ग्रहण ({date})",
+    "Bu hafta · AstroFree": "इस हफ़्ते · AstroFree",
+    "Dolunay {sign} burcunda ({date})": "{sign} में पूर्णिमा ({date})",
+    "Güneş tutulması ({date})": "सूर्य ग्रहण ({date})",
+    "Haftalık özet: haftada bir, haftanın gökyüzü olayları ve haritanız için sade bir not": "साप्ताहिक सार: हफ़्ते में एक बार, हफ़्ते की आकाशीय घटनाएँ और आपकी कुंडली के लिए एक सरल नोट",
+    "Kimin için": "किसके लिए",
+    "Profesyonel modda": "पेशेवर मोड में",
+    "Yeni Ay {sign} burcunda ({date})": "{sign} में अमावस्या ({date})",
+    "{name}: {subject} için destekleyici bir hafta olabilir.": "{name}: {subject} के लिए यह सहायक हफ़्ता हो सकता है।",
+    "{name}: {subject} konusunda biraz zorlanılabilecek ama gelişime açık bir hafta olabilir.": "{name}: {subject} के लिए यह हफ़्ता थोड़ा चुनौती भरा पर विकास के लिए खुला हो सकता है।",
+    "{p} geri harekete başlıyor ({date})": "{p} वक्री होना शुरू ({date})",
+    "{p} yeniden ileri gidiyor ({date})": "{p} फिर से मार्गी ({date})",
+    "İlk kaydedilen kişi": "पहला सहेजा गया व्यक्ति"
   }
 }

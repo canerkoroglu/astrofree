@@ -189,7 +189,15 @@ export interface AppSettings {
   /** 'system' follows the computer's time zone; 'manual' uses defaultZone as set. */
   timezoneMode: 'system' | 'manual'
   dateOrder: 'auto' | 'DMY' | 'MDY' | 'YMD'
-  notifications: { enabled: boolean; scope: 'all' | 'tagged'; tag: string }
+  notifications: {
+    enabled: boolean
+    scope: 'all' | 'tagged'
+    tag: string
+    /** Plain weekly summary (sky events and the person's main transit), once a week. */
+    weekly?: boolean
+    /** Whose chart the weekly summary is about ('' = the first saved person). */
+    weeklyChart?: string
+  }
   returnPlace: 'natal' | 'current'
   ai: AiSettings
 }
