@@ -6,6 +6,7 @@ import { fmtPos, glyph, SIGNS, signGlyph, splitDeg } from '../lib/astro'
 import { fmtLocal, fmtOffset, isValidZone, jdToLocal, localToJd, nowJd, offsetAt, revjul } from '../lib/time'
 import DateTimeField from './DateTimeField'
 import PlaceSearch from './PlaceSearch'
+import BirthTimeHelp from './BirthTimeHelp'
 
 const RODDEN: [string, string][] = [
   ['', 'Belirtilmedi'],
@@ -30,10 +31,13 @@ export default function ChartEditor({
   initial,
   existing,
   onApply,
-  onClose
+  onClose,
+  sidMode = null
 }: {
   initial: ChartRecord
   existing: ChartRecord[]
+  /** Sidereal mode of the settings (null = tropical), for the Moon-sign hint. */
+  sidMode?: number | null
   onApply: (rec: ChartRecord, save: boolean) => void
   onClose: () => void
 }) {
@@ -197,6 +201,7 @@ export default function ChartEditor({
                   {t('12:00 kullanılacak. Yükselen, MC ve evler güvenilmez olur; Ay ±7° oynayabilir. Yorumlar buna göre yapılır.')}
                 </div>
               )}
+              {rec.timeUnknown && !isEvent && <BirthTimeHelp rec={rec} sidMode={sidMode} />}
             </section>
 
             <section className="ed-sec">

@@ -1333,6 +1333,17 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "{p} ({n} olay)": "{p} ({n} acontecimientos)",
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: pudo ser una influencia favorable para {subject}",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: pudo ser una influencia exigente o movilizadora para {subject}",
-    "ör. Yeni işe başladım": "p. ej. Empecé un trabajo nuevo"
+    "ör. Yeni işe başladım": "p. ej. Empecé un trabajo nuevo",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "Una hora aproximada que recuerden sus padres o familiares (p. ej. \"de madrugada\", \"por la tarde\")",
+    "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "La Luna avanza unos 13° al día; pudo cambiar de signo.",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "La Luna estuvo en {a} todo ese día; su signo lunar muy probablemente es correcto.",
+    "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "Ese día la Luna pasó de {a} a {b}; su signo lunar podría ser cualquiera de los dos.",
+    "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "Álbum de bebé, anuncio de nacimiento, cartas o diarios antiguos",
+    "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "Partida de nacimiento, registro del hospital o del nacimiento (en algunos países incluye la hora)",
+    "Doğum saatinizi bilmiyor musunuz? Ne değişir, nasıl bulunur?": "¿No sabe su hora de nacimiento? Qué cambia y cómo encontrarla",
+    "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Su signo solar y la mayoría de los planetas se calculan igualmente bien.",
+    "Saati bulmak için şunlara bakılabilir:": "Dónde se puede buscar la hora:",
+    "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Si encuentra una hora aproximada, desactive \"Hora de nacimiento desconocida\", introdúzcala y elija \"C — Fuente poco clara, aproximada\" como fuente de la hora.",
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "El ascendente y las casas (áreas de la vida) dependen de la hora; recorren los 12 signos en un día, por eso no se muestran."
   }
 }

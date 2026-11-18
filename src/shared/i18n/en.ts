@@ -1333,6 +1333,17 @@ The person asking knows astrology. Use technical terms without explaining them a
     "{p} ({n} olay)": "{p} ({n} events)",
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: may have been a supportive influence on {subject}",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: may have been a demanding or stirring influence on {subject}",
-    "ör. Yeni işe başladım": "e.g. Started a new job"
+    "ör. Yeni işe başladım": "e.g. Started a new job",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "An approximate time remembered by parents or relatives (e.g. \"early morning\", \"afternoon\")",
+    "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "The Moon moves about 13° in a day; it may have changed sign.",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "The Moon was in {a} all that day; your Moon sign is most likely right.",
+    "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "That day the Moon moved from {a} into {b}; your Moon sign may be either.",
+    "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "Baby album, birth announcement, old letters or diaries",
+    "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "Birth certificate, hospital or birth record (in some countries it includes the time)",
+    "Doğum saatinizi bilmiyor musunuz? Ne değişir, nasıl bulunur?": "Don't know your birth time? What changes, and how to find it",
+    "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Your Sun sign and most planets are still calculated correctly.",
+    "Saati bulmak için şunlara bakılabilir:": "Places that may have the time:",
+    "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "If you find an approximate time, turn off \"Birth time unknown\", enter it, and choose \"C — Unclear source, approximate\" as the time source.",
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "The rising sign and houses (life areas) depend on the time; they pass through all 12 signs in a day, so they are not shown."
   }
 }

@@ -1470,6 +1470,7 @@ export default function App() {
         <ChartEditor
           initial={editor}
           existing={charts}
+          sidMode={settings.zodiac === 'sidereal' ? settings.sidMode : null}
           onClose={() => setEditor(null)}
           onApply={(rec, save) => {
             // The very first saved chart opens on the offline reading: something to read right away, no AI needed.

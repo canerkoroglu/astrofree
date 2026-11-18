@@ -1333,6 +1333,17 @@ export const hi: Locale = {
     "{p} ({n} olay)": "{p} ({n} घटनाएँ)",
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: {subject} के लिए सहायक प्रभाव रहा हो सकता है",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: {subject} पर चुनौतीपूर्ण या प्रेरक प्रभाव रहा हो सकता है",
-    "ör. Yeni işe başladım": "जैसे नई नौकरी शुरू की"
+    "ör. Yeni işe başladım": "जैसे नई नौकरी शुरू की",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "माता-पिता या रिश्तेदारों को याद अनुमानित समय (जैसे \"भोर में\", \"दोपहर बाद\")",
+    "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "चंद्रमा एक दिन में लगभग 13° चलता है; उसकी राशि बदल गई हो सकती है।",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "उस पूरे दिन चंद्रमा {a} में था; आपकी चंद्र राशि बहुत संभवतः सही है।",
+    "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "उस दिन चंद्रमा {a} से {b} में गया; आपकी चंद्र राशि दोनों में से कोई भी हो सकती है।",
+    "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "बचपन का एल्बम, जन्म की घोषणा, पुराने पत्र या डायरियाँ",
+    "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "जन्म प्रमाणपत्र, अस्पताल या जन्म रिकॉर्ड (कुछ देशों में इसमें समय होता है)",
+    "Doğum saatinizi bilmiyor musunuz? Ne değişir, nasıl bulunur?": "जन्म समय नहीं पता? क्या बदलता है और कैसे पता करें",
+    "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "आपकी सूर्य राशि और ज़्यादातर ग्रह फिर भी सही निकलते हैं।",
+    "Saati bulmak için şunlara bakılabilir:": "समय यहाँ खोजा जा सकता है:",
+    "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "अगर अनुमानित समय मिल जाए, तो \"जन्म समय अज्ञात\" बंद करें, वह समय डालें और समय स्रोत में \"C — अस्पष्ट स्रोत, अनुमानित\" चुनें।",
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "लग्न और भाव (जीवन के क्षेत्र) समय पर निर्भर हैं; दिन भर में ये सभी 12 राशियों से गुज़रते हैं, इसलिए नहीं दिखाए जाते।"
   }
 }

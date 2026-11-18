@@ -1333,6 +1333,17 @@ export const ru: Locale = {
     "{p} ({n} olay)": "{p} (событий: {n})",
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: могло быть поддерживающим влиянием на сферу «{subject}»",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: могло быть требовательным или побуждающим влиянием на сферу «{subject}»",
-    "ör. Yeni işe başladım": "напр. Начал(а) новую работу"
+    "ör. Yeni işe başladım": "напр. Начал(а) новую работу",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "Приблизительное время, которое помнят родители или родственники (например, «под утро», «после обеда»)",
+    "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "Луна проходит около 13° в сутки; она могла сменить знак.",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "Весь тот день Луна была в знаке {a}; ваш лунный знак, скорее всего, верен.",
+    "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "В тот день Луна перешла из знака {a} в {b}; ваш лунный знак может быть любым из двух.",
+    "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "Детский альбом, объявление о рождении, старые письма или дневники",
+    "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "Свидетельство о рождении, запись в роддоме или в реестре (в некоторых странах там указано время)",
+    "Doğum saatinizi bilmiyor musunuz? Ne değişir, nasıl bulunur?": "Не знаете время рождения? Что меняется и как его найти",
+    "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Ваш солнечный знак и большинство планет всё равно рассчитываются верно.",
+    "Saati bulmak için şunlara bakılabilir:": "Где можно поискать время:",
+    "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Если найдёте приблизительное время, выключите «Время рождения неизвестно», введите его и выберите источник «C — Неясный источник, приблизительно».",
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Асцендент и дома (сферы жизни) зависят от времени; за сутки они проходят все 12 знаков, поэтому не показываются."
   }
 }

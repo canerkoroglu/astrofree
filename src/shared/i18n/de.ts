@@ -1333,6 +1333,17 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "{p} ({n} olay)": "{p} ({n} Ereignisse)",
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: könnte für {subject} ein unterstützender Einfluss gewesen sein",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: könnte für {subject} ein fordernder oder antreibender Einfluss gewesen sein",
-    "ör. Yeni işe başladım": "z. B. Neue Stelle angetreten"
+    "ör. Yeni işe başladım": "z. B. Neue Stelle angetreten",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "Eine ungefähre Zeit, an die sich Eltern oder Verwandte erinnern (z. B. „frühmorgens\", „nachmittags\")",
+    "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "Der Mond legt an einem Tag etwa 13° zurück; er könnte das Zeichen gewechselt haben.",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "Der Mond stand den ganzen Tag in {a}; Ihr Mondzeichen stimmt sehr wahrscheinlich.",
+    "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "An diesem Tag wechselte der Mond von {a} nach {b}; Ihr Mondzeichen kann eines von beiden sein.",
+    "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "Babyalbum, Geburtsanzeige, alte Briefe oder Tagebücher",
+    "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "Geburtsurkunde, Krankenhaus- oder Geburtsregister (in manchen Ländern mit Uhrzeit)",
+    "Doğum saatinizi bilmiyor musunuz? Ne değişir, nasıl bulunur?": "Geburtszeit unbekannt? Was sich ändert und wie man sie findet",
+    "Güneş burcunuz ve çoğu gezegen yine doğru hesaplanır.": "Ihr Sonnenzeichen und die meisten Planeten werden trotzdem richtig berechnet.",
+    "Saati bulmak için şunlara bakılabilir:": "Hier lässt sich nach der Uhrzeit suchen:",
+    "Yaklaşık bir saat bulursanız \"Doğum saati bilinmiyor\"u kapatıp o saati girin ve Saat kaynağı olarak \"C — Kaynağı belirsiz, yaklaşık\" seçin.": "Finden Sie eine ungefähre Zeit, schalten Sie „Geburtszeit unbekannt\" aus, geben Sie sie ein und wählen Sie als Zeitquelle „C — Unklare Quelle, ungefähr\".",
+    "Yükselen burç ve evler (hayat alanları) saate bağlıdır; gün içinde 12 burcun hepsinden geçer, bu yüzden gösterilmez.": "Aszendent und Häuser (Lebensbereiche) hängen von der Uhrzeit ab; sie durchlaufen an einem Tag alle 12 Zeichen und werden deshalb nicht gezeigt."
   }
 }

@@ -5096,3 +5096,11 @@ button.gd-day {
   margin: 4px 0 0;
   padding-left: 18px;
 }
+.birth-help summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.birth-help ul {
+  margin: 4px 0 6px;
+  padding-left: 18px;
+}
