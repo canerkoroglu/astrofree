@@ -1277,6 +1277,10 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Alışveriş / cihaz": "Shopping / devices",
     "Yolculuk": "Travel",
     "Saç": "Hair",
-    "Diyet": "Diet"
+    "Diyet": "Diet",
+    "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "The AstroHermes API key is not valid or has been revoked. Copy it again from your AstroHermes account page.",
+    "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Your AstroHermes subscription is not active, or this month's allowance is used up. You can check this on your AstroHermes account page.",
+    "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Your AstroHermes plan does not include this model. Choose astrohermes-1-fast, or upgrade your plan.",
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "A paid AI service made for astrology. Just paste the API key from your AstroHermes subscription (ahr_live_…); the address is set already."
   }
 }

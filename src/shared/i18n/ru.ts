@@ -1277,6 +1277,10 @@ export const ru: Locale = {
     "Alışveriş / cihaz": "Покупки / техника",
     "Yolculuk": "Поездка",
     "Saç": "Волосы",
-    "Diyet": "Диета"
+    "Diyet": "Диета",
+    "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "Ключ API AstroHermes недействителен или отозван. Скопируйте его снова со страницы вашей учётной записи AstroHermes.",
+    "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Подписка AstroHermes не активна или лимит этого месяца исчерпан. Проверить это можно на странице вашей учётной записи AstroHermes.",
+    "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Ваш тариф AstroHermes не включает эту модель. Выберите astrohermes-1-fast или смените тариф.",
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Платный ИИ-сервис, созданный для астрологии. Просто вставьте ключ API из подписки AstroHermes (ahr_live_…); адрес уже задан."
   }
 }

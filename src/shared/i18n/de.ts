@@ -1277,6 +1277,10 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Alışveriş / cihaz": "Einkauf / Geräte",
     "Yolculuk": "Reise",
     "Saç": "Haare",
-    "Diyet": "Diät"
+    "Diyet": "Diät",
+    "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "Der AstroHermes-API-Schlüssel ist ungültig oder wurde widerrufen. Kopieren Sie ihn erneut von Ihrer AstroHermes-Kontoseite.",
+    "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Ihr AstroHermes-Abo ist nicht aktiv, oder das Kontingent dieses Monats ist aufgebraucht. Sie können das auf Ihrer AstroHermes-Kontoseite prüfen.",
+    "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Ihr AstroHermes-Tarif enthält dieses Modell nicht. Wählen Sie astrohermes-1-fast oder wechseln Sie den Tarif.",
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Ein kostenpflichtiger KI-Dienst speziell für Astrologie. Fügen Sie einfach den API-Schlüssel aus Ihrem AstroHermes-Abo ein (ahr_live_…); die Adresse ist bereits eingestellt."
   }
 }

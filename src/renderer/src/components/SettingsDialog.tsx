@@ -396,10 +396,12 @@ export default function SettingsDialog({
                             onChange={(e) => setKeys({ ...keys, [p.id]: e.target.value })}
                           />
                         </label>
-                        <label>
-                          {t('Base URL')}
-                          <input value={c.baseUrl ?? ''} onChange={(e) => setProv(p.id, { baseUrl: e.target.value })} />
-                        </label>
+                        {p.id !== 'astrohermes' && (
+                          <label>
+                            {t('Base URL')}
+                            <input value={c.baseUrl ?? ''} onChange={(e) => setProv(p.id, { baseUrl: e.target.value })} />
+                          </label>
+                        )}
                       </>
                     )}
                     <label className="narrow">

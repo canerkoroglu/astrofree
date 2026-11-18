@@ -58,6 +58,13 @@ export const PROVIDERS: {
     models: ['deepseek-chat', 'deepseek-reasoner']
   },
   {
+    id: 'astrohermes',
+    label: 'AstroHermes',
+    kind: 'api',
+    hint: 'Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.',
+    models: ['astrohermes-1-fast', 'astrohermes-1']
+  },
+  {
     id: 'local',
     label: 'Yerel sunucu',
     kind: 'api',
@@ -65,6 +72,11 @@ export const PROVIDERS: {
     models: []
   }
 ]
+
+/** AstroHermes, the paid astrology model service (a separate product): live address, and staging for ahr_test_ keys. */
+export const ASTROHERMES_URL = 'https://astrohermes.cklabs.tr/v1'
+export const ASTROHERMES_STAGING_URL = 'https://astrohermes-staging.cklabs.tr/v1'
+export const astrohermesUrl = (key: string | null) => (key?.trim().startsWith('ahr_test_') ? ASTROHERMES_STAGING_URL : ASTROHERMES_URL)
 
 /** Common OpenAI-compatible servers and their default addresses. */
 export const LOCAL_PRESETS: { id: string; label: string; url: string; hint: string }[] = [
@@ -148,6 +160,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
       openai: { model: 'gpt-5-mini', baseUrl: 'https://api.openai.com/v1' },
       gemini: { model: 'gemini-2.5-flash', baseUrl: 'https://generativelanguage.googleapis.com/v1beta' },
       deepseek: { model: 'deepseek-chat', baseUrl: 'https://api.deepseek.com' },
+      // The address is fixed (ASTROHERMES_URL); only the subscription key is entered.
+      astrohermes: { model: 'astrohermes-1-fast' },
       local: { model: '', baseUrl: 'http://localhost:11434/v1', preset: 'ollama', timeoutSec: 300, hideThinking: true }
     }
   }

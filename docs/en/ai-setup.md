@@ -67,6 +67,19 @@ stored only on your computer.
 | Does not serve your country | The provider does not support your region; use another provider or a local model |
 | Could not reach … / secure connection | No internet, or a company network (proxy, firewall) is blocking it |
 
+### AstroHermes (made for astrology, paid)
+
+AstroHermes is a separate, paid AI service built for astrology; it is not part of AstroFree and you do not need it
+(the options above and local models work the same way).
+
+1. Get your API key from your AstroHermes subscription (`ahr_live_…`).
+2. Paste it under **Settings → AI → AstroHermes**; the address is set already, nothing else to enter.
+3. **Test key** → choose `astrohermes-1-fast` (fast) or `astrohermes-1` (deeper; if your plan includes it).
+4. Pick **AstroHermes** as the provider in the chat panel.
+
+If the subscription is not active or this month's allowance is used up, the app says so plainly; you can check it on
+your AstroHermes account page.
+
 ## 4. Local model
 
 Install [Ollama](https://ollama.com) and download a model:

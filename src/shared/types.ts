@@ -115,6 +115,7 @@ export type ProviderId =
   | 'openai'
   | 'gemini'
   | 'deepseek'
+  | 'astrohermes'
   | 'local'
 
 export interface ProviderConfig {

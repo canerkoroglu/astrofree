@@ -67,6 +67,19 @@ anahtar zinciriyle şifrelenip yalnızca bilgisayarınızda saklanır.
 | Bulunduğunuz ülkeden hizmet vermiyor | Sağlayıcı bölgenizi desteklemiyor; başka sağlayıcı ya da yerel model |
 | … adresine ulaşılamadı / güvenli bağlantı kurulamadı | İnternet yok ya da şirket ağı (proxy, güvenlik duvarı) engelliyor |
 
+### AstroHermes (astrolojiye özel, ücretli)
+
+AstroHermes, astroloji için hazırlanmış ayrı ve ücretli bir yapay zekâ servisidir; AstroFree'nin parçası değildir ve
+kullanmak zorunda değilsiniz (yukarıdaki seçenekler ve yerel modeller aynı şekilde çalışır).
+
+1. AstroHermes aboneliğinizden API anahtarınızı alın (`ahr_live_…`).
+2. **Ayarlar → Yapay zekâ → AstroHermes** bölümüne yapıştırın; adres hazırdır, başka bir şey girmeniz gerekmez.
+3. **Anahtarı test et** → `astrohermes-1-fast` (hızlı) ya da `astrohermes-1` (derin; planınız içeriyorsa) seçin.
+4. Sohbet panelinde sağlayıcı olarak **AstroHermes**'i seçin.
+
+Abonelik etkin değilse ya da aylık hak dolmuşsa uygulama bunu açıkça söyler; durumu AstroHermes hesap sayfanızdan
+görebilirsiniz.
+
 ## 4. Yerel model
 
 [Ollama](https://ollama.com)'yı kurun ve bir model indirin:

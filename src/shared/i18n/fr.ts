@@ -1277,6 +1277,10 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Alışveriş / cihaz": "Achats / appareils",
     "Yolculuk": "Voyage",
     "Saç": "Cheveux",
-    "Diyet": "Régime"
+    "Diyet": "Régime",
+    "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "La clé d'API AstroHermes n'est pas valide ou a été révoquée. Copiez-la à nouveau depuis la page de votre compte AstroHermes.",
+    "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "Votre abonnement AstroHermes n'est pas actif, ou le quota de ce mois est épuisé. Vous pouvez le vérifier sur la page de votre compte AstroHermes.",
+    "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "Votre formule AstroHermes n'inclut pas ce modèle. Choisissez astrohermes-1-fast ou changez de formule.",
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "Un service d'IA payant conçu pour l'astrologie. Collez simplement la clé d'API de votre abonnement AstroHermes (ahr_live_…) ; l'adresse est déjà réglée."
   }
 }

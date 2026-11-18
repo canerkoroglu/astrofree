@@ -1277,6 +1277,10 @@ export const hi: Locale = {
     "Alışveriş / cihaz": "ख़रीदारी / उपकरण",
     "Yolculuk": "यात्रा",
     "Saç": "बाल",
-    "Diyet": "डाइट"
+    "Diyet": "डाइट",
+    "AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.": "AstroHermes API कुंजी मान्य नहीं है या रद्द कर दी गई है। इसे अपने AstroHermes खाते के पेज से फिर से कॉपी करें।",
+    "AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.": "आपकी AstroHermes सदस्यता सक्रिय नहीं है या इस महीने की सीमा ख़त्म हो गई है। इसे अपने AstroHermes खाते के पेज पर देख सकते हैं।",
+    "AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.": "आपकी AstroHermes योजना में यह मॉडल शामिल नहीं है। astrohermes-1-fast चुनें या अपनी योजना बढ़ाएँ।",
+    "Astrolojiye özel, ücretli bir yapay zekâ servisi. AstroHermes aboneliğinizden aldığınız API anahtarını (ahr_live_…) yapıştırmanız yeterli; adres hazır.": "ज्योतिष के लिए बनी एक सशुल्क AI सेवा। बस अपनी AstroHermes सदस्यता की API कुंजी (ahr_live_…) चिपकाएँ; पता पहले से तय है।"
   }
 }

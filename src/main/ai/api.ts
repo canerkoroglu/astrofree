@@ -2,6 +2,7 @@
 import { tm } from '../i18n'
 import type { AiChatRequest, AiMessage, AiUsage, ProviderConfig } from '@shared/types'
 import { questionWithContext } from '@shared/aiHistory'
+import { astrohermesUrl } from '@shared/defaults'
 import type { Emit } from './cli'
 
 /** Yield the `data:` payload of each server-sent event in a fetch response. */
@@ -29,8 +30,14 @@ async function* sse(res: Response): AsyncGenerator<string> {
 }
 
 /** Plain-language advice for the HTTP errors people actually hit (wrong key, no credit, rate limit…). */
-function httpHint(status: number, text: string, local: boolean): string | null {
+function httpHint(status: number, text: string, local: boolean, label = ''): string | null {
   const t = text.toLowerCase()
+  if (label === 'AstroHermes') {
+    // Its own account words: the key comes from the AstroHermes account page, the quota from the subscription.
+    if (status === 401) return tm('AstroHermes API anahtarı geçersiz ya da iptal edilmiş. Anahtarı AstroHermes hesap sayfanızdan yeniden kopyalayın.')
+    if (status === 402) return tm('AstroHermes aboneliğiniz etkin değil ya da bu ayki kullanım hakkınız doldu. Durumu AstroHermes hesap sayfanızdan görebilirsiniz.')
+    if (status === 403) return tm('AstroHermes planınız bu modeli içermiyor. Model olarak astrohermes-1-fast seçin ya da planınızı yükseltin.')
+  }
   if (/location is not supported|unsupported_country|country, region, or territory/.test(t))
     return tm('Bu sağlayıcı bulunduğunuz ülkeden hizmet vermiyor. Başka bir sağlayıcı ya da yerel model deneyin.')
   if (status === 401 || /invalid[_ ]api[_ ]key|incorrect api key|api key not valid|authentication/.test(t))
@@ -71,7 +78,7 @@ async function failIfBad(res: Response, label: string): Promise<void> {
   } catch {
     if (body && body.length < 300) msg += ': ' + body.trim()
   }
-  const hint = httpHint(res.status, body, isLocalUrl(res.url))
+  const hint = httpHint(res.status, body, isLocalUrl(res.url), label)
   throw new Error(hint ? `${hint}\n(${msg})` : msg)
 }
 
@@ -358,6 +365,8 @@ export async function runApi(
       return openaiCompatible(req, cfg, key, emit, signal, 'https://api.openai.com/v1', 'OpenAI')
     case 'deepseek':
       return openaiCompatible(req, cfg, key, emit, signal, 'https://api.deepseek.com', 'DeepSeek')
+    case 'astrohermes':
+      return openaiCompatible(req, { ...cfg, baseUrl: astrohermesUrl(key) }, key, emit, signal, '', 'AstroHermes')
     case 'local':
       if (!(req.model || cfg.model)) throw new Error(tm('Yerel sunucu için model seçilmemiş. Ayarlar → Yapay zekâ → "Modelleri getir" ile seçin.'))
       return openaiCompatible(req, cfg, key, emit, signal, '', tm('Yerel sunucu'))
@@ -383,6 +392,10 @@ export async function testApiKey(provider: string, cfg: ProviderConfig, key: str
     url = `${trimSlash(cfg.baseUrl || 'https://generativelanguage.googleapis.com/v1beta')}/models?pageSize=200`
     headers = { 'x-goog-api-key': key }
     label = 'Gemini'
+  } else if (provider === 'astrohermes') {
+    url = `${astrohermesUrl(key)}/models`
+    headers = { authorization: `Bearer ${key}` }
+    label = 'AstroHermes'
   } else {
     const base = trimSlash(cfg.baseUrl || (provider === 'deepseek' ? 'https://api.deepseek.com' : 'https://api.openai.com/v1'))
     url = `${base}/models`
