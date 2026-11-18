@@ -24,6 +24,20 @@ const d180 = (x: number) => {
   return v > 180 ? v - 360 : v
 }
 
+/**
+ * The void-of-course search asks for the same moments again and again (the Moon against nine
+ * bodies and five aspects on one 0.1-day grid): remember each longitude once.
+ */
+function memoLon(lon: (t: number, b: number) => number): (t: number, b: number) => number {
+  const seen = new Map<string, number>()
+  return (t, b) => {
+    const k = `${b}|${t}`
+    let v = seen.get(k)
+    if (v === undefined) seen.set(k, (v = lon(t, b)))
+    return v
+  }
+}
+
 function bisect(a: number, b: number, f: (t: number) => boolean, tol = 1 / 1440): number {
   const fa = f(a)
   while (b - a > tol) {
@@ -134,6 +148,7 @@ export async function moonStays(jd: number, days: number, sidMode: number | null
   const swe = await getSwe()
   const calc = lonFn(swe, sidMode)
   const lon = (t: number, b: number) => calc(t, b)[0]
+  const vocLon = memoLon(lon)
   const sign = (t: number) => Math.floor(norm(lon(t, 1)) / 30)
   const out: MoonStay[] = []
   let start = jd
@@ -141,7 +156,7 @@ export async function moonStays(jd: number, days: number, sidMode: number | null
   for (let t = jd + 0.1; start < jd + days; t += 0.1) {
     if (sign(t) === s) continue
     const end = bisect(t - 0.1, t, (x) => sign(x) !== s)
-    const v = voidOfCourse(end - 0.2, lon)
+    const v = voidOfCourse(end - 0.2, vocLon)
     out.push({ start, end, sign: s, voc: Math.max(v?.start ?? end, start) })
     start = end
     s = sign(t)
@@ -223,11 +238,12 @@ export async function electionalSearch(req: ElectionRequest): Promise<ElectionWi
   const step = Math.max(5, req.stepMinutes) / 1440
 
   // Void-of-course spans across the range, found once.
+  const vocLon = memoLon(lon)
   const voc: { start: number; end: number }[] = []
   if (cond.moonNotVoc) {
     let t = req.start - 3
     for (let guard = 0; guard < 400 && t < req.end; guard++) {
-      const v = voidOfCourse(t, lon)
+      const v = voidOfCourse(t, vocLon)
       if (!v) break
       voc.push({ start: v.start, end: v.end })
       t = v.end + 0.05
@@ -285,13 +301,14 @@ export async function timingFacts(dayStart: number, days: number, sidMode: numbe
   const swe = await getSwe()
   const calc = lonFn(swe, sidMode)
   const lon = (t: number, b: number) => calc(t, b)[0]
+  const lonMemo = memoLon(lon)
   const n = Math.max(1, Math.min(Math.round(days), 560))
   const end = dayStart + n
 
   const voc: { start: number; end: number }[] = []
   let t = dayStart - 3
   for (let guard = 0; guard < 600 && t < end; guard++) {
-    const v = voidOfCourse(t, lon)
+    const v = voidOfCourse(t, lonMemo)
     if (!v) break
     if (v.start < v.end) voc.push({ start: v.start, end: v.end })
     t = v.end + 0.05
