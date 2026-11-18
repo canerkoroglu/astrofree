@@ -8,6 +8,83 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
+    version: '0.3.0',
+    items: {
+      tr: [
+        'Yeni diller: Portekizce, Almanca, Fransızca, Rusça ve Hintçe. Yapay zekâ varsayılan olarak arayüz dilinde yanıt verir.',
+        'Yanıt düzeyi: Amatör kısa, sade ve teknik terimsiz yanıtlar verir; Profesyonel dereceler, orb’lar ve tekniklerle ayrıntılı yanıtlar. Amatör yanıtların altında “Biraz daha ayrıntılı” düğmesi.',
+        '“Ne zaman?” soruları: nikâh, diyet, saç, telefon alma, sözleşme, yolculuk ya da taşınma için sorduğunuz döneme (en çok 18 ay) göre uygun olabilecek günler geleneksel ölçütlerle hesaplanır.',
+        'Haritaları gruplama: kişi ve olayları Aile, Arkadaşlar, Danışanlar, Ünlüler, İş ya da kendi grubunuza ayırın.',
+        'Paylaşım kartları: X, LinkedIn ve Pinterest boyutları; yaklaşan gökyüzü olayları için yeni kart.',
+        'Gelişmiş Vedik araçlar (Ayarlar → Genel, varsayılan kapalı): Kuzey/Güney Hint çarkı, doğum Panchangı, Ashtakoota eşleştirme.',
+        'Düzeltme: İspanyolca, Portekizce ve Fransızca arayüzde “O” (batı) harfli boylamlar doğu okunuyordu.'
+      ],
+      en: [
+        'New languages: Portuguese, German, French, Russian and Hindi. The AI answers in the interface language by default.',
+        'Answer level: Beginner gives short, plain answers without jargon; Professional gives detailed answers with degrees, orbs and techniques. A “A little more detail” button under beginner answers.',
+        '“When?” questions: days that may suit a wedding, diet, haircut, buying a phone, signing a contract, a trip or a move are worked out by traditional criteria for the period you ask about (up to 18 months).',
+        'Chart groups: sort people and events into Family, Friends, Clients, Famous, Work or your own group.',
+        'Share cards: X, LinkedIn and Pinterest sizes; a new card for upcoming sky events.',
+        'Advanced Vedic tools (Settings → General, off by default): North/South Indian chart, birth Panchang, Ashtakoota matching.',
+        'Fix: in the Spanish, Portuguese and French interface, longitudes marked “O” (west) were read as east.'
+      ],
+      es: [
+        'Nuevos idiomas: portugués, alemán, francés, ruso e hindi. La IA responde por defecto en el idioma de la interfaz.',
+        'Nivel de respuesta: Principiante da respuestas breves, sencillas y sin tecnicismos; Profesional, respuestas detalladas con grados, orbes y técnicas. Botón “Un poco más de detalle” bajo las respuestas de principiante.',
+        'Preguntas de “¿cuándo?”: se calculan con criterios tradicionales los días que podrían convenir para una boda, una dieta, el pelo, comprar un móvil, firmar un contrato, un viaje o una mudanza en el periodo que pregunte (hasta 18 meses).',
+        'Grupos de cartas: ordene personas y eventos en Familia, Amigos, Clientes, Famosos, Trabajo o su propio grupo.',
+        'Tarjetas para compartir: tamaños para X, LinkedIn y Pinterest; nueva tarjeta para próximos eventos del cielo.',
+        'Herramientas védicas avanzadas (Ajustes → General, desactivadas por defecto): carta del norte/sur de la India, Panchang natal, emparejamiento Ashtakoota.',
+        'Corrección: en la interfaz en español, portugués y francés, las longitudes con “O” (oeste) se leían como este.'
+      ],
+      pt: [
+        'Novos idiomas: português, alemão, francês, russo e hindi. A IA responde por padrão no idioma da interface.',
+        'Nível de resposta: Iniciante dá respostas curtas, simples e sem jargão; Profissional, respostas detalhadas com graus, orbes e técnicas. Botão “Um pouco mais de detalhe” sob as respostas de iniciante.',
+        'Perguntas de “quando?”: os dias que podem favorecer casamento, dieta, cabelo, comprar um celular, assinar contrato, viagem ou mudança são calculados por critérios tradicionais para o período perguntado (até 18 meses).',
+        'Grupos de mapas: organize pessoas e eventos em Família, Amigos, Clientes, Famosos, Trabalho ou seu próprio grupo.',
+        'Cartões para compartilhar: tamanhos para X, LinkedIn e Pinterest; novo cartão para próximos eventos do céu.',
+        'Ferramentas védicas avançadas (Configurações → Geral, desligadas por padrão): mapa do norte/sul da Índia, Panchang natal, compatibilidade Ashtakoota.',
+        'Correção: na interface em espanhol, português e francês, longitudes com “O” (oeste) eram lidas como leste.'
+      ],
+      de: [
+        'Neue Sprachen: Portugiesisch, Deutsch, Französisch, Russisch und Hindi. Die KI antwortet standardmäßig in der Sprache der Oberfläche.',
+        'Antwortstufe: Einsteiger erhält kurze, einfache Antworten ohne Fachbegriffe; Professionell ausführliche Antworten mit Graden, Orben und Techniken. Unter Einsteiger-Antworten die Schaltfläche „Etwas ausführlicher“.',
+        '„Wann?“-Fragen: Tage, die sich für Hochzeit, Diät, Friseur, Handykauf, Vertrag, Reise oder Umzug eignen könnten, werden nach traditionellen Kriterien für den gefragten Zeitraum (bis 18 Monate) berechnet.',
+        'Horoskop-Gruppen: Personen und Ereignisse in Familie, Freunde, Klienten, Prominente, Arbeit oder eine eigene Gruppe einordnen.',
+        'Teilen-Karten: Formate für X, LinkedIn und Pinterest; neue Karte für kommende Himmelsereignisse.',
+        'Erweiterte vedische Werkzeuge (Einstellungen → Allgemein, standardmäßig aus): nord-/südindisches Horoskop, Geburts-Panchang, Ashtakoota-Abgleich.',
+        'Korrektur: In der spanischen, portugiesischen und französischen Oberfläche wurden Längen mit „O“ (West) als Ost gelesen.'
+      ],
+      fr: [
+        'Nouvelles langues : portugais, allemand, français, russe et hindi. L’IA répond par défaut dans la langue de l’interface.',
+        'Niveau de réponse : Débutant donne des réponses courtes, simples et sans jargon ; Professionnel, des réponses détaillées avec degrés, orbes et techniques. Bouton « Un peu plus de détails » sous les réponses débutant.',
+        'Questions « quand ? » : les jours qui pourraient convenir à un mariage, un régime, les cheveux, l’achat d’un téléphone, un contrat, un voyage ou un déménagement sont calculés selon des critères traditionnels pour la période demandée (jusqu’à 18 mois).',
+        'Groupes de thèmes : classez personnes et événements en Famille, Amis, Clients, Célébrités, Travail ou votre propre groupe.',
+        'Cartes de partage : formats X, LinkedIn et Pinterest ; nouvelle carte pour les prochains événements du ciel.',
+        'Outils védiques avancés (Réglages → Général, désactivés par défaut) : thème d’Inde du Nord/du Sud, Panchang de naissance, compatibilité Ashtakoota.',
+        'Correction : dans l’interface espagnole, portugaise et française, les longitudes marquées « O » (ouest) étaient lues comme est.'
+      ],
+      ru: [
+        'Новые языки: португальский, немецкий, французский, русский и хинди. ИИ по умолчанию отвечает на языке интерфейса.',
+        'Уровень ответа: «Начинающий» — короткие простые ответы без терминов; «Профессиональный» — подробные ответы с градусами, орбисами и техниками. Под ответами для начинающих — кнопка «Чуть подробнее».',
+        'Вопросы «когда?»: дни, которые могут подойти для свадьбы, диеты, стрижки, покупки телефона, договора, поездки или переезда, рассчитываются по традиционным критериям для указанного периода (до 18 месяцев).',
+        'Группы карт: распределяйте людей и события по группам «Семья», «Друзья», «Клиенты», «Знаменитости», «Работа» или своей.',
+        'Карточки для соцсетей: размеры для X, LinkedIn и Pinterest; новая карточка для ближайших небесных событий.',
+        'Расширенные ведические инструменты (Настройки → Общие, по умолчанию выключены): североиндийская/южноиндийская карта, натальный Панчанг, совместимость Аштакута.',
+        'Исправление: в испанском, португальском и французском интерфейсе долготы с буквой «O» (запад) читались как восточные.'
+      ],
+      hi: [
+        'नई भाषाएँ: पुर्तगाली, जर्मन, फ़्रेंच, रूसी और हिंदी। AI डिफ़ॉल्ट रूप से इंटरफ़ेस की भाषा में उत्तर देता है।',
+        'उत्तर का स्तर: शुरुआती को छोटे, सरल, बिना तकनीकी शब्दों के उत्तर; पेशेवर को अंश, ओर्ब और तकनीकों के साथ विस्तृत उत्तर। शुरुआती उत्तरों के नीचे “थोड़ा और विस्तार से” बटन।',
+        '“कब?” वाले सवाल: शादी, डाइट, बाल, फ़ोन ख़रीदने, अनुबंध, यात्रा या घर बदलने के लिए अनुकूल हो सकने वाले दिन पूछी गई अवधि (18 महीने तक) के लिए पारंपरिक मानदंडों से निकाले जाते हैं।',
+        'कुंडली समूह: लोगों और घटनाओं को परिवार, दोस्त, क्लाइंट, प्रसिद्ध व्यक्ति, काम या अपने समूह में बाँटें।',
+        'शेयर कार्ड: X, LinkedIn और Pinterest के आकार; आने वाली आकाशीय घटनाओं के लिए नया कार्ड।',
+        'उन्नत वैदिक उपकरण (सेटिंग्स → सामान्य, डिफ़ॉल्ट रूप से बंद): उत्तर/दक्षिण भारतीय कुंडली, जन्म पंचांग, अष्टकूट मिलान।',
+        'सुधार: स्पेनिश, पुर्तगाली और फ़्रेंच इंटरफ़ेस में “O” (पश्चिम) वाले देशांतर पूर्व पढ़े जा रहे थे।'
+      ]
+    }
+  },
+  {
     version: '0.2.1',
     items: {
       tr: [
