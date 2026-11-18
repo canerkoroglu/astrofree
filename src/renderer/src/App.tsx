@@ -8,6 +8,7 @@ import ElectionalSearch from './components/ElectionalSearch'
 import GoodDays from './components/GoodDays'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
+import BirthdayReport from './components/BirthdayReport'
 import BasicReading from './components/BasicReading'
 import TodayView from './components/TodayView'
 import { customGroups, GROUP_PRESETS, groupLabel } from './lib/groups'
@@ -217,6 +218,7 @@ export default function App() {
   }, [reloadKb])
   const [calHits, setCalHits] = useState<TransitHit[]>([])
   const [printing, setPrinting] = useState(false)
+  const [showBirthday, setShowBirthday] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
   const [update, setUpdate] = useState<{ version: string; url: string } | null>(null)
   const [obOpen, setObOpen] = useState(false)
@@ -1187,6 +1189,11 @@ export default function App() {
               </button>
               {exportOpen && (
                 <div className="pop-menu" onMouseLeave={() => setExportOpen(false)}>
+                  {working.id !== NOW_ID && working.kind !== 'event' && (
+                    <button onClick={() => (setExportOpen(false), setShowBirthday(true))} disabled={!computed}>
+                      🎂 {t('Doğum günü raporu')} <span className="muted small">{t('bu yaşın sade özeti, PDF')}</span>
+                    </button>
+                  )}
                   <button onClick={() => (setExportOpen(false), setShowShare(true))} disabled={!computed}>
                     {t('Paylaşım kartı')} <span className="muted small">{t('Instagram, WhatsApp…')}</span>
                   </button>
@@ -1269,7 +1276,7 @@ export default function App() {
           }} />
         )}
         {view === 'days' && eventPlace && <GoodDays natal={goodDaysNatal} tz={eventTz} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
-        {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} />}
+        {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} onBirthday={working.id !== NOW_ID ? () => setShowBirthday(true) : undefined} />}
         {view === 'calendar' && computed && (
           <TransitCalendar
             natal={computed.natal}
@@ -1414,6 +1421,9 @@ export default function App() {
             }}
           />
         </aside>
+      )}
+      {showBirthday && computed && working.id !== NOW_ID && (
+        <BirthdayReport natal={computed.natal} rec={working} settings={settings} onAsk={ask} onClose={() => setShowBirthday(false)} />
       )}
       {printing &&
         computed &&

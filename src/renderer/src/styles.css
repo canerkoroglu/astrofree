@@ -4999,3 +4999,49 @@ button.gd-day {
 .tg-mode button {
   font-size: 12px;
 }
+
+/* ---- Doğum günü raporu ---------------------------------------------------- */
+.bday-modal {
+  max-width: 680px;
+  width: min(680px, 94vw);
+}
+.bday-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.bday-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.bday-head h2 {
+  margin: 0;
+}
+.bday-cake {
+  font-size: 34px;
+}
+.bday section {
+  margin: 12px 0;
+}
+.bday h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--accent);
+}
+.bday ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+.bday li {
+  margin-bottom: 4px;
+}
+@media print {
+  .bday-print {
+    padding: 1.2cm 1.4cm;
+    font-size: 12pt;
+  }
+}

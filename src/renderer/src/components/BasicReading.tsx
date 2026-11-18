@@ -18,7 +18,8 @@ export default function BasicReading({
   settings,
   onAsk,
   synastry,
-  partner
+  partner,
+  onBirthday
 }: {
   natal: Layer
   rec: ChartRecord
@@ -27,6 +28,8 @@ export default function BasicReading({
   /** The partner's chart as an outer layer, when the synastry layer is on. */
   synastry?: Layer | null
   partner?: ChartRecord | null
+  /** Open the birthday (solar return) report. */
+  onBirthday?: () => void
 }) {
   const m = M()
   const [copied, setCopied] = useState(false)
@@ -105,6 +108,7 @@ export default function BasicReading({
             <div className="muted">{t('Yapay zekâ gerektirmeyen, çevrimdışı temel yorum')}</div>
           </div>
           <div className="reading-actions">
+            {onBirthday && rec.kind !== 'event' && <button onClick={onBirthday}>🎂 {t('Doğum günü raporu')}</button>}
             <button
               onClick={() => {
                 void navigator.clipboard.writeText(plain())
