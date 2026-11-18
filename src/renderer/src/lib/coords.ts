@@ -1,6 +1,8 @@
 import { compass } from './astro'
+import { getLocaleData } from './i18n'
 // Coordinate parsing and formatting. Accepts decimal degrees and the common
-// astrological / atlas forms: 38n15, 85w46, 38°15'K, 38 15 30 N, 41K01, 28D57.
+// astrological / atlas forms: 38n15, 85w46, 38°15'K, 38 15 30 N, 41K01, 28D57,
+// and the interface language's own compass letters (German 13°24'O, Portuguese 46°38'O…).
 
 const NEG = new Set(['S', 'W', 'G', 'B'])
 const POS = new Set(['N', 'E', 'K', 'D'])
@@ -9,9 +11,13 @@ const LON_LETTERS = new Set(['E', 'W', 'D', 'B'])
 
 /** Parse a latitude (isLat) or longitude string. Returns null when invalid. */
 export function parseCoord(input: string, isLat: boolean): number | null {
-  const raw = input.trim().toLocaleUpperCase('tr').replace(/,/g, '.')
+  const c = getLocaleData().compass
+  // O is east in German but west in Spanish, French and Portuguese: only the current language decides.
+  const own: Record<string, string> = { [c.n.toUpperCase()]: 'N', [c.s.toUpperCase()]: 'S', [c.e.toUpperCase()]: 'E', [c.w.toUpperCase()]: 'W' }
+  const raw = [...input.trim().toLocaleUpperCase('tr').replace(/,/g, '.')].map((ch) => own[ch] ?? ch).join('')
   if (!raw) return null
-  const letters = raw.match(/[NSEWKGDB]/g) ?? []
+  // Any other letter (another language's O, a typo) makes the input invalid rather than silently ignored.
+  const letters = raw.match(/\p{L}/gu) ?? []
   if (letters.length > 1) return null
   const letter = letters[0]
   if (letter && (isLat ? !LAT_LETTERS.has(letter) : !LON_LETTERS.has(letter))) return null
