@@ -6,6 +6,7 @@ import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
 import GoodDays from './components/GoodDays'
+import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BirthdayReport from './components/BirthdayReport'
@@ -88,9 +89,9 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'today' | 'info' | 'reading' | 'days' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+type View = 'chart' | 'today' | 'info' | 'reading' | 'days' | 'journal' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 // Amateur mode keeps the everyday tabs and layers; professional shows everything.
-const AMATEUR_VIEWS: View[] = ['chart', 'today', 'reading', 'days', 'notes', 'kb']
+const AMATEUR_VIEWS: View[] = ['chart', 'today', 'reading', 'days', 'journal', 'notes', 'kb']
 const AMATEUR_LAYERS: OuterKind[] = ['transit', 'synastry']
 const AMATEUR_TABS: BottomTab[] = ['positions']
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
@@ -464,6 +465,10 @@ export default function App() {
   // ---- amateur / professional mode ---------------------------------------------
   const amateur = settings?.mode === 'amateur'
   const setMode = (m: AppSettings['mode']) => settings && saveSettings({ ...settings, mode: m, ai: { ...settings.ai, level: m } })
+  // The journal belongs to a saved person: leave it when the sky or an event chart is opened.
+  useEffect(() => {
+    if (view === 'journal' && (!working || working.id === NOW_ID || working.kind === 'event')) setView('chart')
+  }, [view, working?.id, working?.kind]) // eslint-disable-line react-hooks/exhaustive-deps
   // Switching to amateur leaves no professional tab, layer or harmonic behind on screen.
   useEffect(() => {
     if (!amateur) return
@@ -629,6 +634,17 @@ export default function App() {
     const stored = all.find((c) => c.id === toSave.id) ?? toSave
     setWorking(structuredClone(stored))
     setSaved(structuredClone(stored))
+  }
+
+  // Journal edits go to the stored record; unsaved edits on screen stay as they are.
+  const saveJournal = async (journal: ChartRecord['journal']) => {
+    if (!working || working.id === NOW_ID) return
+    const base = saved ?? working
+    const all = await window.astro.charts.save({ ...base, journal })
+    setCharts(all)
+    const stored = all.find((c) => c.id === base.id)
+    if (stored) setSaved(structuredClone(stored))
+    setWorking((w) => (w ? { ...w, journal } : w))
   }
 
   const removeChart = async (c: ChartRecord) => {
@@ -1224,6 +1240,12 @@ export default function App() {
           <button className={view === 'reading' ? 'on' : ''} onClick={() => setView('reading')} title={t('Yapay zekâ gerektirmeyen, çevrimdışı temel yorum')}>
             {t('Temel Yorum')}
           </button>
+          {working.id !== NOW_ID && working.kind !== 'event' && (
+            <button className={view === 'journal' ? 'on' : ''} onClick={() => setView('journal')} title={t('Hayatınızdaki olaylar ve o günlerin gökyüzü')}>
+              {t('Olaylarım')}
+              {working.journal?.length ? ` (${working.journal.length})` : ''}
+            </button>
+          )}
           <button className={view === 'days' ? 'on' : ''} onClick={() => setView('days')} title={t('Nikâh, yeni iş, saç, yolculuk… için geleneksel olarak uygun sayılan günler')}>
             {t('Uygun Günler')}
           </button>
@@ -1274,6 +1296,9 @@ export default function App() {
             jumpTo(jd)
             setView('chart')
           }} />
+        )}
+        {view === 'journal' && computed && working.id !== NOW_ID && (
+          <Journal natal={computed.natal} rec={working} settings={settings} onSave={saveJournal} onAsk={ask} />
         )}
         {view === 'days' && eventPlace && <GoodDays natal={goodDaysNatal} tz={eventTz} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
         {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} onBirthday={working.id !== NOW_ID ? () => setShowBirthday(true) : undefined} />}

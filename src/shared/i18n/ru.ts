@@ -1316,6 +1316,23 @@ export const ru: Locale = {
     "{name} · {age}. yaş günü": "{name} · исполняется {age}",
     "{when}: {subject} için destekleyici bir dönem olabilir ({planet}).": "{when}: может быть благоприятный период для сферы «{subject}» ({planet}).",
     "{when}: {subject} konusunda sabır isteyebilecek ama olgunlaştırıcı bir dönem olabilir ({planet}).": "{when}: период, который может потребовать терпения в сфере «{subject}», но помочь ей созреть ({planet}).",
-    "Önceki yıl": "Предыдущий год"
+    "Önceki yıl": "Предыдущий год",
+    "Ay {sign} burcunda": "Луна в знаке {sign}",
+    "Bu olay silinsin mi?": "Удалить это событие?",
+    "Hayatımdaki şu olayları o günlerin transitleriyle birlikte kısa ve sade yorumla; tekrar eden temalar var mı?": "Кратко и просто истолкуй эти события моей жизни вместе с транзитами тех дней; есть ли повторяющиеся темы?",
+    "Hayatınızdaki olaylar ve o günlerin gökyüzü": "События вашей жизни и небо в те дни",
+    "Hayatınızdaki önemli olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedin; o günün gökyüzünü haritanızla birlikte görün.": "Записывайте важные события своей жизни (новая работа, переезд, знакомство…) с датой; смотрите небо того дня вместе с вашей картой.",
+    "Henüz olay yok. İlk olayınızı ekleyerek başlayabilirsiniz.": "Событий пока нет. Добавьте первое, чтобы начать.",
+    "Ne oldu?": "Что произошло?",
+    "Not (isteğe bağlı)": "Заметка (необязательно)",
+    "O gün yavaş gezegenler haritanızın ana noktalarına sıkı bir açı yapmıyordu.": "В тот день медленные планеты не образовывали тесных аспектов к главным точкам вашей карты.",
+    "Olay ekle": "Добавить событие",
+    "Olaylarım": "Мои события",
+    "Olaylarınızda sık eşlik eden gezegenler": "Планеты, которые часто сопровождают ваши события",
+    "Tarih": "Дата",
+    "{p} ({n} olay)": "{p} (событий: {n})",
+    "{p}: {subject} için destekleyici bir etki olabilir": "{p}: могло быть поддерживающим влиянием на сферу «{subject}»",
+    "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: могло быть требовательным или побуждающим влиянием на сферу «{subject}»",
+    "ör. Yeni işe başladım": "напр. Начал(а) новую работу"
   }
 }

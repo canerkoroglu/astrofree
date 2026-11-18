@@ -1316,6 +1316,23 @@ export const hi: Locale = {
     "{name} · {age}. yaş günü": "{name} · {age} साल के",
     "{when}: {subject} için destekleyici bir dönem olabilir ({planet}).": "{when}: {subject} के लिए यह सहायक समय हो सकता है ({planet})।",
     "{when}: {subject} konusunda sabır isteyebilecek ama olgunlaştırıcı bir dönem olabilir ({planet}).": "{when}: {subject} में धैर्य माँगने वाला पर परिपक्व बनाने वाला समय हो सकता है ({planet})।",
-    "Önceki yıl": "पिछला साल"
+    "Önceki yıl": "पिछला साल",
+    "Ay {sign} burcunda": "चंद्रमा {sign} में",
+    "Bu olay silinsin mi?": "यह घटना हटाएँ?",
+    "Hayatımdaki şu olayları o günlerin transitleriyle birlikte kısa ve sade yorumla; tekrar eden temalar var mı?": "मेरे जीवन की इन घटनाओं को उन दिनों के गोचरों के साथ छोटा और सरल समझाओ; क्या कोई विषय दोहराए जा रहे हैं?",
+    "Hayatınızdaki olaylar ve o günlerin gökyüzü": "आपके जीवन की घटनाएँ और उन दिनों का आकाश",
+    "Hayatınızdaki önemli olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedin; o günün gökyüzünü haritanızla birlikte görün.": "अपने जीवन की अहम घटनाएँ (नई नौकरी, घर बदलना, किसी से मिलना…) तारीख़ के साथ लिखें; उस दिन का आकाश अपनी कुंडली के साथ देखें।",
+    "Henüz olay yok. İlk olayınızı ekleyerek başlayabilirsiniz.": "अभी कोई घटना नहीं। शुरू करने के लिए पहली घटना जोड़ें।",
+    "Ne oldu?": "क्या हुआ?",
+    "Not (isteğe bağlı)": "नोट (वैकल्पिक)",
+    "O gün yavaş gezegenler haritanızın ana noktalarına sıkı bir açı yapmıyordu.": "उस दिन धीमे ग्रह आपकी कुंडली के मुख्य बिंदुओं से कोई निकट पहलू नहीं बना रहे थे।",
+    "Olay ekle": "घटना जोड़ें",
+    "Olaylarım": "मेरी घटनाएँ",
+    "Olaylarınızda sık eşlik eden gezegenler": "ग्रह जो अक्सर आपकी घटनाओं के साथ दिखते हैं",
+    "Tarih": "तारीख़",
+    "{p} ({n} olay)": "{p} ({n} घटनाएँ)",
+    "{p}: {subject} için destekleyici bir etki olabilir": "{p}: {subject} के लिए सहायक प्रभाव रहा हो सकता है",
+    "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: {subject} पर चुनौतीपूर्ण या प्रेरक प्रभाव रहा हो सकता है",
+    "ör. Yeni işe başladım": "जैसे नई नौकरी शुरू की"
   }
 }

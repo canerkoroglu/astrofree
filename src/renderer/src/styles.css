@@ -5045,3 +5045,54 @@ button.gd-day {
     font-size: 12pt;
   }
 }
+
+/* ---- Olaylarım ---------------------------------------------------------------- */
+.journal {
+  overflow: auto;
+  flex: 1;
+}
+.journal-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.journal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.journal-form label.grow {
+  flex: 1 1 200px;
+}
+.journal-form .actions {
+  margin-left: auto;
+}
+.journal-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.journal-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.journal-tools {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+.journal-sky {
+  margin-top: 6px;
+}
+.journal-sky ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}

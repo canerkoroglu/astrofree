@@ -1316,6 +1316,23 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "{name} · {age}. yaş günü": "{name} · {age} ans",
     "{when}: {subject} için destekleyici bir dönem olabilir ({planet}).": "{when} : cette période pourrait être porteuse pour {subject} ({planet}).",
     "{when}: {subject} konusunda sabır isteyebilecek ama olgunlaştırıcı bir dönem olabilir ({planet}).": "{when} : une période qui pourrait demander de la patience pour {subject}, tout en l'aidant à mûrir ({planet}).",
-    "Önceki yıl": "Année précédente"
+    "Önceki yıl": "Année précédente",
+    "Ay {sign} burcunda": "Lune en {sign}",
+    "Bu olay silinsin mi?": "Supprimer cet événement ?",
+    "Hayatımdaki şu olayları o günlerin transitleriyle birlikte kısa ve sade yorumla; tekrar eden temalar var mı?": "Interprète ces événements de ma vie avec les transits de ces jours-là, brièvement et simplement ; y a-t-il des thèmes qui reviennent ?",
+    "Hayatınızdaki olaylar ve o günlerin gökyüzü": "Les événements de votre vie et le ciel de ces jours-là",
+    "Hayatınızdaki önemli olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedin; o günün gökyüzünü haritanızla birlikte görün.": "Notez les événements importants de votre vie (nouvel emploi, déménagement, une rencontre…) avec leur date ; voyez le ciel de ce jour avec votre thème.",
+    "Henüz olay yok. İlk olayınızı ekleyerek başlayabilirsiniz.": "Aucun événement pour l'instant. Ajoutez le premier pour commencer.",
+    "Ne oldu?": "Que s'est-il passé ?",
+    "Not (isteğe bağlı)": "Note (facultatif)",
+    "O gün yavaş gezegenler haritanızın ana noktalarına sıkı bir açı yapmıyordu.": "Ce jour-là, les planètes lentes ne formaient pas d'aspect serré avec les points principaux de votre thème.",
+    "Olay ekle": "Ajouter un événement",
+    "Olaylarım": "Mes événements",
+    "Olaylarınızda sık eşlik eden gezegenler": "Planètes qui accompagnent souvent vos événements",
+    "Tarih": "Date",
+    "{p} ({n} olay)": "{p} ({n} événements)",
+    "{p}: {subject} için destekleyici bir etki olabilir": "{p} : a pu être une influence porteuse pour {subject}",
+    "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p} : a pu être une influence exigeante ou stimulante pour {subject}",
+    "ör. Yeni işe başladım": "ex. J'ai commencé un nouvel emploi"
   }
 }

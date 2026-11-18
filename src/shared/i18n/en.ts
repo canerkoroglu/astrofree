@@ -1316,6 +1316,23 @@ The person asking knows astrology. Use technical terms without explaining them a
     "{name} · {age}. yaş günü": "{name} · turning {age}",
     "{when}: {subject} için destekleyici bir dönem olabilir ({planet}).": "{when}: this may be a supportive time for {subject} ({planet}).",
     "{when}: {subject} konusunda sabır isteyebilecek ama olgunlaştırıcı bir dönem olabilir ({planet}).": "{when}: a time that may ask for patience with {subject}, yet help it mature ({planet}).",
-    "Önceki yıl": "Previous year"
+    "Önceki yıl": "Previous year",
+    "Ay {sign} burcunda": "Moon in {sign}",
+    "Bu olay silinsin mi?": "Delete this event?",
+    "Hayatımdaki şu olayları o günlerin transitleriyle birlikte kısa ve sade yorumla; tekrar eden temalar var mı?": "Interpret these events of my life together with the transits of those days, briefly and simply; are there recurring themes?",
+    "Hayatınızdaki olaylar ve o günlerin gökyüzü": "Events in your life and the sky on those days",
+    "Hayatınızdaki önemli olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedin; o günün gökyüzünü haritanızla birlikte görün.": "Note the important events of your life (a new job, a move, meeting someone…) with their dates; see that day's sky together with your chart.",
+    "Henüz olay yok. İlk olayınızı ekleyerek başlayabilirsiniz.": "No events yet. Add your first one to begin.",
+    "Ne oldu?": "What happened?",
+    "Not (isteğe bağlı)": "Note (optional)",
+    "O gün yavaş gezegenler haritanızın ana noktalarına sıkı bir açı yapmıyordu.": "That day the slow planets made no close aspect to the main points of your chart.",
+    "Olay ekle": "Add event",
+    "Olaylarım": "My events",
+    "Olaylarınızda sık eşlik eden gezegenler": "Planets that often accompany your events",
+    "Tarih": "Date",
+    "{p} ({n} olay)": "{p} ({n} events)",
+    "{p}: {subject} için destekleyici bir etki olabilir": "{p}: may have been a supportive influence on {subject}",
+    "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: may have been a demanding or stirring influence on {subject}",
+    "ör. Yeni işe başladım": "e.g. Started a new job"
   }
 }

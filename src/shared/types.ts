@@ -26,6 +26,14 @@ export interface Place {
   zone?: string
 }
 
+/** One entry of a person's life-event journal. */
+export interface JournalEntry {
+  id: string
+  date: { y: number; m: number; d: number }
+  title: string
+  note?: string
+}
+
 export interface ChartRecord {
   id: string
   name: string
@@ -38,6 +46,8 @@ export interface ChartRecord {
   group?: string
   /** Person (default) or an event chart (wedding, company founding, move…). */
   kind?: 'person' | 'event'
+  /** Life events the person noted ("changed jobs"), shown with that day's sky. */
+  journal?: JournalEntry[]
   /** Birth time unknown: noon is used and houses/angles are unreliable. */
   timeUnknown?: boolean
   /** Rodden rating of the time source: AA, A, B, C, DD, X. */
