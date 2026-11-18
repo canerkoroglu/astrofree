@@ -1348,6 +1348,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Diese Antwort ist für die Stufe Einsteiger lang ({n} Wörter).",
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "Diese Antwort enthält eine Anweisung („{w}\"); Entscheidungen liegen immer bei Ihnen.",
     "Kısalt ve yumuşat": "Kürzen und abmildern",
-    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Kannst du deine letzte Antwort in höchstens 150 Wörtern, in einfacher Sprache und ohne Anweisungen (kein „du solltest\", „unbedingt\" o. Ä.), vorsichtig formuliert neu schreiben?"
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Kannst du deine letzte Antwort in höchstens 150 Wörtern, in einfacher Sprache und ohne Anweisungen (kein „du solltest\", „unbedingt\" o. Ä.), vorsichtig formuliert neu schreiben?",
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: Eine Zeit, in der {subject} zum Übermaß neigen, aber auch wachsen könnte ({planet})."
   }
 }

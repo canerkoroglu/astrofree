@@ -1348,6 +1348,7 @@ export const ru: Locale = {
     "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Ответ длинный для уровня «Любитель» ({n} слов).",
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "В ответе есть указание («{w}»); решения всегда остаются за вами.",
     "Kısalt ve yumuşat": "Сократить и смягчить",
-    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Можешь переписать последний ответ не длиннее 150 слов, простым языком и без указаний (без «вам следует», «обязательно» и т. п.), осторожными формулировками?"
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Можешь переписать последний ответ не длиннее 150 слов, простым языком и без указаний (без «вам следует», «обязательно» и т. п.), осторожными формулировками?",
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: период, когда в сфере «{subject}» может быть склонность к излишествам, но и рост ({planet})."
   }
 }

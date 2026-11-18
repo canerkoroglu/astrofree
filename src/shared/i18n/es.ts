@@ -1348,6 +1348,7 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Bu yanıt Amatör düzey için uzun ({n} kelime).": "Esta respuesta es larga para el nivel Aficionado ({n} palabras).",
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "Esta respuesta contiene una expresión directiva (\"{w}\"); las decisiones siempre son suyas.",
     "Kısalt ve yumuşat": "Acortar y suavizar",
-    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "¿Puedes reescribir tu última respuesta en 150 palabras como máximo, con lenguaje sencillo y sin indicaciones (sin \"debes\", \"sin duda\" ni similares), con un tono prudente?"
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "¿Puedes reescribir tu última respuesta en 150 palabras como máximo, con lenguaje sencillo y sin indicaciones (sin \"debes\", \"sin duda\" ni similares), con un tono prudente?",
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: un periodo en que {subject} podría tender al exceso, pero también crecer ({planet})."
   }
 }

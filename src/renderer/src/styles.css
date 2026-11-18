@@ -5111,3 +5111,13 @@ button.gd-day {
   background: var(--warn-bg);
   border-radius: 4px;
 }
+/* The report scrolls; its buttons stay in reach at the bottom. */
+.bday-modal .actions {
+  position: sticky;
+  /* Pinned to the modal's bottom edge, covering its padding so no text shows below. */
+  bottom: calc(-1 * var(--s6, 18px));
+  margin-bottom: calc(-1 * var(--s6, 18px));
+  background: var(--panel);
+  padding: 10px 0 var(--s6, 18px);
+  border-top: 1px solid var(--line);
+}

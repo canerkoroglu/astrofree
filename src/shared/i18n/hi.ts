@@ -1348,6 +1348,7 @@ export const hi: Locale = {
     "Bu yanıt Amatör düzey için uzun ({n} kelime).": "शौक़िया स्तर के लिए यह उत्तर लंबा है ({n} शब्द)।",
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "इस उत्तर में निर्देश देने वाला वाक्यांश है (\"{w}\"); फ़ैसले हमेशा आपके हैं।",
     "Kısalt ve yumuşat": "छोटा और नरम करें",
-    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "क्या तुम अपना पिछला उत्तर ज़्यादा से ज़्यादा 150 शब्दों में, सरल भाषा में और बिना निर्देश दिए (\"आपको चाहिए\", \"ज़रूर\" जैसे शब्दों के बिना), संभावना की भाषा में फिर से लिख सकते हो?"
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "क्या तुम अपना पिछला उत्तर ज़्यादा से ज़्यादा 150 शब्दों में, सरल भाषा में और बिना निर्देश दिए (\"आपको चाहिए\", \"ज़रूर\" जैसे शब्दों के बिना), संभावना की भाषा में फिर से लिख सकते हो?",
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: {subject} में अति की ओर झुकाव पर बढ़ोतरी वाला समय हो सकता है ({planet})।"
   }
 }

@@ -643,8 +643,10 @@ export default function App() {
     const all = await window.astro.charts.save({ ...base, journal })
     setCharts(all)
     const stored = all.find((c) => c.id === base.id)
-    if (stored) setSaved(structuredClone(stored))
-    setWorking((w) => (w ? { ...w, journal } : w))
+    if (!stored) return
+    setSaved(structuredClone(stored))
+    // Same journal and save time on screen, so only real unsaved edits count as changes.
+    setWorking((w) => (w ? { ...w, journal: stored.journal, updatedAt: stored.updatedAt } : w))
   }
 
   const removeChart = async (c: ChartRecord) => {

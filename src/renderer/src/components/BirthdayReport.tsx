@@ -114,8 +114,10 @@ export default function BirthdayReport({
     const good = h.aspect === 'trine' || h.aspect === 'sextile' || (h.aspect === 'conjunction' && h.body === 5)
     const when = [...new Set(h.exacts.map((e) => month(e.jd)))].join(', ')
     const planet = bodyName(h.body)
-    return good
-      ? t('{when}: {subject} için destekleyici bir dönem olabilir ({planet}).', { when, subject: lc(subject), planet })
+    if (good) return t('{when}: {subject} için destekleyici bir dönem olabilir ({planet}).', { when, subject: lc(subject), planet })
+    // Jupiter's hard aspects tend to excess rather than restriction.
+    return h.body === 5
+      ? t('{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).', { when, subject: lc(subject), planet })
       : t('{when}: {subject} konusunda sabır isteyebilecek ama olgunlaştırıcı bir dönem olabilir ({planet}).', { when, subject: lc(subject), planet })
   }
 
@@ -140,7 +142,7 @@ export default function BirthdayReport({
             {m.planets.sun.subject} {m.houses[ready.sunHouse - 1].where}.
           </p>
           <p>
-            {t('Duygusal açıdan')}: {lc(m.planets.moon.subject)} {m.houses[ready.moonHouse - 1].where}.
+            {m.planets.moon.subject} {m.houses[ready.moonHouse - 1].where}.
           </p>
           <p className="muted">
             {t('Yılın tonu')}: {SIGNS[ready.ascSign].name} — {m.signs[ready.ascSign].keywords}

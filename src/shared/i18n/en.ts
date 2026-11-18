@@ -1348,6 +1348,7 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Bu yanıt Amatör düzey için uzun ({n} kelime).": "This answer is long for the Amateur level ({n} words).",
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "This answer contains a directive phrase (\"{w}\"); decisions are always yours.",
     "Kısalt ve yumuşat": "Shorten and soften",
-    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Could you rewrite your last answer in at most 150 words, in plain language and without directions (no \"you should\", \"definitely\" and the like), using tentative wording?"
+    "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "Could you rewrite your last answer in at most 150 words, in plain language and without directions (no \"you should\", \"definitely\" and the like), using tentative wording?",
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: a time that may tempt {subject} towards excess, yet help it grow ({planet})."
   }
 }
