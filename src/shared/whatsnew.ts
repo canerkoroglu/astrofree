@@ -8,6 +8,83 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
+    version: '0.4.0',
+    items: {
+      tr: [
+        'İki kullanım modu: Amatör sade ekranlar ve gündelik dil; Profesyonel tüm teknik araçlar. Üst çubuktan tek tıkla değiştirilebilir.',
+        'Uygun Günler: nikâh, diyet, saç, alışveriş, sözleşme, yolculuk ya da taşınma için uygun olabilecek günler takvimde, nedenleriyle; yapay zekâ gerekmez. Takvime .ics olarak aktarılabilir.',
+        'Olaylarım: hayatınızdaki önemli olayları kaydedin, o günün gökyüzünü haritanızla birlikte görün.',
+        'Doğum günü raporu: bir doğum gününden ötekine yılın sade bir özeti; PDF olarak kaydedilebilir.',
+        'Haftalık özet bildirimi: haftanın gökyüzü olayları ve sizi en çok ilgilendirebilecek transit.',
+        'AstroHermes: hazır yapay zekâ sağlayıcısı; yalnızca anahtarınızı yapıştırmanız yeterli.',
+        'Doğum saatini bilmeyenler için rehber; Amatör yanıtlar uzun ya da yönlendirici çıkarsa tek tıkla kısaltma.'
+      ],
+      en: [
+        'Two modes: Amateur keeps screens simple with everyday language; Professional shows every technical tool. Switch with one click in the top bar.',
+        'Good Days: days that may suit a wedding, diet, haircut, shopping, a contract, a trip or a move, on a calendar with the reasons; no AI needed. Export to your calendar as .ics.',
+        'My events: record important events in your life and see that day’s sky alongside your chart.',
+        'Birthday report: a plain summary of the year from one birthday to the next; can be saved as PDF.',
+        'Weekly summary notification: the week’s sky events and the transit that may concern you most.',
+        'AstroHermes: a ready-made AI provider; just paste your key.',
+        'A guide for those who don’t know their birth time; one-click shortening when an Amateur answer comes out long or directive.'
+      ],
+      es: [
+        'Dos modos: Aficionado mantiene pantallas sencillas y lenguaje cotidiano; Profesional muestra todas las herramientas técnicas. Se cambia con un clic en la barra superior.',
+        'Días favorables: los días que podrían convenir para una boda, una dieta, el pelo, compras, un contrato, un viaje o una mudanza, en un calendario con sus motivos; sin IA. Exportables a su calendario como .ics.',
+        'Mis acontecimientos: registre los acontecimientos importantes de su vida y vea el cielo de ese día junto a su carta.',
+        'Informe de cumpleaños: un resumen sencillo del año de un cumpleaños al siguiente; se puede guardar en PDF.',
+        'Notificación semanal: los eventos del cielo de la semana y el tránsito que más podría afectarle.',
+        'AstroHermes: un proveedor de IA listo para usar; basta con pegar su clave.',
+        'Una guía para quien no conoce su hora de nacimiento; acortar con un clic cuando una respuesta del nivel Aficionado sale larga o directiva.'
+      ],
+      pt: [
+        'Dois modos: Amador mantém telas simples e linguagem do dia a dia; Profissional mostra todas as ferramentas técnicas. Troque com um clique na barra superior.',
+        'Dias favoráveis: dias que podem favorecer casamento, dieta, cabelo, compras, contrato, viagem ou mudança, num calendário com os motivos; sem IA. Exportáveis para sua agenda como .ics.',
+        'Meus acontecimentos: registre acontecimentos importantes da sua vida e veja o céu daquele dia junto ao seu mapa.',
+        'Relatório de aniversário: um resumo simples do ano de um aniversário ao seguinte; pode ser salvo em PDF.',
+        'Notificação semanal: os eventos do céu da semana e o trânsito que mais pode lhe dizer respeito.',
+        'AstroHermes: um provedor de IA pronto; basta colar sua chave.',
+        'Um guia para quem não sabe a hora de nascimento; encurtar com um clique quando uma resposta do nível Amador sai longa ou diretiva.'
+      ],
+      de: [
+        'Zwei Modi: Einsteiger mit schlichten Ansichten und Alltagssprache; Profi mit allen technischen Werkzeugen. Umschalten mit einem Klick in der oberen Leiste.',
+        'Günstige Tage: Tage, die sich für Hochzeit, Diät, Friseur, Einkauf, Vertrag, Reise oder Umzug eignen könnten, im Kalender mit Begründung; ohne KI. Export in den Kalender als .ics.',
+        'Meine Ereignisse: wichtige Ereignisse Ihres Lebens festhalten und den Himmel jenes Tages mit Ihrem Horoskop sehen.',
+        'Geburtstagsbericht: eine schlichte Übersicht über das Jahr von einem Geburtstag zum nächsten; als PDF speicherbar.',
+        'Wöchentliche Übersicht: die Himmelsereignisse der Woche und der Transit, der Sie am meisten betreffen könnte.',
+        'AstroHermes: ein fertig eingerichteter KI-Anbieter; nur den Schlüssel einfügen.',
+        'Eine Hilfe für alle, die ihre Geburtszeit nicht kennen; Kürzen mit einem Klick, wenn eine Einsteiger-Antwort zu lang oder zu direktiv ausfällt.'
+      ],
+      fr: [
+        'Deux modes : Amateur garde des écrans simples et un langage courant ; Professionnel affiche tous les outils techniques. Changement en un clic dans la barre du haut.',
+        'Jours favorables : les jours qui pourraient convenir à un mariage, un régime, les cheveux, un achat, un contrat, un voyage ou un déménagement, sur un calendrier avec leurs raisons ; sans IA. Export vers votre agenda en .ics.',
+        'Mes événements : notez les événements importants de votre vie et voyez le ciel de ce jour-là avec votre thème.',
+        'Rapport d’anniversaire : un résumé simple de l’année d’un anniversaire au suivant ; enregistrable en PDF.',
+        'Résumé hebdomadaire : les événements célestes de la semaine et le transit qui pourrait vous concerner le plus.',
+        'AstroHermes : un fournisseur d’IA prêt à l’emploi ; il suffit de coller votre clé.',
+        'Un guide pour qui ne connaît pas son heure de naissance ; raccourcir en un clic une réponse Amateur trop longue ou trop directive.'
+      ],
+      ru: [
+        'Два режима: «Любитель» — простые экраны и обычный язык; «Профессионал» — все технические инструменты. Переключение одним щелчком на верхней панели.',
+        'Удачные дни: дни, которые могут подойти для свадьбы, диеты, стрижки, покупок, договора, поездки или переезда, — в календаре с причинами; без ИИ. Экспорт в календарь в формате .ics.',
+        'Мои события: записывайте важные события жизни и смотрите небо того дня вместе со своей картой.',
+        'Отчёт ко дню рождения: простой обзор года от одного дня рождения до следующего; можно сохранить в PDF.',
+        'Еженедельная сводка: небесные события недели и транзит, который может касаться вас больше всего.',
+        'AstroHermes: готовый поставщик ИИ — достаточно вставить ключ.',
+        'Подсказка для тех, кто не знает времени рождения; сокращение одним щелчком, если ответ уровня «Любитель» получился длинным или директивным.'
+      ],
+      hi: [
+        'दो मोड: शौक़िया — सरल स्क्रीन और रोज़मर्रा की भाषा; पेशेवर — सभी तकनीकी उपकरण। ऊपरी पट्टी में एक क्लिक से बदलें।',
+        'शुभ दिन: विवाह, डाइट, बाल, ख़रीदारी, अनुबंध, यात्रा या घर बदलने के लिए उपयुक्त हो सकने वाले दिन, कारणों सहित कैलेंडर में; AI की ज़रूरत नहीं। .ics के रूप में कैलेंडर में निर्यात करें।',
+        'मेरी घटनाएँ: जीवन की महत्वपूर्ण घटनाएँ दर्ज करें और उस दिन का आकाश अपनी कुंडली के साथ देखें।',
+        'जन्मदिन रिपोर्ट: एक जन्मदिन से अगले तक वर्ष का सरल सार; PDF के रूप में सहेजा जा सकता है।',
+        'साप्ताहिक सारांश सूचना: सप्ताह की आकाशीय घटनाएँ और वह गोचर जो आपसे सबसे अधिक जुड़ा हो सकता है।',
+        'AstroHermes: तैयार AI प्रदाता; बस अपनी कुंजी चिपकाएँ।',
+        'जन्म समय न जानने वालों के लिए मार्गदर्शिका; शौक़िया उत्तर लंबा या निर्देशात्मक हो तो एक क्लिक में छोटा करें।'
+      ]
+    }
+  },
+  {
     version: '0.3.0',
     items: {
       tr: [
