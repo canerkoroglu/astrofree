@@ -8,6 +8,67 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
+    version: '0.5.0',
+    items: {
+      tr: [
+        'Ay Takvimi: her günün Ay evresi, burcu, burç geçiş ve boşluk saatleri, tutulmalar ve geleneksel bahçe günleri; PDF ve takvime (.ics) aktarım.',
+        'Bu gece gökyüzünde: hangi gezegenin hangi saatte, hangi yönde görülebileceği, yakın görünen gezegenler, meteor yağmurları ve görülecek tutulmalar.',
+        'Doğum saatini bul: Olaylarım’daki tarihlerden en olası doğum saatlerini gerekçeleriyle sıralar; yaklaşık bir sonuç verir.',
+        'Kişiler ve olaylar penceresi: notlar ve olaylar dahil her şeyde arama, sıralama, sabitleme, toplu düzenleme ve kopyaları birleştirme. Profesyonel modda danışan kartı ve seans notları.',
+        'İçe aktarım düzeltildi: astro.com AAF dosyalarındaki tarihler artık atlanmıyor; önizleme, kopya denetimi, yapıştırarak içe aktarma ve AAF / CSV olarak dışa aktarma.'
+      ],
+      en: [
+        'Moon Calendar: each day’s Moon phase, sign, ingress and void-of-course times, eclipses and traditional garden days; export to PDF or your calendar (.ics).',
+        'Tonight’s sky: which planets may be seen, when and in which direction, close pairs, meteor showers and upcoming visible eclipses.',
+        'Find my birth time: ranks the most likely birth times from the dates in My events, with the reasons; the result is approximate.',
+        'People and events window: search everything including notes and events, sort, pin, edit in bulk and merge duplicates. In Professional mode, a client card with session notes.',
+        'Import fixed: dates in astro.com AAF files are no longer skipped; preview, duplicate check, import by pasting, and export as AAF / CSV.'
+      ],
+      es: [
+        'Calendario lunar: la fase, el signo, las horas de ingreso y de Luna vacía de cada día, los eclipses y los días tradicionales de jardín; exportable a PDF o a su calendario (.ics).',
+        'El cielo de esta noche: qué planetas podrían verse, a qué hora y en qué dirección, parejas cercanas, lluvias de meteoros y próximos eclipses visibles.',
+        'Encontrar mi hora de nacimiento: ordena las horas más probables a partir de las fechas de Mis acontecimientos, con sus motivos; el resultado es aproximado.',
+        'Ventana de personas y acontecimientos: búsqueda en todo, notas y acontecimientos incluidos, orden, fijar, edición en bloque y fusión de duplicados. En modo Profesional, ficha de cliente con notas de sesión.',
+        'Importación corregida: las fechas de los archivos AAF de astro.com ya no se omiten; vista previa, control de duplicados, importar pegando texto y exportar como AAF / CSV.'
+      ],
+      pt: [
+        'Calendário lunar: a fase, o signo, os horários de ingresso e de Lua fora de curso de cada dia, os eclipses e os dias tradicionais de jardim; exportável em PDF ou para sua agenda (.ics).',
+        'O céu desta noite: quais planetas podem ser vistos, a que horas e em que direção, pares próximos, chuvas de meteoros e próximos eclipses visíveis.',
+        'Encontrar minha hora de nascimento: ordena as horas mais prováveis a partir das datas em Meus acontecimentos, com os motivos; o resultado é aproximado.',
+        'Janela de pessoas e acontecimentos: busca em tudo, inclusive notas e acontecimentos, ordenação, fixar, edição em lote e mesclagem de duplicados. No modo Profissional, ficha de cliente com notas de sessão.',
+        'Importação corrigida: datas em arquivos AAF do astro.com não são mais ignoradas; pré-visualização, verificação de duplicados, importar colando texto e exportar como AAF / CSV.'
+      ],
+      de: [
+        'Mondkalender: Mondphase, Zeichen, Zeichenwechsel und Leerlauf des Mondes für jeden Tag, Finsternisse und die traditionellen Gartentage; Export als PDF oder in den Kalender (.ics).',
+        'Der Himmel heute Nacht: welche Planeten wann und in welcher Richtung zu sehen sein könnten, nahe Paare, Meteorströme und kommende sichtbare Finsternisse.',
+        'Geburtszeit finden: ordnet die wahrscheinlichsten Geburtszeiten anhand der Daten in Meine Ereignisse, mit Begründung; das Ergebnis ist eine Näherung.',
+        'Fenster Personen und Ereignisse: Suche in allem einschließlich Notizen und Ereignissen, Sortieren, Anheften, Sammelbearbeitung und Zusammenführen von Doppelten. Im Profi-Modus eine Klientenkarte mit Sitzungsnotizen.',
+        'Import korrigiert: Daten in AAF-Dateien von astro.com werden nicht mehr übersprungen; Vorschau, Doppelprüfung, Import durch Einfügen und Export als AAF / CSV.'
+      ],
+      fr: [
+        'Calendrier lunaire : la phase, le signe, les heures d’entrée et de Lune vide de chaque jour, les éclipses et les jours traditionnels de jardinage ; export en PDF ou vers votre agenda (.ics).',
+        'Le ciel de cette nuit : quelles planètes pourraient être vues, à quelle heure et dans quelle direction, rapprochements, pluies d’étoiles filantes et prochaines éclipses visibles.',
+        'Trouver mon heure de naissance : classe les heures les plus probables à partir des dates de Mes événements, avec leurs raisons ; le résultat est approximatif.',
+        'Fenêtre Personnes et événements : recherche partout, notes et événements compris, tri, épinglage, modification groupée et fusion des doublons. En mode Professionnel, une fiche client avec notes de séance.',
+        'Import corrigé : les dates des fichiers AAF d’astro.com ne sont plus ignorées ; aperçu, contrôle des doublons, import par collage et export en AAF / CSV.'
+      ],
+      ru: [
+        'Лунный календарь: фаза, знак, время перехода в знак и Луны без курса на каждый день, затмения и традиционные садовые дни; экспорт в PDF или в календарь (.ics).',
+        'Небо этой ночью: какие планеты можно увидеть, когда и в какой стороне, близкие пары, метеорные потоки и ближайшие видимые затмения.',
+        'Найти время рождения: по датам из раздела «Мои события» показывает наиболее вероятные времена рождения с пояснениями; результат приблизительный.',
+        'Окно «Люди и события»: поиск по всему, включая заметки и события, сортировка, закрепление, массовое редактирование и объединение дубликатов. В профессиональном режиме — карточка клиента с заметками о сессиях.',
+        'Импорт исправлен: даты в файлах AAF с astro.com больше не пропускаются; предпросмотр, проверка дубликатов, импорт вставкой текста и экспорт в AAF / CSV.'
+      ],
+      hi: [
+        'चंद्र कैलेंडर: हर दिन की चंद्र कला, राशि, राशि-प्रवेश और शून्य-गति का समय, ग्रहण और पारंपरिक बागवानी दिन; PDF या कैलेंडर (.ics) में निर्यात।',
+        'आज रात का आकाश: कौन-से ग्रह कब और किस दिशा में दिख सकते हैं, पास-पास दिखने वाले ग्रह, उल्का वर्षा और आने वाले दृश्य ग्रहण।',
+        'जन्म समय खोजें: मेरी घटनाएँ की तिथियों से सबसे संभावित जन्म समय कारणों सहित क्रम में दिखाता है; परिणाम अनुमानित है।',
+        'लोग और घटनाएँ विंडो: नोट्स और घटनाओं सहित हर चीज़ में खोज, क्रम, पिन, एक साथ संपादन और दोहराव मिलाना। पेशेवर मोड में सत्र नोट्स के साथ क्लाइंट कार्ड।',
+        'आयात ठीक किया गया: astro.com की AAF फ़ाइलों की तिथियाँ अब छूटती नहीं; पूर्वावलोकन, दोहराव जाँच, चिपकाकर आयात और AAF / CSV में निर्यात।'
+      ]
+    }
+  },
+  {
     version: '0.4.0',
     items: {
       tr: [
