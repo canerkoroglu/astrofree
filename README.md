@@ -54,8 +54,9 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
   fontlar uygulamanın içinde. İnternet yalnızca yapay zekâ sohbeti ve güncelleme denetimi için gerekir.
 - **Yapay zekâ ile sohbet** — ekrandaki haritanın tam verisi her mesajla gönderilir; zamanı oynattıkça
   yorum güncel transitleri izler.
-- **İki kullanım modu** — Amatör: sade sekmeler, kısa ve gündelik yanıtlar, yapay zekâsız **Uygun Günler** takvimi;
-  Profesyonel: tüm teknikler ve ayrıntılı yanıtlar.
+- **İki kullanım modu** — Amatör: sade sekmeler, kısa ve gündelik yanıtlar, yapay zekâsız **Uygun Günler** ve
+  **Ay Takvimi**; Profesyonel: tüm teknikler, ayrıntılı yanıtlar ve danışan kayıtları.
+- **Doğum saatini bul** — hayatınızdaki olayların tarihlerinden, olası doğum saatlerini gerekçeleriyle sıralar.
 - **Hesap yok, abonelik yok, reklam yok** — verileriniz yalnızca kendi bilgisayarınızda durur.
 - **8 dilde arayüz:** Türkçe, İngilizce, İspanyolca, Portekizce, Almanca, Fransızca, Rusça ve Hintçe; yapay zekâ
   varsayılan olarak arayüz dilinde yanıt verir. Yeni dil eklemek tek dosya.
@@ -77,7 +78,8 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
 - ±saniye / dakika / saat / gün / hafta / ay / yıl adımları, ← → tuşları, Shift ile ×10, boşluk tuşuyla animasyon,
   **Alt (⌥) + fare tekerleği** ile çark üzerinde zaman kaydırma, **Canlı** mod (gerçek saat).
 - Tarih alanına `17.01.1942 18:35`, `17 Ocak 1942` gibi serbest yazım ya da açılır takvim.
-- "Doğum zamanı" kipinde doğum saati oynatılır (rektifikasyon).
+- "Doğum zamanı" kipinde doğum saati oynatılır (elle rektifikasyon); otomatik arama için **Doğum saatini bul**
+  (Kişiler ve olaylar bölümünde).
 - **Saat dilimleri:** IANA bölgeleri (tarihsel yaz saati dahil), sabit fark veya Yerel Ortalama Zaman (LMT);
   1582 öncesi için Jülyen takvimi.
 
@@ -89,10 +91,28 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
 - **Olaylarım:** kişinin hayat olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedilir; her olayda o
   günün Ay'ı ve yavaş gezegenlerin (Mars–Plüton) haritaya açıları sade dille ve teknik etiketiyle görünür. Birden çok
   olayda tekrar eden gezegenler özetlenir; "Yapay zekâya sor" tüm olayları transitleriyle gönderir. Kayıtlar haritanın
-  içinde saklanır ve yedeğe girer.
+  içinde saklanır ve yedeğe girer. Olaylara tür verilebilir (ilişki, iş, ev, aile, sağlık, kayıp, eğitim, yolculuk);
+  liste türe göre süzülür.
+- **Doğum saatini bul (rektifikasyon):** en az 3 (tercihen 5–10) olay girildiğinde, seçilen saat aralığındaki her aday
+  saat (2–4 dakika arayla) için yavaş gezegen transitlerinin (Jüpiter–Plüton), Güneş yayı direksiyonlarının ve
+  ilerletilmiş Ay'ın o tarihlerde köşelere (ASC, MC, DSC, IC) yakınlığı puanlanır; olay türü ilgili köşeyi öne çıkarır
+  (iş → MC, ilişki → ASC/DSC…). En uyumlu üç saat, olay olay gerekçeleriyle ve puan eğrisiyle gösterilir; tek tıkla
+  haritaya uygulanır (saat kaynağı "C"). Yaklaşık bir yöntemdir ve böyle sunulur.
+- **Kişiler ve olaylar penceresi** (kenar çubuğundaki ☰, ⌘⇧P): aksan duyarsız arama (isim, yer, yıl, not, etiket,
+  olaylar ve seanslar içinde), tür/grup/etiket/saati bilinmeyen süzgeçleri, isim, doğum tarihi, son değişen ya da son
+  eklenen sıralaması, üste sabitleme; birden çok kayıtta grup ve etiket değiştirme, silme, dışa aktarma; aynı kişinin
+  kopyalarını bulup birleştirme (etiket, not, olay ve seanslar korunur); yaklaşan doğum günleri.
+- **Danışan kartı** (Profesyonel mod): e-posta ve telefon, notlar, tarihli seans kayıtları ve sonraki görüşme tarihi;
+  yaklaşan görüşmeler pencerenin başında listelenir. Ayarlar → Genel → *Raporlarda adınız* doldurulursa PDF
+  raporların başına astroloğun adı ve iletişim satırı yazılır. Tüm bu bilgiler yalnızca bu bilgisayarda tutulur.
 - Şehir/ilçe araması (çevrimdışı), `38n15`, `41K01`, `38°15'30" N` gibi koordinat biçimleri ya da dünya
   haritasından tıklayarak seçim; en yakın yerleşim ve saat dilimi otomatik bulunur.
-- **İçe aktarma:** AAF (astro.com, AstroGold, Solar Fire, Janus) ve CSV. Dışa aktarma: JSON.
+- **İçe aktarma** (önizlemeli): AAF (astro.com, Solar Fire, AstroGold, Janus; Solar Fire'da *Charts → Export → AAF*)
+  ve CSV, dosyadan ya da yapıştırarak. AAF'ta `g`/`j` takvim harfi, Jülyen takvimi tarihleri ve `#COM` notları
+  okunur; Jülyen günü verilmişse an birebir korunur. CSV'de ondalık virgül, IANA bölgesi ya da sabit fark (`+3:00`),
+  tür/grup/etiket/rodden sütunları; koordinat yoksa yer adı şehir listesinde aranır. Listede zaten olan kayıtlar
+  işaretlenir ve tekrar eklenmez; okunamayan satırlar sayılır. **Dışa aktarma:** AAF, CSV ve JSON (tümü ya da
+  seçilenler).
 
 ### Analiz
 - **Natal Bilgiler:** Güneş–Ay–Yükselen, harita yöneticisi, ay evresi, element/nitelik dengesi, gezegen
@@ -111,6 +131,14 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
   birlikte sağlayan zaman aralıklarını bulur.
 - **Astrokartografi:** MC/IC/ASC/DSC çizgileri dünya haritasında; bir yere tıklayınca yakın çizgiler ve
   o yere taşınmış harita.
+- **Ay Takvimi:** ay ay her günün Ay evresi, burcu, burç geçiş saati ve boşluk saatleri; Yeni Ay, İlk Dördün, Dolunay
+  ve Son Dördün anları, tutulmalar. Geleneksel bahçe takvimlerinin kök/yaprak/çiçek/meyve günleri (Ay'ın burcunun
+  elementine göre) ve büyüyen/küçülen Ay'ın ekim, budama ve saç kesimiyle ilişkilendirilmesi, bilimsel dayanağı
+  olmadığı belirtilerek. Güney yarımkürede Ay simgeleri ters döner. PDF ve `.ics` olarak alınabilir.
+- **Bu gece gökyüzünde** (kenar çubuğundaki 🔭): bulunduğunuz yerden gün batımı, tam karanlık ve gün doğumu; çıplak
+  gözle görülebilecek Ay ve gezegenlerin hangi saatler arasında, hangi yönde ve ne yükseklikte görülebileceği,
+  parlaklıkları ve bulundukları burç; birbirine 4°'den yakın görünen çiftler; yaklaşan meteor yağmurları ve oradan
+  görülebilecek bir sonraki Güneş ve Ay tutulması. Ok tuşlarıyla sonraki gecelere geçilir.
 - **Haftalık özet:** haftada bir sade bir bildirim: haftanın gökyüzü olayları (Merkür/Venüs/Mars retro başlangıç ve
   bitişleri, Yeni Ay/Dolunay, tutulmalar) ve seçilen kişinin haftadaki başlıca transiti, olasılık diliyle
   (Ayarlar → Bildirimler'den açılıp kapanır, kişi seçilir).
@@ -278,6 +306,8 @@ npm run dev
 | `npm run typecheck` | TypeScript denetimi |
 | `npm run test:engine` | Efemeris doğruluk testi |
 | `npm run test:timing` | Zamanlama motoru (8 dilde konu ve tarih algılama, gün kuralları) ve Amatör yanıt denetimi testleri |
+| `npm run test:import` | AAF/CSV okuma ve yazma (yaz-oku), kopya tespiti ve arama testleri |
+| `npm run test:tools` | Ay evreleri, bu gecenin gökyüzü ve doğum saati bulma (bilinen saatli bir haritada) testleri |
 | `npm run test:e2e` | Uçtan uca arayüz testleri (`E2E_AI=1` ile yerel Claude Code / Codex de denenir) |
 | `npm run i18n:check` | Dillerdeki eksik çevirileri listeler |
 | `npm run dist:mac` / `dist:win` / `dist:linux` | Paketleme (her sistem kendi üzerinde) |
