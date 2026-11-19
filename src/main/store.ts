@@ -135,6 +135,66 @@ export const removeChart = (id: string) =>
     return all
   })
 
+const fold = (s: string) => s.trim().toLocaleLowerCase().replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+/** Same person or event: same name, same birth minute and (nearly) the same place. */
+export const sameChart = (a: ChartRecord, b: ChartRecord) =>
+  fold(a.name) === fold(b.name) &&
+  a.local.y === b.local.y &&
+  a.local.m === b.local.m &&
+  a.local.d === b.local.d &&
+  (a.timeUnknown || b.timeUnknown || (a.local.h === b.local.h && a.local.mi === b.local.mi)) &&
+  Math.abs(a.place.lat - b.place.lat) < 0.1 &&
+  Math.abs(a.place.lon - b.place.lon) < 0.1
+
+/** Charts read from another program's file; ones already in the list are left out. */
+export const addCharts = (recs: ChartRecord[]) =>
+  serial(async () => {
+    const all = await listCharts()
+    let added = 0
+    let duplicates = 0
+    for (const r of recs) {
+      if (!r?.local || !r.place) continue
+      if (all.some((c) => sameChart(c, r))) {
+        duplicates++
+        continue
+      }
+      all.push({ ...r, id: crypto.randomUUID(), createdAt: Date.now(), updatedAt: Date.now() })
+      added++
+    }
+    await writeJson('charts.json', all)
+    scheduleBackup()
+    return { charts: all, added, duplicates }
+  })
+
+/** Several charts changed at once (group, tags…). */
+export const saveCharts = (recs: ChartRecord[]) =>
+  serial(async () => {
+    const all = await listCharts()
+    const byId = new Map(recs.map((r) => [r.id, r]))
+    const next = all.map((c) => (byId.has(c.id) ? { ...byId.get(c.id)!, updatedAt: Date.now() } : c))
+    await writeJson('charts.json', next)
+    scheduleBackup()
+    return next
+  })
+
+export const removeCharts = (ids: string[]) =>
+  serial(async () => {
+    const drop = new Set(ids)
+    const all = (await listCharts()).filter((c) => !drop.has(c.id))
+    await writeJson('charts.json', all)
+    const chats = await readJson<ChatFile>('chats.json', {})
+    let changed = false
+    for (const id of ids)
+      if (chats[id]) {
+        delete chats[id]
+        changed = true
+      }
+    if (changed) await writeJson('chats.json', chats)
+    scheduleBackup()
+    return all
+  })
+
 /** Import a chart list or a full backup file ({ charts, interpretations }). */
 export const importData = (data: unknown) =>
   serial(async () => {

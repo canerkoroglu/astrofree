@@ -1,13 +1,16 @@
 import { setLang, t } from './lib/i18n'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { AppSettings, AspectKey, ChartRecord, Interpretation, LocalDateTime, MoonStay, PlanetaryHours, SkyReport, TransitHit, TzSpec } from '@shared/types'
+import type { AppSettings, AspectKey, ChartRecord, ImportResult, Interpretation, LocalDateTime, MoonStay, PlanetaryHours, SkyReport, TransitHit, TzSpec } from '@shared/types'
 import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
 import GoodDays from './components/GoodDays'
 import MoonCalendar from './components/MoonCalendar'
 import NightSky from './components/NightSky'
+import ImportDialog from './components/ImportDialog'
+import PeopleManager from './components/PeopleManager'
+import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
@@ -223,6 +226,9 @@ export default function App() {
   const [printing, setPrinting] = useState(false)
   const [showBirthday, setShowBirthday] = useState(false)
   const [showNight, setShowNight] = useState(false)
+  const [showPeople, setShowPeople] = useState(false)
+  const [importing, setImporting] = useState<Extract<ImportResult, { kind: 'preview' }> | 'blank' | null>(null)
+  const [notice, setNotice] = useState('')
   const [tagFilter, setTagFilter] = useState('')
   const [update, setUpdate] = useState<{ version: string; url: string } | null>(null)
   const [obOpen, setObOpen] = useState(false)
@@ -652,6 +658,37 @@ export default function App() {
     setWorking((w) => (w ? { ...w, journal: stored.journal, updatedAt: stored.updatedAt } : w))
   }
 
+  // Changes made elsewhere (people manager, import): the list, and the fields they touch on
+  // the chart on screen, so its own unsaved edits stay and are not flagged twice.
+  const chartsChanged = (all: ChartRecord[]) => {
+    setCharts(all)
+    if (!working || working.id === NOW_ID) return
+    const stored = all.find((c) => c.id === working.id)
+    if (!stored) {
+      if (settings) {
+        setWorking(nowChart(settings))
+        setSaved(null)
+      }
+      return
+    }
+    const keys = ['group', 'tags', 'notes', 'contact', 'sessions', 'favorite', 'journal', 'updatedAt'] as const
+    const pick = (c: ChartRecord) => Object.fromEntries(keys.map((k) => [k, c[k]]))
+    setSaved((s0) => (s0 ? { ...s0, ...pick(stored) } : s0))
+    setWorking((w) => (w ? { ...w, ...pick(stored) } : w))
+  }
+  const flashNotice = (s: string) => {
+    setNotice(s)
+    window.setTimeout(() => setNotice(''), 4000)
+  }
+  const importFile = async () => {
+    const r = await window.astro.charts.importFile()
+    if (!r) return
+    if (r.kind === 'restored') {
+      chartsChanged(r.charts)
+      flashNotice(t('Yedek geri yüklendi.'))
+    } else setImporting(r)
+  }
+
   const removeChart = async (c: ChartRecord) => {
     if (!confirm(`"${c.name}" — ${t('haritası silinsin mi?')}`)) return
     setCharts(await window.astro.charts.remove(c.id))
@@ -668,7 +705,8 @@ export default function App() {
     else if (cmd === 'save') {
       if (working.id === NOW_ID || !working.name) setEditor({ ...working, name: working.id === NOW_ID ? '' : working.name })
       else void persist(working)
-    } else if (cmd === 'import') void window.astro.charts.importFile().then((all) => all && setCharts(all))
+    } else if (cmd === 'import') void importFile()
+    else if (cmd === 'people') setShowPeople(true)
     else if (cmd === 'export') void window.astro.charts.exportAll(charts)
     else if (cmd === 'shortcuts') setShowKeys(true)
     else if (cmd === 'report') setShowReport(true)
@@ -775,12 +813,11 @@ export default function App() {
   const natalJd = chartJd(working)
   const sun = computed?.natal.points.find((p) => p.key === 'sun')
   const moon = computed?.natal.points.find((p) => p.key === 'moon')
-  const q = filter.toLocaleLowerCase('tr')
   const allTags = [...new Set(charts.flatMap((c) => c.tags ?? []))].sort((a, b) => a.localeCompare(b, 'tr'))
-  const visible = charts
-    .filter((c) => !tagFilter || (c.tags ?? []).includes(tagFilter))
-    .filter((c) => !q || `${c.name} ${(c.tags ?? []).join(' ')} ${c.group ? groupLabel(c.group) : ''} ${c.notes ?? ''} ${c.place.name}`.toLocaleLowerCase('tr').includes(q))
-    .sort((a, b) => a.name.localeCompare(b.name, 'tr'))
+  const visible = sortCharts(
+    charts.filter((c) => (!tagFilter || (c.tags ?? []).includes(tagFilter)) && (!filter.trim() || matches(c, filter))),
+    'name'
+  )
   // Sidebar list sections: by kind (people / events) or by group.
   const listSections: { key: string; label: string; items: ChartRecord[] }[] =
     groupBy === 'group'
@@ -1010,7 +1047,13 @@ export default function App() {
             🔭 {t('Bu gece')}
           </button>
         </div>
-        <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
+        <div className="search-row">
+          <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
+          <button className="tip-end" data-tip={t('Kişiler ve olaylar: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Kişiler ve olaylar')} onClick={() => setShowPeople(true)}>
+            ☰
+          </button>
+        </div>
+        {notice && <p className="small notice">{notice}</p>}
         {charts.some((c) => c.group) && (
           <div className="seg group-by" role="radiogroup" aria-label={t('Listeyi böl')}>
             <button role="radio" aria-checked={groupBy === 'kind'} className={groupBy === 'kind' ? 'on' : ''} onClick={() => changeGroupBy('kind')}>
@@ -1048,7 +1091,7 @@ export default function App() {
                     <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
                       <span className={`avatar sm ${kind === 'event' ? 'event' : ''}`}>{kind === 'event' ? '◆' : initialsOf(c.name)}</span>
                       <span className="item-text">
-                        <span className="nm">{c.name}</span>
+                        <span className="nm">{c.favorite ? '★ ' : ''}{c.name}</span>
                         <span className="muted small">
                           {fmtLocal(c.local).split(' ')[0]}
                           {c.timeUnknown ? '' : ' ' + fmtLocal(c.local).split(' ')[1]} · {c.place.name.split(',')[0]}
@@ -1458,6 +1501,25 @@ export default function App() {
             }}
           />
         </aside>
+      )}
+      {showPeople && (
+        <PeopleManager
+          charts={charts}
+          professional={!amateur}
+          onChange={chartsChanged}
+          onOpen={(c) => (setShowPeople(false), openChart(c, 'natal'))}
+          onEdit={(c) => (setShowPeople(false), setEditor(c))}
+          onImport={() => setImporting('blank')}
+          onClose={() => setShowPeople(false)}
+        />
+      )}
+      {importing && (
+        <ImportDialog
+          initial={importing === 'blank' ? null : importing}
+          charts={charts}
+          onDone={(all, m) => (chartsChanged(all), setImporting(null), flashNotice(m))}
+          onClose={() => setImporting(null)}
+        />
       )}
       {showNight && eventPlace && <NightSky place={eventPlace} tz={eventTz} sidMode={settings.zodiac === 'sidereal' ? settings.sidMode : null} onClose={() => setShowNight(false)} />}
       {showBirthday && computed && working.id !== NOW_ID && (

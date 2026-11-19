@@ -9,6 +9,7 @@ import { monthsLong, t } from '../lib/i18n'
 import { M } from '../lib/meanings'
 import { fmtDate, jdToLocal, julday } from '../lib/time'
 import { bodyName, retroPeriods } from '../lib/timing'
+import { PractitionerLine } from './PrintReport'
 
 const YEAR_NATAL = ['sun', 'moon', 'venus', 'mars', 'asc', 'mc']
 const ASPECTS = [
@@ -123,6 +124,7 @@ export default function BirthdayReport({
 
   const body = ready && (
     <article className="bday">
+      {printing && <PractitionerLine settings={settings} />}
       <header className="bday-head">
         <div className="bday-cake" aria-hidden>
           🎂

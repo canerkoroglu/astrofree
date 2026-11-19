@@ -629,9 +629,23 @@ export default function SettingsDialog({
                 {t('Profesyonel')}
               </label>
               <p className="muted small">
-                {t('Amatör modda yalnızca gündelik sekmeler (Harita, Bugün, Temel Yorum, Uygun Günler) görünür ve yapay zekâ kısa, sade yanıt verir. Profesyonel mod tüm araçları ve teknik yanıtları açar.')}
+                {t('Amatör modda yalnızca gündelik sekmeler (Harita, Bugün, Temel Yorum, Olaylarım, Uygun Günler, Ay Takvimi) görünür ve yapay zekâ kısa, sade yanıt verir. Profesyonel mod tüm araçları ve teknik yanıtları açar.')}
               </p>
             </fieldset>
+            {s.mode === 'professional' && (
+              <fieldset>
+                <legend>{t('Raporlarda adınız')}</legend>
+                <label>
+                  {t('Ad ya da unvan')}
+                  <input value={s.practitioner?.name ?? ''} placeholder={t('ör. Ayşe Yılmaz, Astrolog')} onChange={(e) => setS({ ...s, practitioner: { name: e.target.value, contact: s.practitioner?.contact ?? '' } })} />
+                </label>
+                <label>
+                  {t('İletişim satırı')}
+                  <input value={s.practitioner?.contact ?? ''} placeholder={t('ör. web sitesi, e-posta ya da telefon')} onChange={(e) => setS({ ...s, practitioner: { name: s.practitioner?.name ?? '', contact: e.target.value } })} />
+                </label>
+                <p className="muted small">{t('Doldurursanız danışanlarınız için hazırladığınız PDF raporların başında görünür.')}</p>
+              </fieldset>
+            )}
             <fieldset className="advanced-features">
               <legend>
                 {t('Gelişmiş özellikler')} <span className="badge">{t('Gelişmiş')}</span>

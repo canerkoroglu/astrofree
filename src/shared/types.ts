@@ -27,11 +27,23 @@ export interface Place {
 }
 
 /** One entry of a person's life-event journal. */
+/** Kind of life event; helps sorting the journal and the birth-time check (career → MC…). */
+export type JournalCategory = 'relationship' | 'career' | 'home' | 'family' | 'health' | 'loss' | 'education' | 'travel' | 'other'
+
 export interface JournalEntry {
   id: string
   date: { y: number; m: number; d: number }
   title: string
   note?: string
+  category?: JournalCategory
+}
+
+/** One consultation with a client (professional use): date, notes, an optional follow-up date. */
+export interface ClientSession {
+  id: string
+  date: { y: number; m: number; d: number }
+  note: string
+  next?: { y: number; m: number; d: number }
 }
 
 export interface ChartRecord {
@@ -48,6 +60,12 @@ export interface ChartRecord {
   kind?: 'person' | 'event'
   /** Life events the person noted ("changed jobs"), shown with that day's sky. */
   journal?: JournalEntry[]
+  /** Consultation log, for astrologers keeping client records. */
+  sessions?: ClientSession[]
+  /** Contact details, kept only on this computer. */
+  contact?: { email?: string; phone?: string }
+  /** Pinned to the top of the list. */
+  favorite?: boolean
   /** Birth time unknown: noon is used and houses/angles are unreliable. */
   timeUnknown?: boolean
   /** Rodden rating of the time source: AA, A, B, C, DD, X. */
@@ -57,6 +75,11 @@ export interface ChartRecord {
   createdAt: number
   updatedAt: number
 }
+
+/** What reading a chart file gave: a restored backup, or charts from another program to preview. */
+export type ImportResult =
+  | { kind: 'restored'; charts: ChartRecord[] }
+  | { kind: 'preview'; format: 'aaf' | 'csv'; records: ChartRecord[]; skipped: number; file: string }
 
 // ---- Ephemeris IPC -------------------------------------------------------
 
@@ -168,6 +191,8 @@ export interface AiSettings {
 
 export interface AppSettings {
   settingsVersion: number
+  /** Astrologer's name and contact line printed on PDF reports (optional). */
+  practitioner?: { name: string; contact: string }
   houseSystem: string
   zodiac: 'tropical' | 'sidereal'
   sidMode: number

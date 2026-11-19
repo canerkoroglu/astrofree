@@ -26,6 +26,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test:engine": "node scripts/verify-engine.mjs",
     "test:timing": "node --no-warnings scripts/test-timing.mjs",
+    "test:import": "node --no-warnings scripts/test-import.mjs",
     "dist": "electron-vite build && electron-builder",
     "dist:mac": "electron-vite build && electron-builder --mac",
     "dist:win": "electron-vite build && electron-builder --win",

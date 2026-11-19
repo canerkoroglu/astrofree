@@ -28,6 +28,7 @@ export default function PrintReport({
 }) {
   return (
     <div className="print-root">
+      <PractitionerLine settings={settings} />
       <div className="print-wheel">
         <ChartWheel natal={computed.natal} outers={computed.outers} settings={settings} aspectLayer={computed.outers.length ? 0 : -1} />
       </div>
@@ -48,5 +49,22 @@ export default function PrintReport({
       <p className="print-foot">{t('Astrolojik yorumlar kişisel keşif amaçlıdır; kesin bilgi ya da tıbbi, hukuki, psikolojik veya finansal tavsiye değildir.')}</p>
       <p className="print-foot">AstroFree · Swiss Ephemeris</p>
     </div>
+  )
+}
+
+/** "Hazırlayan: …" at the top of a report, when the astrologer filled it in (Settings). */
+export function PractitionerLine({ settings }: { settings: AppSettings }) {
+  const p = settings.practitioner
+  if (!p?.name.trim() && !p?.contact.trim()) return null
+  return (
+    <p className="print-by">
+      {p.name.trim() && (
+        <>
+          {t('Hazırlayan')}: <strong>{p.name.trim()}</strong>
+        </>
+      )}
+      {p.name.trim() && p.contact.trim() ? ' · ' : ''}
+      {p.contact.trim()}
+    </p>
   )
 }

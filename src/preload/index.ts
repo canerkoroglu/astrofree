@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
+  ImportResult,
   AiChatRequest,
   AiEvent,
   AppSettings,
@@ -80,7 +81,12 @@ const api = {
     save: (rec: ChartRecord): Promise<ChartRecord[]> => ipcRenderer.invoke('charts:save', rec),
     remove: (id: string): Promise<ChartRecord[]> => ipcRenderer.invoke('charts:remove', id),
     exportAll: (recs: ChartRecord[]): Promise<boolean> => ipcRenderer.invoke('charts:export', recs),
-    importFile: (): Promise<ChartRecord[] | null> => ipcRenderer.invoke('charts:import')
+    importFile: (): Promise<ImportResult | null> => ipcRenderer.invoke('charts:import'),
+    importText: (text: string): Promise<ImportResult> => ipcRenderer.invoke('charts:importText', text),
+    addMany: (recs: ChartRecord[]): Promise<{ charts: ChartRecord[]; added: number; duplicates: number }> => ipcRenderer.invoke('charts:addMany', recs),
+    saveMany: (recs: ChartRecord[]): Promise<ChartRecord[]> => ipcRenderer.invoke('charts:saveMany', recs),
+    removeMany: (ids: string[]): Promise<ChartRecord[]> => ipcRenderer.invoke('charts:removeMany', ids),
+    exportText: (text: string, format: 'aaf' | 'csv', name: string): Promise<boolean> => ipcRenderer.invoke('charts:exportText', text, format, name)
   },
 
   settings: {

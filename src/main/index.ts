@@ -2,6 +2,7 @@ import { app, BrowserWindow, clipboard, ClipboardItem, dialog, ipcMain, Menu, na
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import type {
+  ImportResult,
   AiChatRequest,
   AppSettings,
   ChartRecord,
@@ -92,6 +93,13 @@ function registerIpc(): void {
     await writeFile(r.filePath, JSON.stringify(recs, null, 2), 'utf8')
     return true
   })
+  // A backup or AstroFree JSON is restored at once; another program's file (AAF, CSV) comes
+  // back for a preview, and only the charts the user keeps are added (charts:addMany).
+  const readCharts = async (name: string, text: string): Promise<ImportResult> => {
+    const parsed = parseChartsFile(name, text)
+    if (parsed.kind === 'json') return { kind: 'restored', charts: await store.importData(parsed.data) }
+    return { kind: 'preview', format: parsed.format, records: parsed.records, skipped: parsed.skipped, file: basename(name) }
+  }
   ipcMain.handle('charts:import', async () => {
     const r = await dialog.showOpenDialog(win!, {
       title: tm('Harita içe aktar'),
@@ -99,7 +107,7 @@ function registerIpc(): void {
       filters: [
         { name: tm('Desteklenenler (AstroFree, AAF, CSV)'), extensions: ['json', 'aaf', 'csv', 'tsv', 'txt'] },
         { name: tm('AstroFree / yedek (JSON)'), extensions: ['json'] },
-        { name: 'AAF — astro.com, AstroGold, Solar Fire', extensions: ['aaf', 'txt'] },
+        { name: 'AAF — astro.com, AstroGold, Solar Fire, Janus', extensions: ['aaf', 'txt'] },
         { name: 'CSV', extensions: ['csv', 'tsv'] }
       ]
     })
@@ -109,7 +117,22 @@ function registerIpc(): void {
     // AAF files from older programs are often Latin-1.
     let text = buf.toString('utf8')
     if (text.includes('\uFFFD')) text = buf.toString('latin1')
-    return store.importData(parseChartsFile(path, text))
+    return readCharts(path, text)
+  })
+  ipcMain.handle('charts:importText', (_e, text: string) => readCharts(/#A93:/i.test(text) ? 'pasted.aaf' : 'pasted.csv', String(text).slice(0, 5_000_000)))
+  ipcMain.handle('charts:addMany', (_e, recs: ChartRecord[]) => store.addCharts(recs))
+  ipcMain.handle('charts:saveMany', (_e, recs: ChartRecord[]) => store.saveCharts(recs))
+  ipcMain.handle('charts:removeMany', (_e, ids: string[]) => store.removeCharts(ids))
+  ipcMain.handle('charts:exportText', async (_e, text: string, format: 'aaf' | 'csv', name: string) => {
+    if (format !== 'aaf' && format !== 'csv') return false
+    const r = await dialog.showSaveDialog(win!, {
+      title: tm('Dışa aktar'),
+      defaultPath: `${basename(String(name)).replace(/[\\/:*?"<>|]/g, '_')}.${format}`,
+      filters: [{ name: format.toUpperCase(), extensions: [format] }]
+    })
+    if (r.canceled || !r.filePath) return false
+    await writeFile(r.filePath, format === 'csv' ? '\uFEFF' + text : text, 'utf8')
+    return true
   })
 
   ipcMain.handle('tools:transits', (_e, req: TransitSearchRequest) => transitSearch(req))
@@ -281,6 +304,7 @@ function buildMenu(): void {
         { label: tm('Yeni harita'), accelerator: 'CmdOrCtrl+N', click: () => win?.webContents.send('menu', 'new') },
         { label: tm('Kaydet'), accelerator: 'CmdOrCtrl+S', click: () => win?.webContents.send('menu', 'save') },
         { type: 'separator' },
+        { label: tm('Kişiler ve olaylar…'), accelerator: 'CmdOrCtrl+Shift+P', click: () => win?.webContents.send('menu', 'people') },
         { label: tm('İçe aktar…'), click: () => win?.webContents.send('menu', 'import') },
         { label: tm('Dışa aktar…'), click: () => win?.webContents.send('menu', 'export') },
         { type: 'separator' },
