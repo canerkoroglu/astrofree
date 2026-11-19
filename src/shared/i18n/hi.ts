@@ -73,7 +73,7 @@ export const hi: Locale = {
 - स्वास्थ्य पर सुधार या बिगड़ने का पूर्वानुमान कभी मत दो; केवल ऊर्जा, आराम और आत्म-देखभाल के विषयों पर सावधान भाषा में बात करो, और बताओ कि फ़ैसले डॉक्टर के साथ लेना बेहतर है।
 - दो लोगों से जुड़े सवालों में (साथी, जीवनसाथी), अगर दूसरे व्यक्ति की कुंडली नहीं दी गई है, तो बताओ कि तुम केवल सामान्य आकाश और पूछने वाले की अपनी कुंडली के आधार पर बात कर रहे हो।`,
     professional: `उत्तर का स्तर: पेशेवर।
-पूछने वाला ज्योतिष जानता है। तकनीकी शब्द बिना समझाए इस्तेमाल करो और हर व्याख्या को उसके आधारों से पुष्ट करो: अंशों के साथ स्थितियाँ, ओर्ब और निकट आते/दूर जाते पहलू, भावेश, गरिमाएँ, दिए गए हों तो दशा-स्वामी और पहलू-आकृतियाँ। सबसे मज़बूत संकेतों (निकट पहलू, केंद्र के ग्रह, स्वामी) से शुरू करो; विरोधी संकेतों को तौलो और इस्तेमाल की गई तकनीकें बताओ। मुहूर्त के सवालों में मानदंड साफ़ लिखो (चंद्र कला और शून्य गति, वक्री, स्तंभन, ग्रहण, व्यक्तिगत गोचर)। विस्तार में जा सकते हो, पर दोहराओ मत; सावधान भाषा बनाए रखो और निर्देश मत दो।`
+पूछने वाला ज्योतिष जानता है। तकनीकी शब्द बिना समझाए इस्तेमाल करो और हर व्याख्या को उसके आधारों से पुष्ट करो: अंशों के साथ स्थितियाँ, ओर्ब और निकट आते/दूर जाते पहलू, भावेश, गरिमाएँ, दिए गए हों तो दशा-स्वामी और पहलू-आकृतियाँ। सबसे मज़बूत संकेतों (निकट पहलू, केंद्र के ग्रह, स्वामी) से शुरू करो; विरोधी संकेतों को तौलो और इस्तेमाल की गई तकनीकें बताओ। मुहूर्त के सवालों में मानदंड साफ़ लिखो (चंद्र कला और शून्य मार्ग, वक्री, स्तंभन, ग्रहण, व्यक्तिगत गोचर)। विस्तार में जा सकते हो, पर दोहराओ मत; सावधान भाषा बनाए रखो और निर्देश मत दो।`
   },
   aiSafety: `सुरक्षा: अगर व्यक्ति संकट में लगे या ख़ुद को नुकसान पहुँचाने, आत्महत्या, हिंसा या ख़तरे की बात करे, तो ज्योतिष को एक तरफ़ रख दो। गर्मजोशी और समझदारी से जवाब दो; उसे तुरंत स्थानीय आपातकालीन नंबर (भारत में 112) या किसी संकट सहायता हेल्पलाइन पर कॉल करने और किसी भरोसेमंद व्यक्ति से बात करने के लिए प्रोत्साहित करो। ऐसे में कुंडली का विश्लेषण, तारीख़ें या भविष्यवाणी मत दो।`,
   strings: {
@@ -1193,9 +1193,9 @@ export const hi: Locale = {
     "- {p} retro: {from} – {to}": "- {p} वक्री: {from} – {to}",
     "- Ölçütlere uymuyor: {why}": "- मानदंडों पर खरा नहीं: {why}",
     "- Ölçütlere uyuyor: {notes}": "- मानदंडों पर खरा: {notes}",
-    "Ay boşlukta değil: {from}:00–{to}:00": "चंद्रमा शून्य गति में नहीं: {from}:00–{to}:00",
-    "Ay gün boyunca büyük ölçüde boşlukta": "दिन के ज़्यादातर समय चंद्रमा शून्य गति में",
-    "Ay gün içinde büyük ölçüde boşlukta değil": "दिन के ज़्यादातर समय चंद्रमा शून्य गति में नहीं",
+    "Ay boşlukta değil: {from}:00–{to}:00": "चंद्रमा शून्य मार्ग में नहीं: {from}:00–{to}:00",
+    "Ay gün boyunca büyük ölçüde boşlukta": "दिन के ज़्यादातर समय चंद्रमा शून्य मार्ग में",
+    "Ay gün içinde büyük ölçüde boşlukta değil": "दिन के ज़्यादातर समय चंद्रमा शून्य मार्ग में नहीं",
     "Ay küçülüyor": "चंद्रमा घट रहा है",
     "Ay {sign} burcunda, {phase}": "चंद्रमा {sign} में, {phase}",
     "Ay şu burçlardaysa artı: {signs}": "चंद्रमा इन राशियों में हो तो अतिरिक्त अंक: {signs}",
@@ -1240,7 +1240,7 @@ export const hi: Locale = {
     "3 ay": "3 महीने",
     "30 gün": "30 दिन",
     "6 ay": "6 महीने",
-    "Amatör modda yalnızca gündelik sekmeler (Harita, Bugün, Temel Yorum, Uygun Günler) görünür ve yapay zekâ kısa, sade yanıt verir. Profesyonel mod tüm araçları ve teknik yanıtları açar.": "शौक़िया मोड में केवल रोज़मर्रा के टैब (कुंडली, आज, मूल व्याख्या, शुभ दिन) दिखते हैं और AI छोटा व सरल उत्तर देता है। पेशेवर मोड सभी उपकरण और तकनीकी उत्तर खोलता है।",
+    "Amatör modda yalnızca gündelik sekmeler (Harita, Bugün, Temel Yorum, Uygun Günler) görünür ve yapay zekâ kısa, sade yanıt verir. Profesyonel mod tüm araçları ve teknik yanıtları açar.": "शौक़िया मोड में केवल रोज़मर्रा के टैब (कुंडली, आज, मूल फलादेश, शुभ दिन) दिखते हैं और AI छोटा व सरल उत्तर देता है। पेशेवर मोड सभी उपकरण और तकनीकी उत्तर खोलता है।",
     "Amatör: sade görünüm ve gündelik yanıtlar": "शौक़िया: सरल दृश्य और रोज़मर्रा के उत्तर",
     "AstroFree’yi nasıl kullanacaksınız?": "आप AstroFree का उपयोग कैसे करेंगे?",
     "Bir iş için geleneksel astrolojide uygun sayılan günler. Yapay zekâ gerekmez.": "वे दिन जिन्हें पारंपरिक ज्योतिष किसी काम के लिए अनुकूल मानता है। AI की ज़रूरत नहीं।",
@@ -1334,9 +1334,9 @@ export const hi: Locale = {
     "{p}: {subject} için destekleyici bir etki olabilir": "{p}: {subject} के लिए सहायक प्रभाव रहा हो सकता है",
     "{p}: {subject} üzerinde zorlayıcı ya da harekete geçirici bir etki olabilir": "{p}: {subject} पर चुनौतीपूर्ण या प्रेरक प्रभाव रहा हो सकता है",
     "ör. Yeni işe başladım": "जैसे नई नौकरी शुरू की",
-    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "माता-पिता या रिश्तेदारों को याद अनुमानित समय (जैसे \"भोर में\", \"दोपहर बाद\")",
+    "Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. \"sabaha karşı\", \"öğleden sonra\")": "माता-पिता या रिश्तेदारों द्वारा याद किया गया अनुमानित समय (जैसे \"भोर में\", \"दोपहर बाद\")",
     "Ay gün içinde yaklaşık 13° ilerler; burç değiştirmiş olabilir.": "चंद्रमा एक दिन में लगभग 13° चलता है; उसकी राशि बदल गई हो सकती है।",
-    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "उस पूरे दिन चंद्रमा {a} में था; आपकी चंद्र राशि बहुत संभवतः सही है।",
+    "Ay o gün boyunca {a} burcunda; Ay burcunuz büyük olasılıkla doğru.": "उस पूरे दिन चंद्रमा {a} में था; आपकी चंद्र राशि संभवतः सही है।",
     "Ay o gün {a} burcundan {b} burcuna geçiyor; Ay burcunuz ikisinden biri olabilir.": "उस दिन चंद्रमा {a} से {b} में गया; आपकी चंद्र राशि दोनों में से कोई भी हो सकती है।",
     "Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler": "बचपन का एल्बम, जन्म की घोषणा, पुराने पत्र या डायरियाँ",
     "Doğum belgesi, hastane ya da doğum kaydı (bazı ülkelerde saati içerir)": "जन्म प्रमाणपत्र, अस्पताल या जन्म रिकॉर्ड (कुछ देशों में इसमें समय होता है)",
@@ -1349,6 +1349,6 @@ export const hi: Locale = {
     "Bu yanıt yönlendirici bir ifade içeriyor (\"{w}\"); kararlar her zaman size aittir.": "इस उत्तर में निर्देश देने वाला वाक्यांश है (\"{w}\"); फ़ैसले हमेशा आपके हैं।",
     "Kısalt ve yumuşat": "छोटा और नरम करें",
     "Son yanıtını en fazla 150 kelimeyle, sade bir dille ve yönlendirme yapmadan (\"yapmalısın\", \"mutlaka\" gibi ifadeler olmadan), olasılık diliyle yeniden yazar mısın?": "क्या तुम अपना पिछला उत्तर ज़्यादा से ज़्यादा 150 शब्दों में, सरल भाषा में और बिना निर्देश दिए (\"आपको चाहिए\", \"ज़रूर\" जैसे शब्दों के बिना), संभावना की भाषा में फिर से लिख सकते हो?",
-    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: {subject} में अति की ओर झुकाव पर बढ़ोतरी वाला समय हो सकता है ({planet})।"
+    "{when}: {subject} konusunda fazlaya kaçma eğilimi olabilecek ama büyütücü bir dönem olabilir ({planet}).": "{when}: {subject} में अति की ओर झुकाव हो सकता है, पर यह बढ़ोतरी का समय भी हो सकता है ({planet})।"
   }
 }

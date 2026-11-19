@@ -54,6 +54,8 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
   fontlar uygulamanın içinde. İnternet yalnızca yapay zekâ sohbeti ve güncelleme denetimi için gerekir.
 - **Yapay zekâ ile sohbet** — ekrandaki haritanın tam verisi her mesajla gönderilir; zamanı oynattıkça
   yorum güncel transitleri izler.
+- **İki kullanım modu** — Amatör: sade sekmeler, kısa ve gündelik yanıtlar, yapay zekâsız **Uygun Günler** takvimi;
+  Profesyonel: tüm teknikler ve ayrıntılı yanıtlar.
 - **Hesap yok, abonelik yok, reklam yok** — verileriniz yalnızca kendi bilgisayarınızda durur.
 - **8 dilde arayüz:** Türkçe, İngilizce, İspanyolca, Portekizce, Almanca, Fransızca, Rusça ve Hintçe; yapay zekâ
   varsayılan olarak arayüz dilinde yanıt verir. Yeni dil eklemek tek dosya.
@@ -81,7 +83,13 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
 
 ### Kişiler ve olaylar
 - Kişi veya olay (evlilik, kuruluş, taşınma…) kaydı; yazarken canlı Güneş–Ay–Yükselen önizlemesi.
-- "Doğum saati bilinmiyor" seçeneği, **Rodden** veri güvenilirliği, etiketler ve notlar.
+- "Doğum saati bilinmiyor" seçeneği, **Rodden** veri güvenilirliği, etiketler ve notlar. Saat bilinmiyorsa kısa bir
+  rehber açılır: neyin doğru kaldığı (Güneş burcu, çoğu gezegen), Ay'ın o gün burç değiştirip değiştirmediği (gün başı
+  ve sonu hesaplanır), yükselen ve evlerin neden gösterilmediği, saatin nerede bulunabileceği.
+- **Olaylarım:** kişinin hayat olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedilir; her olayda o
+  günün Ay'ı ve yavaş gezegenlerin (Mars–Plüton) haritaya açıları sade dille ve teknik etiketiyle görünür. Birden çok
+  olayda tekrar eden gezegenler özetlenir; "Yapay zekâya sor" tüm olayları transitleriyle gönderir. Kayıtlar haritanın
+  içinde saklanır ve yedeğe girer.
 - Şehir/ilçe araması (çevrimdışı), `38n15`, `41K01`, `38°15'30" N` gibi koordinat biçimleri ya da dünya
   haritasından tıklayarak seçim; en yakın yerleşim ve saat dilimi otomatik bulunur.
 - **İçe aktarma:** AAF (astro.com, AstroGold, Solar Fire, Janus) ve CSV. Dışa aktarma: JSON.
@@ -103,7 +111,10 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
   birlikte sağlayan zaman aralıklarını bulur.
 - **Astrokartografi:** MC/IC/ASC/DSC çizgileri dünya haritasında; bir yere tıklayınca yakın çizgiler ve
   o yere taşınmış harita.
-- **Masaüstü bildirimleri:** kayıtlı kişilere yaklaşan önemli transitler.
+- **Haftalık özet:** haftada bir sade bir bildirim: haftanın gökyüzü olayları (Merkür/Venüs/Mars retro başlangıç ve
+  bitişleri, Yeni Ay/Dolunay, tutulmalar) ve seçilen kişinin haftadaki başlıca transiti, olasılık diliyle
+  (Ayarlar → Bildirimler'den açılıp kapanır, kişi seçilir).
+- **Masaüstü bildirimleri** (Profesyonel modda): kayıtlı kişilere yaklaşan önemli tam transitler.
 
 ### Bilgi bankası
 - Kendi ders notlarınızı, kitap özetlerinizi ve yorum kurallarınızı Markdown dosyaları olarak ekleyin
@@ -117,6 +128,10 @@ SmartScreen uyarısında **Ek bilgi → Yine de çalıştır** gerekir. Rehberle
 ### Diğer
 - Yapay zekâ yanıtlarını kişiye **yorum** olarak kaydetme ve düzenleme.
 - **PNG** (çark) ve **PDF** rapor (çark + natal bilgiler + kayıtlı yorumlar).
+- **Doğum günü raporu** (Temel Yorum ya da Dışa aktar menüsü; yapay zekâ gerekmez): bir doğum gününden ötekine
+  tek sayfalık sade özet. Güneş dönüşüne göre yılın odağı (Güneş ve Ay'ın evi, yükselenin tonu; doğum saati
+  bilinmiyorsa atlanır), yıl içinde Jüpiter ve Satürn'ün haritaya açıları (aylarıyla), Merkür retroları ve tutulmalar.
+  Yıllar arasında gezinme, PDF olarak kaydetme, "Yapay zekâya sor".
 - **Açık / koyu / sistem** teması, ilk açılış rehberi.
 - **Otomatik yedek** (iCloud Drive, Dropbox vb. bir klasöre günlük, 30 gün saklanır).
 - **Otomatik güncelleme** (Windows kurulumu ve Linux AppImage); macOS ve portable sürümde bildirim.
@@ -132,6 +147,7 @@ transit→natal açılar, progresyonlar…) gönderilir. "Gönderilen veri" bağ
 | Codex (CLI) | `codex exec --json`, salt okunur, kalıcı oturum yok | `codex login` |
 | Gemini (CLI) | `gemini -o stream-json` | `gemini` ile giriş ya da Gemini API anahtarı |
 | Claude, OpenAI, Gemini, DeepSeek API | HTTPS akışı | Ayarlar → Yapay zekâ'dan API anahtarı |
+| AstroHermes | Astrolojiye özel, ücretli, ayrı bir servis; OpenAI uyumlu akış, adres hazır | AstroHermes aboneliğinden `ahr_live_…` anahtarı |
 | Yerel sunucu | OpenAI uyumlu `/v1/chat/completions` akışı | Ollama, llama.cpp, LM Studio, LiteLLM, vLLM vb.; anahtar isteğe bağlı |
 
 Adım adım kurulum ve "bulunamadı" sorunları için: [Yapay zekâ bağlantı rehberi](docs/ai-setup.md) ·
@@ -155,6 +171,13 @@ ayrıca kurulması gerekir.
   uymuyor). Bir güne tıklayınca nedenleri ve "Yapay zekâya sor" düğmesi; "Bugün" değerlendirmesi, aralıktaki retrolar ve
   tutulmalar. **Takvime aktar** öne çıkan günleri, retro dönemlerini ve tutulmaları `.ics` dosyası olarak kaydeder
   (telefon, Google, Apple ya da Outlook takvimine eklenebilir). Sohbetteki "ne zaman?" yanıtlarıyla aynı hesaplamayı kullanır.
+- **Yanıt denetimi** (Amatör): son yanıtta yönlendirici bir ifade ("mutlaka", "yapmalısınız", "you should"… 8 dilde)
+  ya da ~260 kelimeyi aşan uzunluk (ayrıntı istenmediyse) olursa yanıtın altında kısa bir not ve **Kısalt ve yumuşat**
+  düğmesi çıkar. Talimatı tam tutmayan (özellikle küçük yerel) modeller için bir güvencedir.
+- **Dil:** yapay zekânın talimatı, yanıt düzeyi ve güvenlik kuralı her istekte yanıt dilinde (varsayılan: arayüz dili)
+  yeniden kurulur; arayüz dili değişince talimatlar da değişir. Kendi sistem talimatınızı yazdıysanız o metin olduğu
+  gibi kalır, ama sonuna yanıt dilinin satırı ("Answer in English." gibi) her zaman eklenir. Kısayollar, harita ve
+  zamanlama verisi arayüz dilindedir.
 - **Zamanlama soruları** ("2027'de ne zaman nikâh günü alabiliriz?", "saç boyatmak için uygun bir zaman mı?", "Merkür
   retrosunda telefon yenilesem?", "önümüzdeki 3 ay"): soru gönderilirken konusu (nikâh, diyet, saç, alışveriş/cihaz,
   sözleşme, yeni iş, yolculuk, taşınma, sağlık) ve tarih aralığı (yıl, ay adı, "önümüzdeki 3 ay", "gelecek ay"; 8 dilde,
@@ -254,6 +277,7 @@ npm run dev
 | `npm start` | Derlenmiş uygulamayı çalıştır |
 | `npm run typecheck` | TypeScript denetimi |
 | `npm run test:engine` | Efemeris doğruluk testi |
+| `npm run test:timing` | Zamanlama motoru (8 dilde konu ve tarih algılama, gün kuralları) ve Amatör yanıt denetimi testleri |
 | `npm run test:e2e` | Uçtan uca arayüz testleri (`E2E_AI=1` ile yerel Claude Code / Codex de denenir) |
 | `npm run i18n:check` | Dillerdeki eksik çevirileri listeler |
 | `npm run dist:mac` / `dist:win` / `dist:linux` | Paketleme (her sistem kendi üzerinde) |

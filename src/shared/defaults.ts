@@ -210,5 +210,9 @@ export const aiLanguageOf = (s: Pick<AppSettings, 'uiLanguage' | 'ai'>) => (!s.a
 /** Standing instructions sent to the AI: the user's own or the language's default, the answer level and the safety rule. */
 export function aiSystemPrompt(s: Pick<AppSettings, 'uiLanguage' | 'ai'>): string {
   const loc = getLocale(aiLanguageOf(s))
-  return `${s.ai.systemPrompt.trim() || loc.systemPrompt}\n\n${loc.aiLevel[s.ai.level]}\n\n${loc.aiSafety}`
+  const own = s.ai.systemPrompt.trim()
+  // A hand-written prompt does not follow a language change: add the answer-language line
+  // (the last line of every built-in prompt, e.g. "- Answer in English.") so it always wins.
+  const lang = loc.systemPrompt.trim().split('\n').pop()!.replace(/^-\s*/, '')
+  return own ? `${own}\n\n${lang}\n\n${loc.aiLevel[s.ai.level]}\n\n${loc.aiSafety}` : `${loc.systemPrompt}\n\n${loc.aiLevel[s.ai.level]}\n\n${loc.aiSafety}`
 }
