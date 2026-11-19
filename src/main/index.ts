@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import type {
   ImportResult,
+  RectifyRequest,
   AiChatRequest,
   AppSettings,
   ChartRecord,
@@ -24,7 +25,7 @@ import { startNotifier } from './notifier'
 import { startAutoUpdate } from './updater'
 import * as store from './store'
 import { issueUrl, logError, reportInfo, watchErrors } from './errorlog'
-import { electionalSearch, ephemSeries, findReturn, fixedStars, lunarPhases, moonStays, nightSky, planetaryHours, timingFacts, transitSearch } from './tools'
+import { electionalSearch, ephemSeries, findReturn, fixedStars, lunarPhases, moonStays, nightSky, planetaryHours, rectify, timingFacts, transitSearch } from './tools'
 
 /** LICENSE and notices ship as extraResources; in dev they sit in the project root. */
 const bundledDoc = (name: string) => join(app.isPackaged ? process.resourcesPath : join(__dirname, '../..'), name)
@@ -147,6 +148,7 @@ function registerIpc(): void {
   ipcMain.handle('tools:moon', (_e, jd: number, days: number, sid: number | null) => moonStays(jd, days, sid))
   ipcMain.handle('tools:phases', (_e, jd: number, days: number) => lunarPhases(jd, days))
   ipcMain.handle('tools:night', (_e, jd: number, lat: number, lon: number, sid: number | null) => nightSky(jd, lat, lon, sid))
+  ipcMain.handle('tools:rectify', (_e, req: RectifyRequest) => rectify(req))
 
   ipcMain.handle('interp:list', () => store.listInterpretations())
   ipcMain.handle('interp:add', (_e, it: Interpretation) => store.addInterpretation(it))

@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
   ImportResult,
+  RectifyRequest,
+  RectifyResult,
   AiChatRequest,
   AiEvent,
   AppSettings,
@@ -43,7 +45,8 @@ const api = {
     moon: (jd: number, days: number, sid: number | null): Promise<MoonStay[]> => ipcRenderer.invoke('tools:moon', jd, days, sid),
     timing: (dayStart: number, days: number, sid: number | null): Promise<TimingFacts> => ipcRenderer.invoke('tools:timing', dayStart, days, sid),
     phases: (jd: number, days: number): Promise<LunarPhase[]> => ipcRenderer.invoke('tools:phases', jd, days),
-    night: (jd: number, lat: number, lon: number, sid: number | null): Promise<NightSky> => ipcRenderer.invoke('tools:night', jd, lat, lon, sid)
+    night: (jd: number, lat: number, lon: number, sid: number | null): Promise<NightSky> => ipcRenderer.invoke('tools:night', jd, lat, lon, sid),
+    rectify: (req: RectifyRequest): Promise<RectifyResult> => ipcRenderer.invoke('tools:rectify', req)
   },
 
   interp: {

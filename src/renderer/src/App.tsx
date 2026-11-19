@@ -10,6 +10,7 @@ import MoonCalendar from './components/MoonCalendar'
 import NightSky from './components/NightSky'
 import ImportDialog from './components/ImportDialog'
 import PeopleManager from './components/PeopleManager'
+import Rectify from './components/Rectify'
 import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
@@ -227,6 +228,7 @@ export default function App() {
   const [showBirthday, setShowBirthday] = useState(false)
   const [showNight, setShowNight] = useState(false)
   const [showPeople, setShowPeople] = useState(false)
+  const [showRectify, setShowRectify] = useState(false)
   const [importing, setImporting] = useState<Extract<ImportResult, { kind: 'preview' }> | 'blank' | null>(null)
   const [notice, setNotice] = useState('')
   const [tagFilter, setTagFilter] = useState('')
@@ -1352,7 +1354,7 @@ export default function App() {
           }} />
         )}
         {view === 'journal' && computed && working.id !== NOW_ID && (
-          <Journal natal={computed.natal} rec={working} settings={settings} onSave={saveJournal} onAsk={ask} />
+          <Journal natal={computed.natal} rec={working} settings={settings} onSave={saveJournal} onAsk={ask} onRectify={() => setShowRectify(true)} />
         )}
         {view === 'days' && eventPlace && <GoodDays natal={goodDaysNatal} tz={eventTz} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
         {view === 'moon' && eventPlace && <MoonCalendar tz={eventTz} lat={eventPlace.lat} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
@@ -1501,6 +1503,18 @@ export default function App() {
             }}
           />
         </aside>
+      )}
+      {showRectify && working.id !== NOW_ID && (
+        <Rectify
+          rec={working}
+          onClose={() => setShowRectify(false)}
+          onApply={(h, mi) => {
+            // On screen only; the user saves it if it looks right.
+            setWorking({ ...working, local: { ...working.local, h, mi, s: 0 }, timeUnknown: undefined, rodden: working.timeUnknown || !working.rodden ? 'C' : working.rodden })
+            setShowRectify(false)
+            setView('chart')
+          }}
+        />
       )}
       {showPeople && (
         <PeopleManager

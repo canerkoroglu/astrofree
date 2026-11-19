@@ -27,6 +27,7 @@
     "test:engine": "node scripts/verify-engine.mjs",
     "test:timing": "node --no-warnings scripts/test-timing.mjs",
     "test:import": "node --no-warnings scripts/test-import.mjs",
+    "test:tools": "node --no-warnings scripts/test-tools.mjs",
     "dist": "electron-vite build && electron-builder",
     "dist:mac": "electron-vite build && electron-builder --mac",
     "dist:win": "electron-vite build && electron-builder --win",

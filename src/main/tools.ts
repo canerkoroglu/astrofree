@@ -10,6 +10,9 @@ import type {
   NightSky,
   NightBody,
   PlanetaryHours,
+  RectifyContact,
+  RectifyRequest,
+  RectifyResult,
   TimingFacts,
   TransitHit,
   TransitSearchRequest
@@ -510,4 +513,108 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
   eclipses.sort((a, b) => a.jd - b.jd)
 
   return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses }
+}
+
+// ---- Birth-time rectification ------------------------------------------------------
+
+const RECT_NATAL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] // Sun … Pluto
+const RECT_SLOW: Record<number, number> = { 5: 0.6, 6: 1, 7: 1, 8: 0.8, 9: 1 } // Jupiter … Pluto: weight
+// Which angle axis an event kind tends to show on, and which planets.
+const RECT_AXIS: Record<string, { axis?: 'asc' | 'mc'; bodies?: number[] }> = {
+  relationship: { axis: 'asc', bodies: [3] },
+  career: { axis: 'mc', bodies: [0, 6] },
+  home: { axis: 'mc', bodies: [1] },
+  family: { axis: 'mc', bodies: [1] },
+  health: { axis: 'asc', bodies: [4] },
+  loss: { bodies: [6, 9] },
+  education: { bodies: [5, 2] },
+  travel: { bodies: [5] }
+}
+
+/**
+ * Scores candidate birth times against dated life events: slow transits to the angles,
+ * solar-arc directed angles to natal planets and directed planets to the angles, and the
+ * progressed Moon on an angle. Each event counts its two closest contacts, so one busy
+ * event cannot outweigh the rest. A classic, rough method; the result is a short list.
+ */
+export async function rectify(req: RectifyRequest): Promise<RectifyResult> {
+  const swe = await getSwe()
+  const lon = (t: number, b: number) => swe.calc_ut(t, b, SEFLG_SWIEPH)[0] as number
+  const events = req.events.slice(0, 60)
+  const transits = events.map((e) => Object.fromEntries(Object.keys(RECT_SLOW).map((b) => [b, lon(e.jd, +b)])) as Record<number, number>)
+  const sep = (a: number, b: number) => Math.abs(d180(a - b))
+  // Conjunction, opposition (shown as the opposite angle) or square, within orb.
+  const hit = (p: number, angleLon: number, orb: number, angle: 'asc' | 'mc') => {
+    const d0 = sep(p, angleLon)
+    if (d0 <= orb) return { angle, aspect: 'conjunction' as const, orb: d0 }
+    const d180v = sep(p, angleLon + 180)
+    if (d180v <= orb) return { angle: angle === 'asc' ? ('dsc' as const) : ('ic' as const), aspect: 'conjunction' as const, orb: d180v }
+    const d90 = Math.min(sep(p, angleLon + 90), sep(p, angleLon - 90))
+    if (d90 <= orb * 0.8) return { angle, aspect: 'square' as const, orb: d90 }
+    return null
+  }
+
+  // Natal Sun once (its daily motion is under a degree; the arc uses it per candidate below).
+  const scores: number[] = []
+  const all: { asc: number; mc: number; contacts: (RectifyContact & { w: number })[] }[] = []
+  for (const jd of req.candidates) {
+    const h = swe.houses_ex(jd, 0, req.lat, req.lon, 'W')
+    const asc = h.ascmc[0] as number
+    const mc = h.ascmc[1] as number
+    const natal = Object.fromEntries(RECT_NATAL.map((b) => [b, lon(jd, b)])) as Record<number, number>
+    const contacts: (RectifyContact & { w: number })[] = []
+    let total = 0
+    events.forEach((e, i) => {
+      const fav = RECT_AXIS[e.category ?? ''] ?? {}
+      const boost = (angle: string, body: number) =>
+        (fav.axis && (fav.axis === 'asc' ? angle === 'asc' || angle === 'dsc' : angle === 'mc' || angle === 'ic') ? 1.5 : 1) * (fav.bodies?.includes(body) ? 1.3 : 1)
+      const found: (RectifyContact & { w: number })[] = []
+      const add = (kind: RectifyContact['kind'], body: number, x: ReturnType<typeof hit>, maxOrb: number, weight: number) => {
+        if (!x) return
+        const w = weight * boost(x.angle, body) * (1 - x.orb / maxOrb) * (x.aspect === 'square' ? 0.7 : 1)
+        found.push({ event: e.id, kind, body, angle: x.angle, aspect: x.aspect, orb: Math.round(x.orb * 100) / 100, w })
+      }
+      // Slow transits to the angles.
+      for (const [b, w] of Object.entries(RECT_SLOW)) {
+        add('transit', +b, hit(transits[i][+b], asc, 1.5, 'asc'), 1.5, w)
+        add('transit', +b, hit(transits[i][+b], mc, 1.5, 'mc'), 1.5, w)
+      }
+      // Secondary progression: a day for a year.
+      const years = (e.jd - jd) / 365.2422
+      if (years > 0) {
+        const pjd = jd + years
+        const arc = d180(lon(pjd, 0) - natal[0])
+        for (const b of RECT_NATAL) {
+          // Directed angles to natal planets (the planet sits where the angle has moved to).
+          add('arcAngle', b, hit(natal[b], asc + arc, 1, 'asc'), 1, 1)
+          add('arcAngle', b, hit(natal[b], mc + arc, 1, 'mc'), 1, 1)
+          // Directed planets to natal angles.
+          add('arcPlanet', b, hit(natal[b] + arc, asc, 1, 'asc'), 1, 0.9)
+          add('arcPlanet', b, hit(natal[b] + arc, mc, 1, 'mc'), 1, 0.9)
+        }
+        const pm = lon(pjd, 1)
+        const c1 = hit(pm, asc, 1, 'asc')
+        const c2 = hit(pm, mc, 1, 'mc')
+        if (c1?.aspect === 'conjunction') add('progMoon', 1, c1, 1, 0.5)
+        if (c2?.aspect === 'conjunction') add('progMoon', 1, c2, 1, 0.5)
+      }
+      found.sort((a, b) => b.w - a.w)
+      const top = found.slice(0, 2)
+      total += top.reduce((s, c) => s + c.w, 0)
+      contacts.push(...top)
+    })
+    scores.push(Math.round(total * 100) / 100)
+    all.push({ asc, mc, contacts })
+  }
+
+  // Smooth a little (neighbouring minutes), then take peaks at least 20 minutes apart.
+  const sm = scores.map((_, i) => (scores[i - 1] ?? scores[i]) * 0.25 + scores[i] * 0.5 + (scores[i + 1] ?? scores[i]) * 0.25)
+  const order = sm.map((v, i) => [v, i] as const).sort((a, b) => b[0] - a[0])
+  const best: RectifyResult['best'] = []
+  for (const [v, i] of order) {
+    if (best.length >= 3 || v <= 0) break
+    if (best.some((b) => Math.abs(req.candidates[b.index] - req.candidates[i]) * 1440 < 20)) continue
+    best.push({ index: i, score: Math.round(v * 100) / 100, asc: all[i].asc, mc: all[i].mc, contacts: all[i].contacts.map(({ w: _w, ...c }) => c) })
+  }
+  return { scores, best }
 }

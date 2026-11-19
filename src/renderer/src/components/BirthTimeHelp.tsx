@@ -43,6 +43,7 @@ export default function BirthTimeHelp({ rec, sidMode }: { rec: ChartRecord; sidM
         <li>{t('Anne, baba ya da yakınların hatırladığı yaklaşık zaman (ör. "sabaha karşı", "öğleden sonra")')}</li>
         <li>{t('Bebeklik albümü, doğum duyurusu, eski mektuplar ya da günlükler')}</li>
       </ul>
+      <p>{t('Saat hiç bilinmiyorsa: haritayı kaydedip Olaylarım sekmesine hayatınızdaki önemli olayları (evlilik, taşınma, iş değişikliği, bir yakının kaybı…) tarihleriyle ekleyin; “Doğum saatini bul” aracı bu olaylara en çok uyan saatleri gösterir.')}</p>
       <p>{t('Yaklaşık bir saat bulursanız "Doğum saati bilinmiyor"u kapatıp o saati girin ve Saat kaynağı olarak "C — Kaynağı belirsiz, yaklaşık" seçin.')}</p>
     </details>
   )

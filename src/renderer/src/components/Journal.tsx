@@ -2,12 +2,13 @@
 // words (the Moon, and the slow planets touching the birth chart), and the journal shows which
 // planets keep coming back. A way to learn astrology on one's own life; no AI needed.
 import { useEffect, useMemo, useState } from 'react'
-import type { AppSettings, ChartRecord, JournalEntry, TransitHit } from '@shared/types'
+import type { AppSettings, ChartRecord, JournalCategory, JournalEntry, TransitHit } from '@shared/types'
 import { ASPECT, moonPhase, POINT, SIGNS, splitDeg, type Layer } from '../lib/astro'
 import { t } from '../lib/i18n'
 import { M } from '../lib/meanings'
 import { fmtDate, julday } from '../lib/time'
 import { bodyName } from '../lib/timing'
+import { categoryIcon, JOURNAL_CATEGORIES } from '../lib/journal'
 
 const SLOW = [4, 5, 6, 7, 8, 9] // Mars … Pluto
 const NATAL_KEYS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'asc', 'mc']
@@ -30,17 +31,20 @@ export default function Journal({
   rec,
   settings,
   onSave,
-  onAsk
+  onAsk,
+  onRectify
 }: {
   natal: Layer
   rec: ChartRecord
   settings: AppSettings
   onSave: (entries: JournalEntry[]) => Promise<void>
   onAsk?: (prompt: string) => void
+  onRectify?: () => void
 }) {
   const m = M()
   const entries = useMemo(() => [...(rec.journal ?? [])].sort((a, b) => iso(b.date).localeCompare(iso(a.date))), [rec.journal])
-  const [draft, setDraft] = useState<{ id: string | null; date: string; title: string; note: string } | null>(null)
+  const [draft, setDraft] = useState<{ id: string | null; date: string; title: string; note: string; category: JournalCategory | '' } | null>(null)
+  const [cat, setCat] = useState<JournalCategory | ''>('')
   const [sky, setSky] = useState<Record<string, Sky>>({})
   const sid = settings.zodiac === 'sidereal' ? settings.sidMode : null
   const timeKnown = !rec.timeUnknown
@@ -89,7 +93,13 @@ export default function Journal({
     if (!draft) return
     const date = fromIso(draft.date)
     if (!date || !draft.title.trim()) return
-    const entry: JournalEntry = { id: draft.id ?? crypto.randomUUID(), date, title: draft.title.trim(), ...(draft.note.trim() ? { note: draft.note.trim() } : {}) }
+    const entry: JournalEntry = {
+      id: draft.id ?? crypto.randomUUID(),
+      date,
+      title: draft.title.trim(),
+      ...(draft.note.trim() ? { note: draft.note.trim() } : {}),
+      ...(draft.category ? { category: draft.category } : {})
+    }
     const rest = (rec.journal ?? []).filter((e) => e.id !== entry.id)
     await onSave([...rest, entry])
     setDraft(null)
@@ -115,8 +125,13 @@ export default function Journal({
           <p className="muted small">{t('Hayatınızdaki önemli olayları (iş değişikliği, taşınma, bir tanışma…) tarihiyle kaydedin; o günün gökyüzünü haritanızla birlikte görün.')}</p>
         </div>
         <div className="reading-actions">
+          {onRectify && (
+            <button onClick={onRectify} disabled={entries.length < 3} title={entries.length < 3 ? t('En az 3 olay gerekir') : t('Olaylarınıza en çok uyan doğum saatlerini bulur')}>
+              🕰 {t('Doğum saatini bul')}
+            </button>
+          )}
           {onAsk && entries.length > 0 && <button onClick={askAll}>{t('Yapay zekâya sor')}</button>}
-          <button className="primary" onClick={() => setDraft({ id: null, date: '', title: '', note: '' })}>
+          <button className="primary" onClick={() => setDraft({ id: null, date: '', title: '', note: '', category: '' })}>
             + {t('Olay ekle')}
           </button>
         </div>
@@ -131,6 +146,17 @@ export default function Journal({
           <label className="grow">
             {t('Ne oldu?')}
             <input value={draft.title} maxLength={120} placeholder={t('ör. Yeni işe başladım')} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+          </label>
+          <label>
+            {t('Tür')}
+            <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value as JournalCategory | '' })}>
+              <option value="">—</option>
+              {JOURNAL_CATEGORIES.map(([k, l, i]) => (
+                <option key={k} value={k}>
+                  {i} {t(l)}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="grow">
             {t('Not (isteğe bağlı)')}
@@ -153,18 +179,29 @@ export default function Journal({
         </div>
       )}
 
+      {entries.some((e) => e.category) && (
+        <div className="tag-filter">
+          {JOURNAL_CATEGORIES.filter(([k]) => entries.some((e) => e.category === k)).map(([k, l, i]) => (
+            <button key={k} className={cat === k ? 'on' : ''} onClick={() => setCat(cat === k ? '' : k)}>
+              {i} {t(l)}
+            </button>
+          ))}
+        </div>
+      )}
+
       <ul className="journal-list">
-        {entries.map((e) => {
+        {entries.filter((e) => !cat || e.category === cat).map((e) => {
           const s = sky[e.id]
           return (
             <li key={e.id} className="gd-detail">
               <div className="journal-row">
                 <div>
+                  {e.category && <span aria-hidden>{categoryIcon(e.category)} </span>}
                   <strong>{e.title}</strong> <span className="muted small">· {fmtDate(e.date)}</span>
                   {e.note && <div className="small">{e.note}</div>}
                 </div>
                 <div className="journal-tools">
-                  <button className="link small" onClick={() => setDraft({ id: e.id, date: iso(e.date), title: e.title, note: e.note ?? '' })}>
+                  <button className="link small" onClick={() => setDraft({ id: e.id, date: iso(e.date), title: e.title, note: e.note ?? '', category: e.category ?? '' })}>
                     {t('Düzenle')}
                   </button>
                   <button className="link small" onClick={() => void remove(e.id)}>

@@ -503,3 +503,31 @@ export interface TimingFacts {
   stations: { jd: number; body: number; retro: boolean }[]
   eclipses: { jd: number; solar: boolean }[]
 }
+
+// ---- Birth-time rectification ----------------------------------------------------
+
+export interface RectifyRequest {
+  /** Candidate birth moments (UT Julian days), in time order. */
+  candidates: number[]
+  lat: number
+  lon: number
+  events: { id: string; jd: number; category?: JournalCategory }[]
+}
+
+/** One timing contact that supports a candidate time for an event. */
+export interface RectifyContact {
+  event: string
+  /** transit: a slow planet on an angle; arcAngle: a directed angle on a planet;
+   *  arcPlanet: a directed planet on an angle; progMoon: the progressed Moon on an angle. */
+  kind: 'transit' | 'arcAngle' | 'arcPlanet' | 'progMoon'
+  body: number
+  angle: 'asc' | 'mc' | 'dsc' | 'ic'
+  aspect: 'conjunction' | 'square'
+  orb: number
+}
+
+export interface RectifyResult {
+  scores: number[]
+  /** Best candidates (indexes into `candidates`), at least 20 minutes apart, with what supports them. */
+  best: { index: number; score: number; asc: number; mc: number; contacts: RectifyContact[] }[]
+}

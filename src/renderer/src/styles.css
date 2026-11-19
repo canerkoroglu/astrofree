@@ -5529,3 +5529,59 @@ label.inline {
   border-bottom: 1px solid var(--line);
   padding-bottom: 6px;
 }
+
+/* ---- Doğum saatini bul --------------------------------------------------------- */
+.rectify-modal {
+  width: min(860px, calc(100vw - 32px));
+}
+.rect-window {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.rect-window .grow {
+  flex: 1;
+}
+.rect-window input {
+  width: 64px;
+  text-align: center;
+}
+.rect-curve {
+  width: 100%;
+  height: auto;
+  margin: 6px 0;
+}
+.rect-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+}
+.rect-mark {
+  stroke: var(--good, #2e8b57);
+  stroke-dasharray: 3 3;
+}
+.rect-label {
+  fill: var(--good, #2e8b57);
+  font-size: 11px;
+  font-weight: 700;
+}
+.rect-tick {
+  fill: var(--muted);
+  font-size: 10px;
+}
+.rect-best {
+  padding-left: 1.4em;
+  display: grid;
+  gap: 8px;
+}
+.rect-best .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.rect-time {
+  font-size: 1.3em;
+}

@@ -35,6 +35,7 @@ jobs:
       - run: npm run test:engine
       - run: npm run test:timing
       - run: npm run test:import
+      - run: npm run test:tools
       - name: Üçüncü taraf lisans metinleri güncel mi
         run: npm run licenses && git diff --exit-code THIRD_PARTY_LICENSES.txt
       - run: npm run build
