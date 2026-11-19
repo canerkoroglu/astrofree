@@ -5,7 +5,10 @@ import type {
   DayFact,
   ElectionWindow,
   FixedStarPos,
+  LunarPhase,
   MoonStay,
+  NightSky,
+  NightBody,
   PlanetaryHours,
   TimingFacts,
   TransitHit,
@@ -373,4 +376,138 @@ export async function ephemSeries(start: number, days: number, stepDays: number,
     for (const b of bodies) lon[b].push(calc(t, b)[0])
   }
   return { jd, lon }
+}
+
+/** Exact new, first-quarter, full and last-quarter Moons from jd over `days`. */
+export async function lunarPhases(jd: number, days: number): Promise<LunarPhase[]> {
+  const swe = await getSwe()
+  const calc = lonFn(swe, null)
+  const elong = (t: number) => norm(calc(t, 1)[0] - calc(t, 0)[0])
+  const out: LunarPhase[] = []
+  const end = jd + Math.min(days, 800)
+  let prev = Math.floor(elong(jd) / 90)
+  for (let t = jd + 0.25; t <= end; t += 0.25) {
+    const q = Math.floor(elong(t) / 90)
+    if (q !== prev) {
+      // The quarter boundary crossed in this step (the elongation wraps at 360).
+      const at = bisect(t - 0.25, t, (x) => Math.floor(elong(x) / 90) === q)
+      out.push({ jd: at, phase: q as LunarPhase['phase'] })
+      prev = q
+    }
+  }
+  return out
+}
+
+const SE_CALC_RISE = 1
+const SE_CALC_SET = 2
+const SE_BIT_ASTRO_TWILIGHT = 4096
+const SEFLG_EQUATORIAL = 2048
+const NIGHT_BODIES = [1, 2, 3, 4, 5, 6] // Moon, Mercury, Venus, Mars, Jupiter, Saturn
+
+/**
+ * Tonight's sky at a place: twilight times, when each naked-eye planet is up in a dark
+ * enough sky and where to look, close pairs, and the next eclipses seen from there.
+ * "Tonight" is the night after the sunset that ends the day containing `jd`
+ * (or the night now under way).
+ */
+export async function nightSky(jd: number, lat: number, lon: number, sidMode: number | null): Promise<NightSky> {
+  const swe = await getSwe()
+  const geo = [lon, lat, 0]
+  const rt = (t: number, body: number, flag: number) => {
+    const r = swe.rise_trans(t, body, '', SEFLG_SWIEPH, flag, geo, 0, 0)?.[0] as number | undefined
+    return r && r > 0 ? r : null
+  }
+  const hor = (t: number, body: number) => {
+    const e = swe.calc_ut(t, body, SEFLG_SWIEPH)
+    const a = swe.azalt(t, 0, geo, 0, 0, [e[0], e[1], e[2]])
+    return { alt: a.apparentAltitude as number, az: norm((a.azimuth as number) + 180) }
+  }
+  // Night now under way, or the coming one.
+  const sunNow = hor(jd, 0).alt
+  let sunset = sunNow < -0.8 ? rt(jd - 1, 0, SE_CALC_SET) : rt(jd, 0, SE_CALC_SET)
+  if (sunset && sunNow < -0.8) {
+    const next = rt(sunset + 0.01, 0, SE_CALC_SET)
+    if (next && next < jd) sunset = next
+  }
+  const from = sunset ?? jd
+  const sunrise = rt(from + 0.01, 0, SE_CALC_RISE)
+  const dark = rt(from - 0.01, 0, SE_CALC_SET | SE_BIT_ASTRO_TWILIGHT)
+  const dawn = rt(from + 0.01, 0, SE_CALC_RISE | SE_BIT_ASTRO_TWILIGHT)
+  const nightEnd = sunrise ?? from + 0.5
+
+  // Sample every 10 minutes from sunset to sunrise.
+  const step = 10 / 1440
+  const ts: number[] = []
+  for (let t = from; t <= nightEnd; t += step) ts.push(t)
+  const sunAlt = ts.map((t) => hor(t, 0).alt)
+  if (sidMode !== null) swe.set_sid_mode(sidMode, 0, 0)
+  const zodiacFlags = SEFLG_SWIEPH | (sidMode !== null ? SEFLG_SIDEREAL : 0)
+
+  const bodies: NightBody[] = []
+  const tracks = new Map<number, { t: number; alt: number; ra: number; dec: number }[]>()
+  for (const body of NIGHT_BODIES) {
+    const ph = swe.pheno_ut(from, body, SEFLG_SWIEPH)
+    const mag = ph ? ph[4] : 0
+    // Bright bodies show in a lighter sky.
+    const sunLimit = body === 1 || mag < -1 ? -4 : mag < 1 ? -8 : -10
+    let win: [number, number] | null = null
+    let best = { t: 0, alt: -90, az: 0 }
+    const track: { t: number; alt: number; ra: number; dec: number }[] = []
+    ts.forEach((t, i) => {
+      const h = hor(t, body)
+      const q = swe.calc_ut(t, body, SEFLG_SWIEPH | SEFLG_EQUATORIAL)
+      if (h.alt > 5 && sunAlt[i] < sunLimit) {
+        win = win ? [win[0], t] : [t, t]
+        track.push({ t, alt: h.alt, ra: q[0], dec: q[1] })
+        if (h.alt > best.alt) best = { t, alt: h.alt, az: h.az }
+      }
+    })
+    tracks.set(body, track)
+    const w = win as [number, number] | null
+    bodies.push({
+      body,
+      lon: swe.calc_ut(from, body, zodiacFlags)[0],
+      magnitude: Math.round(mag * 10) / 10,
+      from: w ? w[0] : null,
+      to: w ? w[1] : null,
+      best: w ? best.t : null,
+      altitude: w ? Math.round(best.alt) : 0,
+      azimuth: w ? Math.round(best.az) : 0,
+      rise: rt(from - 0.5, body, SE_CALC_RISE),
+      set: rt(from, body, SE_CALC_SET)
+    })
+  }
+
+  // Close pairs while both are up.
+  const sepDeg = (a: { ra: number; dec: number }, b: { ra: number; dec: number }) => {
+    const r = Math.PI / 180
+    const c = Math.sin(a.dec * r) * Math.sin(b.dec * r) + Math.cos(a.dec * r) * Math.cos(b.dec * r) * Math.cos((a.ra - b.ra) * r)
+    return Math.acos(Math.min(1, Math.max(-1, c))) / r
+  }
+  const pairs: NightSky['pairs'] = []
+  for (let i = 0; i < NIGHT_BODIES.length; i++)
+    for (let j = i + 1; j < NIGHT_BODIES.length; j++) {
+      const A = tracks.get(NIGHT_BODIES[i])!
+      const B = new Map(tracks.get(NIGHT_BODIES[j])!.map((p) => [p.t, p]))
+      let bestPair: { sep: number; jd: number } | null = null
+      for (const p of A) {
+        const q = B.get(p.t)
+        if (!q) continue
+        const s = sepDeg(p, q)
+        if (s < 4 && (!bestPair || s < bestPair.sep)) bestPair = { sep: s, jd: p.t }
+      }
+      if (bestPair) pairs.push({ a: NIGHT_BODIES[i], b: NIGHT_BODIES[j], sep: Math.round(bestPair.sep * 10) / 10, jd: bestPair.jd })
+    }
+
+  const moonPh = swe.pheno_ut(from + 0.25, 1, SEFLG_SWIEPH)
+  const el = norm(swe.calc_ut(from + 0.25, 1, SEFLG_SWIEPH)[0] - swe.calc_ut(from + 0.25, 0, SEFLG_SWIEPH)[0])
+
+  const eclipses: NightSky['eclipses'] = []
+  const sol = swe.sol_eclipse_when_loc(jd, SEFLG_SWIEPH, geo, 0)
+  if (sol) eclipses.push({ jd: sol.tret[0], solar: true, kind: sol.retFlag & 4 ? 'total' : sol.retFlag & 8 ? 'annular' : 'partial', magnitude: Math.round(sol.attr[0] * 100) / 100 })
+  const lun = swe.lun_eclipse_when_loc(jd, SEFLG_SWIEPH, geo, 0)
+  if (lun) eclipses.push({ jd: lun.tret[0], solar: false, kind: lun.retFlag & 4 ? 'total' : lun.retFlag & 16 ? 'partial' : 'penumbral', magnitude: Math.round((lun.retFlag & 20 ? lun.attr[0] : lun.attr[1]) * 100) / 100 })
+  eclipses.sort((a, b) => a.jd - b.jd)
+
+  return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses }
 }

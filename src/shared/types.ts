@@ -432,6 +432,46 @@ export interface DayFact {
   retro: number[]
 }
 
+/** An exact Moon phase: 0 new, 1 first quarter, 2 full, 3 last quarter. */
+export interface LunarPhase {
+  jd: number
+  phase: 0 | 1 | 2 | 3
+}
+
+/** One planet in tonight's sky, as seen from a place. */
+export interface NightBody {
+  body: number
+  /** Ecliptic longitude (in the chosen zodiac) for its sign. */
+  lon: number
+  magnitude: number
+  /** When it is above 5° in a dark enough sky; null when it is not seen tonight. */
+  from: number | null
+  to: number | null
+  /** Highest point inside that window. */
+  best: number | null
+  altitude: number
+  /** Compass azimuth at `best`, 0 = north, 90 = east. */
+  azimuth: number
+  rise: number | null
+  set: number | null
+}
+
+export interface NightSky {
+  sunset: number | null
+  /** End of astronomical twilight (sky fully dark); null at high latitudes in summer. */
+  dark: number | null
+  dawn: number | null
+  sunrise: number | null
+  /** Moon lit fraction 0–1 and whether it is growing. */
+  moonLit: number
+  moonWaxing: boolean
+  bodies: NightBody[]
+  /** Two planets (or the Moon and a planet) within 4° of each other, both seen tonight. */
+  pairs: { a: number; b: number; sep: number; jd: number }[]
+  /** The next solar and lunar eclipse seen from this place. */
+  eclipses: { jd: number; solar: boolean; kind: 'total' | 'annular' | 'partial' | 'penumbral'; magnitude: number }[]
+}
+
 export interface TimingFacts {
   days: DayFact[]
   /** Mercury, Venus and Mars stations from ~4 months before the range to ~4 months after it. */

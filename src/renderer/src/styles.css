@@ -5121,3 +5121,200 @@ button.gd-day {
   padding: 10px 0 var(--s6, 18px);
   border-top: 1px solid var(--line);
 }
+
+/* ---- Ay Takvimi ---------------------------------------------------------------- */
+.moon-cal {
+  overflow: auto;
+  flex: 1;
+}
+.moon-cal .gd-layout {
+  margin-top: 10px;
+}
+.moon-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  max-width: 640px;
+}
+button.moon-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 2px 5px;
+  min-height: 64px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  border-left-width: 4px;
+  background: var(--panel);
+}
+.moon-day .md-num {
+  align-self: flex-start;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1;
+}
+.moon-day .md-moon {
+  font-size: 20px;
+  line-height: 1.1;
+}
+.moon-day .md-sign {
+  font-size: 12px;
+}
+.moon-day .md-arrow {
+  color: var(--muted);
+  font-size: 10px;
+}
+.moon-day.exact {
+  background: var(--panel-2);
+  font-weight: 600;
+}
+.moon-day.today .md-num {
+  color: var(--accent);
+  font-weight: 700;
+}
+.moon-day.sel {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.md-voc {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.7;
+}
+.md-voc.inline {
+  position: static;
+  display: inline-block;
+}
+.md-big {
+  font-size: 22px;
+  vertical-align: middle;
+}
+.moon-chip {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.el-earth {
+  border-left-color: #8a6a3d;
+}
+.el-water {
+  border-left-color: #3d7fb8;
+}
+.el-air {
+  border-left-color: #b68ad6;
+}
+.el-fire {
+  border-left-color: #d9603b;
+}
+.moon-chip.el-earth {
+  background: #8a6a3d;
+}
+.moon-chip.el-water {
+  background: #3d7fb8;
+}
+.moon-chip.el-air {
+  background: #b68ad6;
+}
+.moon-chip.el-fire {
+  background: #d9603b;
+}
+.moon-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+@media (max-width: 700px) {
+  button.moon-day {
+    min-height: 52px;
+  }
+  .moon-day .md-moon {
+    font-size: 16px;
+  }
+}
+@media print {
+  .moon-print {
+    padding: 1cm 1.2cm;
+    font-size: 11pt;
+  }
+  .moon-print .moon-grid {
+    max-width: none;
+  }
+  .moon-print button.moon-day {
+    min-height: 70px;
+    border-color: #ccc;
+  }
+}
+
+/* ---- Bu gece gökyüzünde ------------------------------------------------------- */
+.night-modal {
+  max-width: 760px;
+}
+.night-modal .gd-head {
+  align-items: flex-start;
+}
+.night-times {
+  margin: 4px 0 10px;
+}
+.night-layout {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.night-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.night-dome {
+  width: 100%;
+  height: auto;
+}
+.dome-sky {
+  fill: #0f1630;
+  stroke: var(--line-strong);
+}
+.dome-ring {
+  fill: none;
+  stroke: #ffffff22;
+}
+.dome-label {
+  fill: #c8cbe0;
+  font-size: 10px;
+}
+.dome-name {
+  fill: #e8e9f3;
+  font-size: 8.5px;
+}
+.dome-body {
+  fill: #fff3c4;
+}
+.dome-body.b1 {
+  fill: #f4f4f4;
+}
+.dome-body.b4 {
+  fill: #ff8a65;
+}
+.dome-body.b3 {
+  fill: #ffffff;
+}
+@media (max-width: 640px) {
+  .night-layout {
+    grid-template-columns: 1fr;
+  }
+  .night-dome {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+}

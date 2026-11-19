@@ -12,6 +12,8 @@ import type {
   ProviderId,
   FixedStarPos,
   Interpretation,
+  LunarPhase,
+  NightSky,
   MoonStay,
   TimingFacts,
   PlanetaryHours,
@@ -38,7 +40,9 @@ const api = {
     hours: (jd: number, lat: number, lon: number, tzOffset: number): Promise<PlanetaryHours | null> =>
       ipcRenderer.invoke('tools:hours', jd, lat, lon, tzOffset),
     moon: (jd: number, days: number, sid: number | null): Promise<MoonStay[]> => ipcRenderer.invoke('tools:moon', jd, days, sid),
-    timing: (dayStart: number, days: number, sid: number | null): Promise<TimingFacts> => ipcRenderer.invoke('tools:timing', dayStart, days, sid)
+    timing: (dayStart: number, days: number, sid: number | null): Promise<TimingFacts> => ipcRenderer.invoke('tools:timing', dayStart, days, sid),
+    phases: (jd: number, days: number): Promise<LunarPhase[]> => ipcRenderer.invoke('tools:phases', jd, days),
+    night: (jd: number, lat: number, lon: number, sid: number | null): Promise<NightSky> => ipcRenderer.invoke('tools:night', jd, lat, lon, sid)
   },
 
   interp: {

@@ -6,6 +6,8 @@ import Astrocartography from './components/Astrocartography'
 import ChartEditor from './components/ChartEditor'
 import ElectionalSearch from './components/ElectionalSearch'
 import GoodDays from './components/GoodDays'
+import MoonCalendar from './components/MoonCalendar'
+import NightSky from './components/NightSky'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
@@ -89,9 +91,9 @@ const initialsOf = (name: string) =>
 
 type BottomTab = 'positions' | 'aspects' | 'grid' | 'houses'
 type OpenMode = 'natal' | 'transit' | 'progressed' | 'info'
-type View = 'chart' | 'today' | 'info' | 'reading' | 'days' | 'journal' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
+type View = 'chart' | 'today' | 'info' | 'reading' | 'days' | 'moon' | 'journal' | 'calendar' | 'notes' | 'acg' | 'election' | 'ephem' | 'kb'
 // Amateur mode keeps the everyday tabs and layers; professional shows everything.
-const AMATEUR_VIEWS: View[] = ['chart', 'today', 'reading', 'days', 'journal', 'notes', 'kb']
+const AMATEUR_VIEWS: View[] = ['chart', 'today', 'reading', 'days', 'moon', 'journal', 'notes', 'kb']
 const AMATEUR_LAYERS: OuterKind[] = ['transit', 'synastry']
 const AMATEUR_TABS: BottomTab[] = ['positions']
 const STAR_POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'asc', 'mc']
@@ -220,6 +222,7 @@ export default function App() {
   const [calHits, setCalHits] = useState<TransitHit[]>([])
   const [printing, setPrinting] = useState(false)
   const [showBirthday, setShowBirthday] = useState(false)
+  const [showNight, setShowNight] = useState(false)
   const [tagFilter, setTagFilter] = useState('')
   const [update, setUpdate] = useState<{ version: string; url: string } | null>(null)
   const [obOpen, setObOpen] = useState(false)
@@ -1003,6 +1006,9 @@ export default function App() {
           <button onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
             {t('Bugün')}
           </button>
+          <button onClick={() => setShowNight(true)} title={t('Bu gece çıplak gözle görülebilecek gezegenler, Ay ve gökyüzü olayları')}>
+            🔭 {t('Bu gece')}
+          </button>
         </div>
         <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
         {charts.some((c) => c.group) && (
@@ -1251,6 +1257,9 @@ export default function App() {
           <button className={view === 'days' ? 'on' : ''} onClick={() => setView('days')} title={t('Nikâh, yeni iş, saç, yolculuk… için geleneksel olarak uygun sayılan günler')}>
             {t('Uygun Günler')}
           </button>
+          <button className={view === 'moon' ? 'on' : ''} onClick={() => setView('moon')} title={t('Ay evreleri, burçları ve boşluk saatleri; bahçe ve saç takvimi')}>
+            {t('Ay Takvimi')}
+          </button>
           {!amateur && (
             <>
               <button className={view === 'calendar' ? 'on' : ''} onClick={() => setView('calendar')}>
@@ -1303,6 +1312,7 @@ export default function App() {
           <Journal natal={computed.natal} rec={working} settings={settings} onSave={saveJournal} onAsk={ask} />
         )}
         {view === 'days' && eventPlace && <GoodDays natal={goodDaysNatal} tz={eventTz} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
+        {view === 'moon' && eventPlace && <MoonCalendar tz={eventTz} lat={eventPlace.lat} lon={eventPlace.lon} settings={settings} onAsk={ask} />}
         {view === 'reading' && computed && <BasicReading natal={computed.natal} rec={working} settings={settings} onAsk={ask} synastry={computed.outers.find((o) => o.kind === 'synastry') ?? null} partner={partner} onBirthday={working.id !== NOW_ID ? () => setShowBirthday(true) : undefined} />}
         {view === 'calendar' && computed && (
           <TransitCalendar
@@ -1449,6 +1459,7 @@ export default function App() {
           />
         </aside>
       )}
+      {showNight && eventPlace && <NightSky place={eventPlace} tz={eventTz} sidMode={settings.zodiac === 'sidereal' ? settings.sidMode : null} onClose={() => setShowNight(false)} />}
       {showBirthday && computed && working.id !== NOW_ID && (
         <BirthdayReport natal={computed.natal} rec={working} settings={settings} onAsk={ask} onClose={() => setShowBirthday(false)} />
       )}
