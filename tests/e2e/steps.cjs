@@ -193,6 +193,38 @@ function steps({ ai, tmp, mock }) {
   step('journal fill', `(()=>{setv(document.querySelector('.journal-form input[type=date]'),'2016-06-01');setv([...document.querySelectorAll('.journal-form input')][1],'Yeni işe başladım');return 1})()`, 300)
   step('journal save', `c('.journal-form .actions button','Kaydet')`, 3000)
   step('journal check', `window.astro.charts.list().then(l=>{const rec=l.find(c=>(c.journal||[]).length);const li=document.querySelectorAll('.journal-list > li');return ok('Olaylarım: olay kaydediliyor, o günün gökyüzü gösteriliyor, harita kaydedilmemiş görünmüyor',!!rec&&rec.journal[0].title==='Yeni işe başladım'&&li.length===1&&!!document.querySelector('.journal-sky')&&!document.querySelector('.unsaved'),li.length+' olay · '+(document.querySelector('.journal-sky')?.innerText||'').slice(0,120).replace(/\\n/g,' | '))})`)
+  // Two more events with a kind, then the birth-time finder.
+  for (const [date, title, cat] of [['2012-09-15', 'Evlendim', 'relationship'], ['2020-03-01', 'Taşındım', 'home']]) {
+    step('journal add ' + title, `(()=>{c('.journal .reading-actions button','+');return 1})()`, 300)
+    step('journal fill ' + title, `(()=>{setv(document.querySelector('.journal-form input[type=date]'),'${date}');setv([...document.querySelectorAll('.journal-form input')][1],'${title}');const sel=document.querySelector('.journal-form select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(sel,'${cat}');sel.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`, 300)
+    step('journal save ' + title, `c('.journal-form .actions button','Kaydet')`, 2500)
+  }
+  step('journal kinds', `window.astro.charts.list().then(l=>{const rec=l.find(c=>(c.journal||[]).length>=3);return ok('Olaylarım: olay türü kaydediliyor ve filtrede görünüyor',!!rec&&rec.journal.some(e=>e.category==='relationship')&&!!document.querySelector('.journal .tag-filter'))})`)
+  step('rectify open', `c('.journal .reading-actions button','🕰')`, 500)
+  step('rectify run', `c('.rectify-modal .rect-window button','Hesapla')`, 4000)
+  step('rectify check', `(()=>{const m=document.querySelector('.rectify-modal');const best=m?.querySelectorAll('.rect-best > li')||[];return ok('Doğum saatini bul: puan eğrisi ve gerekçeli aday saatler',!!m?.querySelector('.rect-curve polyline')&&best.length>=1&&/\\d\\d:\\d\\d/.test(best[0]?.querySelector('.rect-time')?.textContent||''),best.length+' aday · '+(best[0]?.innerText||'').slice(0,140).replace(/\\n/g,' | '))})()`)
+  step('rectify close', `c('.rectify-modal .actions button','Kapat')`, 400)
+  // Moon calendar.
+  step('moon tab', `c('.view-tabs button','Ay Takvimi')`, 3500)
+  step('moon check', `(()=>{const d=document.querySelectorAll('.moon-day');const ex=document.querySelectorAll('.moon-day.exact');return ok('Ay Takvimi: ayın tüm günleri, evre anları ve evre listesi',d.length>=28&&d.length<=31&&ex.length>=3&&document.querySelectorAll('.moon-list li').length>=3,d.length+' gün, '+ex.length+' evre')})()`)
+  step('moon day', `(()=>{document.querySelectorAll('.moon-day')[10].click();return 1})()`, 400)
+  step('moon detail', `ok('Ay Takvimi: gün ayrıntısı (burç, bahçe notu)',/Ay .* burcunda/.test(document.querySelector('.moon-cal .gd-side')?.innerText||'')&&/günü/.test(document.querySelector('.moon-cal .gd-side')?.innerText||''))`)
+  step('moon next', `(()=>{c('.moon-cal .bday-nav button','▶');return 1})()`, 3000)
+  step('moon next check', `ok('Ay Takvimi: sonraki aya geçiliyor',document.querySelectorAll('.moon-day').length>=28&&!!document.querySelector('.moon-cal .bday-nav .link'))`)
+  // Tonight's sky.
+  step('night open', `c('.side-actions button','🔭')`, 3500)
+  step('night check', `(()=>{const m=document.querySelector('.night-modal');return ok('Bu gece gökyüzünde: alacakaranlık saatleri, gezegen listesi ve gökyüzü haritası',!!m&&/\\d\\d:\\d\\d/.test(m.querySelector('.night-times')?.textContent||'')&&m.querySelectorAll('.night-list li').length>=1&&!!m.querySelector('.night-dome'),(m?.innerText||'').slice(0,160).replace(/\\n/g,' | '))})()`)
+  step('night next', `(()=>{c('.night-modal .bday-nav button','▶');return 1})()`, 3000)
+  step('night close', `c('.night-modal .actions button','Kapat')`, 400)
+  // Import with preview, duplicates, people manager.
+  step('import text', `window.astro.charts.importText('#A93:Einstein,Albert,m,14.3.1879g,11:30,Ulm,DEU\\n#B93:2407422.98027,48n24,10e00,0h40e,0\\n#A93:Bad,Date,m,soon,12:00,X,XX\\n#B93:*,1n00,1e00,0hE00,0').then(async r=>{if(r.kind!=='preview')return 'FAIL içe aktarma önizlemesi gelmedi';const a=await window.astro.charts.addMany(r.records);const b=await window.astro.charts.addMany(r.records);return ok('İçe aktarma: AAF metni okunuyor, okunamayan satır sayılıyor, aynı kayıt ikinci kez eklenmiyor',r.records.length===1&&r.skipped===1&&r.records[0].local.y===1879&&a.added===1&&b.added===0&&b.duplicates===1)})`)
+  step('people open', `c('.search-row button','☰')`, 600)
+  step('people check', `(()=>{const m=document.querySelector('.people-modal');return ok('Kişiler ve olaylar: liste, filtreler ve dışa aktarma düğmeleri',!!m&&m.querySelectorAll('.people-list li').length>=1&&!!m.querySelector('.people-filters select')&&[...m.querySelectorAll('.people-bulk button')].some(b=>b.textContent==='AAF'))})()`)
+  step('people search', `(()=>{setv(document.querySelector('.people-filters .search'),'yeni ise');return 1})()`, 400)
+  step('people search check', `ok('Kişiler ve olaylar: aksan duyarsız arama olayların içinde de arıyor',document.querySelectorAll('.people-list li input[type=checkbox]').length===1)`)
+  step('people card', `(()=>{document.querySelector('.people-list .people-row').click();return 1})()`, 400)
+  step('people card check', `ok('Danışan kartı: iletişim alanları ve seanslar (Profesyonel)',!!document.querySelector('.client-card .client-contact')&&!!document.querySelector('.client-sessions'))`)
+  step('people close', `c('.people-modal > .actions button','Kapat')`, 400)
   step('interp', `window.astro.interp.add({id:'i1',chartId:'x',title:'t',content:'c',provider:'test',createdAt:Date.now()}).then(a=>ok('Yorum arşivi',a.some(i=>i.id==='i1')))`)
   if (ai) {
     step('claude', `aiAsk('claude-code','','Sadece "tamam" yaz.').then(r=>(r.startsWith('OK')?'PASS ':'FAIL ')+'Claude Code — '+r)`)
