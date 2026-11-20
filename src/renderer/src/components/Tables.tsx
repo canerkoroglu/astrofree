@@ -1,5 +1,6 @@
 import { t } from '../lib/i18n'
-import { useMemo } from 'react'
+import { houseText, M } from '../lib/meanings'
+import { useMemo, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
   ASPECT,
@@ -76,11 +77,22 @@ export function PositionsTable({ natal, outers }: { natal: Layer; outers: Layer[
 }
 
 export function HousesTable({ natal }: { natal: Layer }) {
+  // Short topic always shown; a click on a row opens what the house is about, where its
+  // ruler sits and the built-in text for each planet in it.
+  const [open, setOpen] = useState<Set<number>>(new Set())
+  const toggle = (i: number) => {
+    const n = new Set(open)
+    if (n.has(i)) n.delete(i)
+    else n.add(i)
+    setOpen(n)
+  }
+  const houses = M().houses
   return (
-    <table className="data">
+    <table className="data houses-table">
       <thead>
         <tr>
           <th>{t('Ev')}</th>
+          <th>{t('Konusu')}</th>
           <th>{t('Başlangıç')}</th>
           <th>{t('Yönetici')}</th>
           <th>{t('Yöneticinin evi')}</th>
@@ -92,9 +104,25 @@ export function HousesTable({ natal }: { natal: Layer }) {
           const ruler = rulerOf(splitDeg(c).sign)
           const rp = natal.points.find((p) => p.key === ruler)
           const inside = natal.points.filter((p) => p.house === i + 1 && !['asc', 'mc'].includes(p.key))
-          return (
-            <tr key={i}>
-              <td className="num">{i + 1}</td>
+          const isOpen = open.has(i)
+          const h = houses[i]
+          return [
+            <tr key={i} className={`house-row${isOpen ? ' open' : ''}`} onClick={() => toggle(i)}>
+              <td className="num">
+                <button
+                  type="button"
+                  className="house-toggle"
+                  aria-expanded={isOpen}
+                  aria-label={t('{n}. ev', { n: i + 1 })}
+                  onClick={(e) => (e.stopPropagation(), toggle(i))}
+                >
+                  <span className="house-chev" aria-hidden>
+                    ›
+                  </span>
+                  {i + 1}
+                </button>
+              </td>
+              <td className="house-topic">{h?.keywords ?? ''}</td>
               <td className="pos">{fmtPos(c, true)}</td>
               <td>
                 <span className="glyph">{glyph(ruler)}</span> {POINT[ruler].name}
@@ -107,8 +135,35 @@ export function HousesTable({ natal }: { natal: Layer }) {
                   </span>
                 ))}
               </td>
-            </tr>
-          )
+            </tr>,
+            isOpen && (
+              <tr key={`${i}d`} className="house-detail">
+                <td />
+                <td colSpan={5}>
+                  <p className="house-about">{h?.about}</p>
+                  <p className="small">
+                    {t('Yöneticisi {planet}, {n}. evde.', { planet: POINT[ruler].name, n: rp?.house ?? '—' })}
+                  </p>
+                  {inside.length > 0 ? (
+                    <ul className="house-in small">
+                      {inside.map((p) => {
+                        const txt = houseText(p.key, i + 1)
+                        return (
+                          <li key={p.key}>
+                            <span className="glyph">{glyph(p.key)}</span> <strong>{POINT[p.key].name}</strong>
+                            {txt ? <> — {txt}</> : null}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  ) : (
+                    <p className="small muted">{t('Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.')}</p>
+                  )}
+                  <p className="small muted house-note">{M().disclaimer}</p>
+                </td>
+              </tr>
+            )
+          ]
         })}
       </tbody>
     </table>

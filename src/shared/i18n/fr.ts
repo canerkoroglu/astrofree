@@ -1590,6 +1590,9 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Dakika": "Minute",
     "Saniye": "Seconde",
     "Yıl seç": "Choisir l’année",
-    "Önceki": "Précédent"
+    "Önceki": "Précédent",
+    "Konusu": "Thèmes",
+    "Yöneticisi {planet}, {n}. evde.": "Son maître, {planet}, est en maison {n}.",
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Aucune planète dans cette maison ; ses thèmes peuvent surtout se lire par son maître."
   }
 }

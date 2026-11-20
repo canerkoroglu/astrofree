@@ -1590,6 +1590,9 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Dakika": "Minute",
     "Saniye": "Sekunde",
     "Yıl seç": "Jahr wählen",
-    "Önceki": "Zurück"
+    "Önceki": "Zurück",
+    "Konusu": "Themen",
+    "Yöneticisi {planet}, {n}. evde.": "Sein Herrscher {planet} steht im {n}. Haus.",
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Keine Planeten in diesem Haus; seine Themen lassen sich vor allem über den Herrscher lesen."
   }
 }

@@ -8589,3 +8589,69 @@ button.soft-btn.on {
 .side-head {
   min-height: 36px;
 }
+
+/* ---- Evler tablosu: kısa konu sütunu, tıklayınca açılan açıklama ---- */
+.houses-table .house-row {
+  cursor: pointer;
+}
+.houses-table .house-row:hover td {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.houses-table .house-row.open td {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+button.house-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  padding: 2px 4px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+.house-chev {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 15px;
+  transition: transform 0.15s;
+}
+.house-row.open .house-chev {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+.houses-table .house-topic {
+  color: var(--muted);
+  font-size: 12.5px;
+  max-width: 260px;
+}
+.houses-table .house-detail td {
+  padding-top: 4px;
+  padding-bottom: 14px;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  border-top: 0;
+}
+.house-detail .house-about {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.house-detail p {
+  margin: 0 0 6px;
+}
+.house-in {
+  margin: 0 0 6px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  line-height: 1.5;
+}
+.house-note {
+  margin-top: 6px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .house-chev {
+    transition: none;
+  }
+}

@@ -1590,6 +1590,9 @@ export const hi: Locale = {
     "Dakika": "मिनट",
     "Saniye": "सेकंड",
     "Yıl seç": "वर्ष चुनें",
-    "Önceki": "पिछला"
+    "Önceki": "पिछला",
+    "Konusu": "विषय",
+    "Yöneticisi {planet}, {n}. evde.": "इसका स्वामी {planet} {n}वें भाव में है।",
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "इस भाव में कोई ग्रह नहीं; इसके विषय मुख्यतः इसके स्वामी से पढ़े जा सकते हैं।"
   }
 }

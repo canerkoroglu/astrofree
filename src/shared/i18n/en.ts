@@ -1590,6 +1590,9 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Dakika": "Minute",
     "Saniye": "Second",
     "Yıl seç": "Choose year",
-    "Önceki": "Previous"
+    "Önceki": "Previous",
+    "Konusu": "Topics",
+    "Yöneticisi {planet}, {n}. evde.": "Its ruler, {planet}, is in house {n}.",
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No planets in this house; its topics may be read mainly through its ruler."
   }
 }
