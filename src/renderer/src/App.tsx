@@ -995,6 +995,13 @@ export default function App() {
             )}
           </div>
         )}
+        {!amateur && railMini && (
+          <button className="rail-btn rail-opts-mini" onClick={() => toggleRailMini()} title={t('Harmonik ve ev sistemi')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="sliders" size={18} />
+            </span>
+          </button>
+        )}
         {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
         <span className="rail-cap">{t('Harita')}</span>
         <span className="rail-sub">{t('Harmonik')}</span>

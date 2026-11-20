@@ -1572,6 +1572,7 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Partner seçin": "Escolha um parceiro",
     "Sinastri partneri seçin": "Escolha o parceiro da sinastria",
     "bu harita": "este mapa",
-    "{name} ile karşılaştırılacak kişiye tıklayın.": "Clique na pessoa a comparar com {name}."
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Clique na pessoa a comparar com {name}.",
+    "Harmonik ve ev sistemi": "Harmônico e sistema de casas"
   }
 }

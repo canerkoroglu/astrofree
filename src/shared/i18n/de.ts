@@ -1572,6 +1572,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Partner seçin": "Partner wählen",
     "Sinastri partneri seçin": "Synastrie-Partner wählen",
     "bu harita": "dieses Horoskop",
-    "{name} ile karşılaştırılacak kişiye tıklayın.": "Klicken Sie auf die Person, die mit {name} verglichen werden soll."
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Klicken Sie auf die Person, die mit {name} verglichen werden soll.",
+    "Harmonik ve ev sistemi": "Harmonik und Häusersystem"
   }
 }

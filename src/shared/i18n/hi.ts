@@ -1572,6 +1572,7 @@ export const hi: Locale = {
     "Partner seçin": "साथी चुनें",
     "Sinastri partneri seçin": "सिनास्ट्री के लिए साथी चुनें",
     "bu harita": "यह कुंडली",
-    "{name} ile karşılaştırılacak kişiye tıklayın.": "{name} से तुलना के लिए व्यक्ति पर क्लिक करें।"
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "{name} से तुलना के लिए व्यक्ति पर क्लिक करें।",
+    "Harmonik ve ev sistemi": "हार्मोनिक और भाव पद्धति"
   }
 }

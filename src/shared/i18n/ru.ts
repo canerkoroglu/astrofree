@@ -1572,6 +1572,7 @@ export const ru: Locale = {
     "Partner seçin": "Выберите партнёра",
     "Sinastri partneri seçin": "Выберите партнёра для синастрии",
     "bu harita": "эта карта",
-    "{name} ile karşılaştırılacak kişiye tıklayın.": "Нажмите на человека для сравнения с {name}."
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Нажмите на человека для сравнения с {name}.",
+    "Harmonik ve ev sistemi": "Гармоника и система домов"
   }
 }

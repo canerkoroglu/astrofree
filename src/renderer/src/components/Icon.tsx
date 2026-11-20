@@ -17,7 +17,8 @@ export const ICONS = {
   eventPlus: 'M9 3l6 6-6 6-6-6zM19 14v6M16 17h6',
   clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
   telescope: 'M3 15l12-6 2 4-12 6zM15 9l4-2 2 4-4 2M9 17l-3 4M11 16l3 5',
-  close: 'M15 6l-6 6 6 6'
+  close: 'M15 6l-6 6 6 6',
+  sliders: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 5v4M8 15v4'
 } as const
 
 export default function Icon({ name, size = 16 }: { name: keyof typeof ICONS; size?: number }) {

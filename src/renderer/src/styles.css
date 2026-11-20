@@ -7103,3 +7103,15 @@ button.partner-card .avatar {
 .sidebar:has(.pick-banner) .chart-list li:not(.pick-self):hover {
   background: color-mix(in srgb, #2f5fb3 10%, transparent);
 }
+
+/* the side menu can be taller than the window: show that it scrolls */
+.rail {
+  scrollbar-width: thin;
+}
+.rail::-webkit-scrollbar {
+  display: block;
+  width: 6px;
+}
+.app:not(.rail-mini) .rail-opts-mini {
+  display: none;
+}
