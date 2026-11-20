@@ -1593,6 +1593,8 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Önceki": "Previous",
     "Konusu": "Topics",
     "Yöneticisi {planet}, {n}. evde.": "Its ruler, {planet}, is in house {n}.",
-    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No planets in this house; its topics may be read mainly through its ruler."
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No planets in this house; its topics may be read mainly through its ruler.",
+    "Harita verisi": "Chart data",
+    "bağlı değil": "not connected"
   }
 }

@@ -344,8 +344,8 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
               const s = statuses.find((x) => x.id === p.id)
               return (
                 <option key={p.id} value={p.id}>
-                  {s ? (s.available ? '● ' : '○ ') : ''}
                   {t(p.label)}
+                  {s && !s.available ? ` (${t('bağlı değil')})` : ''}
                 </option>
               )
             })}
@@ -528,68 +528,74 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       </div>
 
       <div className="composer">
-        <textarea
-          rows={3}
-          value={input}
-          placeholder={t('Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)')}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault()
-              void send(input)
-            }
-          }}
-        />
-        <div className="composer-row">
-          <label className="inline small">
-            <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} /> {t('Harita verisini ekle')}
-          </label>
-          {knowledgeCount > 0 && (
-            <label className="inline small" title={t('Haritayla ve sorunuzla eşleşen bilgi bankası kayıtları da gönderilir')}>
-              <input
-                type="checkbox"
-                checked={settings.ai.useKnowledge}
-                disabled={!attach}
-                onChange={(e) => onSettings({ ...settings, ai: { ...settings.ai, useKnowledge: e.target.checked } })}
-              />{' '}
-              {t('Bilgi bankası')}
+        <div className="composer-box">
+          <textarea
+            rows={3}
+            value={input}
+            placeholder={t('Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)')}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                void send(input)
+              }
+            }}
+          />
+          <div className="composer-row">
+            <label className={`chip-check${attach ? ' on' : ''}`} title={t('Harita verisini ekle')}>
+              <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} />
+              <Icon name="wheel" size={14} />
+              {t('Harita verisi')}
             </label>
-          )}
-          <button className="link small" onClick={() => setShowCtx(!showCtx)}>
-            {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
-          </button>
-
-          <span className="grow" />
-          <span
-            className="muted small token-meter"
-            title={[
-              t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.'),
-              nextSize.repeat > 0 ? t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) }) : '',
-              nextSize.withChart ? `📎 ${t('harita verisiyle')}` : '',
-              nextSize.shortened > 0 ? t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened }) : ''
-            ]
-              .filter(Boolean)
-              .join('\n')}
-          >
-            ≈ {fmtK(nextSize.tokens)} {t('token')}
-            {nextSize.withChart ? ' 📎' : ''}
-          </span>
-          <select
-            className="chat-level"
-            value={settings.ai.level}
-            onChange={(e) => setLevel(e.target.value as AiLevel)}
-            title={t('Yanıt düzeyi: Amatör sade, gündelik bir dille; Profesyonel teknik terimler ve ayrıntıyla yanıtlar.')}
-          >
-            <option value="amateur">{t('Amatör')}</option>
-            <option value="professional">{t('Profesyonel')}</option>
-          </select>
-          {runId ? (
-            <button onClick={stop}>{t('■ Durdur')}</button>
-          ) : (
-            <button className="primary" disabled={!input.trim()} onClick={() => void send(input)}>
-              {t('Gönder')}
+            {knowledgeCount > 0 && (
+              <label className={`chip-check${settings.ai.useKnowledge && attach ? ' on' : ''}`} title={t('Haritayla ve sorunuzla eşleşen bilgi bankası kayıtları da gönderilir')}>
+                <input
+                  type="checkbox"
+                  checked={settings.ai.useKnowledge}
+                  disabled={!attach}
+                  onChange={(e) => onSettings({ ...settings, ai: { ...settings.ai, useKnowledge: e.target.checked } })}
+                />
+                <Icon name="book" size={14} />
+                {t('Bilgi bankası')}
+              </label>
+            )}
+            <button className="link small" onClick={() => setShowCtx(!showCtx)}>
+              {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
             </button>
-          )}
+            <span className="composer-actions">
+              <span
+                className="muted small token-meter"
+                title={[
+                  t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.'),
+                  nextSize.repeat > 0 ? t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) }) : '',
+                  nextSize.withChart ? `📎 ${t('harita verisiyle')}` : '',
+                  nextSize.shortened > 0 ? t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened }) : ''
+                ]
+                  .filter(Boolean)
+                  .join('\n')}
+              >
+                ≈ {fmtK(nextSize.tokens)} {t('token')}
+              </span>
+              <select
+                className="chat-level"
+                value={settings.ai.level}
+                onChange={(e) => setLevel(e.target.value as AiLevel)}
+                title={t('Yanıt düzeyi: Amatör sade, gündelik bir dille; Profesyonel teknik terimler ve ayrıntıyla yanıtlar.')}
+              >
+                <option value="amateur">{t('Amatör')}</option>
+                <option value="professional">{t('Profesyonel')}</option>
+              </select>
+              {runId ? (
+                <button className="send-btn stop" onClick={stop} aria-label={t('■ Durdur')} title={t('■ Durdur')}>
+                  <span className="stop-sq" aria-hidden />
+                </button>
+              ) : (
+                <button className="send-btn primary" disabled={!input.trim()} onClick={() => void send(input)} aria-label={t('Gönder')} title={t('Gönder')}>
+                  <Icon name="send" size={17} />
+                </button>
+              )}
+            </span>
+          </div>
         </div>
         <div className="ai-disclaimer">{t('Yapay zekâ yanıtları hata içerebilir; kişisel keşif amaçlıdır, kesin bilgi ya da profesyonel tavsiye değildir.')}</div>
         {showCtx && <pre className="ctx">{lastKb ? `${context}\n\n${lastKb}` : context}</pre>}

@@ -1593,6 +1593,8 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Önceki": "Anterior",
     "Konusu": "Temas",
     "Yöneticisi {planet}, {n}. evde.": "Seu regente, {planet}, está na casa {n}.",
-    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Não há planetas nesta casa; seus temas podem ser lidos sobretudo pelo regente."
+    "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Não há planetas nesta casa; seus temas podem ser lidos sobretudo pelo regente.",
+    "Harita verisi": "Dados do mapa",
+    "bağlı değil": "não conectado"
   }
 }

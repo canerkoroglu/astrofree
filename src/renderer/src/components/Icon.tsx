@@ -27,6 +27,8 @@ export const ICONS = {
   download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
   upload: 'M12 15V4M7 9l5-5 5 5M5 20h14',
   expand: 'M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7',
+  send: 'M12 19V5M6 11l6-6 6 6',
+  book: 'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10',
   sliders: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 5v4M8 15v4'
 } as const
 
