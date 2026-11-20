@@ -9057,3 +9057,60 @@ table.grid td.cell small {
 table.grid td.cell:not(.empty):hover {
   background: color-mix(in srgb, var(--accent) 7%, transparent);
 }
+
+/* ---- Evler: sabit sütunlar (açılan satır tabloyu oynatmaz), kayarak açılan ayrıntı ---- */
+table.houses-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.houses-table col.hc-ev { width: 72px; }
+.houses-table col.hc-topic { width: 30%; }
+.houses-table col.hc-cusp { width: 15%; }
+.houses-table col.hc-ruler { width: 15%; }
+.houses-table col.hc-rh { width: 12%; }
+.houses-table col.hc-in { width: auto; }
+.houses-table th:first-child,
+.houses-table td:first-child {
+  text-align: left;
+}
+.houses-table .house-topic {
+  max-width: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.houses-table tr.house-detail td {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.houses-table tr.house-detail.open td {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+.house-slide {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.22s ease;
+}
+.house-detail.open .house-slide {
+  grid-template-rows: 1fr;
+}
+.house-slide-in {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 16px 0 calc(72px + 8px);
+  opacity: 0;
+  transition: opacity 0.18s ease, padding 0.22s ease;
+}
+.house-detail.open .house-slide-in {
+  padding-top: 10px;
+  padding-bottom: 14px;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .house-slide,
+  .house-slide-in {
+    transition: none;
+  }
+}

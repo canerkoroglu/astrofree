@@ -90,6 +90,14 @@ export function HousesTable({ natal }: { natal: Layer }) {
   const houses = M().houses
   return (
     <table className="data houses-table">
+      <colgroup>
+        <col className="hc-ev" />
+        <col className="hc-topic" />
+        <col className="hc-cusp" />
+        <col className="hc-ruler" />
+        <col className="hc-rh" />
+        <col className="hc-in" />
+      </colgroup>
       <thead>
         <tr>
           <th>{t('Ev')}</th>
@@ -137,33 +145,34 @@ export function HousesTable({ natal }: { natal: Layer }) {
                 ))}
               </td>
             </tr>,
-            isOpen && (
-              <tr key={`${i}d`} className="house-detail">
-                <td />
-                <td colSpan={5}>
-                  <p className="house-about">{h?.about}</p>
-                  <p className="small">
-                    {t('Yöneticisi {planet}, {n}. evde.', { planet: POINT[ruler].name, n: rp?.house ?? '—' })}
-                  </p>
-                  {inside.length > 0 ? (
-                    <ul className="house-in small">
-                      {inside.map((p) => {
-                        const txt = houseText(p.key, i + 1)
-                        return (
-                          <li key={p.key}>
-                            <span className="glyph">{glyph(p.key)}</span> <strong>{POINT[p.key].name}</strong>
-                            {txt ? <> — {txt}</> : null}
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  ) : (
-                    <p className="small muted">{t('Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.')}</p>
-                  )}
-                  <p className="small muted house-note">{M().disclaimer}</p>
-                </td>
-              </tr>
-            )
+            <tr key={`${i}d`} className={`house-detail${isOpen ? ' open' : ''}`} aria-hidden={!isOpen}>
+              <td colSpan={6}>
+                <div className="house-slide">
+                  <div className="house-slide-in">
+                      <p className="house-about">{h?.about}</p>
+                      <p className="small">
+                        {t('Yöneticisi {planet}, {n}. evde.', { planet: POINT[ruler].name, n: rp?.house ?? '—' })}
+                      </p>
+                      {inside.length > 0 ? (
+                        <ul className="house-in small">
+                          {inside.map((p) => {
+                            const txt = houseText(p.key, i + 1)
+                            return (
+                              <li key={p.key}>
+                                <span className="glyph">{glyph(p.key)}</span> <strong>{POINT[p.key].name}</strong>
+                                {txt ? <> — {txt}</> : null}
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      ) : (
+                        <p className="small muted">{t('Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.')}</p>
+                      )}
+                      <p className="small muted house-note">{M().disclaimer}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
           ]
         })}
       </tbody>
