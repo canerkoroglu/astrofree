@@ -7233,3 +7233,337 @@ button.menu-select.open .ico {
   text-align: center;
   flex: none;
 }
+
+/* ---- Bu gece gökyüzünde, v3: geniş, üç sütun, kaydırmasız; gece boyunca oynatılan harita ---- */
+.night-modal {
+  width: min(1320px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  gap: var(--s4);
+  animation: night-in 0.22s ease-out;
+}
+@keyframes night-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+.night-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  flex-wrap: wrap;
+}
+.night-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.night-title p {
+  margin: 2px 0 0;
+}
+.night-modal .night-times {
+  display: flex;
+  gap: var(--s4);
+  margin: 0 0 0 auto;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 13px;
+}
+.night-modal .night-times > span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+}
+.night-modal .night-times strong {
+  font-family: var(--num-font);
+  font-size: 14px;
+}
+.night-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 180px;
+  justify-content: center;
+}
+.night-nav .ghost-icon {
+  font-size: 20px;
+}
+.night-nav strong {
+  min-width: 120px;
+  text-align: center;
+  font-size: 14px;
+}
+.night-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr) minmax(260px, 340px);
+  gap: var(--s5);
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+.night-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  min-height: 0;
+}
+.night-map .night-dome {
+  width: 100%;
+  max-height: calc(100vh - 300px);
+  aspect-ratio: 1;
+  height: auto;
+}
+.dome-sky {
+  stroke: none;
+  transition: fill 0.4s;
+}
+.dome-stars {
+  transition: opacity 0.4s;
+}
+.dome-ring,
+.dome-axis {
+  fill: none;
+  stroke: #ffffff1c;
+  stroke-width: 0.5;
+}
+.dome-axis {
+  stroke-dasharray: 1.5 2.5;
+}
+.dome-horizon {
+  fill: none;
+  stroke: #ffffff55;
+  stroke-width: 0.8;
+}
+.dome-alt {
+  fill: #ffffff55;
+  font-size: 5.5px;
+}
+.night-modal .dome-label {
+  fill: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+}
+.dome-path {
+  fill: none;
+  stroke-width: 0.6;
+  stroke-opacity: 0.22;
+  stroke-dasharray: 1 2;
+  transition: stroke-opacity 0.15s;
+}
+.dome-path.hl {
+  stroke-opacity: 0.8;
+  stroke-width: 0.9;
+}
+.dome-body-g circle {
+  transition: cx 0.14s linear, cy 0.14s linear;
+}
+.dome-body-g ellipse {
+  transition: cx 0.14s linear, cy 0.14s linear;
+}
+.dome-body-g.hl circle:last-of-type {
+  stroke: #fff;
+  stroke-width: 0.8;
+}
+.night-modal .dome-name {
+  fill: #eef0fa;
+  font-size: 7px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: #0a1128;
+  stroke-width: 2.4px;
+}
+.night-scrub {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+button.night-play {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  min-height: 0;
+  padding: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+}
+.night-track {
+  position: relative;
+  flex: 1;
+  height: 24px;
+}
+.night-track-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e8a25e 0%, #3b4f86 12%, #0e1733 30%, #0e1733 70%, #3b4f86 88%, #e8a25e 100%);
+  overflow: hidden;
+}
+.night-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff38;
+}
+.night-tick {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background: #ffffffaa;
+}
+.night-track input[type='range'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.night-track input[type='range']::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 24px;
+}
+.night-track input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+}
+.night-clock {
+  flex: none;
+  min-width: 48px;
+  font-family: var(--num-font);
+  font-size: 15px;
+}
+.night-cap {
+  margin: 0;
+  text-align: center;
+}
+.night-modal .night-list {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.night-modal .night-list > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s2);
+}
+.night-modal .night-card {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  opacity: 0.62;
+  transition: opacity 0.2s, border-color 0.15s, background 0.15s;
+}
+.night-modal .night-card.up {
+  opacity: 1;
+}
+.night-modal .night-card.hl {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--panel));
+}
+.night-dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15), 0 0 8px 1px color-mix(in srgb, currentColor 0%, rgb(255 220 150 / 0.6));
+}
+.night-card-main {
+  flex: 1;
+  min-width: 0;
+}
+.night-modal .night-card-head {
+  margin-bottom: 2px;
+}
+.night-card-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--s3);
+}
+.night-when {
+  font-family: var(--num-font);
+  font-weight: 600;
+}
+.night-side {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  padding-left: var(--s5);
+  border-left: 1px solid var(--line);
+}
+.night-side .night-sec {
+  border-top: 0;
+  padding-top: 0;
+}
+.night-events li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: var(--s2);
+  align-items: start;
+}
+.night-ev-ico {
+  font-size: 15px;
+  line-height: 1.3;
+  text-align: center;
+}
+.night-warn {
+  display: block;
+  margin-top: 2px;
+  color: var(--error);
+  font-weight: 600;
+}
+@media (max-width: 1100px) {
+  .night-grid {
+    grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+    overflow: auto;
+  }
+  .night-side {
+    grid-column: 1 / -1;
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-top: var(--s4);
+  }
+}
+@media (max-width: 760px) {
+  .night-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .night-modal,
+  .dome-body-g circle,
+  .dome-body-g ellipse {
+    animation: none;
+    transition: none;
+  }
+}

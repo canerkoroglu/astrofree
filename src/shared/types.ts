@@ -479,6 +479,8 @@ export interface NightBody {
   azimuth: number
   rise: number | null
   set: number | null
+  /** Altitude and compass azimuth at each of NightSky.times (null while below the horizon). */
+  track: ({ alt: number; az: number } | null)[]
 }
 
 export interface NightSky {
@@ -495,6 +497,9 @@ export interface NightSky {
   pairs: { a: number; b: number; sep: number; jd: number }[]
   /** The next solar and lunar eclipse seen from this place. */
   eclipses: { jd: number; solar: boolean; kind: 'total' | 'annular' | 'partial' | 'penumbral'; magnitude: number }[]
+  /** Sample times from sunset to sunrise (every 10 minutes) and the Sun's altitude at each. */
+  times: number[]
+  sunAlt: number[]
 }
 
 export interface TimingFacts {

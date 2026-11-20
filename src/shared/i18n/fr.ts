@@ -1573,6 +1573,7 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Sinastri partneri seçin": "Choisir le partenaire de synastrie",
     "bu harita": "ce thème",
     "{name} ile karşılaştırılacak kişiye tıklayın.": "Cliquez sur la personne à comparer avec {name}.",
-    "Harmonik ve ev sistemi": "Harmonique et système de maisons"
+    "Harmonik ve ev sistemi": "Harmonique et système de maisons",
+    "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Faites glisser le curseur pour suivre le ciel au fil de la nuit ; nord en haut, est à gauche."
   }
 }

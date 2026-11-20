@@ -476,8 +476,10 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
     let win: [number, number] | null = null
     let best = { t: 0, alt: -90, az: 0 }
     const track: { t: number; alt: number; ra: number; dec: number }[] = []
+    const path: ({ alt: number; az: number } | null)[] = []
     ts.forEach((t, i) => {
       const h = hor(t, body)
+      path.push(h.alt > -0.5 ? { alt: Math.round(h.alt * 10) / 10, az: Math.round(h.az * 10) / 10 } : null)
       const q = swe.calc_ut(t, body, SEFLG_SWIEPH | SEFLG_EQUATORIAL)
       if (h.alt > 5 && sunAlt[i] < sunLimit) {
         win = win ? [win[0], t] : [t, t]
@@ -497,7 +499,8 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
       altitude: w ? Math.round(best.alt) : 0,
       azimuth: w ? Math.round(best.az) : 0,
       rise: rt(from - 0.5, body, SE_CALC_RISE),
-      set: rt(from, body, SE_CALC_SET)
+      set: rt(from, body, SE_CALC_SET),
+      track: path
     })
   }
 
@@ -532,7 +535,7 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
   if (lun) eclipses.push({ jd: lun.tret[0], solar: false, kind: lun.retFlag & 4 ? 'total' : lun.retFlag & 16 ? 'partial' : 'penumbral', magnitude: Math.round((lun.retFlag & 20 ? lun.attr[0] : lun.attr[1]) * 100) / 100 })
   eclipses.sort((a, b) => a.jd - b.jd)
 
-  return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses }
+  return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses, times: ts, sunAlt: sunAlt.map((a) => Math.round(a * 10) / 10) }
 }
 
 // ---- Birth-time rectification ------------------------------------------------------

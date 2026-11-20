@@ -218,7 +218,7 @@ function steps({ ai, tmp, mock }) {
   // Tonight's sky.
   step('night open', `c('.rail-actions .rail-lbl','Bu gece')`, 3500)
   step('night check', `(()=>{const m=document.querySelector('.night-modal');return ok('Bu gece gökyüzünde: alacakaranlık saatleri, gezegen listesi ve gökyüzü haritası',!!m&&/\\d\\d:\\d\\d/.test(m.querySelector('.night-times')?.textContent||'')&&m.querySelectorAll('.night-list li').length>=1&&!!m.querySelector('.night-dome'),(m?.innerText||'').slice(0,160).replace(/\\n/g,' | '))})()`)
-  step('night next', `(()=>{c('.night-modal .bday-nav button','▶');return 1})()`, 3000)
+  step('night next', `(()=>{c('.night-modal .night-nav button','›');return 1})()`, 3000)
   step('night close', `(()=>{document.querySelector('.night-modal .modal-x').click();return 1})()`, 400)
   // Import with preview, duplicates, people manager.
   step('import text', `window.astro.charts.importText('#A93:Einstein,Albert,m,14.3.1879g,11:30,Ulm,DEU\\n#B93:2407422.98027,48n24,10e00,0h40e,0\\n#A93:Bad,Date,m,soon,12:00,X,XX\\n#B93:*,1n00,1e00,0hE00,0').then(async r=>{if(r.kind!=='preview')return 'FAIL içe aktarma önizlemesi gelmedi';const a=await window.astro.charts.addMany(r.records);const b=await window.astro.charts.addMany(r.records);return ok('İçe aktarma: AAF metni okunuyor, okunamayan satır sayılıyor, aynı kayıt ikinci kez eklenmiyor',r.records.length===1&&r.skipped===1&&r.records[0].local.y===1879&&a.added===1&&b.added===0&&b.duplicates===1)})`)
