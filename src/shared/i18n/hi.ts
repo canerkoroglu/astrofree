@@ -1564,6 +1564,7 @@ export const hi: Locale = {
     "Menüyü daralt": "मेनू छोटा करें",
     "Menüyü genişlet": "मेनू बड़ा करें",
     "Kişi ara…": "व्यक्ति खोजें…",
-    "Yapay zekâ sağlayıcısı": "एआई प्रदाता"
+    "Yapay zekâ sağlayıcısı": "एआई प्रदाता",
+    "Şimdiki zaman": "वर्तमान समय"
   }
 }

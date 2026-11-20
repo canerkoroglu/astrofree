@@ -6748,3 +6748,73 @@ button.ghost-icon.new:hover:not(:disabled) {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ---- Üst çubuğun sağı: zaman (Şimdi | Canlı) · uygulama simgeleri · saat dilimi ---- */
+.ico {
+  display: block;
+  flex: none;
+}
+.tb-nowseg {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.tb-nowseg > button,
+.tb-nowseg > button.on,
+.tb-nowseg > button.toggle.on {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: 34px;
+  padding: 0 14px;
+  font-weight: 500;
+}
+.tb-nowseg > button + button {
+  border-left: 1px solid var(--line);
+}
+.tb-nowseg > button:hover {
+  background: var(--panel-2);
+}
+.tb-nowseg > button.tb-live.on {
+  background: color-mix(in srgb, #2e9d62 14%, var(--panel));
+  color: var(--ink);
+  font-weight: 600;
+}
+.tb-right {
+  gap: var(--s3);
+}
+.tb-app {
+  gap: 2px;
+  padding-right: var(--s3);
+  border-right: 1px solid var(--line);
+}
+.tb-app button.ghost-icon {
+  width: 34px;
+  height: 34px;
+}
+.tb-app button.ghost-icon.on {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: transparent;
+  border-radius: 9px;
+  box-shadow: none;
+}
+.timebar button.tb-chat,
+.timebar button.tb-chat.on {
+  border-radius: 9px;
+}
+button.tb-zone {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 5px 10px;
+}
+button.tb-zone .ico {
+  color: var(--muted);
+}

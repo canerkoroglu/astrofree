@@ -70,7 +70,7 @@ function steps({ ai, tmp, mock }) {
   step('point card close', `(()=>{document.querySelector('.point-card .pc-close').click();return 1})()`, 300)
   step('step day', `(()=>{window.T0=document.querySelector('.timebar .dtf > input').value;c('.timebar .steps button','+G');return 1})()`, 600)
   step('step check', `ok('Zaman adımı',document.querySelector('.timebar .dtf > input').value!==window.T0)`)
-  step('theme', `(()=>{document.querySelector('.tb-app .icon-btn').click();return 1})()`, 500)
+  step('theme', `(()=>{document.querySelector('.tb-app .ghost-icon').click();return 1})()`, 500)
   step('theme check', `ok('Tema düğmesi',!!document.documentElement.getAttribute('data-theme'))`)
   step('export menu', `c('.head-actions button','Dışa aktar')`, 300)
   step('png', `c('.pop-menu button','Çark görseli')`, 2500)

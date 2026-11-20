@@ -1,4 +1,5 @@
 import { t } from '../lib/i18n'
+import Icon from './Icon'
 import AiSetupGuide from './AiSetupGuide'
 import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
@@ -370,7 +371,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
               )}
               <button onClick={() => setGuide(true)}>{t('Nasıl bağlanırım?')}</button>
               <button className="ghost-icon" onClick={recheck} aria-label={t('Tekrar kontrol et')} title={t('Tekrar kontrol et')}>
-                <Icon d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" />
+                <Icon name="refresh" />
               </button>
             </div>
           </div>
@@ -411,13 +412,13 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             </select>
           )}
           <button className="ghost-icon" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
-            <Icon d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" />
+            <Icon name="edit" />
           </button>
           <button className="ghost-icon" disabled={!!runId || !stored} title={t('Oturumu sil')} aria-label={t('Oturumu sil')} onClick={() => void deleteSession()}>
-            <Icon d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13M10 11v6M14 11v6" />
+            <Icon name="trash" />
           </button>
           <button className="ghost-icon new" disabled={!!runId || !messages.length} onClick={newSession} title={t('Bu sohbet saklanır; yeni, boş bir oturum açılır')} aria-label={t('Yeni sohbet')}>
-            <Icon d="M12 5v14M5 12h14" />
+            <Icon name="plus" />
           </button>
         </div>
       </div>
@@ -597,11 +598,3 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
   )
 }
 
-/** A small line icon in the text colour (24×24 path). */
-function Icon({ d }: { d: string }) {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d={d} />
-    </svg>
-  )
-}

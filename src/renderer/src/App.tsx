@@ -15,6 +15,7 @@ import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import PartnerPicker from './components/PartnerPicker'
+import Icon from './components/Icon'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BirthdayReport from './components/BirthdayReport'
 import BasicReading from './components/BasicReading'
@@ -62,7 +63,7 @@ function localStorageFlag(key: string): boolean {
 }
 
 const THEME_NEXT = { system: 'light', light: 'dark', dark: 'system' } as const
-const THEME_ICON = { system: '◐', light: '☀︎', dark: '☾' } as const
+const THEME_ICON = { system: 'auto', light: 'sun', dark: 'moon' } as const
 const THEME_LABEL = { system: 'Tema: sistem', light: 'Tema: açık', dark: 'Tema: koyu' } as const
 const OUTER_HELP: Record<OuterKind, string> = {
   transit: 'Seçili tarihteki gökyüzü, natal haritanın etrafında',
@@ -1035,31 +1036,33 @@ export default function App() {
         )}
         <div className="tb-app" role="group" aria-label={t('Ana menü')}>
           <button
-            className="icon-btn tip-end"
+            className="ghost-icon tip-end"
             onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
             title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
             data-tip={t(THEME_LABEL[settings.theme])}
             aria-label={t(THEME_LABEL[settings.theme])}
           >
-            {THEME_ICON[settings.theme]}
+            <Icon name={THEME_ICON[settings.theme]} size={18} />
           </button>
           <button
-            className={`icon-btn tip-end tb-chat${showChat ? ' on' : ''}`}
+            className={`ghost-icon tip-end tb-chat${showChat ? ' on' : ''}`}
             aria-pressed={showChat}
             onClick={() => setShowChat(!showChat)}
             aria-label={t('AI sohbet')}
             title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
             data-tip={t('AI sohbet')}
           >
-            💬
+            <Icon name="chat" size={18} />
           </button>
-          <button className="icon-btn tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
-            ⚙︎
+          <button className="ghost-icon tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
+            <Icon name="gear" size={18} />
           </button>
         </div>
         <div className="menu-wrap tb-zone-wrap">
           <button className="tb-zone" aria-expanded={zoneOpen} onClick={() => setZoneOpen(!zoneOpen)} title={t('Saat dilimleri')}>
+            <Icon name="globe" size={15} />
             <span className="tz-name">{tzLabel(targetTz)}</span> <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
+            <Icon name="chevron" size={13} />
           </button>
           {zoneOpen && (
             <div className="pop-menu zone-pop" onMouseLeave={() => setZoneOpen(false)}>

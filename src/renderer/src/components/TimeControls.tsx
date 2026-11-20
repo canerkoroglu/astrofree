@@ -102,6 +102,7 @@ export default function TimeControls(p: Props) {
         </div>
 
         <div className="tb-group tb-now">
+          <div className="tb-nowseg" role="group" aria-label={t('Şimdiki zaman')}>
           <button onClick={p.onNow} title={t('Şimdiki zaman (N)')}>
             {t('Şimdi')}
           </button>
@@ -114,6 +115,7 @@ export default function TimeControls(p: Props) {
             <span className="toggle-dot live" aria-hidden />
             {t('Canlı')}
           </button>
+          </div>
         </div>
         {p.right && <div className="tb-group tb-right">{p.right}</div>}
 
