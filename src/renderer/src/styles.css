@@ -8655,3 +8655,20 @@ button.house-toggle {
     transition: none;
   }
 }
+
+/* contrast: no see-through text (the WCAG check multiplies opacity) */
+.chart-list .row-more,
+.chart-list li.active .row-more,
+.chart-list .row-more:hover {
+  opacity: 1;
+}
+.chart-list .row-more {
+  color: var(--muted);
+}
+.chart-list .row-more:hover,
+.chart-list li.active .row-more {
+  color: var(--ink);
+}
+button.add-new {
+  color: color-mix(in srgb, var(--accent) 78%, var(--ink));
+}
