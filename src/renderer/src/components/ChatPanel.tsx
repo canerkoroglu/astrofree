@@ -532,7 +532,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       <div className="composer">
         <div className="composer-box">
           <textarea
-            rows={2}
+            rows={3}
             value={input}
             placeholder={t('Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)')}
             onChange={(e) => setInput(e.target.value)}

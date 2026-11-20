@@ -9245,3 +9245,8 @@ button.send-btn {
     display: none;
   }
 }
+
+/* chat input: one line taller */
+.composer-box textarea {
+  min-height: 66px;
+}
