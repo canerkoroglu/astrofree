@@ -8,6 +8,75 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
+    version: '0.6.0',
+    items: {
+      tr: [
+        'Yeni düzen: solda ana menü (katmanlar, harita ayarları, kullanım modu), yanında açılıp kapanan Haritalar ve Gökyüzü paneli; zaman çubuğu en üstte.',
+        'Bu gece gökyüzünde penceresi baştan tasarlandı: gece boyunca oynatılan gökyüzü haritası, ekliptik, yükseklik grafiği ve her gezegenin o andaki konumu.',
+        'Haritalar paneli: Tümü / Kişiler / Olaylar sekmesi, Yeni ekle düğmesi ve her satırda simgeli seçenek menüsü; sinastri partneri listeden seçiliyor.',
+        'Daha kolay tarih seçimi: yıl ve ay ızgarası, ▲▼ saat ve dakika; kişi ekleme penceresi sadeleştirildi.',
+        'Haritada burç, ev ve köşe etiketlerinin üzerine gelince açıklama.',
+        'Düzeltme: Bu gece penceresinin bazı bilgisayarlarda hesaplamaları bozan bellek hatası giderildi; Şimdi ve Canlı kayıtlı haritada transit zamanını şu ana getiriyor.'
+      ],
+      en: [
+        'New layout: a main menu on the left (layers, chart settings, usage mode) with a Charts and Sky panel that opens and closes beside it; the time bar is at the top.',
+        'In tonight’s sky, redesigned: a sky map that plays through the night, the ecliptic, an altitude chart and where each planet is at that moment.',
+        'Charts panel: All / People / Events tabs, an Add new button and an options menu with icons on every row; the synastry partner is chosen from the list.',
+        'Easier date picking: year and month grids, ▲▼ hours and minutes; a simpler window for adding a person.',
+        'Hover over sign, house and angle labels on the wheel for an explanation.',
+        'Fix: a memory error in In tonight’s sky that could break calculations on some computers; Now and Live bring the transit time to now on a saved chart.'
+      ],
+      es: [
+        'Nuevo diseño: un menú principal a la izquierda (capas, ajustes de la carta, modo de uso) con un panel de Cartas y Cielo que se abre y se cierra a su lado; la barra de tiempo está arriba.',
+        'En el cielo esta noche, rediseñado: un mapa del cielo que avanza durante la noche, la eclíptica, un gráfico de altura y la posición de cada planeta en ese momento.',
+        'Panel de cartas: pestañas Todos / Personas / Eventos, un botón Añadir y un menú de opciones con iconos en cada fila; la pareja de la sinastría se elige de la lista.',
+        'Elegir fechas es más fácil: cuadrículas de años y meses, ▲▼ para horas y minutos; una ventana más sencilla para añadir una persona.',
+        'Al pasar sobre los signos, las casas y los ángulos de la rueda aparece una explicación.',
+        'Corrección: un error de memoria en En el cielo esta noche que podía romper los cálculos en algunos equipos; Ahora y En vivo llevan la hora del tránsito al momento actual en una carta guardada.'
+      ],
+      pt: [
+        'Novo layout: um menu principal à esquerda (camadas, ajustes do mapa, modo de uso) com um painel de Mapas e Céu que abre e fecha ao lado; a barra de tempo fica no topo.',
+        'No céu esta noite, redesenhado: um mapa do céu que avança pela noite, a eclíptica, um gráfico de altura e a posição de cada planeta naquele momento.',
+        'Painel de mapas: abas Todos / Pessoas / Eventos, um botão Adicionar e um menu de opções com ícones em cada linha; o parceiro da sinastria é escolhido na lista.',
+        'Escolher datas ficou mais fácil: grades de anos e meses, ▲▼ para horas e minutos; uma janela mais simples para adicionar uma pessoa.',
+        'Passe o mouse sobre signos, casas e ângulos da roda para ver uma explicação.',
+        'Correção: um erro de memória em No céu esta noite que podia quebrar os cálculos em alguns computadores; Agora e Ao vivo trazem a hora do trânsito para agora num mapa salvo.'
+      ],
+      de: [
+        'Neues Layout: links ein Hauptmenü (Ebenen, Horoskop-Einstellungen, Nutzungsmodus), daneben ein auf- und zuklappbarer Bereich für Horoskope und Himmel; die Zeitleiste steht oben.',
+        'Heute am Himmel, neu gestaltet: eine Himmelskarte, die durch die Nacht läuft, die Ekliptik, ein Höhendiagramm und die Position jedes Planeten zum jeweiligen Zeitpunkt.',
+        'Horoskop-Bereich: Reiter Alle / Personen / Ereignisse, eine Schaltfläche Neu hinzufügen und in jeder Zeile ein Optionsmenü mit Symbolen; der Synastrie-Partner wird aus der Liste gewählt.',
+        'Einfachere Datumswahl: Jahres- und Monatsraster, ▲▼ für Stunden und Minuten; ein schlichteres Fenster zum Hinzufügen einer Person.',
+        'Zeichen, Häuser und Achsen im Rad zeigen beim Darüberfahren eine Erklärung.',
+        'Korrektur: ein Speicherfehler in Heute am Himmel, der auf manchen Rechnern die Berechnungen stören konnte; Jetzt und Live setzen bei einem gespeicherten Horoskop die Transitzeit auf jetzt.'
+      ],
+      fr: [
+        'Nouvelle disposition : un menu principal à gauche (couches, réglages du thème, mode d’utilisation) avec à côté un panneau Thèmes et Ciel qui s’ouvre et se ferme ; la barre de temps est en haut.',
+        'Dans le ciel ce soir, repensé : une carte du ciel qui défile au fil de la nuit, l’écliptique, un graphique de hauteur et la position de chaque planète à cet instant.',
+        'Panneau des thèmes : onglets Tous / Personnes / Événements, un bouton Ajouter et sur chaque ligne un menu d’options avec icônes ; le partenaire de synastrie se choisit dans la liste.',
+        'Choix des dates plus simple : grilles des années et des mois, ▲▼ pour les heures et les minutes ; une fenêtre plus simple pour ajouter une personne.',
+        'Survolez les signes, les maisons et les angles de la roue pour voir une explication.',
+        'Correction : une erreur de mémoire dans Dans le ciel ce soir qui pouvait fausser les calculs sur certains ordinateurs ; Maintenant et En direct ramènent l’heure du transit à maintenant sur un thème enregistré.'
+      ],
+      ru: [
+        'Новый интерфейс: слева главное меню (слои, настройки карты, режим), рядом раскрывающаяся панель «Карты» и «Небо»; панель времени вверху.',
+        '«На небе сегодня ночью» переработано: карта неба, которая проигрывается в течение ночи, эклиптика, график высоты и положение каждой планеты в выбранный момент.',
+        'Панель карт: вкладки «Все / Люди / События», кнопка «Добавить» и меню с иконками в каждой строке; партнёр для синастрии выбирается из списка.',
+        'Выбирать даты проще: сетки лет и месяцев, ▲▼ для часов и минут; окно добавления человека стало проще.',
+        'При наведении на знаки, дома и углы карты появляется пояснение.',
+        'Исправление: ошибка памяти в окне «На небе сегодня ночью», которая на некоторых компьютерах могла нарушать расчёты; «Сейчас» и «В реальном времени» переводят время транзита на текущий момент в сохранённой карте.'
+      ],
+      hi: [
+        'नया रूप: बाईं ओर मुख्य मेनू (परतें, कुंडली सेटिंग, उपयोग मोड) और उसके बगल में खुलने-बंद होने वाला कुंडलियाँ और आकाश पैनल; समय पट्टी सबसे ऊपर।',
+        'आज रात आकाश में — नए रूप में: रात भर चलने वाला आकाश मानचित्र, क्रांतिवृत्त, ऊँचाई का ग्राफ़ और उस क्षण हर ग्रह की स्थिति।',
+        'कुंडलियाँ पैनल: सभी / लोग / घटनाएँ टैब, नया जोड़ें बटन और हर पंक्ति में आइकन वाला विकल्प मेनू; सिनास्ट्री साथी सूची से चुना जाता है।',
+        'तिथि चुनना आसान: वर्ष और महीने की ग्रिड, घंटे और मिनट के लिए ▲▼; व्यक्ति जोड़ने की विंडो सरल हुई।',
+        'चक्र पर राशि, भाव और कोण लेबल पर माउस ले जाने से विवरण दिखता है।',
+        'सुधार: आज रात आकाश में एक मेमोरी त्रुटि जो कुछ कंप्यूटरों पर गणना बिगाड़ सकती थी; सहेजी गई कुंडली में अभी और लाइव ट्रांज़िट समय को अभी पर ले आते हैं।'
+      ]
+    }
+  },
+  {
     version: '0.5.0',
     items: {
       tr: [
