@@ -8330,3 +8330,134 @@ button.soft-btn.on {
   padding: 0 18px;
   font-size: 12.5px;
 }
+
+/* ---- Sol menü, şık sürüm: renkli hızlı işlem kutucukları, anahtarlı katmanlar ---- */
+.rail {
+  background:
+    radial-gradient(120% 40% at 0% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
+    var(--panel);
+}
+.rail-cap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.08em;
+}
+.rail-cap::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.app.rail-mini .rail-cap::after {
+  display: none;
+}
+/* quick actions: a 2×2 grid of tinted tiles */
+.rail .rail-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: var(--s3);
+  border-top: 0;
+}
+.rail button.rail-btn.tile {
+  --hue: var(--accent);
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-height: 70px;
+  padding: 10px 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--hue) 22%, var(--line));
+  border-radius: 14px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--hue) 12%, var(--panel)), var(--panel) 75%);
+  color: var(--ink);
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+.rail button.rail-btn.tile:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--hue) 55%, transparent);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--hue) 20%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--hue) 18%, var(--panel)), var(--panel) 80%);
+}
+.rail button.rail-btn.tile .rail-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--hue) 18%, var(--panel));
+  color: var(--hue);
+}
+.rail button.rail-btn.tile .rail-lbl {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+.rail .t-person { --hue: #3b74c4; }
+.rail .t-event { --hue: #8a5cc7; }
+.rail .t-today { --hue: #d08a1e; }
+.rail .t-night { --hue: #3d4fa8; }
+.app.rail-mini .rail .rail-tiles {
+  grid-template-columns: 1fr;
+}
+.app.rail-mini .rail button.rail-btn.tile {
+  min-height: 0;
+  padding: 6px;
+  border-color: transparent;
+  background: transparent;
+}
+/* layers: a small on/off switch on the right, the row tinted in the layer colour when on */
+.rail-layers button.rail-btn {
+  position: relative;
+}
+.rail-switch {
+  flex: none;
+  margin-left: auto;
+  width: 28px;
+  height: 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 14%, var(--panel));
+  position: relative;
+  transition: background 0.15s;
+}
+.rail-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--panel);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  transition: transform 0.15s;
+}
+.rail button.rail-btn.on .rail-switch {
+  background: var(--layer, var(--accent));
+}
+.rail button.rail-btn.on .rail-switch::after {
+  transform: translateX(12px);
+}
+.rail-layers button.rail-btn:disabled .rail-switch {
+  opacity: 0.4;
+}
+.rail .rail-layers button.rail-btn.on {
+  border-color: color-mix(in srgb, var(--layer) 35%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--layer) 16%, var(--panel)), color-mix(in srgb, var(--layer) 4%, var(--panel)));
+  box-shadow: inset 3px 0 0 var(--layer);
+}
+.rail-layers button.rail-btn .rail-lbl {
+  flex: 1;
+}
+.app.rail-mini .rail-switch {
+  display: none;
+}
+/* panels (Haritalar / Gökyüzü): accent when open */
+.rail .rail-group:first-of-type button.rail-btn.on .rail-badge {
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail button.rail-btn.tile,
+  .rail-switch,
+  .rail-switch::after {
+    transition: none;
+  }
+}

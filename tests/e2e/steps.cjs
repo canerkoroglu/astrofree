@@ -25,7 +25,7 @@ function steps({ ai, tmp, mock }) {
   step('terms saved', `window.astro.settings.get().then(s=>ok('İlk açılış rehberi ve lisans onayı',!document.querySelector('.onboarding')&&!!s.termsAccepted&&!!s.termsAcceptedAt&&!document.querySelector('.terms-dialog')))`)
   step('ephemeris', `window.astro.compute([{jdUT:2430377.5243055555,lat:38.25,lon:-85.7667,houseSystem:'P',sidMode:null,bodies:[0,1,9]}]).then(r=>{const b=r[0].bodies;return ok('Efemeris doğruluğu',Math.abs(b[0].lon-297.2930)<0.001&&Math.abs(b[1].lon-312.4323)<0.002&&Math.abs(r[0].asc-139.5244)<0.01,'Güneş '+b[0].lon.toFixed(4))})`)
   step('geo', `Promise.all(['Kadıköy','Londra','louisville, kentucky'].map(q=>window.astro.geo.search(q,'tr'))).then(r=>ok('Çevrimdışı şehir arama',r.every(x=>x.length>0)&&r[0][0].zone==='Europe/Istanbul'))`)
-  step('new person', `c('.rail-actions .rail-lbl','+ Kişi')`, 1500)
+  step('new person', `c('.rail-actions .rail-lbl','Kişi')`, 1500)
   step('fill', `(()=>{setv(document.querySelector('.big-input'),'Muhammad Ali');setv(document.querySelector('.ed-sec .dtf > input'),'17.01.1942 18:35');setv(document.querySelector('.place-search input'),'Louisville, kentucky');return 1})()`, 900)
   step('pick place', `(()=>{[...document.querySelectorAll('.place-results button')].find(b=>b.textContent.includes('Kentucky')).click();return 1})()`, 500)
   step('preview', `(()=>{const t=[...document.querySelectorAll('.pv-item')].map(e=>e.innerText).join(' ');return ok('Canlı önizleme',t.includes('Oğlak')&&t.includes('Kova')&&t.includes('Aslan'),t.replace(/\\s+/g,' '))})()`)

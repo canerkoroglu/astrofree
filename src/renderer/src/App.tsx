@@ -934,26 +934,26 @@ export default function App() {
             <span className="rail-lbl">{t('Gökyüzü')}</span>
           </button>
         </div>
-        <div className="rail-group rail-actions" role="group" aria-label={t('Yeni')}>
-          <button className="rail-btn" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
+        <div className="rail-group rail-actions rail-tiles" role="group" aria-label={t('Yeni')}>
+          <button className="rail-btn tile t-person" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
             <span className="rail-badge plain" aria-hidden>
               <Icon name="userPlus" size={18} />
             </span>
-            <span className="rail-lbl">{t('+ Kişi')}</span>
+            <span className="rail-lbl">{t('Kişi')}</span>
           </button>
-          <button className="rail-btn" onClick={() => setEditor(blankChart(settings, 'event'))} title={t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}>
+          <button className="rail-btn tile t-event" onClick={() => setEditor(blankChart(settings, 'event'))} title={t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}>
             <span className="rail-badge plain" aria-hidden>
               <Icon name="eventPlus" size={18} />
             </span>
-            <span className="rail-lbl">{t('+ Olay')}</span>
+            <span className="rail-lbl">{t('Olay')}</span>
           </button>
-          <button className="rail-btn" onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
+          <button className="rail-btn tile t-today" onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
             <span className="rail-badge plain" aria-hidden>
               <Icon name="clock" size={18} />
             </span>
             <span className="rail-lbl">{t('Bugün')}</span>
           </button>
-          <button className="rail-btn rail-night" onClick={() => setShowNight(true)} title={t('Bu gece çıplak gözle görülebilecek gezegenler, Ay ve gökyüzü olayları')}>
+          <button className="rail-btn tile t-night rail-night" onClick={() => setShowNight(true)} title={t('Bu gece çıplak gözle görülebilecek gezegenler, Ay ve gökyüzü olayları')}>
             <span className="rail-badge plain" aria-hidden>
               <Icon name="telescope" size={18} />
             </span>
@@ -979,6 +979,7 @@ export default function App() {
                 {RAIL_ABBR[k]}
               </span>
               <span className="rail-lbl">{t(OUTER_LABEL[k])}</span>
+              <span className="rail-switch" aria-hidden />
             </button>
           ))}
         </div>
