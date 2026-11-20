@@ -992,9 +992,10 @@ export default function App() {
           >
             {THEME_ICON[settings.theme]}
           </button>
-          <button className={`toggle${showChat ? ' on' : ''}`} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
+          <button className={`toggle${showChat ? ' on' : ''}`} aria-pressed={showChat} aria-label={t('AI sohbet')} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
             <span className="toggle-dot" aria-hidden />
-            {t('AI sohbet')}
+            <span className="chat-ico" aria-hidden>💬</span>
+            <span className="chat-lbl">{t('AI sohbet')}</span>
           </button>
           <button onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
             <span className="lbl-icon" aria-hidden>

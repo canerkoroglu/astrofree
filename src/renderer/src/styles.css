@@ -5585,3 +5585,50 @@ label.inline {
 .rect-time {
   font-size: 1.3em;
 }
+
+/* ---- Kenar çubuğu düğmeleri: iki sütun, sütun genişliğini hiçbir zaman aşmaz ---- */
+.sidebar .side-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+}
+.sidebar .side-actions button {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.sidebar {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ---- Üst çubuk: dar pencerede önce kısalır; yine sığmazsa ikinci satıra geçer, kesilmez ---- */
+.toolbar {
+  flex-wrap: wrap;
+  row-gap: var(--s2);
+}
+.toolbar .chat-lbl {
+  display: inline;
+}
+.toolbar .chat-ico {
+  display: none;
+}
+@container toolbar (max-width: 1500px) {
+  .toolbar .chat-lbl {
+    display: none;
+  }
+  .toolbar .chat-ico {
+    display: inline;
+  }
+  .toolbar button.toggle {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .tg-mode button {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
