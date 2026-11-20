@@ -1584,6 +1584,7 @@ export const ru: Locale = {
     "Harita yönetimi": "Управление картами",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Управление картами: массовое редактирование, импорт/экспорт, дубликаты",
     "Harita yönetimi…": "Управление картами…",
-    "Yeni ekle": "Добавить"
+    "Yeni ekle": "Добавить",
+    "Saat dilimi": "Часовой пояс"
   }
 }

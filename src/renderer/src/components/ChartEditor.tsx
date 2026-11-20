@@ -9,6 +9,7 @@ import DateTimeField from './DateTimeField'
 import PlaceSearch from './PlaceSearch'
 import BirthTimeHelp from './BirthTimeHelp'
 import MenuSelect from './MenuSelect'
+import Icon from './Icon'
 
 const RODDEN: [string, string][] = [
   ['', 'Belirtilmedi'],
@@ -221,10 +222,13 @@ export default function ChartEditor({
                 }}
               />
               <div className="tz-line">
-                <span className={tzOk ? '' : 'error'}>
+                <Icon name="clock" size={15} />
+                <span className="tz-cap">{t('Saat dilimi')}</span>
+                <span className={tzOk ? 'tz-val' : 'tz-val error'}>
                   {tzOk ? `${rec.tz.kind === 'zone' ? rec.tz.zone : rec.tz.kind === 'lmt' ? t('Yerel ortalama zaman') : t('Sabit fark')} · ${fmtOffset(off)}${dstNote}` : t('Geçersiz saat dilimi')}
                 </span>
-                <button type="button" className="link small" onClick={() => setTzOpen(!tzOpen)}>
+                <button type="button" className={`soft-btn${tzOpen ? ' on' : ''}`} aria-expanded={tzOpen} onClick={() => setTzOpen(!tzOpen)}>
+                  <Icon name="edit" size={14} />
                   {tzOpen ? t('Gizle') : t('Değiştir')}
                 </button>
               </div>

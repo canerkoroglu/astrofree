@@ -1,4 +1,5 @@
 import { getLang, t } from '../lib/i18n'
+import Icon from './Icon'
 import { useEffect, useRef, useState } from 'react'
 import type { GeoResult, Place } from '@shared/types'
 import { fmtCoord } from '../lib/astro'
@@ -134,12 +135,13 @@ export default function PlaceSearch({
         {ccTag(value.cc) && <span className="cc big">{ccTag(value.cc)}</span>}
         <div className="pc-body">
           <input className="pc-name" value={value.name} onChange={(e) => onChange({ ...value, name: e.target.value })} title={t('Yer adı (düzenlenebilir)')} />
-          <div className="muted small">
+          <div className="pc-coords">
+            <Icon name="pin" size={13} />
             {fmtDms(value.lat, true)} · {fmtDms(value.lon, false)}
-            {value.zone ? ` · ${value.zone}` : ''}
           </div>
         </div>
-        <button type="button" className="link small" onClick={() => setAdvanced(!advanced)}>
+        <button type="button" className={`soft-btn${advanced ? ' on' : ''}`} aria-expanded={advanced} onClick={() => setAdvanced(!advanced)}>
+          <Icon name="globe" size={14} />
           {advanced ? t('Gizle') : t('Koordinat / harita')}
         </button>
       </div>
