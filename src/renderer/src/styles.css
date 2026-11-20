@@ -9119,3 +9119,44 @@ table.houses-table {
   visibility: hidden;
   transition: opacity 0.18s ease, padding 0.22s ease, visibility 0s 0.22s;
 }
+
+/* aspect grid: 25% smaller, and it shrinks with narrow windows instead of overflowing */
+table.grid {
+  max-width: 825px;
+}
+table.grid th,
+table.grid td {
+  height: 46px;
+  padding: 2px 1px;
+}
+table.grid thead th {
+  height: 40px;
+}
+table.grid th .glyph,
+table.grid td.cell .glyph {
+  font-size: 16.5px;
+}
+table.grid tbody th {
+  width: 48px;
+}
+table.grid td.cell small {
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+@media (max-width: 1400px) {
+  table.grid th,
+  table.grid td {
+    height: 38px;
+  }
+  table.grid th .glyph,
+  table.grid td.cell .glyph {
+    font-size: 14px;
+  }
+  table.grid td.cell small {
+    font-size: 9.5px;
+    letter-spacing: -0.02em;
+  }
+  table.grid tbody th {
+    width: 36px;
+  }
+}
