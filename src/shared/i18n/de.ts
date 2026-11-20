@@ -1563,6 +1563,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Ana menü": "Hauptmenü",
     "Menüyü daralt": "Menü einklappen",
     "Menüyü genişlet": "Menü ausklappen",
-    "Kişi ara…": "Personen suchen…"
+    "Kişi ara…": "Personen suchen…",
+    "Yapay zekâ sağlayıcısı": "KI-Anbieter"
   }
 }

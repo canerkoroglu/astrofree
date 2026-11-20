@@ -1563,6 +1563,7 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Ana menü": "Menu principal",
     "Menüyü daralt": "Réduire le menu",
     "Menüyü genişlet": "Agrandir le menu",
-    "Kişi ara…": "Chercher une personne…"
+    "Kişi ara…": "Chercher une personne…",
+    "Yapay zekâ sağlayıcısı": "Fournisseur d’IA"
   }
 }

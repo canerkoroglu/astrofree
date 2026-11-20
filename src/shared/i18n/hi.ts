@@ -1563,6 +1563,7 @@ export const hi: Locale = {
     "Ana menü": "मुख्य मेनू",
     "Menüyü daralt": "मेनू छोटा करें",
     "Menüyü genişlet": "मेनू बड़ा करें",
-    "Kişi ara…": "व्यक्ति खोजें…"
+    "Kişi ara…": "व्यक्ति खोजें…",
+    "Yapay zekâ sağlayıcısı": "एआई प्रदाता"
   }
 }

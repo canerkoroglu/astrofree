@@ -335,88 +335,92 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
 
   return (
     <div className="chat">
-      <div className="chat-head">
-        <select value={provider} onChange={(e) => setProvider(e.target.value as ProviderId)}>
-          {PROVIDERS.map((p) => {
-            const s = statuses.find((x) => x.id === p.id)
-            return (
-              <option key={p.id} value={p.id}>
-                {s ? (s.available ? '● ' : '○ ') : ''}
-                {t(p.label)}
-              </option>
-            )
-          })}
-        </select>
-        <input list="models" value={cfg.model} placeholder={t('model (varsayılan)')} onChange={(e) => setModel(e.target.value)} />
-        <datalist id="models">
-          {models.map((m) => (
-            <option key={m} value={m} />
-          ))}
-        </datalist>
-      </div>
-      <div className="chat-sessions">
-        {renaming !== null ? (
-          <input
-            autoFocus
-            className="session-title-input"
-            value={renaming}
-            onChange={(e) => setRenaming(e.target.value)}
-            onBlur={() => void renameSession(renaming)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') void renameSession(renaming)
-              if (e.key === 'Escape') setRenaming(null)
-            }}
-          />
-        ) : (
-          <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={`${t('Bu haritanın sohbet oturumları')} · ${t('{n} oturum', { n: sessions.length })}`}>
-            {!stored && <option value="">{t('Yeni sohbet')}</option>}
-            {sessions.map((x) => (
-              <option key={x.id} value={x.id}>
-                {sessionLabel(x)}
-              </option>
-            ))}
+      <div className="chat-top">
+        <div className="chat-conn">
+          <span className={`conn-dot ${st ? (st.available ? 'ok' : 'off') : 'wait'}`} aria-hidden />
+          <select className="conn-provider" value={provider} onChange={(e) => setProvider(e.target.value as ProviderId)} aria-label={t('Yapay zekâ sağlayıcısı')}>
+            {PROVIDERS.map((p) => {
+              const s = statuses.find((x) => x.id === p.id)
+              return (
+                <option key={p.id} value={p.id}>
+                  {s ? (s.available ? '● ' : '○ ') : ''}
+                  {t(p.label)}
+                </option>
+              )
+            })}
           </select>
-        )}
-        <button className="icon-btn" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
-          ✎
-        </button>
-        <button className="icon-btn" disabled={!!runId || !stored} title={t('Oturumu sil')} aria-label={t('Oturumu sil')} onClick={() => void deleteSession()}>
-          🗑
-        </button>
-        <button className="primary small-btn" disabled={!!runId || !messages.length} onClick={newSession} title={t('Bu sohbet saklanır; yeni, boş bir oturum açılır')}>
-          + {t('Yeni')}
-        </button>
-      </div>
-      {st && !st.available ? (
-        <div className="chat-status warn unavailable">
-          <span>{st.detail}</span>
-          <span className="chat-status-actions">
-            {onOpenSettings && info.kind === 'api' && (
-              <button className="link" onClick={() => onOpenSettings(`ai:${provider}`)}>
-                {provider === 'local' ? t('Adres ve port') : t('API anahtarı gir')}
+          <span className="conn-sep" aria-hidden />
+          <input className="conn-model" list="models" value={cfg.model} placeholder={t('model (varsayılan)')} onChange={(e) => setModel(e.target.value)} aria-label={t('Model')} title={cfg.model || t('model (varsayılan)')} />
+          <datalist id="models">
+            {models.map((m) => (
+              <option key={m} value={m} />
+            ))}
+          </datalist>
+        </div>
+        {st && !st.available ? (
+          <div className="chat-callout" role="status">
+            <div className="chat-callout-msg">
+              <span aria-hidden>⚠︎</span> {st.detail}
+            </div>
+            <div className="chat-callout-btns">
+              {onOpenSettings && info.kind === 'api' && (
+                <button className="primary" onClick={() => onOpenSettings(`ai:${provider}`)}>
+                  {provider === 'local' ? t('Adres ve port') : t('API anahtarı gir')}
+                </button>
+              )}
+              <button onClick={() => setGuide(true)}>{t('Nasıl bağlanırım?')}</button>
+              <button className="ghost-icon" onClick={recheck} aria-label={t('Tekrar kontrol et')} title={t('Tekrar kontrol et')}>
+                <Icon d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" />
               </button>
+            </div>
+          </div>
+        ) : (
+          <div className="chat-status">
+            {st ? st.detail : t('Kontrol ediliyor…')}
+            {st && provider === 'local' && onOpenSettings && (
+              <>
+                {' · '}
+                <button className="link" onClick={() => onOpenSettings('ai:local')}>
+                  {t('Adres ve port')}
+                </button>
+              </>
             )}
-            <button className="link" onClick={() => setGuide(true)}>
-              {t('Nasıl bağlanırım?')}
-            </button>
-            <button className="link" onClick={recheck}>
-              {t('Tekrar kontrol et')}
-            </button>
-          </span>
-        </div>
-      ) : (
-        <div className="chat-status">
-          {st ? st.detail : t('Kontrol ediliyor…')}
-          {st && provider === 'local' && onOpenSettings && (
-            <>
-              {' · '}
-              <button className="link" onClick={() => onOpenSettings('ai:local')}>
-                {t('Adres ve port')}
-              </button>
-            </>
+          </div>
+        )}
+        <div className="chat-sessions">
+          {renaming !== null ? (
+            <input
+              autoFocus
+              className="session-title-input"
+              value={renaming}
+              onChange={(e) => setRenaming(e.target.value)}
+              onBlur={() => void renameSession(renaming)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') void renameSession(renaming)
+                if (e.key === 'Escape') setRenaming(null)
+              }}
+            />
+          ) : (
+            <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={`${t('Bu haritanın sohbet oturumları')} · ${t('{n} oturum', { n: sessions.length })}`}>
+              {!stored && <option value="">{t('Yeni sohbet')}</option>}
+              {sessions.map((x) => (
+                <option key={x.id} value={x.id}>
+                  {sessionLabel(x)}
+                </option>
+              ))}
+            </select>
           )}
+          <button className="ghost-icon" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
+            <Icon d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" />
+          </button>
+          <button className="ghost-icon" disabled={!!runId || !stored} title={t('Oturumu sil')} aria-label={t('Oturumu sil')} onClick={() => void deleteSession()}>
+            <Icon d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13M10 11v6M14 11v6" />
+          </button>
+          <button className="ghost-icon new" disabled={!!runId || !messages.length} onClick={newSession} title={t('Bu sohbet saklanır; yeni, boş bir oturum açılır')} aria-label={t('Yeni sohbet')}>
+            <Icon d="M12 5v14M5 12h14" />
+          </button>
         </div>
-      )}
+      </div>
       {guide && (
         <AiSetupGuide
           onClose={() => setGuide(false)}
@@ -590,5 +594,14 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
         {showCtx && <pre className="ctx">{lastKb ? `${context}\n\n${lastKb}` : context}</pre>}
       </div>
     </div>
+  )
+}
+
+/** A small line icon in the text colour (24×24 path). */
+function Icon({ d }: { d: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d={d} />
+    </svg>
   )
 }

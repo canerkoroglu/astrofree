@@ -1563,6 +1563,7 @@ export const ru: Locale = {
     "Ana menü": "Главное меню",
     "Menüyü daralt": "Свернуть меню",
     "Menüyü genişlet": "Развернуть меню",
-    "Kişi ara…": "Найти человека…"
+    "Kişi ara…": "Найти человека…",
+    "Yapay zekâ sağlayıcısı": "Поставщик ИИ"
   }
 }

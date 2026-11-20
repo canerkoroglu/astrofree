@@ -1563,6 +1563,7 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Ana menü": "Menú principal",
     "Menüyü daralt": "Contraer menú",
     "Menüyü genişlet": "Expandir menú",
-    "Kişi ara…": "Buscar personas…"
+    "Kişi ara…": "Buscar personas…",
+    "Yapay zekâ sağlayıcısı": "Proveedor de IA"
   }
 }
