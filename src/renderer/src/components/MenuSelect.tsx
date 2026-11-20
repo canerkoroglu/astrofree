@@ -7,12 +7,17 @@ export default function MenuSelect<T extends string | number>({
   value,
   options,
   onChange,
-  label
+  label,
+  display,
+  className = ''
 }: {
   value: T
   options: { value: T; label: string }[]
   onChange: (v: T) => void
   label: string
+  /** Shorter text for the button than the option's full label. */
+  display?: string
+  className?: string
 }) {
   const [open, setOpen] = useState(false)
   const [hi, setHi] = useState(0)
@@ -58,7 +63,7 @@ export default function MenuSelect<T extends string | number>({
       <button
         ref={btn}
         type="button"
-        className={`menu-select${open ? ' open' : ''}`}
+        className={`menu-select ${className}${open ? ' open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`${label}: ${current?.label ?? ''}`}
@@ -73,7 +78,10 @@ export default function MenuSelect<T extends string | number>({
           else if (e.key === 'Escape') (e.preventDefault(), e.stopPropagation(), setOpen(false))
         }}
       >
-        <span className="menu-select-val">{current?.label}</span>
+        {className.includes('row') && <span className="menu-select-lbl">{label}</span>}
+        <span className="menu-select-val" title={current?.label}>
+          {display ?? current?.label}
+        </span>
         <Icon name="chevron" size={14} />
       </button>
       {open && (

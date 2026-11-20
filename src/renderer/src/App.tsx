@@ -1005,31 +1005,29 @@ export default function App() {
         )}
         {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
         <span className="rail-cap">{t('Harita')}</span>
-        <span className="rail-sub">{t('Harmonik')}</span>
-        <div className="tg-harmonic harm-step" role="group" aria-label={t('Harmonik harita (konumlar n ile çarpılır)')}>
-          <button className="ghost-icon" disabled={harmonic <= 1} onClick={() => setHarmonic(Math.max(1, harmonic - 1))} aria-label="−">
-            ‹
-          </button>
-          <span className={`harm-val${harmonic > 1 ? ' on' : ''}`} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
-            {harmonic === 1 ? t('yok') : `H${harmonic}`}
-          </span>
-          <button className="ghost-icon" disabled={harmonic >= 16} onClick={() => setHarmonic(Math.min(16, harmonic + 1))} aria-label="+">
-            ›
-          </button>
-          {harmonic > 1 && (
-            <button className="ghost-icon harm-reset" onClick={() => setHarmonic(1)} aria-label={t('Harmonik: yok')} title={t('Harmonik: yok')}>
-              ×
-            </button>
-          )}
-        </div>
-        <span className="rail-sub">{t('Ev sistemi')}</span>
-        <div className="tg-house">
-          <MenuSelect
-            label={t('Ev sistemi')}
-            value={settings.houseSystem}
-            options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
-            onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
-          />
+        <div className="chart-opts">
+          <div className="tg-house">
+            <MenuSelect
+              className="row"
+              label={t('Ev sistemi')}
+              value={settings.houseSystem}
+              display={t(HOUSE_SYSTEMS.find(([k]) => k === settings.houseSystem)?.[1] ?? '').replace(/\s*\(.*\)$/, '')}
+              options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
+              onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
+            />
+          </div>
+          <div className="tg-harmonic opt-row" role="group" aria-label={t('Harmonik harita (konumlar n ile çarpılır)')} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
+            <span className="menu-select-lbl">{t('Harmonik')}</span>
+            <div className="harm-step">
+              <button disabled={harmonic <= 1} onClick={() => setHarmonic(Math.max(1, harmonic - 1))} aria-label="−">
+                −
+              </button>
+              <span className={`harm-val${harmonic > 1 ? ' on' : ''}`}>{harmonic === 1 ? t('yok') : `H${harmonic}`}</span>
+              <button disabled={harmonic >= 16} onClick={() => setHarmonic(Math.min(16, harmonic + 1))} aria-label="+">
+                +
+              </button>
+            </div>
+          </div>
         </div>
         </div>}
         <span className="grow" />
