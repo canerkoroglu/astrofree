@@ -1046,41 +1046,8 @@ export default function App() {
         }}
         speed={speed}
         onSpeed={setSpeed}
-        right={
+        zone={
           <>
-        {updateReady ? (
-          <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
-            {t('v{v} hazır · Yeniden başlat', { v: updateReady })}
-          </button>
-        ) : update && (
-          <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title={t('GitHub\'da yeni sürüm')}>
-            {t('Yeni sürüm v{v} · İndir', { v: update.version })}
-          </a>
-        )}
-        <div className="tb-app" role="group" aria-label={t('Ana menü')}>
-          <button
-            className="ghost-icon tip-end"
-            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
-            data-tip={t(THEME_LABEL[settings.theme])}
-            aria-label={t(THEME_LABEL[settings.theme])}
-          >
-            <Icon name={THEME_ICON[settings.theme]} size={18} />
-          </button>
-          <button
-            className={`ghost-icon tip-end tb-chat${showChat ? ' on' : ''}`}
-            aria-pressed={showChat}
-            onClick={() => setShowChat(!showChat)}
-            aria-label={t('AI sohbet')}
-            title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
-            data-tip={t('AI sohbet')}
-          >
-            <Icon name="chat" size={18} />
-          </button>
-          <button className="ghost-icon tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
-            <Icon name="gear" size={18} />
-          </button>
-        </div>
         <div className="menu-wrap tb-zone-wrap">
           <button className="tb-zone" aria-expanded={zoneOpen} onClick={() => setZoneOpen(!zoneOpen)} title={t('Saat dilimleri')}>
             <Icon name="globe" size={15} />
@@ -1130,6 +1097,43 @@ export default function App() {
               </div>
             </div>
           )}
+        </div>
+          </>
+        }
+        right={
+          <>
+        {updateReady ? (
+          <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
+            {t('v{v} hazır · Yeniden başlat', { v: updateReady })}
+          </button>
+        ) : update && (
+          <a className="update-pill" href={update.url} target="_blank" rel="noreferrer" title={t('GitHub\'da yeni sürüm')}>
+            {t('Yeni sürüm v{v} · İndir', { v: update.version })}
+          </a>
+        )}
+        <div className="tb-app" role="group" aria-label={t('Ana menü')}>
+          <button
+            className="ghost-icon tip-end"
+            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            data-tip={t(THEME_LABEL[settings.theme])}
+            aria-label={t(THEME_LABEL[settings.theme])}
+          >
+            <Icon name={THEME_ICON[settings.theme]} size={18} />
+          </button>
+          <button
+            className={`ghost-icon tip-end tb-chat${showChat ? ' on' : ''}`}
+            aria-pressed={showChat}
+            onClick={() => setShowChat(!showChat)}
+            aria-label={t('AI sohbet')}
+            title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
+            data-tip={t('AI sohbet')}
+          >
+            <Icon name="chat" size={18} />
+          </button>
+          <button className="ghost-icon tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
+            <Icon name="gear" size={18} />
+          </button>
         </div>
           </>
         }

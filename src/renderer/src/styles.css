@@ -6946,3 +6946,27 @@ button.tb-zone .ico {
 .app.rail-mini .rail-mode.is-professional .rail-mode-thumb {
   transform: translateY(100%);
 }
+
+/* order at the right end: time zone · Şimdi | Canlı · theme, chat, settings */
+.tb-zonegrp {
+  margin-left: auto;
+}
+.tb-zonegrp .tb-zone-wrap {
+  position: relative;
+}
+.tb-zonegrp .zone-pop {
+  right: 0;
+  left: auto;
+}
+.tb-zonegrp + .tb-now {
+  margin-left: 0;
+}
+.tb-right .tb-app {
+  padding-right: 0;
+  border-right: 0;
+}
+@container timebar (max-width: 1400px) {
+  .tb-zonegrp .tb-zone .tz-name {
+    display: none;
+  }
+}

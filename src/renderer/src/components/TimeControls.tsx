@@ -21,6 +21,8 @@ const SPEEDS = [1, 2, 5, 10, 20, 30]
 interface Props {
   /** App-wide controls at the right end of the bar (time zone, theme, chat, settings). */
   right?: ReactNode
+  /** The time zone of the time being stepped, shown just before Şimdi | Canlı. */
+  zone?: ReactNode
   local: LocalDateTime
   target: 'event' | 'natal'
   /** Label of the chart's own moment: birth, or the event for event charts. */
@@ -101,6 +103,7 @@ export default function TimeControls(p: Props) {
           </select>
         </div>
 
+        {p.zone && <div className="tb-group tb-zonegrp">{p.zone}</div>}
         <div className="tb-group tb-now">
           <div className="tb-nowseg" role="group" aria-label={t('Şimdiki zaman')}>
           <button onClick={p.onNow} title={t('Şimdiki zaman (N)')}>
