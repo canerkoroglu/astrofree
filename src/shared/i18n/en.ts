@@ -1595,6 +1595,7 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Yöneticisi {planet}, {n}. evde.": "Its ruler, {planet}, is in house {n}.",
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No planets in this house; its topics may be read mainly through its ruler.",
     "Harita verisi": "Chart data",
-    "bağlı değil": "not connected"
+    "bağlı değil": "not connected",
+    "bunu kullan": "use this"
   }
 }

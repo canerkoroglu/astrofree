@@ -1,3 +1,4 @@
+import Select from './Select'
 import { monthsLong, t } from '../lib/i18n'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, AspectKey, TransitHit, TzSpec } from '@shared/types'
@@ -107,13 +108,13 @@ export default function TransitCalendar({
         <span>
           {t('{date} tarihinden itibaren', { date: date(startDay + 0.5) })}
         </span>
-        <select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
+        <Select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
           {[1, 3, 6, 12, 24, 36].map((m) => (
             <option key={m} value={m}>
               {t('{n} ay', { n: m })}
             </option>
           ))}
-        </select>
+        </Select>
         {(Object.keys(GROUPS) as Group[]).map((g) => (
           <label key={g} className="inline small">
             <input type="checkbox" checked={groups[g]} onChange={(e) => setGroups({ ...groups, [g]: e.target.checked })} />

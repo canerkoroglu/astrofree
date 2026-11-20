@@ -1,3 +1,4 @@
+import Select from './Select'
 import { LOCALES } from '@shared/i18n'
 import { t } from '../lib/i18n'
 import { useEffect, useState } from 'react'
@@ -49,7 +50,7 @@ export default function Onboarding({
             <div className="ob-row">
               <label>
                 {t('Arayüz dili')}
-                <select
+                <Select
                   value={settings.uiLanguage}
                   onChange={(e) => {
                     const lang = e.target.value
@@ -66,15 +67,15 @@ export default function Onboarding({
                       {l.name}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <label>
                 {t('Tema')}
-                <select value={settings.theme} onChange={(e) => onSettings({ ...settings, theme: e.target.value as AppSettings['theme'] })}>
+                <Select value={settings.theme} onChange={(e) => onSettings({ ...settings, theme: e.target.value as AppSettings['theme'] })}>
                   <option value="system">{t('Sistem')}</option>
                   <option value="light">{t('Açık')}</option>
                   <option value="dark">{t('Koyu')}</option>
-                </select>
+                </Select>
               </label>
             </div>
             <TermsCheckbox

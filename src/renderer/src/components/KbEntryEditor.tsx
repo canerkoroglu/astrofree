@@ -1,3 +1,4 @@
+import Select from './Select'
 import ModalClose from './ModalClose'
 import { getLang, t } from '../lib/i18n'
 import { useState } from 'react'
@@ -78,13 +79,13 @@ export default function KbEntryEditor({
         {!entry && files.length > 0 && (
           <label className="field">
             {t('Konu')}
-            <select value={d.file} onChange={(e) => setD({ ...d, file: e.target.value })}>
+            <Select value={d.file} onChange={(e) => setD({ ...d, file: e.target.value })}>
               {files.map((f) => (
                 <option key={f.name} value={f.name}>
                   {f.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
         )}
 
@@ -109,14 +110,14 @@ export default function KbEntryEditor({
 
           <div className="kb-rule-row">
             <span>{t('Ay şu durakta')}</span>
-            <select value={mansion} onChange={(e) => (add(`durak:${e.target.value}`), setMansion(''))}>
+            <Select value={mansion} onChange={(e) => (add(`durak:${e.target.value}`), setMansion(''))}>
               <option value="">{t('Durak seçin…')}</option>
               {MANSIONS.map((m, i) => (
                 <option key={i} value={i + 1}>
                   {i + 1}. {getLang() === 'tr' ? m.tr : m.en}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="kb-rule-row">
@@ -134,14 +135,14 @@ export default function KbEntryEditor({
 
           <div className="kb-rule-row">
             <span>{t('Ay fazı')}</span>
-            <select value={phase} onChange={(e) => (add(`faz:${e.target.value}`), setPhase(''))}>
+            <Select value={phase} onChange={(e) => (add(`faz:${e.target.value}`), setPhase(''))}>
               <option value="">{t('Faz seçin…')}</option>
               {PHASE_SLUG.map((slug, i) => (
                 <option key={slug} value={slug}>
                   {moonPhase(0, i * 45 + 1).name}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="kb-rule-row top">

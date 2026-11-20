@@ -2,6 +2,7 @@
 // events and sessions; filters and sorting; actions on many at once (group, tags, export,
 // delete); merging copies; and for astrologers a client card with contact details,
 // a consultation log, follow-ups and upcoming birthdays.
+import Select from './Select'
 import ModalClose from './ModalClose'
 import { useMemo, useState } from 'react'
 import type { ChartRecord, ClientSession } from '@shared/types'
@@ -250,7 +251,7 @@ export default function PeopleManager({
                     </button>
                   ))}
                 </div>
-                <select value={group} onChange={(e) => setGroup(e.target.value)} aria-label={t('Grup')}>
+                <Select value={group} onChange={(e) => setGroup(e.target.value)} aria-label={t('Grup')}>
                   <option value="">{t('Tüm gruplar')}</option>
                   {groups.map((g) => (
                     <option key={g} value={g}>
@@ -258,24 +259,24 @@ export default function PeopleManager({
                     </option>
                   ))}
                   <option value="-">{t('Grupsuz')}</option>
-                </select>
+                </Select>
                 {tags.length > 0 && (
-                  <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Etiket')}>
+                  <Select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Etiket')}>
                     <option value="">{t('Tüm etiketler')}</option>
                     {tags.map((x) => (
                       <option key={x} value={x}>
                         #{x}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 )}
                 <span className="grow" />
-                <select value={sort} onChange={(e) => pickSort(e.target.value as SortKey)} aria-label={t('Sırala')}>
+                <Select value={sort} onChange={(e) => pickSort(e.target.value as SortKey)} aria-label={t('Sırala')}>
                   <option value="name">{t('İsme göre')}</option>
                   <option value="birth">{t('Doğum tarihine göre')}</option>
                   <option value="updated">{t('Son değişene göre')}</option>
                   <option value="created">{t('Son eklenene göre')}</option>
-                </select>
+                </Select>
               </div>
 
               <div className={`pm-bulk small${sel.size ? ' active' : ''}`}>
@@ -295,7 +296,7 @@ export default function PeopleManager({
                 )}
                 {sel.size > 0 && (
                   <>
-                    <select value="" onChange={(e) => e.target.value && void saveMany(selected.map((c) => ({ ...c, group: e.target.value === '-' ? undefined : e.target.value })))} aria-label={t('Gruba taşı')}>
+                    <Select value="" onChange={(e) => e.target.value && void saveMany(selected.map((c) => ({ ...c, group: e.target.value === '-' ? undefined : e.target.value })))} aria-label={t('Gruba taşı')}>
                       <option value="">{t('Gruba taşı…')}</option>
                       {[...GROUP_PRESETS.map(([id]) => id), ...customGroups(charts)].map((g) => (
                         <option key={g} value={g}>
@@ -303,7 +304,7 @@ export default function PeopleManager({
                         </option>
                       ))}
                       <option value="-">{t('Gruptan çıkar')}</option>
-                    </select>
+                    </Select>
                     <input className="tag-mini" value={tagDraft} placeholder={t('etiket')} onChange={(e) => setTagDraft(e.target.value)} />
                     <button disabled={!tagDraft.trim()} onClick={() => (void saveMany(selected.map((c) => ({ ...c, tags: [...new Set([...(c.tags ?? []), tagDraft.trim()])] }))), setTagDraft(''))}>
                       {t('Etiket ekle')}

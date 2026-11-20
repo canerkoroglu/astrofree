@@ -1,3 +1,4 @@
+import Select from './Select'
 import ModalClose from './ModalClose'
 import ReportDialog from './ReportDialog'
 import { getLocale, LOCALES } from '@shared/i18n'
@@ -170,70 +171,70 @@ export default function SettingsDialog({
           <div className="form-grid">
             <label>
               {t('Ev sistemi')}
-              <select value={s.houseSystem} onChange={(e) => setS({ ...s, houseSystem: e.target.value })}>
+              <Select value={s.houseSystem} onChange={(e) => setS({ ...s, houseSystem: e.target.value })}>
                 {HOUSE_SYSTEMS.map(([k, n]) => (
                   <option key={k} value={k}>
                     {t(n)}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label>
               {t('Zodyak')}
-              <select value={s.zodiac} onChange={(e) => setS({ ...s, zodiac: e.target.value as AppSettings['zodiac'] })}>
+              <Select value={s.zodiac} onChange={(e) => setS({ ...s, zodiac: e.target.value as AppSettings['zodiac'] })}>
                 <option value="tropical">{t('Tropikal')}</option>
                 <option value="sidereal">{t('Sidereal (Vedik)')}</option>
-              </select>
+              </Select>
             </label>
             {s.zodiac === 'sidereal' && (
               <label>
                 {t('Ayanamsa')}
-                <select value={s.sidMode} onChange={(e) => setS({ ...s, sidMode: Number(e.target.value) })}>
+                <Select value={s.sidMode} onChange={(e) => setS({ ...s, sidMode: Number(e.target.value) })}>
                   {AYANAMSAS.map(([k, n]) => (
                     <option key={k} value={k}>
                       {t(n)}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
             )}
             <label>
               {t('Ay düğümü')}
-              <select value={s.nodeType} onChange={(e) => setS({ ...s, nodeType: e.target.value as 'mean' | 'true' })}>
+              <Select value={s.nodeType} onChange={(e) => setS({ ...s, nodeType: e.target.value as 'mean' | 'true' })}>
                 <option value="mean">{t('Ortalama')}</option>
                 <option value="true">{t('Gerçek')}</option>
-              </select>
+              </Select>
             </label>
             <label>
               {t('Lilith')}
-              <select value={s.lilithType} onChange={(e) => setS({ ...s, lilithType: e.target.value as 'mean' | 'true' })}>
+              <Select value={s.lilithType} onChange={(e) => setS({ ...s, lilithType: e.target.value as 'mean' | 'true' })}>
                 <option value="mean">{t('Ortalama')}</option>
                 <option value="true">{t('Oskülasyon (gerçek)')}</option>
-              </select>
+              </Select>
             </label>
             <label>
               {t('Çark yönü')}
-              <select value={s.orientation} onChange={(e) => setS({ ...s, orientation: e.target.value as 'asc' | 'aries' })}>
+              <Select value={s.orientation} onChange={(e) => setS({ ...s, orientation: e.target.value as 'asc' | 'aries' })}>
                 <option value="asc">{t('Yükselen solda')}</option>
                 <option value="aries">{t('0° Koç solda')}</option>
-              </select>
+              </Select>
             </label>
             <label>
               {t('Progres açılar (ASC/MC)')}
-              <select
+              <Select
                 value={s.progressedAngles}
                 onChange={(e) => setS({ ...s, progressedAngles: e.target.value as AppSettings['progressedAngles'] })}
               >
                 <option value="naibod">{t('Naibod (RA)')}</option>
                 <option value="solarArc">{t('Solar ark')}</option>
-              </select>
+              </Select>
             </label>
             <label>
               {t('Dönüş haritası yeri')}
-              <select value={s.returnPlace} onChange={(e) => setS({ ...s, returnPlace: e.target.value as AppSettings['returnPlace'] })}>
+              <Select value={s.returnPlace} onChange={(e) => setS({ ...s, returnPlace: e.target.value as AppSettings['returnPlace'] })}>
                 <option value="natal">{t('Doğum yeri')}</option>
                 <option value="current">{t('Varsayılan konum (bulunduğunuz yer)')}</option>
-              </select>
+              </Select>
             </label>
             <fieldset className="span2">
               <legend>{t('Ek noktalar')}</legend>
@@ -349,14 +350,14 @@ export default function SettingsDialog({
             <div className="form-grid">
               <label>
                 {t('Yanıt dili')}
-                <select value={s.ai.language || 'auto'} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value } })}>
+                <Select value={s.ai.language || 'auto'} onChange={(e) => setS({ ...s, ai: { ...s.ai, language: e.target.value } })}>
                   <option value="auto">{t('Arayüz diliyle aynı ({lang})', { lang: getLocale(s.uiLanguage).name })}</option>
                   {LOCALES.map((l) => (
                     <option key={l.code} value={l.code}>
                       {l.name}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
             </div>
             <label className="inline">
@@ -444,7 +445,7 @@ export default function SettingsDialog({
               <div className="form-grid">
                 <label>
                   {t('Arayüz dili')}
-                  <select
+                  <Select
                     value={s.uiLanguage}
                     onChange={(e) => {
                       const lang = e.target.value
@@ -456,15 +457,15 @@ export default function SettingsDialog({
                         {l.name}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </label>
                 <label>
                   {t('Tema')}
-                  <select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
+                  <Select value={s.theme} onChange={(e) => setS({ ...s, theme: e.target.value as AppSettings['theme'] })}>
                     <option value="system">{t('Sistem')}</option>
                     <option value="light">{t('Açık')}</option>
                     <option value="dark">{t('Koyu')}</option>
-                  </select>
+                  </Select>
                 </label>
               </div>
             </fieldset>
@@ -518,14 +519,14 @@ export default function SettingsDialog({
               </div>
               <label>
                 {t('Tarih biçimi')}
-                <select value={s.dateOrder} onChange={(e) => setS({ ...s, dateOrder: e.target.value as AppSettings['dateOrder'] })}>
+                <Select value={s.dateOrder} onChange={(e) => setS({ ...s, dateOrder: e.target.value as AppSettings['dateOrder'] })}>
                   <option value="auto">
                     {t('Dile göre')} ({fmtDate(SAMPLE, getLocale(s.uiLanguage).dateOrder)})
                   </option>
                   <option value="DMY">{fmtDate(SAMPLE, 'DMY')}</option>
                   <option value="MDY">{fmtDate(SAMPLE, 'MDY')}</option>
                   <option value="YMD">{fmtDate(SAMPLE, 'YMD')}</option>
-                </select>
+                </Select>
               </label>
             </fieldset>
             <fieldset>
@@ -542,14 +543,14 @@ export default function SettingsDialog({
                 <div className="row">
                   <label>
                     {t('Kimin için')}
-                    <select value={s.notifications.weeklyChart ?? ''} onChange={(e) => setS({ ...s, notifications: { ...s.notifications, weeklyChart: e.target.value } })}>
+                    <Select value={s.notifications.weeklyChart ?? ''} onChange={(e) => setS({ ...s, notifications: { ...s.notifications, weeklyChart: e.target.value } })}>
                       <option value="">{t('İlk kaydedilen kişi')}</option>
                       {people.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </label>
                 </div>
               )}
@@ -563,13 +564,13 @@ export default function SettingsDialog({
                 {s.mode === 'amateur' ? ` · ${t('Profesyonel modda')}` : ''}
               </label>
               <div className="row">
-                <select
+                <Select
                   value={s.notifications.scope}
                   onChange={(e) => setS({ ...s, notifications: { ...s.notifications, scope: e.target.value as 'all' | 'tagged' } })}
                 >
                   <option value="all">{t('Tüm kişiler')}</option>
                   <option value="tagged">{t('Yalnızca etiketliler')}</option>
-                </select>
+                </Select>
                 {s.notifications.scope === 'tagged' && (
                   <input
                     value={s.notifications.tag}

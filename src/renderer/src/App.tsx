@@ -1,3 +1,4 @@
+import Select from './components/Select'
 import { setLang, t } from './lib/i18n'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -1678,14 +1679,14 @@ export default function App() {
               </button>
             ))}
             {outers.length > 0 && !amateur && (
-              <select value={aspectLayer} onChange={(e) => setAspectLayer(Number(e.target.value))} title={t('Çarkta ve tabloda gösterilen açılar')}>
+              <Select value={aspectLayer} onChange={(e) => setAspectLayer(Number(e.target.value))} title={t('Çarkta ve tabloda gösterilen açılar')}>
                 <option value={-1}>{t('Açılar: Natal ↔ Natal')}</option>
                 {computed?.outers.map((o, i) => (
                   <option key={i} value={i}>
                     {t('Açılar')}: {t(o.label)} → Natal
                   </option>
                 ))}
-              </select>
+              </Select>
             )}
             <span className="grow" />
             <span className="muted small">

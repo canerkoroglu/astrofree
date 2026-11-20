@@ -1,5 +1,7 @@
+import Select from './Select'
 import { t } from '../lib/i18n'
 import Icon from './Icon'
+import MenuSelect from './MenuSelect'
 import AiSetupGuide from './AiSetupGuide'
 import type { SettingsFocus } from './SettingsDialog'
 import DOMPurify from 'dompurify'
@@ -339,24 +341,24 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       <div className="chat-top">
         <div className="chat-conn">
           <span className={`conn-dot ${st ? (st.available ? 'ok' : 'off') : 'wait'}`} aria-hidden />
-          <select className="conn-provider" value={provider} onChange={(e) => setProvider(e.target.value as ProviderId)} aria-label={t('Yapay zekâ sağlayıcısı')}>
-            {PROVIDERS.map((p) => {
-              const s = statuses.find((x) => x.id === p.id)
-              return (
-                <option key={p.id} value={p.id}>
-                  {t(p.label)}
-                  {s && !s.available ? ` (${t('bağlı değil')})` : ''}
-                </option>
-              )
-            })}
-          </select>
-          <span className="conn-sep" aria-hidden />
-          <input className="conn-model" list="models" value={cfg.model} placeholder={t('model (varsayılan)')} onChange={(e) => setModel(e.target.value)} aria-label={t('Model')} title={cfg.model || t('model (varsayılan)')} />
-          <datalist id="models">
-            {models.map((m) => (
-              <option key={m} value={m} />
+          <Select className="conn-provider" value={provider} onChange={(e) => setProvider(e.target.value as ProviderId)} aria-label={t('Yapay zekâ sağlayıcısı')}>
+            {PROVIDERS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {t(p.label)}
+              </option>
             ))}
-          </datalist>
+          </Select>
+          <span className="conn-sep" aria-hidden />
+          <span className="conn-model">
+            <MenuSelect
+              label={t('Model')}
+              allowCustom
+              value={cfg.model}
+              display={cfg.model || t('model (varsayılan)')}
+              options={[...new Set([...(cfg.model ? [cfg.model] : []), ...models])].map((m) => ({ value: m, label: m }))}
+              onChange={(m) => setModel(m)}
+            />
+          </span>
         </div>
         {st && !st.available ? (
           <div className="chat-callout" role="status">
@@ -402,14 +404,14 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
               }}
             />
           ) : (
-            <select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={`${t('Bu haritanın sohbet oturumları')} · ${t('{n} oturum', { n: sessions.length })}`}>
+            <Select value={stored ? session.id : ''} disabled={!!runId} onChange={(e) => switchSession(e.target.value)} title={`${t('Bu haritanın sohbet oturumları')} · ${t('{n} oturum', { n: sessions.length })}`}>
               {!stored && <option value="">{t('Yeni sohbet')}</option>}
               {sessions.map((x) => (
                 <option key={x.id} value={x.id}>
                   {sessionLabel(x)}
                 </option>
               ))}
-            </select>
+            </Select>
           )}
           <button className="ghost-icon" disabled={!!runId || !stored} title={t('Oturumun adını değiştir')} aria-label={t('Oturumun adını değiştir')} onClick={() => setRenaming(session.title)}>
             <Icon name="edit" />
@@ -576,7 +578,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
               >
                 ≈ {fmtK(nextSize.tokens)} {t('token')}
               </span>
-              <select
+              <Select
                 className="chat-level"
                 value={settings.ai.level}
                 onChange={(e) => setLevel(e.target.value as AiLevel)}
@@ -584,7 +586,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
               >
                 <option value="amateur">{t('Amatör')}</option>
                 <option value="professional">{t('Profesyonel')}</option>
-              </select>
+              </Select>
               {runId ? (
                 <button className="send-btn stop" onClick={stop} aria-label={t('■ Durdur')} title={t('■ Durdur')}>
                   <span className="stop-sq" aria-hidden />

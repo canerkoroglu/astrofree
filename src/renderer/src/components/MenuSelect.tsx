@@ -11,13 +11,23 @@ export default function MenuSelect<T extends string | number>({
   options,
   onChange,
   label,
-  searchable = true
+  searchable = true,
+  allowCustom = false,
+  disabled = false,
+  title,
+  display
 }: {
   value: T
   options: { value: T; label: string; hint?: string }[]
   onChange: (v: T) => void
   label: string
   searchable?: boolean
+  /** Also offer what was typed in the search box as a value (e.g. a model name). */
+  allowCustom?: boolean
+  disabled?: boolean
+  title?: string
+  /** Text for the button instead of the option's label. */
+  display?: string
 }) {
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
@@ -30,8 +40,11 @@ export default function MenuSelect<T extends string | number>({
 
   const shown = useMemo(() => {
     const words = fold(q).split(/\s+/).filter(Boolean)
-    return words.length ? options.filter((o) => words.every((w) => fold(`${o.label} ${o.hint ?? ''} ${o.value}`).includes(w))) : options
-  }, [options, q])
+    const list = words.length ? options.filter((o) => words.every((w) => fold(`${o.label} ${o.hint ?? ''} ${o.value}`).includes(w))) : options
+    const typed = q.trim()
+    if (allowCustom && typed && !options.some((o) => String(o.value) === typed)) return [{ value: typed as T, label: typed, hint: t('bunu kullan') }, ...list]
+    return list
+  }, [options, q, allowCustom])
 
   const show = () => {
     const r = btn.current!.getBoundingClientRect()
@@ -86,13 +99,15 @@ export default function MenuSelect<T extends string | number>({
         className={`menu-select${open ? ' open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`${label}: ${current?.label ?? ''}`}
+        aria-label={`${label}: ${current?.label ?? display ?? ''}`}
+        title={title}
+        disabled={disabled}
         onClick={() => (open ? setOpen(false) : show())}
         onKeyDown={(e) => {
           if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ')) (e.preventDefault(), show())
         }}
       >
-        <span className="menu-select-val">{current?.label}</span>
+        <span className="menu-select-val">{display ?? current?.label ?? String(value ?? '')}</span>
         <Icon name="chevron" size={14} />
       </button>
       {open && (

@@ -1,5 +1,6 @@
 // "Paylaşım kartı": social-media sized PNGs — the chart with the big three, or an
 // upcoming sky event (retrograde, ingress, lunation, eclipse) with a hedged note.
+import Select from './Select'
 import ModalClose from './ModalClose'
 import { useEffect, useRef, useState } from 'react'
 import type { AppSettings, ChartRecord, SkyEvent, TzSpec } from '@shared/types'
@@ -163,13 +164,13 @@ export default function ShareCard({
             {kind === 'event' && (
               <label>
                 {t('Olay')}
-                <select value={eventIdx} onChange={(e) => setEventIdx(Number(e.target.value))}>
+                <Select value={eventIdx} onChange={(e) => setEventIdx(Number(e.target.value))}>
                   {events.map((e, i) => (
                     <option key={i} value={i}>
                       {fmtDate(jdToLocal(e.jd, tz, lon))} · {eventText(e)}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
             )}
             <fieldset>

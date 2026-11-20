@@ -1595,6 +1595,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Yöneticisi {planet}, {n}. evde.": "Sein Herrscher {planet} steht im {n}. Haus.",
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Keine Planeten in diesem Haus; seine Themen lassen sich vor allem über den Herrscher lesen.",
     "Harita verisi": "Horoskopdaten",
-    "bağlı değil": "nicht verbunden"
+    "bağlı değil": "nicht verbunden",
+    "bunu kullan": "diesen verwenden"
   }
 }

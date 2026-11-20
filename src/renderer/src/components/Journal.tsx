@@ -1,6 +1,7 @@
 // "Olaylarım": a person's life-event journal. Each event shows the sky of that day in plain
 // words (the Moon, and the slow planets touching the birth chart), and the journal shows which
 // planets keep coming back. A way to learn astrology on one's own life; no AI needed.
+import Select from './Select'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, ChartRecord, JournalCategory, JournalEntry, TransitHit } from '@shared/types'
 import { ASPECT, moonPhase, POINT, SIGNS, splitDeg, type Layer } from '../lib/astro'
@@ -149,14 +150,14 @@ export default function Journal({
           </label>
           <label>
             {t('Tür')}
-            <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value as JournalCategory | '' })}>
+            <Select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value as JournalCategory | '' })}>
               <option value="">—</option>
               {JOURNAL_CATEGORIES.map(([k, l, i]) => (
                 <option key={k} value={k}>
                   {i} {t(l)}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
           <label className="grow">
             {t('Not (isteğe bağlı)')}

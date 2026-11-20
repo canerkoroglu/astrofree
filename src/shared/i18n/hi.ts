@@ -1595,6 +1595,7 @@ export const hi: Locale = {
     "Yöneticisi {planet}, {n}. evde.": "इसका स्वामी {planet} {n}वें भाव में है।",
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "इस भाव में कोई ग्रह नहीं; इसके विषय मुख्यतः इसके स्वामी से पढ़े जा सकते हैं।",
     "Harita verisi": "कुंडली डेटा",
-    "bağlı değil": "जुड़ा नहीं"
+    "bağlı değil": "जुड़ा नहीं",
+    "bunu kullan": "यही उपयोग करें"
   }
 }

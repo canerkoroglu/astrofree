@@ -1595,6 +1595,7 @@ export const ru: Locale = {
     "Yöneticisi {planet}, {n}. evde.": "Его управитель, {planet}, в {n}-м доме.",
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "В этом доме нет планет; его темы можно читать в основном через управителя.",
     "Harita verisi": "Данные карты",
-    "bağlı değil": "не подключено"
+    "bağlı değil": "не подключено",
+    "bunu kullan": "использовать"
   }
 }

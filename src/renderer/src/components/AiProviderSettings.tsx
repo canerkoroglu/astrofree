@@ -1,3 +1,4 @@
+import Select from './Select'
 import { t } from '../lib/i18n'
 import { useState } from 'react'
 import { LOCAL_PRESETS } from '@shared/defaults'
@@ -58,7 +59,7 @@ export function LocalServerSettings({
       <div className="ls-grid">
         <label>
           {t('Sunucu türü')}
-          <select
+          <Select
             value={preset.id}
             onChange={(e) => {
               const pr = LOCAL_PRESETS.find((x) => x.id === e.target.value)!
@@ -72,7 +73,7 @@ export function LocalServerSettings({
                 {t(x.label)}
               </option>
             ))}
-          </select>
+          </Select>
           <span className="muted small">{t(preset.hint)}</span>
         </label>
 

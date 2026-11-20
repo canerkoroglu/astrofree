@@ -1,3 +1,4 @@
+import Select from './Select'
 import { t } from '../lib/i18n'
 import type { ReactNode } from 'react'
 import type { LocalDateTime } from '@shared/types'
@@ -83,24 +84,24 @@ export default function TimeControls(p: Props) {
         </div>
 
         <div className="tb-group">
-          <select className="tb-step" value={p.stepIndex} onChange={(e) => p.onStepIndex(Number(e.target.value))} title={t('◀ ▶ ve ← → tuşlarının adım boyu (↑ ↓)')}>
+          <Select className="tb-step" value={p.stepIndex} onChange={(e) => p.onStepIndex(Number(e.target.value))} title={t('◀ ▶ ve ← → tuşlarının adım boyu (↑ ↓)')}>
             {STEPS.map((s, i) => (
               <option key={i} value={i}>
                 {t('Adım')}: {t(s.label)}
               </option>
             ))}
-          </select>
+          </Select>
           <button className={`toggle tb-play${p.playing ? ' on' : ''}`} aria-pressed={p.playing} onClick={() => p.onPlaying(!p.playing)} title={t('Animasyon (boşluk tuşu)')}>
             {p.playing ? `❚❚ ${t('Durdur')}` : `▶ ${t('Oynat')}`}
           </button>
-          <select className="tb-speed" value={p.speed} onChange={(e) => p.onSpeed(Number(e.target.value))} title={t('Oynatma hızı: saniyede kaç adım ilerlenir')}>
+          <Select className="tb-speed" value={p.speed} onChange={(e) => p.onSpeed(Number(e.target.value))} title={t('Oynatma hızı: saniyede kaç adım ilerlenir')}>
             {SPEEDS.includes(p.speed) ? null : <option value={p.speed}>{t('Hız')}: {p.speed}/{t('sn')}</option>}
             {SPEEDS.map((v) => (
               <option key={v} value={v}>
                 {t('Hız')}: {v}/{t('sn')}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {p.zone && <div className="tb-group tb-zonegrp">{p.zone}</div>}

@@ -1,3 +1,4 @@
+import Select from './Select'
 import { t } from '../lib/i18n'
 import { useState } from 'react'
 import type { AppSettings, ElectionConditions, ElectionWindow, Place, TzSpec } from '@shared/types'
@@ -127,27 +128,27 @@ export default function ElectionalSearch({
             <input type="checkbox" checked={aspectOn} onChange={(e) => setAspectOn(e.target.checked)} /> {t('Şu açı olsun:')}
           </label>
           <div className="row" style={{ opacity: aspectOn ? 1 : 0.6 }}>
-            <select value={asp.a} onChange={(e) => setAsp({ ...asp, a: +e.target.value })}>
+            <Select value={asp.a} onChange={(e) => setAsp({ ...asp, a: +e.target.value })}>
               {BODIES.map((b) => (
                 <option key={b} value={b}>
                   {POINT[bodyKey(b)].name}
                 </option>
               ))}
-            </select>
-            <select value={asp.kind} onChange={(e) => setAsp({ ...asp, kind: +e.target.value })}>
+            </Select>
+            <Select value={asp.kind} onChange={(e) => setAsp({ ...asp, kind: +e.target.value })}>
               {ASPECT_CHOICES.map(([n], i) => (
                 <option key={i} value={i}>
                   {t(n)}
                 </option>
               ))}
-            </select>
-            <select value={asp.b} onChange={(e) => setAsp({ ...asp, b: +e.target.value })}>
+            </Select>
+            <Select value={asp.b} onChange={(e) => setAsp({ ...asp, b: +e.target.value })}>
               {BODIES.map((b) => (
                 <option key={b} value={b}>
                   {POINT[bodyKey(b)].name}
                 </option>
               ))}
-            </select>
+            </Select>
             <input type="number" min={0.5} max={10} step={0.5} value={asp.orb} onChange={(e) => setAsp({ ...asp, orb: +e.target.value })} title={t('Orb (°)')} style={{ width: 64 }} />
           </div>
         </section>
@@ -157,25 +158,25 @@ export default function ElectionalSearch({
             <input type="checkbox" checked={angOn} onChange={(e) => setAngOn(e.target.checked)} /> {t('ASC/DSC/MC/IC yakınında:')}
           </label>
           <div className="row" style={{ opacity: angOn ? 1 : 0.6 }}>
-            <select value={ang.body} onChange={(e) => setAng({ ...ang, body: +e.target.value })}>
+            <Select value={ang.body} onChange={(e) => setAng({ ...ang, body: +e.target.value })}>
               {BODIES.map((b) => (
                 <option key={b} value={b}>
                   {POINT[bodyKey(b)].name}
                 </option>
               ))}
-            </select>
+            </Select>
             <input type="number" min={1} max={15} value={ang.orb} onChange={(e) => setAng({ ...ang, orb: +e.target.value })} title={t('Orb (°)')} style={{ width: 64 }} />
           </div>
           <div className="muted small">{t('Konum')}: {place.name}</div>
           <h3>{t('Aralık')}</h3>
           <div className="row">
-            <select value={days} onChange={(e) => setDays(+e.target.value)}>
+            <Select value={days} onChange={(e) => setDays(+e.target.value)}>
               {[7, 14, 30, 60, 90, 180, 365].map((d) => (
                 <option key={d} value={d}>
                   {t('{n} gün', { n: d })}
                 </option>
               ))}
-            </select>
+            </Select>
             <span className="muted small">{t('{date} tarihinden itibaren', { date: fmt(startJd) })}</span>
           </div>
           <button className="primary" onClick={() => void run()} disabled={busy}>

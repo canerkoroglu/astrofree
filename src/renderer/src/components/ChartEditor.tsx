@@ -1,3 +1,4 @@
+import Select from './Select'
 import ModalClose from './ModalClose'
 import { t } from '../lib/i18n'
 import { customGroups, GROUP_PRESETS, groupLabel } from '../lib/groups'
@@ -234,7 +235,7 @@ export default function ChartEditor({
               </div>
               {tzOpen && (
                 <div className="row tz-edit">
-                  <select
+                  <Select
                     value={rec.tz.kind}
                     onChange={(e) => {
                       const k = e.target.value
@@ -246,7 +247,7 @@ export default function ChartEditor({
                     <option value="zone">{t('Bölge (yaz saati geçmişi dahil)')}</option>
                     <option value="offset">{t('Sabit fark')}</option>
                     <option value="lmt">{t('Yerel ortalama zaman (LMT)')}</option>
-                  </select>
+                  </Select>
                   {rec.tz.kind === 'zone' && (
                     <input
                       value={zoneText}

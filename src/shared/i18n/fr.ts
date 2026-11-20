@@ -1595,6 +1595,7 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Yöneticisi {planet}, {n}. evde.": "Son maître, {planet}, est en maison {n}.",
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Aucune planète dans cette maison ; ses thèmes peuvent surtout se lire par son maître.",
     "Harita verisi": "Données du thème",
-    "bağlı değil": "non connecté"
+    "bağlı değil": "non connecté",
+    "bunu kullan": "utiliser celui-ci"
   }
 }

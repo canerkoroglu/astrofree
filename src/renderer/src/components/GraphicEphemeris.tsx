@@ -1,3 +1,4 @@
+import Select from './Select'
 import { monthsShort, t } from '../lib/i18n'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppSettings, TzSpec } from '@shared/types'
@@ -91,13 +92,13 @@ export default function GraphicEphemeris({
   return (
     <div className="gephem">
       <div className="cal-controls">
-        <select value={months} onChange={(e) => setMonths(+e.target.value)}>
+        <Select value={months} onChange={(e) => setMonths(+e.target.value)}>
           {[3, 6, 12, 24].map((m) => (
             <option key={m} value={m}>
               {t('{n} ay', { n: m })}
             </option>
           ))}
-        </select>
+        </Select>
         <div className="seg">
           {[360, 90, 45, 30].map((m) => (
             <button key={m} className={mod === m ? 'on' : ''} onClick={() => setMod(m)} title={t(m === 360 ? 'Tam daire' : m === 90 ? 'Kavuşum, kare, karşıt tek çizgide' : m === 45 ? 'Tüm sert açılar' : 'Burç içi derece')}>

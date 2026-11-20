@@ -1,6 +1,7 @@
 // Charts from another program (AAF from astro.com, Solar Fire, AstroGold, Janus; or CSV):
 // a preview before anything is saved. Charts already in the list are marked and left out,
 // rows that could not be read are counted, and all can go into one group at once.
+import Select from './Select'
 import ModalClose from './ModalClose'
 import { useMemo, useState } from 'react'
 import type { ChartRecord, ImportResult } from '@shared/types'
@@ -98,14 +99,14 @@ export default function ImportDialog({
             <div className="import-opts">
               <label className="inline">
                 {t('Gruba ekle')}
-                <select value={group} onChange={(e) => setGroup(e.target.value)}>
+                <Select value={group} onChange={(e) => setGroup(e.target.value)}>
                   <option value="">{t('Dosyadaki gibi')}</option>
                   {groups.map((g) => (
                     <option key={g} value={g}>
                       {groupLabel(g)}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <label className="inline check">
                 <input type="checkbox" checked={tag} onChange={(e) => setTag(e.target.checked)} /> {t('"içe-aktarılan" etiketi ekle')}

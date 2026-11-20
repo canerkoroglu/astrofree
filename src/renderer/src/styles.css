@@ -8817,3 +8817,116 @@ button.send-btn.stop {
   text-align: center;
   color: var(--muted);
 }
+
+/* side menu a little wider; usage mode switch balanced */
+.app {
+  --rail-w: 196px;
+}
+.app.rail-mini {
+  --rail-w: 64px;
+}
+.rail .rail-mode button,
+.rail .rail-mode button.on {
+  font-size: 11.5px;
+  padding-left: 4px;
+  padding-right: 4px;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Tek açılır liste dili: <Select> (uygulama stilindeki MenuSelect + gizli yerel liste) ---- */
+.ui-select {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+}
+select.ui-native {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0;
+  padding: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: -1;
+}
+.ui-select > button.menu-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0 12px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+}
+.ui-select > button.menu-select:hover:not(:disabled),
+.ui-select > button.menu-select.open {
+  border-color: var(--line-strong);
+}
+.ui-select > button.menu-select:disabled {
+  opacity: 0.45;
+}
+.ui-select .menu-select-val {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* full width where the native select used to fill its row */
+label > .ui-select,
+.form-grid .ui-select,
+.modal fieldset .ui-select,
+.chat-sessions .ui-select,
+.journal-form .ui-select,
+.inline-select .ui-select {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+}
+label.inline > .ui-select,
+label.check > .ui-select {
+  width: auto;
+  flex: 0 1 auto;
+}
+/* chat: provider and model inside the connection box, without their own border */
+.chat-conn .ui-select > button.menu-select,
+.conn-model button.menu-select {
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  padding: 0 6px 0 0;
+}
+.chat-conn .conn-provider > button.menu-select {
+  font-weight: 650;
+}
+.conn-model {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.conn-model button.menu-select {
+  width: 100%;
+  font-family: var(--num-font);
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.chat .composer-row .ui-select.chat-level > button.menu-select {
+  min-height: 30px;
+  padding: 0 10px 0 12px;
+  font-size: 12px;
+}
+.timebar .ui-select > button.menu-select {
+  min-height: 34px;
+}
