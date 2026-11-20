@@ -9114,3 +9114,8 @@ table.houses-table {
     transition: none;
   }
 }
+/* closed details are also hidden from screen readers and the contrast check */
+.house-detail:not(.open) .house-slide-in {
+  visibility: hidden;
+  transition: opacity 0.18s ease, padding 0.22s ease, visibility 0s 0.22s;
+}
