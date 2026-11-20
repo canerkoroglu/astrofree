@@ -1543,6 +1543,9 @@ export const ru: Locale = {
     "Kayıp / yas": "Утрата / горе",
     "Eğitim": "Учёба",
     "Yolculuk / yurt dışı": "Поездка / заграница",
-    "Diğer": "Другое"
+    "Diğer": "Другое",
+    "Doğum haritası": "Натальная карта",
+    "Olay haritası": "Карта события",
+    "Seçenekler": "Параметры"
   }
 }

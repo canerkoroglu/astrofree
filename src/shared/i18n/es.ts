@@ -1543,6 +1543,9 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Kayıp / yas": "Pérdida / duelo",
     "Eğitim": "Estudios",
     "Yolculuk / yurt dışı": "Viaje / extranjero",
-    "Diğer": "Otro"
+    "Diğer": "Otro",
+    "Doğum haritası": "Carta natal",
+    "Olay haritası": "Carta del acontecimiento",
+    "Seçenekler": "Opciones"
   }
 }

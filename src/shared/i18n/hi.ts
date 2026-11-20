@@ -1543,6 +1543,9 @@ export const hi: Locale = {
     "Kayıp / yas": "हानि / शोक",
     "Eğitim": "शिक्षा",
     "Yolculuk / yurt dışı": "यात्रा / विदेश",
-    "Diğer": "अन्य"
+    "Diğer": "अन्य",
+    "Doğum haritası": "जन्म कुंडली",
+    "Olay haritası": "घटना कुंडली",
+    "Seçenekler": "विकल्प"
   }
 }

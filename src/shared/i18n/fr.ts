@@ -1543,6 +1543,9 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Kayıp / yas": "Perte / deuil",
     "Eğitim": "Études",
     "Yolculuk / yurt dışı": "Voyage / étranger",
-    "Diğer": "Autre"
+    "Diğer": "Autre",
+    "Doğum haritası": "Thème natal",
+    "Olay haritası": "Thème de l’événement",
+    "Seçenekler": "Options"
   }
 }

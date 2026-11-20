@@ -1543,6 +1543,9 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Kayıp / yas": "Loss / grief",
     "Eğitim": "Education",
     "Yolculuk / yurt dışı": "Travel / abroad",
-    "Diğer": "Other"
+    "Diğer": "Other",
+    "Doğum haritası": "Birth chart",
+    "Olay haritası": "Event chart",
+    "Seçenekler": "Options"
   }
 }

@@ -5632,3 +5632,58 @@ label.inline {
     padding-right: 10px;
   }
 }
+
+/* ---- Liste satırı: üzerine gelince hiçbir şey açılmaz; seçenekler ⋯ menüsünde ---- */
+.chart-list .chips,
+.chart-list li:hover .chips,
+.chart-list li.active .chips {
+  display: none;
+}
+.chart-list .row-more {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.45;
+}
+.chart-list li.active .row-more,
+.chart-list .row-more[aria-expanded='true'],
+.chart-list .row-more:focus-visible,
+.chart-list .row-more:hover {
+  opacity: 1;
+}
+.chart-list .row-more:hover,
+.chart-list .row-more[aria-expanded='true'] {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.chart-list .item {
+  padding-right: 34px;
+}
+.row-menu {
+  position: fixed;
+  right: auto;
+  min-width: 200px;
+  z-index: 60;
+}
+.row-menu > button {
+  flex-direction: row;
+  align-items: center;
+}
+.row-menu hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: var(--s1) 0;
+}
+.row-menu > button.danger {
+  color: var(--error);
+}

@@ -1543,6 +1543,9 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Kayıp / yas": "Verlust / Trauer",
     "Eğitim": "Ausbildung",
     "Yolculuk / yurt dışı": "Reise / Ausland",
-    "Diğer": "Sonstiges"
+    "Diğer": "Sonstiges",
+    "Doğum haritası": "Geburtshoroskop",
+    "Olay haritası": "Ereignishoroskop",
+    "Seçenekler": "Optionen"
   }
 }

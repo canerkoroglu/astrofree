@@ -133,6 +133,24 @@ export default function App() {
   const [settingsFocus, setSettingsFocus] = useState<SettingsFocus | undefined>()
   const [exportOpen, setExportOpen] = useState(false)
   const [zoneOpen, setZoneOpen] = useState(false)
+  // The list row menu (⋯ or right-click): opened at a screen point so the scrolling list never clips it.
+  const [itemMenu, setItemMenu] = useState<{ id: string; x: number; y: number } | null>(null)
+  useEffect(() => {
+    if (!itemMenu) return
+    const close = () => setItemMenu(null)
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && close()
+    window.addEventListener('mousedown', close)
+    window.addEventListener('resize', close)
+    window.addEventListener('keydown', key)
+    window.addEventListener('wheel', close, { passive: true })
+    return () => {
+      window.removeEventListener('mousedown', close)
+      window.removeEventListener('resize', close)
+      window.removeEventListener('keydown', key)
+      window.removeEventListener('wheel', close)
+    }
+  }, [itemMenu])
+  const menuChart = itemMenu ? charts.find((c) => c.id === itemMenu.id) : undefined
   const [filter, setFilter] = useState('')
   const [showChat, setShowChat] = useState(true)
   const [view, setView] = useState<View>('chart')
@@ -1036,6 +1054,34 @@ export default function App() {
       />
 
       <aside className="sidebar">
+        {itemMenu && menuChart && (
+          <div
+            className="pop-menu row-menu"
+            role="menu"
+            style={{ left: Math.max(8, itemMenu.x - 200), top: Math.min(itemMenu.y, window.innerHeight - 280) }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            {(
+              [
+                ['natal', menuChart.kind === 'event' ? 'Olay haritası' : 'Doğum haritası'],
+                ['info', 'Bilgiler'],
+                ['transit', 'Transit'],
+                ...((menuChart.kind ?? 'person') === 'person' ? [['progressed', 'Progresyon']] : [])
+              ] as [string, string][]
+            ).map(([v, label]) => (
+              <button key={v} role="menuitem" onClick={() => (setItemMenu(null), openChart(menuChart, v as Parameters<typeof openChart>[1]))}>
+                {t(label)}
+              </button>
+            ))}
+            <hr />
+            <button role="menuitem" onClick={() => (setItemMenu(null), setEditor(menuChart))}>
+              ✎ {t('Düzenle')}
+            </button>
+            <button role="menuitem" className="danger" onClick={() => (setItemMenu(null), void removeChart(menuChart))}>
+              × {t('Sil')}
+            </button>
+          </div>
+        )}
         <div className="side-actions">
           <button className="primary" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
             {t('+ Kişi')}
@@ -1091,7 +1137,13 @@ export default function App() {
                 return (
                 <li key={c.id} className={c.id === working.id ? 'active' : ''}>
                   <div className="item-row">
-                    <button className="item" onClick={() => openChart(c, 'natal')} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
+                    <button
+                      className="item"
+                      onClick={() => openChart(c, 'natal')}
+                      onContextMenu={(e) => {
+                        e.preventDefault()
+                        setItemMenu({ id: c.id, x: e.clientX + 180, y: e.clientY })
+                      }} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
                       <span className={`avatar sm ${kind === 'event' ? 'event' : ''}`}>{kind === 'event' ? '◆' : initialsOf(c.name)}</span>
                       <span className="item-text">
                         <span className="nm">{c.favorite ? '★ ' : ''}{c.name}</span>
@@ -1102,20 +1154,18 @@ export default function App() {
                         {(c.tags?.length ?? 0) > 0 && <span className="item-tags">{c.tags!.map((t) => `#${t}`).join(' ')}</span>}
                       </span>
                     </button>
-<span className="row-actions">
-                    <button className="x tip-end" data-tip={t('Düzenle')} aria-label={t('Düzenle')} onClick={() => setEditor(c)}>
-                      ✎
+<button
+                      className="row-more"
+                      aria-label={t('Seçenekler')}
+                      aria-haspopup="menu"
+                      aria-expanded={itemMenu?.id === c.id}
+                      onClick={(e) => {
+                        const r = e.currentTarget.getBoundingClientRect()
+                        setItemMenu(itemMenu?.id === c.id ? null : { id: c.id, x: r.right, y: r.bottom + 4 })
+                      }}
+                    >
+                      ⋯
                     </button>
-                    <button className="x tip-end" data-tip={t('Sil')} aria-label={t('Sil')} onClick={() => void removeChart(c)}>
-                      ×
-                    </button>
-                    </span>
-                  </div>
-                  <div className="chips">
-                    <button onClick={() => openChart(c, 'natal')}>{t('Harita')}</button>
-                    <button onClick={() => openChart(c, 'info')}>{t('Bilgiler')}</button>
-                    <button onClick={() => openChart(c, 'transit')}>{t('Transit')}</button>
-                    {kind === 'person' && <button onClick={() => openChart(c, 'progressed')}>{t('Progresyon')}</button>}
                   </div>
                 </li>
                 )
