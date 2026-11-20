@@ -1207,7 +1207,7 @@ export default function App() {
           <div
             className="pop-menu row-menu"
             role="menu"
-            style={{ left: Math.max(8, itemMenu.x - 200), top: Math.min(itemMenu.y, window.innerHeight - 280) }}
+            style={{ left: Math.max(8, itemMenu.x - 220), top: Math.min(itemMenu.y, window.innerHeight - 280) }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {(
