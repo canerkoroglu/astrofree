@@ -532,7 +532,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
       <div className="composer">
         <div className="composer-box">
           <textarea
-            rows={3}
+            rows={2}
             value={input}
             placeholder={t('Haritayla ilgili sorunuzu yazın… (Enter gönderir, Shift+Enter yeni satır)')}
             onChange={(e) => setInput(e.target.value)}
@@ -561,12 +561,13 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
                 {t('Bilgi bankası')}
               </label>
             )}
-            <button className="link small" onClick={() => setShowCtx(!showCtx)}>
-              {showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
-            </button>
             <span className="composer-actions">
-              <span
-                className="muted small token-meter"
+              <button
+                type="button"
+                className={`token-meter${showCtx ? ' on' : ''}`}
+                aria-pressed={showCtx}
+                aria-label={showCtx ? t('Veriyi gizle') : t('Gönderilen veri')}
+                onClick={() => setShowCtx(!showCtx)}
                 title={[
                   t('Gönder’e basınca gidecek yaklaşık veri: talimat, harita verisi, sohbet geçmişi ve sorunuz. Eski mesajlar kısaltılarak gönderilir; talimat ve geçmiş sağlayıcının önbelleğinden okunduğu için tekrar eden kısım daha hızlı ve ucuzdur.'),
                   nextSize.repeat > 0 ? t('≈ {n} tekrar (önbellek)', { n: fmtK(nextSize.repeat) }) : '',
@@ -574,10 +575,10 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
                   nextSize.shortened > 0 ? t('{n} eski mesaj kısaltıldı', { n: nextSize.shortened }) : ''
                 ]
                   .filter(Boolean)
-                  .join('\n')}
+                  .join('\n') + '\n\n' + (showCtx ? t('Veriyi gizle') : t('Gönderilen veri'))}
               >
                 ≈ {fmtK(nextSize.tokens)} {t('token')}
-              </span>
+              </button>
               <Select
                 className="chat-level"
                 value={settings.ai.level}

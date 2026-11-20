@@ -9173,3 +9173,71 @@ table.grid td.cell.x-at {
 table.grid td.cell:not(.empty):hover {
   background: color-mix(in srgb, var(--accent) 20%, transparent);
 }
+
+/* ---- Sohbet yazma alanı, kompakt ---- */
+.chat .composer {
+  padding: 8px 12px 8px;
+  gap: 4px;
+}
+.composer-box {
+  border-radius: 12px;
+}
+.composer-box textarea {
+  min-height: 44px;
+  padding: 9px 12px 2px;
+  font-size: 13.5px;
+}
+.chat .composer-row {
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding: 4px 6px 6px 8px;
+}
+.chip-check {
+  min-height: 26px;
+  padding: 0 8px;
+  gap: 4px;
+  font-size: 11.5px;
+}
+.chip-check .ico {
+  width: 13px;
+  height: 13px;
+}
+.composer-actions {
+  gap: 4px;
+}
+button.token-meter {
+  min-height: 26px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: var(--num-font);
+  white-space: nowrap;
+}
+button.token-meter:hover,
+button.token-meter.on {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.chat .composer-row .ui-select.chat-level > button.menu-select {
+  min-height: 26px;
+  padding: 0 8px 0 10px;
+  font-size: 11.5px;
+  gap: 4px;
+}
+button.send-btn {
+  width: 30px;
+  height: 30px;
+}
+.chat .ai-disclaimer {
+  font-size: 10.5px;
+}
+/* very narrow chat column: the chips keep only their icons */
+@container chat (max-width: 360px) {
+  .chip-check .chip-lbl {
+    display: none;
+  }
+}
