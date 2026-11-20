@@ -8461,3 +8461,136 @@ button.soft-btn.on {
     transition: none;
   }
 }
+
+/* ===== Sol menü + panel: tek bütün (v3) =====
+   One row style for panel switches and layers; compact quick actions; calm cards. */
+.rail {
+  gap: var(--s4);
+}
+.rail-switch {
+  display: none !important;
+}
+/* shared row: 36px, rounded, tinted with a left bar when on */
+.rail .rail-group > button.rail-btn:not(.tile) {
+  min-height: 36px;
+  padding: 4px 8px;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.rail .rail-group > button.rail-btn:not(.tile):hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.rail .rail-group > button.rail-btn:not(.tile).on {
+  --c: var(--layer, var(--accent));
+  border-color: transparent;
+  background: color-mix(in srgb, var(--c) 13%, var(--panel));
+  box-shadow: inset 3px 0 0 var(--c);
+  font-weight: 650;
+}
+.rail .rail-group > button.rail-btn:not(.tile):disabled {
+  opacity: 0.45;
+}
+.rail .rail-group > button.rail-btn:not(.tile) .rail-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  font-size: 10.5px;
+}
+.rail .rail-group > button.rail-btn:not(.tile).on .rail-badge.plain {
+  color: var(--accent);
+}
+.rail .rail-layers button.rail-btn .rail-badge {
+  border-width: 1.5px;
+  background: transparent;
+}
+.rail .rail-layers button.rail-btn.on .rail-badge {
+  background: var(--layer);
+  border-color: var(--layer);
+  color: #fff;
+}
+.rail .rail-lbl {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* quick actions: four low tiles, icon beside the name */
+.rail .rail-tiles {
+  gap: 6px;
+  padding-top: 0;
+}
+.rail button.rail-btn.tile {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 8px 4px 5px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--hue) 7%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--hue) 20%, var(--line));
+}
+.rail button.rail-btn.tile:hover {
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--hue) 14%, var(--panel));
+}
+.rail button.rail-btn.tile .rail-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.rail button.rail-btn.tile .rail-lbl {
+  font-size: 12.5px;
+  text-align: left;
+}
+/* sections: same caps, same spacing; chart options sit in one calm block */
+.rail .rail-cap {
+  padding: 0 2px 4px;
+  font-size: 10.5px;
+}
+.rail .rail-opts {
+  gap: 4px;
+  padding-top: 0;
+  border-top: 0;
+}
+.rail .rail-opts .rail-sub {
+  padding: 4px 2px 0;
+  font-size: 11.5px;
+}
+.rail .rail-group + .rail-group,
+.rail .rail-group + .rail-opts,
+.rail .rail-opts + .rail-opts {
+  margin-top: var(--s1);
+}
+/* the side panel follows the same rhythm */
+.sidebar {
+  gap: var(--s3);
+}
+.side-head {
+  min-height: 34px;
+}
+.side-head h2 {
+  font-size: 15px;
+}
+.side-head .ghost-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 17px;
+}
+.side-head .menu-wrap {
+  position: relative;
+}
+.side-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+  top: calc(100% + 4px);
+}
+.side-menu > button:disabled {
+  opacity: 0.45;
+}

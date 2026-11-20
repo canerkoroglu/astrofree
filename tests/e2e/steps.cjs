@@ -222,7 +222,7 @@ function steps({ ai, tmp, mock }) {
   step('night close', `(()=>{document.querySelector('.night-modal .modal-x').click();return 1})()`, 400)
   // Import with preview, duplicates, people manager.
   step('import text', `window.astro.charts.importText('#A93:Einstein,Albert,m,14.3.1879g,11:30,Ulm,DEU\\n#B93:2407422.98027,48n24,10e00,0h40e,0\\n#A93:Bad,Date,m,soon,12:00,X,XX\\n#B93:*,1n00,1e00,0hE00,0').then(async r=>{if(r.kind!=='preview')return 'FAIL içe aktarma önizlemesi gelmedi';const a=await window.astro.charts.addMany(r.records);const b=await window.astro.charts.addMany(r.records);return ok('İçe aktarma: AAF metni okunuyor, okunamayan satır sayılıyor, aynı kayıt ikinci kez eklenmiyor',r.records.length===1&&r.skipped===1&&r.records[0].local.y===1879&&a.added===1&&b.added===0&&b.duplicates===1)})`)
-  step('people open', `c('.search-row button','☰')`, 600)
+  step('people open', `(()=>{if(!document.querySelector('.side-more'))c('.rail .rail-lbl','Haritalar');setTimeout(()=>{document.querySelector('.side-more').click();setTimeout(()=>c('.side-menu button','Harita yönetimi'),100)},200);return 1})()`, 900)
   step('people check', `(()=>{const m=document.querySelector('.people-modal');return ok('Kişiler ve olaylar: liste, filtreler ve dışa aktarma düğmeleri',!!m&&m.querySelectorAll('.people-list li').length>=1&&!!m.querySelector('.pm-filters select')&&!!m.querySelector('.pm-bulk .menu-wrap button')&&m.querySelectorAll('.pm-stat').length===4)})()`)
   step('people search', `(()=>{setv(document.querySelector('.pm-search .search'),'yeni ise');return 1})()`, 400)
   step('people search check', `ok('Kişiler ve olaylar: aksan duyarsız arama olayların içinde de arıyor',document.querySelectorAll('.people-list li input[type=checkbox]').length===1)`)

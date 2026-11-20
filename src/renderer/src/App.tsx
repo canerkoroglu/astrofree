@@ -159,6 +159,7 @@ export default function App() {
   const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
   // Charts list: all, birth charts only, or event charts only (remembered).
   const [addOpen, setAddOpen] = useState(false)
+  const [sideMenu, setSideMenu] = useState(false)
   const [listKind, setListKindState] = useState<'all' | 'person' | 'event'>(() => {
     try {
       const v = localStorage.getItem('list-kind')
@@ -979,7 +980,6 @@ export default function App() {
                 {RAIL_ABBR[k]}
               </span>
               <span className="rail-lbl">{t(OUTER_LABEL[k])}</span>
-              <span className="rail-switch" aria-hidden />
             </button>
           ))}
         </div>
@@ -1239,13 +1239,32 @@ export default function App() {
           <h2>{panel === 'sky' ? t('Gökyüzü') : t('Haritalar')}</h2>
           {panel === 'sky' && (
             <button className="ghost-icon sky-expand" title={t('Tam ekranda göster')} aria-label={t('Tam ekranda göster')} onClick={() => setSkyFull(true)}>
-              ⤢
+              <Icon name="expand" size={16} />
             </button>
           )}
           {panel === 'people' && (
-            <button className="ghost-icon tip-end" data-tip={t('Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Harita yönetimi')} onClick={() => setShowPeople(true)}>
-              ☰
-            </button>
+            <div className="menu-wrap">
+              <button className="ghost-icon side-more" aria-haspopup="menu" aria-expanded={sideMenu} aria-label={t('Seçenekler')} title={t('Seçenekler')} onClick={() => setSideMenu(!sideMenu)}>
+                ⋯
+              </button>
+              {sideMenu && (
+                <div className="pop-menu row-menu side-menu" role="menu" onMouseLeave={() => setSideMenu(false)}>
+                  <button role="menuitem" onClick={() => (setSideMenu(false), setShowPeople(true))}>
+                    <Icon name="sliders" size={17} />
+                    <span>{t('Harita yönetimi')}</span>
+                  </button>
+                  <hr />
+                  <button role="menuitem" onClick={() => (setSideMenu(false), menuRef.current('import'))}>
+                    <Icon name="download" size={17} />
+                    <span>{t('İçe aktar')}</span>
+                  </button>
+                  <button role="menuitem" disabled={!charts.length} onClick={() => (setSideMenu(false), menuRef.current('export'))}>
+                    <Icon name="upload" size={17} />
+                    <span>{t('Dışa aktar')}</span>
+                  </button>
+                </div>
+              )}
+            </div>
           )}
           <button className="ghost-icon" onClick={() => setPanel(null)} aria-label={t('Paneli kapat')} title={t('Paneli kapat')}>
             <Icon name="close" />
@@ -1400,12 +1419,6 @@ export default function App() {
             </li>
           )}
         </ul>
-        </div>
-        <div className="side-actions">
-          <button onClick={() => menuRef.current('import')}>{t('İçe aktar')}</button>
-          <button onClick={() => menuRef.current('export')} disabled={!charts.length}>
-            {t('Dışa aktar')}
-          </button>
         </div>
           </>
         )}
