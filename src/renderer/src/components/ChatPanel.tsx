@@ -547,7 +547,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             <label className={`chip-check${attach ? ' on' : ''}`} title={t('Harita verisini ekle')}>
               <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} />
               <Icon name="wheel" size={14} />
-              {t('Harita verisi')}
+              <span className="chip-lbl">{t('Harita verisi')}</span>
             </label>
             {knowledgeCount > 0 && (
               <label className={`chip-check${settings.ai.useKnowledge && attach ? ' on' : ''}`} title={t('Haritayla ve sorunuzla eşleşen bilgi bankası kayıtları da gönderilir')}>
@@ -558,7 +558,7 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
                   onChange={(e) => onSettings({ ...settings, ai: { ...settings.ai, useKnowledge: e.target.checked } })}
                 />
                 <Icon name="book" size={14} />
-                {t('Bilgi bankası')}
+                <span className="chip-lbl">{t('Bilgi bankası')}</span>
               </label>
             )}
             <span className="composer-actions">

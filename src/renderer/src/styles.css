@@ -9235,8 +9235,12 @@ button.send-btn {
 .chat .ai-disclaimer {
   font-size: 10.5px;
 }
-/* very narrow chat column: the chips keep only their icons */
-@container chat (max-width: 360px) {
+/* narrow chat column: the chips keep only their icons (name in the tooltip) */
+.chat .composer {
+  container-type: inline-size;
+  container-name: composer;
+}
+@container composer (max-width: 440px) {
   .chip-check .chip-lbl {
     display: none;
   }
