@@ -1565,6 +1565,8 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Menüyü genişlet": "Menü ausklappen",
     "Kişi ara…": "Personen suchen…",
     "Yapay zekâ sağlayıcısı": "KI-Anbieter",
-    "Şimdiki zaman": "Aktuelle Zeit"
+    "Şimdiki zaman": "Aktuelle Zeit",
+    "Paneli kapat": "Bereich schließen",
+    "Paneller": "Bereiche"
   }
 }

@@ -1565,6 +1565,8 @@ export const ru: Locale = {
     "Menüyü genişlet": "Развернуть меню",
     "Kişi ara…": "Найти человека…",
     "Yapay zekâ sağlayıcısı": "Поставщик ИИ",
-    "Şimdiki zaman": "Текущее время"
+    "Şimdiki zaman": "Текущее время",
+    "Paneli kapat": "Закрыть панель",
+    "Paneller": "Панели"
   }
 }

@@ -1565,6 +1565,8 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Menüyü genişlet": "Expand menu",
     "Kişi ara…": "Search people…",
     "Yapay zekâ sağlayıcısı": "AI provider",
-    "Şimdiki zaman": "Current time"
+    "Şimdiki zaman": "Current time",
+    "Paneli kapat": "Close panel",
+    "Paneller": "Panels"
   }
 }

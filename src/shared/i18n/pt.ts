@@ -1565,6 +1565,8 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Menüyü genişlet": "Expandir menu",
     "Kişi ara…": "Buscar pessoas…",
     "Yapay zekâ sağlayıcısı": "Provedor de IA",
-    "Şimdiki zaman": "Hora atual"
+    "Şimdiki zaman": "Hora atual",
+    "Paneli kapat": "Fechar painel",
+    "Paneller": "Painéis"
   }
 }

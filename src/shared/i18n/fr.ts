@@ -1565,6 +1565,8 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Menüyü genişlet": "Agrandir le menu",
     "Kişi ara…": "Chercher une personne…",
     "Yapay zekâ sağlayıcısı": "Fournisseur d’IA",
-    "Şimdiki zaman": "Heure actuelle"
+    "Şimdiki zaman": "Heure actuelle",
+    "Paneli kapat": "Fermer le panneau",
+    "Paneller": "Panneaux"
   }
 }

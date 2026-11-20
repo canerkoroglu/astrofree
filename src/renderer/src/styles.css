@@ -6818,3 +6818,60 @@ button.tb-zone {
 button.tb-zone .ico {
   color: var(--muted);
 }
+
+/* ---- Ana menü + açılır kapanır panel (Kişiler ve olaylar / Gökyüzü) ---- */
+.app {
+  --side-w: clamp(240px, 18vw, 290px);
+  grid-template-columns: var(--rail-w) var(--side-w) minmax(0, 1fr) clamp(300px, 27vw, 400px);
+}
+.app.no-chat {
+  grid-template-columns: var(--rail-w) var(--side-w) minmax(0, 1fr) 0;
+}
+.app.no-side {
+  --side-w: 0px;
+}
+.app.no-side .sidebar {
+  display: none;
+}
+.side-head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 32px;
+}
+.side-head h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.side-head .ghost-icon {
+  width: 30px;
+  height: 30px;
+}
+.sidebar .search-row .search {
+  width: 100%;
+}
+.side-sky-full {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.side-sky-full .sky {
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+}
+.rail-actions {
+  padding-top: var(--s2);
+  border-top: 1px solid var(--line);
+}
+.rail-actions .rail-badge,
+.rail .rail-group:first-of-type .rail-badge {
+  color: var(--ink);
+}

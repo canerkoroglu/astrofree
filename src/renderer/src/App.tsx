@@ -139,6 +139,24 @@ export default function App() {
   const [settingsFocus, setSettingsFocus] = useState<SettingsFocus | undefined>()
   const [exportOpen, setExportOpen] = useState(false)
   const [zoneOpen, setZoneOpen] = useState(false)
+  // The panel beside the main menu: the people and events list, the sky, or closed.
+  const [panel, setPanelState] = useState<'people' | 'sky' | null>(() => {
+    try {
+      const v = localStorage.getItem('side-panel')
+      return v === 'sky' ? 'sky' : v === 'none' ? null : 'people'
+    } catch {
+      return 'people'
+    }
+  })
+  const setPanel = (v: 'people' | 'sky' | null) => {
+    setPanelState(v)
+    try {
+      localStorage.setItem('side-panel', v ?? 'none')
+    } catch {
+      /* storage unavailable */
+    }
+  }
+  const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
   // Side menu: full (icons and names) or narrow (icons only); remembered on this computer.
   const [railMini, setRailMini] = useState(() => {
     try {
@@ -206,43 +224,6 @@ export default function App() {
       return {}
     }
   })
-  // Height of the people list in the sidebar, % of the space shared with the sky panel.
-  const panesRef = useRef<HTMLDivElement>(null)
-  const [listPct, setListPct] = useState<number>(() => {
-    try {
-      const v = Number(localStorage.getItem('sidebar-split'))
-      return v >= 15 && v <= 85 ? v : 55
-    } catch {
-      return 55
-    }
-  })
-  const saveListPct = (v: number) => {
-    const c = Math.min(85, Math.max(15, v))
-    setListPct(c)
-    try {
-      localStorage.setItem('sidebar-split', String(c))
-    } catch {
-      /* storage unavailable */
-    }
-  }
-  const startSplitDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const box = panesRef.current?.getBoundingClientRect()
-    if (!box) return
-    e.preventDefault()
-    const el = e.currentTarget
-    el.setPointerCapture(e.pointerId)
-    el.classList.add('dragging')
-    const move = (ev: PointerEvent) => saveListPct(((ev.clientY - box.top) / box.height) * 100)
-    const up = () => {
-      el.classList.remove('dragging')
-      el.removeEventListener('pointermove', move)
-      el.removeEventListener('pointerup', up)
-      el.removeEventListener('pointercancel', up)
-    }
-    el.addEventListener('pointermove', move)
-    el.addEventListener('pointerup', up)
-    el.addEventListener('pointercancel', up)
-  }
   const toggleSection = (k: string) =>
     setCollapsed((c) => {
       const n = { ...c, [k]: !c[k] }
@@ -888,7 +869,7 @@ export default function App() {
         ]
 
   return (
-    <div className={`app${showChat ? '' : ' no-chat'}${railMini ? ' rail-mini' : ''}`}>
+    <div className={`app${showChat ? '' : ' no-chat'}${railMini ? ' rail-mini' : ''}${panel ? '' : ' no-side'}`}>
       <nav className="rail" aria-label={t('Ana menü')}>
         <div className="rail-top">
           <div className="brand rail-brand" title="AstroFree">
@@ -901,6 +882,46 @@ export default function App() {
             title={railMini ? t('Menüyü genişlet') : t('Menüyü daralt')}
           >
             {railMini ? '»' : '«'}
+          </button>
+        </div>
+        <div className="rail-group" role="group" aria-label={t('Paneller')}>
+          <button className={`rail-btn${panel === 'people' ? ' on' : ''}`} aria-pressed={panel === 'people'} onClick={() => togglePanel('people')} title={t('Kişiler ve olaylar')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="users" size={18} />
+            </span>
+            <span className="rail-lbl">{t('Kişiler ve olaylar')}</span>
+          </button>
+          <button className={`rail-btn${panel === 'sky' ? ' on' : ''}`} aria-pressed={panel === 'sky'} onClick={() => togglePanel('sky')} title={t('Gökyüzü')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="star" size={18} />
+            </span>
+            <span className="rail-lbl">{t('Gökyüzü')}</span>
+          </button>
+        </div>
+        <div className="rail-group rail-actions" role="group" aria-label={t('Yeni')}>
+          <button className="rail-btn" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="userPlus" size={18} />
+            </span>
+            <span className="rail-lbl">{t('+ Kişi')}</span>
+          </button>
+          <button className="rail-btn" onClick={() => setEditor(blankChart(settings, 'event'))} title={t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="eventPlus" size={18} />
+            </span>
+            <span className="rail-lbl">{t('+ Olay')}</span>
+          </button>
+          <button className="rail-btn" onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="clock" size={18} />
+            </span>
+            <span className="rail-lbl">{t('Bugün')}</span>
+          </button>
+          <button className="rail-btn rail-night" onClick={() => setShowNight(true)} title={t('Bu gece çıplak gözle görülebilecek gezegenler, Ay ve gökyüzü olayları')}>
+            <span className="rail-badge plain" aria-hidden>
+              <Icon name="telescope" size={18} />
+            </span>
+            <span className="rail-lbl">{t('Bu gece')}</span>
           </button>
         </div>
         <div className="rail-group rail-layers" role="group" aria-label={t('Katmanlar')}>
@@ -1141,25 +1162,26 @@ export default function App() {
             </button>
           </div>
         )}
-        <div className="side-actions">
-          <button className="primary" onClick={() => setEditor(blankChart(settings))} title={t('Yeni kişi (⌘N)')}>
-            {t('+ Kişi')}
-          </button>
-          <button onClick={() => setEditor(blankChart(settings, 'event'))} title={t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}>
-            {t('+ Olay')}
-          </button>
-          <button onClick={openToday} title={t('Şu anki gökyüzü (canlı)')}>
-            {t('Bugün')}
-          </button>
-          <button onClick={() => setShowNight(true)} title={t('Bu gece çıplak gözle görülebilecek gezegenler, Ay ve gökyüzü olayları')}>
-            🔭 {t('Bu gece')}
+        <div className="side-head">
+          <h2>{panel === 'sky' ? t('Gökyüzü') : t('Kişiler ve olaylar')}</h2>
+          {panel === 'sky' && (
+            <button className="ghost-icon sky-expand" title={t('Tam ekranda göster')} aria-label={t('Tam ekranda göster')} onClick={() => setSkyFull(true)}>
+              ⤢
+            </button>
+          )}
+          {panel === 'people' && (
+            <button className="ghost-icon tip-end" data-tip={t('Kişiler ve olaylar: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Kişiler ve olaylar')} onClick={() => setShowPeople(true)}>
+              ☰
+            </button>
+          )}
+          <button className="ghost-icon" onClick={() => setPanel(null)} aria-label={t('Paneli kapat')} title={t('Paneli kapat')}>
+            <Icon name="close" />
           </button>
         </div>
+        {panel === 'people' && (
+          <>
         <div className="search-row">
           <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
-          <button className="tip-end" data-tip={t('Kişiler ve olaylar: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Kişiler ve olaylar')} onClick={() => setShowPeople(true)}>
-            ☰
-          </button>
         </div>
         {notice && <p className="small notice">{notice}</p>}
         {charts.some((c) => c.group) && (
@@ -1181,8 +1203,8 @@ export default function App() {
             ))}
           </div>
         )}
-        <div className="side-panes" ref={panesRef}>
-        <ul className="chart-list side-pane" style={collapsed.sky ? undefined : { flex: `0 0 ${listPct}%` }}>
+        <div className="side-panes">
+        <ul className="chart-list side-pane">
           {listSections.map(({ key: secKey, label, items: group }) => {
             if (!group.length) return null
             return [
@@ -1238,47 +1260,6 @@ export default function App() {
             </li>
           )}
         </ul>
-        {!collapsed.sky && (
-          <div
-            className="side-split"
-            role="separator"
-            aria-orientation="horizontal"
-            aria-label={t('Kişiler ve gökyüzü arasındaki bölme')}
-            aria-valuenow={Math.round(listPct)}
-            aria-valuemin={15}
-            aria-valuemax={85}
-            tabIndex={0}
-            title={t('Sürükleyerek yüksekliği ayarlayın · çift tıklama: varsayılan')}
-            onPointerDown={startSplitDrag}
-            onDoubleClick={() => saveListPct(55)}
-            onKeyDown={(e) => {
-              if (e.key === 'ArrowUp') (e.preventDefault(), saveListPct(listPct - 5))
-              if (e.key === 'ArrowDown') (e.preventDefault(), saveListPct(listPct + 5))
-            }}
-          >
-            <span />
-          </div>
-        )}
-        <section className={`side-sky side-pane${collapsed.sky ? ' folded' : ''}`}>
-          <div className="list-head side-pane-head">
-            <button className="sec-toggle" aria-expanded={!collapsed.sky} onClick={() => toggleSection('sky')}>
-              <span className="chev">{collapsed.sky ? '▸' : '▾'}</span> {t('Gökyüzü')}
-            </button>
-            <button
-              className="sky-expand"
-              title={t('Tam ekranda göster')}
-              aria-label={t('Tam ekranda göster')}
-              onClick={() => setSkyFull(true)}
-            >
-              ⤢ {t('Tam ekran')}
-            </button>
-          </div>
-          {!collapsed.sky && (
-            <div className="side-pane-body">
-              <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
-            </div>
-          )}
-        </section>
         </div>
         <div className="side-actions">
           <button onClick={() => menuRef.current('import')}>{t('İçe aktar')}</button>
@@ -1286,6 +1267,13 @@ export default function App() {
             {t('Dışa aktar')}
           </button>
         </div>
+          </>
+        )}
+        {panel === 'sky' && (
+          <div className="side-sky-full">
+            <SkyPanel report={sky} hours={hours} jd={skyJd} tz={eventTz} lon={settings.defaultPlace.lon} onJump={jumpTo} />
+          </div>
+        )}
       </aside>
 
       <main className="center">
