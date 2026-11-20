@@ -8,6 +8,7 @@ import { fmtLocal, fmtOffset, isValidZone, jdToLocal, localToJd, nowJd, offsetAt
 import DateTimeField from './DateTimeField'
 import PlaceSearch from './PlaceSearch'
 import BirthTimeHelp from './BirthTimeHelp'
+import MenuSelect from './MenuSelect'
 
 const RODDEN: [string, string][] = [
   ['', 'Belirtilmedi'],
@@ -104,7 +105,9 @@ export default function ChartEditor({
     onApply({ ...rec, name: rec.name.trim(), rodden: rec.timeUnknown ? 'X' : rec.rodden }, save)
   }
 
-  const initials = rec.name.trim() ? rec.name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toLocaleUpperCase('tr') : isEvent ? '◆' : '?'
+  // Letters only: "Beste — Güneş Dönüşü" gives "BG", not "B—".
+  const words = rec.name.trim().split(/\s+/).filter((w) => /^\p{L}/u.test(w))
+  const initials = isEvent ? '◆' : words.length ? words.slice(0, 2).map((w) => w[0]).join('').toLocaleUpperCase('tr') : '?'
 
   return (
     <div
@@ -119,7 +122,7 @@ export default function ChartEditor({
         <ModalClose onClose={onClose} />
         <header className="ed-head">
           <h2>{t(isNew ? (isEvent ? 'Yeni olay' : 'Yeni kişi') : isEvent ? 'Olayı düzenle' : 'Kişiyi düzenle')}</h2>
-          <div className="seg kind-seg">
+          <div className="seg kind-seg" role="radiogroup" aria-label={t('Tür')}>
             <button type="button" className={!isEvent ? 'on' : ''} onClick={() => setRec({ ...rec, kind: 'person' })}>
               {t('Kişi')}
             </button>
@@ -185,16 +188,16 @@ export default function ChartEditor({
                     <span>{t('Doğum saati bilinmiyor')}</span>
                   </label>
                   {!rec.timeUnknown && (
-                    <label className="inline-select">
-                      {t('Saat kaynağı')}
-                      <select value={rec.rodden ?? ''} onChange={(e) => setRec({ ...rec, rodden: e.target.value })} title={t('Rodden güvenilirlik derecesi')}>
-                        {RODDEN.filter(([k]) => k !== 'X').map(([k, n]) => (
-                          <option key={k} value={k}>
-                            {t(n)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                    <div className="inline-select">
+                      <span>{t('Saat kaynağı')}</span>
+                      <MenuSelect
+                        label={t('Rodden güvenilirlik derecesi')}
+                        searchable={false}
+                        value={rec.rodden ?? ''}
+                        options={RODDEN.filter(([k]) => k !== 'X').map(([k, n]) => ({ value: k, label: t(n) }))}
+                        onChange={(v) => setRec({ ...rec, rodden: v })}
+                      />
+                    </div>
                   )}
                 </div>
               )}

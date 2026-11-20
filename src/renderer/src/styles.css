@@ -8007,3 +8007,69 @@ button.add-new:hover {
 .row-menu > button.danger:hover .ico {
   color: var(--error);
 }
+
+/* ---- Kişi / olay penceresi: × başlıkta, tutarlı tür seçici, sade saat kaynağı ---- */
+.modal.editor {
+  position: relative;
+  overflow: hidden;
+}
+.modal.editor > .modal-x {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  margin: 0;
+}
+.modal.editor > .modal-x + .ed-head {
+  padding-right: 64px;
+}
+.modal.editor .ed-head .seg.kind-seg {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 7%, var(--panel));
+}
+.modal.editor .ed-head .kind-seg button,
+.modal.editor .ed-head .kind-seg button.on {
+  min-width: 72px;
+  min-height: 30px;
+  padding: 4px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+.modal.editor .ed-head .kind-seg button.on {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+}
+.ed-time-opts {
+  flex-wrap: wrap;
+  gap: var(--s3) var(--s5);
+  align-items: center;
+}
+.ed-time-opts .inline-select {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: 1 1 260px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.ed-time-opts .inline-select button.menu-select {
+  flex: 1;
+  min-height: 34px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
