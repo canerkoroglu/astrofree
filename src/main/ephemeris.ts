@@ -26,6 +26,22 @@ export function getSwe(): Promise<Swe> {
   return swePromise
 }
 
+/**
+ * Runs a calculation; if the WASM engine fails with a runtime error (its memory can be left
+ * corrupt by a faulty call), a fresh engine is started and the calculation is tried once more,
+ * so the app recovers without a restart.
+ */
+export async function withSwe<T>(fn: () => Promise<T> | T): Promise<T> {
+  try {
+    return await fn()
+  } catch (e) {
+    if (!(e instanceof WebAssembly.RuntimeError)) throw e
+    console.error('Swiss Ephemeris engine restarted after:', e.message)
+    swePromise = null
+    return await fn()
+  }
+}
+
 const norm = (x: number) => ((x % 360) + 360) % 360
 
 function computeOne(swe: Swe, req: EphemRequest): EphemResult {

@@ -16,7 +16,7 @@ import type {
 } from '@shared/types'
 import { apiKeyTest, cancelChat, detectProviders, serverModels, startChat } from './ai'
 import { ensureShellPath } from './ai/proc'
-import { computeMany } from './ephemeris'
+import { computeMany, withSwe } from './ephemeris'
 import { skyReport } from './events'
 import { nearestPlace, placeForZone, searchPlaces, zoneAt } from './geo'
 import { setMainLang, tm } from './i18n'
@@ -77,8 +77,8 @@ function createWindow(): void {
 }
 
 function registerIpc(): void {
-  ipcMain.handle('ephem:compute', (_e, reqs: EphemRequest[]) => computeMany(reqs))
-  ipcMain.handle('ephem:sky', (_e, jd: number, days: number, sidMode: number | null) => skyReport(jd, days, sidMode))
+  ipcMain.handle('ephem:compute', (_e, reqs: EphemRequest[]) => withSwe(() => computeMany(reqs)))
+  ipcMain.handle('ephem:sky', (_e, jd: number, days: number, sidMode: number | null) => withSwe(() => skyReport(jd, days, sidMode)))
 
   ipcMain.handle('charts:list', () => store.listCharts())
   ipcMain.handle('charts:save', (_e, rec: ChartRecord) => store.saveChart(rec))
@@ -136,19 +136,19 @@ function registerIpc(): void {
     return true
   })
 
-  ipcMain.handle('tools:transits', (_e, req: TransitSearchRequest) => transitSearch(req))
-  ipcMain.handle('tools:return', (_e, body: number, lon: number, jd: number, sid: number | null) => findReturn(body, lon, jd, sid))
+  ipcMain.handle('tools:transits', (_e, req: TransitSearchRequest) => withSwe(() => transitSearch(req)))
+  ipcMain.handle('tools:return', (_e, body: number, lon: number, jd: number, sid: number | null) => withSwe(() => findReturn(body, lon, jd, sid)))
   ipcMain.handle('tools:series', (_e, start: number, days: number, step: number, bodies: number[], sid: number | null) =>
-    ephemSeries(start, days, step, bodies, sid)
+    withSwe(() => ephemSeries(start, days, step, bodies, sid))
   )
-  ipcMain.handle('tools:election', (_e, req: ElectionRequest) => electionalSearch(req))
-  ipcMain.handle('tools:stars', (_e, jd: number, sid: number | null) => fixedStars(jd, sid))
-  ipcMain.handle('tools:hours', (_e, jd: number, lat: number, lon: number, tz: number) => planetaryHours(jd, lat, lon, tz))
-  ipcMain.handle('tools:timing', (_e, start: number, days: number, sid: number | null) => timingFacts(start, days, sid))
-  ipcMain.handle('tools:moon', (_e, jd: number, days: number, sid: number | null) => moonStays(jd, days, sid))
-  ipcMain.handle('tools:phases', (_e, jd: number, days: number) => lunarPhases(jd, days))
-  ipcMain.handle('tools:night', (_e, jd: number, lat: number, lon: number, sid: number | null) => nightSky(jd, lat, lon, sid))
-  ipcMain.handle('tools:rectify', (_e, req: RectifyRequest) => rectify(req))
+  ipcMain.handle('tools:election', (_e, req: ElectionRequest) => withSwe(() => electionalSearch(req)))
+  ipcMain.handle('tools:stars', (_e, jd: number, sid: number | null) => withSwe(() => fixedStars(jd, sid)))
+  ipcMain.handle('tools:hours', (_e, jd: number, lat: number, lon: number, tz: number) => withSwe(() => planetaryHours(jd, lat, lon, tz)))
+  ipcMain.handle('tools:timing', (_e, start: number, days: number, sid: number | null) => withSwe(() => timingFacts(start, days, sid)))
+  ipcMain.handle('tools:moon', (_e, jd: number, days: number, sid: number | null) => withSwe(() => moonStays(jd, days, sid)))
+  ipcMain.handle('tools:phases', (_e, jd: number, days: number) => withSwe(() => lunarPhases(jd, days)))
+  ipcMain.handle('tools:night', (_e, jd: number, lat: number, lon: number, sid: number | null) => withSwe(() => nightSky(jd, lat, lon, sid)))
+  ipcMain.handle('tools:rectify', (_e, req: RectifyRequest) => withSwe(() => rectify(req)))
 
   ipcMain.handle('interp:list', () => store.listInterpretations())
   ipcMain.handle('interp:add', (_e, it: Interpretation) => store.addInterpretation(it))
