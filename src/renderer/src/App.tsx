@@ -1212,22 +1212,25 @@ export default function App() {
           >
             {(
               [
-                ['natal', menuChart.kind === 'event' ? 'Olay haritası' : 'Doğum haritası'],
-                ['info', 'Bilgiler'],
-                ['transit', 'Transit'],
-                ...((menuChart.kind ?? 'person') === 'person' ? [['progressed', 'Progresyon']] : [])
-              ] as [string, string][]
-            ).map(([v, label]) => (
+                ['natal', menuChart.kind === 'event' ? 'Olay haritası' : 'Doğum haritası', 'wheel'],
+                ['info', 'Bilgiler', 'info'],
+                ['transit', 'Transit', 'orbit'],
+                ...((menuChart.kind ?? 'person') === 'person' ? [['progressed', 'Progresyon', 'trend']] : [])
+              ] as [string, string, 'wheel' | 'info' | 'orbit' | 'trend'][]
+            ).map(([v, label, icon]) => (
               <button key={v} role="menuitem" onClick={() => (setItemMenu(null), openChart(menuChart, v as Parameters<typeof openChart>[1]))}>
-                {t(label)}
+                <Icon name={icon} size={17} />
+                <span>{t(label)}</span>
               </button>
             ))}
             <hr />
             <button role="menuitem" onClick={() => (setItemMenu(null), setEditor(menuChart))}>
-              ✎ {t('Düzenle')}
+              <Icon name="edit" size={17} />
+              <span>{t('Düzenle')}</span>
             </button>
             <button role="menuitem" className="danger" onClick={() => (setItemMenu(null), void removeChart(menuChart))}>
-              × {t('Sil')}
+              <Icon name="trash" size={17} />
+              <span>{t('Sil')}</span>
             </button>
           </div>
         )}
