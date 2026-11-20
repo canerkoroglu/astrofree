@@ -573,10 +573,20 @@ export default function App() {
     [working, settings, stepIndex, effTarget, eventTz, setNatalJd]
   )
 
+  // A saved chart keeps its own moment: "Şimdi" and "Canlı" then move the transit time
+  // (switching Transit on if no layer is open) instead of the birth time.
+  const ownMoment = effTarget === 'natal' && !!working && working.id !== NOW_ID
+  const toTransitNow = () => {
+    if (!outers.length) toggleOuterRef.current('transit')
+    setTarget('event')
+    setEventJd(nowJd())
+  }
+  const toggleOuterRef = useRef<(k: OuterKind) => void>(() => undefined)
   const goNow = useCallback(() => {
-    if (effTarget === 'natal') setNatalJd(nowJd())
+    if (ownMoment) toTransitNow()
+    else if (effTarget === 'natal') setNatalJd(nowJd())
     else setEventJd(nowJd())
-  }, [effTarget, setNatalJd])
+  }, [effTarget, setNatalJd, ownMoment, outers.length]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Live mode follows the wall clock. It only drives the birth time of the
   // "Şu An" chart; a real birth chart is never overwritten by the clock.
@@ -777,6 +787,7 @@ export default function App() {
     setTarget('event')
     setAspectLayer(0)
   }
+  toggleOuterRef.current = toggleOuter
 
   const openReturn = (kind: 'solarReturn' | 'lunarReturn') => {
     const r = computed?.returns.find((x) => x.kind === kind)
@@ -1000,7 +1011,10 @@ export default function App() {
         }}
         onNow={goNow}
         live={live}
-        onLive={setLive}
+        onLive={(v) => {
+          if (v && ownMoment) toTransitNow()
+          setLive(v)
+        }}
         playing={playing}
         onPlaying={(v) => {
           setPlaying(v)

@@ -6588,3 +6588,23 @@ button.rail-btn {
 .pp-list .pp-none {
   cursor: default;
 }
+
+/* the shared "button.on" underline style does not suit round icon and menu buttons */
+.timebar button.tb-chat,
+.timebar button.tb-chat.on {
+  border-radius: 999px;
+  box-shadow: none;
+}
+.timebar button.tb-chat.on {
+  background: color-mix(in srgb, var(--accent) 16%, var(--panel));
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--ink);
+}
+.rail button.rail-btn.on {
+  border-radius: 9px;
+  box-shadow: none;
+}
+.rail .rail-mode button.on {
+  border-radius: 8px;
+  box-shadow: none;
+}
