@@ -1585,6 +1585,11 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Horoskopverwaltung: Sammelbearbeitung, Import/Export, Doppelte",
     "Harita yönetimi…": "Horoskopverwaltung…",
     "Yeni ekle": "Neu hinzufügen",
-    "Saat dilimi": "Zeitzone"
+    "Saat dilimi": "Zeitzone",
+    "Ay seç": "Monat wählen",
+    "Dakika": "Minute",
+    "Saniye": "Sekunde",
+    "Yıl seç": "Jahr wählen",
+    "Önceki": "Zurück"
   }
 }

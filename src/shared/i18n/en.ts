@@ -1585,6 +1585,11 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Chart manager: bulk editing, import/export, duplicates",
     "Harita yönetimi…": "Chart manager…",
     "Yeni ekle": "Add new",
-    "Saat dilimi": "Time zone"
+    "Saat dilimi": "Time zone",
+    "Ay seç": "Choose month",
+    "Dakika": "Minute",
+    "Saniye": "Second",
+    "Yıl seç": "Choose year",
+    "Önceki": "Previous"
   }
 }

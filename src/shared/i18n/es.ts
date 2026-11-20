@@ -1585,6 +1585,11 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestión de cartas: edición en bloque, importar/exportar, duplicados",
     "Harita yönetimi…": "Gestión de cartas…",
     "Yeni ekle": "Añadir",
-    "Saat dilimi": "Zona horaria"
+    "Saat dilimi": "Zona horaria",
+    "Ay seç": "Elegir mes",
+    "Dakika": "Minuto",
+    "Saniye": "Segundo",
+    "Yıl seç": "Elegir año",
+    "Önceki": "Anterior"
   }
 }

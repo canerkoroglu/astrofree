@@ -8151,3 +8151,182 @@ button.soft-btn.on {
   font-family: var(--num-font);
   font-size: 12.5px;
 }
+
+/* ---- Tarih seçici v2: gün / ay / yıl görünümleri, ▲▼ saat, Bugün · Tamam ---- */
+.dtf .dtf-pop {
+  width: 300px;
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.22);
+  animation: ms-in 0.12s ease-out;
+}
+.dtf-pop .dtf-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.dtf-pop button.dtf-nav {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted);
+}
+.dtf-pop button.dtf-nav:hover {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.dtf-title {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+.dtf-pop button.dtf-title-btn {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.dtf-pop button.dtf-title-btn:hover {
+  background: var(--panel-2);
+  color: var(--accent);
+}
+.dtf-title-range {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--num-font);
+  line-height: 32px;
+}
+.dtf-pop .dtf-grid {
+  gap: 2px;
+}
+.dtf-pop .dtf-dow {
+  padding-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.dtf-pop .dtf-grid button,
+.dtf-pop .dtf-cells button {
+  min-height: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+  font-weight: 500;
+}
+.dtf-pop .dtf-grid button {
+  height: 34px;
+  padding: 0;
+  font-size: 13px;
+}
+.dtf-pop .dtf-grid button:hover,
+.dtf-pop .dtf-cells button:hover {
+  background: var(--panel-2);
+}
+.dtf-pop .dtf-grid button.today,
+.dtf-pop .dtf-cells button.today {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.dtf-pop .dtf-grid button.on,
+.dtf-pop .dtf-cells button.on {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.dtf-cells {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 4px 0;
+}
+.dtf-pop .dtf-cells button {
+  height: 44px;
+  padding: 0 4px;
+  font-size: 13px;
+}
+.dtf-pop .dtf-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.dtf-time-lbl {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dtf-colon {
+  font-weight: 700;
+  color: var(--muted);
+}
+.spin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 46px;
+}
+.spin button {
+  width: 100%;
+  height: 18px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1;
+}
+.spin button:hover {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.dtf-pop .spin input {
+  width: 46px;
+  min-height: 0;
+  padding: 4px 0;
+  text-align: center;
+  font-family: var(--num-font);
+  font-size: 18px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+.dtf-pop .spin input:focus {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.dtf-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.dtf-pop button.dtf-today {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 12.5px;
+}
+.dtf-pop button.dtf-ok {
+  min-height: 32px;
+  padding: 0 18px;
+  font-size: 12.5px;
+}

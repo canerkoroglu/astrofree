@@ -73,13 +73,18 @@ export default function DateTimeField({
   const [focused, setFocused] = useState(false)
   const [open, setOpen] = useState(false)
   const [view, setView] = useState({ y: value.y, m: value.m })
+  // Days, months of a year, or a page of twelve years: birth dates are often decades back.
+  const [mode, setMode] = useState<'days' | 'months' | 'years'>('days')
   const wrap = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!focused) setText(formatLocal(value, seconds))
   }, [value, seconds, focused])
   useEffect(() => {
-    if (open) setView({ y: value.y, m: value.m })
+    if (open) {
+      setView({ y: value.y, m: value.m })
+      setMode('days')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
   useEffect(() => {
@@ -109,6 +114,8 @@ export default function DateTimeField({
     setView({ y: Math.floor(t / 12), m: (t % 12 + 12) % 12 + 1 })
   }
   const setTime = (patch: Partial<LocalDateTime>) => onChange({ ...value, ...patch })
+  const today = new Date()
+  const yearPage = view.y - (((view.y % 12) + 12) % 12)
 
   return (
     <div className={`dtf ${className}`} ref={wrap}>
@@ -145,67 +152,152 @@ export default function DateTimeField({
         </svg>
       </button>
       {open && (
-        <div className="dtf-pop" onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}>
+        <div className="dtf-pop" onKeyDown={(e) => e.key === 'Escape' && (e.stopPropagation(), setOpen(false))}>
           <div className="dtf-head">
-            <button type="button" onClick={() => shiftMonth(-1)} title={t('Önceki ay')}>
+            <button
+              type="button"
+              className="dtf-nav"
+              onClick={() => (mode === 'days' ? shiftMonth(-1) : setView({ ...view, y: view.y - (mode === 'years' ? 12 : 1) }))}
+              aria-label={mode === 'days' ? t('Önceki ay') : t('Önceki')}
+            >
               ‹
             </button>
-            <select value={view.m} onChange={(e) => setView({ ...view, m: +e.target.value })}>
-              {monthsLong().map((name, i) => (
-                <option key={i} value={i + 1}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            <input
-              type="number"
-              className="dtf-year"
-              value={view.y}
-              onChange={(e) => e.target.value && setView({ ...view, y: Math.max(-3000, Math.min(3000, +e.target.value)) })}
-            />
-            <button type="button" onClick={() => shiftMonth(1)} title={t('Sonraki ay')}>
+            <div className="dtf-title">
+              {mode === 'days' && (
+                <button type="button" className="dtf-title-btn" onClick={() => setMode('months')} title={t('Ay seç')}>
+                  {monthsLong()[view.m - 1]}
+                </button>
+              )}
+              {mode !== 'years' ? (
+                <button type="button" className="dtf-title-btn" onClick={() => setMode('years')} title={t('Yıl seç')}>
+                  {view.y}
+                </button>
+              ) : (
+                <span className="dtf-title-range">
+                  {yearPage} – {yearPage + 11}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              className="dtf-nav"
+              onClick={() => (mode === 'days' ? shiftMonth(1) : setView({ ...view, y: view.y + (mode === 'years' ? 12 : 1) }))}
+              aria-label={mode === 'days' ? t('Sonraki ay') : t('Sonraki')}
+            >
               ›
             </button>
           </div>
-          <div className="dtf-grid">
-            {dowMonFirst().map((d) => (
-              <span key={d} className="dtf-dow">
-                {d}
-              </span>
-            ))}
-            {cells.map((d, i) =>
-              d === null ? (
-                <span key={i} />
-              ) : (
+
+          {mode === 'days' && (
+            <div className="dtf-grid">
+              {dowMonFirst().map((d) => (
+                <span key={d} className="dtf-dow">
+                  {d}
+                </span>
+              ))}
+              {cells.map((d, i) =>
+                d === null ? (
+                  <span key={i} />
+                ) : (
+                  <button
+                    type="button"
+                    key={i}
+                    className={[
+                      d === value.d && view.m === value.m && view.y === value.y ? 'on' : '',
+                      d === today.getDate() && view.m === today.getMonth() + 1 && view.y === today.getFullYear() ? 'today' : ''
+                    ].join(' ')}
+                    onClick={() => onChange({ ...value, y: view.y, m: view.m, d })}
+                  >
+                    {d}
+                  </button>
+                )
+              )}
+            </div>
+          )}
+          {mode === 'months' && (
+            <div className="dtf-cells">
+              {monthsLong().map((name, i) => (
                 <button
                   type="button"
                   key={i}
-                  className={d === value.d && view.m === value.m && view.y === value.y ? 'on' : ''}
-                  onClick={() => onChange({ ...value, y: view.y, m: view.m, d })}
+                  className={i + 1 === value.m && view.y === value.y ? 'on' : ''}
+                  onClick={() => (setView({ ...view, m: i + 1 }), setMode('days'))}
                 >
-                  {d}
+                  {name}
                 </button>
-              )
-            )}
-          </div>
+              ))}
+            </div>
+          )}
+          {mode === 'years' && (
+            <div className="dtf-cells">
+              {Array.from({ length: 12 }, (_, i) => yearPage + i).map((y) => (
+                <button type="button" key={y} className={y === value.y ? 'on' : y === today.getFullYear() ? 'today' : ''} onClick={() => (setView({ ...view, y }), setMode('months'))}>
+                  {y}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="dtf-time">
-            <span className="muted small">{t('Saat')}</span>
-            <input type="number" min={0} max={23} value={value.h} onChange={(e) => setTime({ h: Math.max(0, Math.min(23, +e.target.value || 0)) })} />
-            :
-            <input type="number" min={0} max={59} value={p2(value.mi)} onChange={(e) => setTime({ mi: Math.max(0, Math.min(59, +e.target.value || 0)) })} />
+            <span className="dtf-time-lbl">{t('Saat')}</span>
+            <Spin value={value.h} max={23} onChange={(h) => setTime({ h })} label={t('Saat')} />
+            <span className="dtf-colon">:</span>
+            <Spin value={value.mi} max={59} onChange={(mi) => setTime({ mi })} label={t('Dakika')} />
             {seconds && (
               <>
-                :
-                <input type="number" min={0} max={59} value={p2(value.s)} onChange={(e) => setTime({ s: Math.max(0, Math.min(59, +e.target.value || 0)) })} />
+                <span className="dtf-colon">:</span>
+                <Spin value={value.s} max={59} onChange={(sec) => setTime({ s: sec })} label={t('Saniye')} />
               </>
             )}
+          </div>
+          <div className="dtf-foot">
+            <button
+              type="button"
+              className="dtf-today"
+              onClick={() => {
+                onChange({ ...value, y: today.getFullYear(), m: today.getMonth() + 1, d: today.getDate() })
+                setView({ y: today.getFullYear(), m: today.getMonth() + 1 })
+                setMode('days')
+              }}
+            >
+              {t('Bugün')}
+            </button>
             <span className="grow" />
-            <button type="button" className="link small" onClick={() => setOpen(false)}>
+            <button type="button" className="primary dtf-ok" onClick={() => setOpen(false)}>
               {t('Tamam')}
             </button>
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+/** A two-digit number with ▲ ▼; arrow keys and the mouse wheel step it, wrapping around. */
+function Spin({ value, max, onChange, label }: { value: number; max: number; onChange: (v: number) => void; label: string }) {
+  const step = (k: number) => onChange((((value + k) % (max + 1)) + max + 1) % (max + 1))
+  return (
+    <div className="spin" onWheel={(e) => step(e.deltaY < 0 ? 1 : -1)}>
+      <button type="button" tabIndex={-1} onClick={() => step(1)} aria-label={`${label} +1`}>
+        ▲
+      </button>
+      <input
+        inputMode="numeric"
+        aria-label={label}
+        value={p2(value)}
+        onChange={(e) => {
+          const v = parseInt(e.target.value.replace(/\D/g, '').slice(-2) || '0', 10)
+          onChange(Math.max(0, Math.min(max, v)))
+        }}
+        onFocus={(e) => e.currentTarget.select()}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowUp') (e.preventDefault(), step(1))
+          if (e.key === 'ArrowDown') (e.preventDefault(), step(-1))
+        }}
+      />
+      <button type="button" tabIndex={-1} onClick={() => step(-1)} aria-label={`${label} −1`}>
+        ▼
+      </button>
     </div>
   )
 }

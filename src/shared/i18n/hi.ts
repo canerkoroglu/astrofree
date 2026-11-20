@@ -1585,6 +1585,11 @@ export const hi: Locale = {
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "कुंडली प्रबंधन: एक साथ संपादन, आयात/निर्यात, दोहराव",
     "Harita yönetimi…": "कुंडली प्रबंधन…",
     "Yeni ekle": "नया जोड़ें",
-    "Saat dilimi": "समय क्षेत्र"
+    "Saat dilimi": "समय क्षेत्र",
+    "Ay seç": "महीना चुनें",
+    "Dakika": "मिनट",
+    "Saniye": "सेकंड",
+    "Yıl seç": "वर्ष चुनें",
+    "Önceki": "पिछला"
   }
 }
