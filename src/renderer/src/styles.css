@@ -6303,3 +6303,94 @@ button.rail-chat.on .rail-badge {
 .toolbar {
   min-height: 48px;
 }
+
+/* ---- Üst çubuk kaldırıldı: zaman çubuğu en üstte, uygulama düğmeleri onun sağ ucunda ---- */
+.app,
+.app.no-chat {
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    'rail time time time'
+    'rail side center chat';
+}
+.app {
+  grid-template-columns: 96px clamp(220px, 17vw, 264px) minmax(0, 1fr) clamp(300px, 27vw, 400px);
+}
+.app.no-chat {
+  grid-template-columns: 96px clamp(220px, 17vw, 264px) minmax(0, 1fr) 0;
+}
+.tb-right {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.tb-right .tb-zone-wrap {
+  position: relative;
+}
+.tb-right .zone-pop {
+  right: 0;
+  left: auto;
+}
+.tb-app {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.tb-chat {
+  white-space: nowrap;
+}
+.tb-row {
+  flex-wrap: wrap;
+  row-gap: var(--s2);
+}
+/* the right end needs room: the least used time controls give way first */
+@container timebar (max-width: 1900px) {
+  .timebar .tb-speed {
+    display: none;
+  }
+}
+@container timebar (max-width: 1760px) {
+  .timebar .tb-fine {
+    display: none;
+  }
+}
+@container timebar (max-width: 1540px) {
+  .timebar .tb-coarse {
+    display: none;
+  }
+}
+@container timebar (max-width: 1400px) {
+  .tb-right .tb-zone .tz-name {
+    display: none;
+  }
+  .timebar .tb-group {
+    padding-left: var(--s3);
+  }
+  .tb-row {
+    gap: var(--s3);
+  }
+}
+/* chart options in the side rail */
+.rail-opts {
+  gap: 4px;
+  padding-top: var(--s2);
+  border-top: 1px solid var(--line);
+}
+.rail-opts select {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  font-size: 11px;
+  padding: 5px 18px 5px 6px;
+  background-position: right 5px center;
+  background-size: 10px;
+  text-overflow: ellipsis;
+}
+.rail-opts button {
+  width: 100%;
+  min-height: 0;
+  font-size: 11px;
+  padding: 4px 2px;
+}
+.rail-opts .rail-cap {
+  padding-bottom: 0;
+}

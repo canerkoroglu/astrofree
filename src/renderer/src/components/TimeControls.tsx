@@ -1,4 +1,5 @@
 import { t } from '../lib/i18n'
+import type { ReactNode } from 'react'
 import type { LocalDateTime } from '@shared/types'
 import type { StepUnit } from '../lib/time'
 import DateTimeField from './DateTimeField'
@@ -18,6 +19,8 @@ export const STEPS: { unit: StepUnit; n: number; label: string }[] = [
 const SPEEDS = [1, 2, 5, 10, 20, 30]
 
 interface Props {
+  /** App-wide controls at the right end of the bar (time zone, theme, chat, settings). */
+  right?: ReactNode
   local: LocalDateTime
   target: 'event' | 'natal'
   /** Label of the chart's own moment: birth, or the event for event charts. */
@@ -112,6 +115,7 @@ export default function TimeControls(p: Props) {
             {t('Canlı')}
           </button>
         </div>
+        {p.right && <div className="tb-group tb-right">{p.right}</div>}
 
       </div>
     </div>

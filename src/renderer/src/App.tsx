@@ -886,51 +886,9 @@ export default function App() {
             </button>
           ))}
         </div>
-        <span className="grow" />
-        <div className="rail-group rail-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
-          {(['amateur', 'professional'] as const).map((m) => (
-            <button
-              key={m}
-              role="radio"
-              aria-checked={settings.mode === m}
-              className={settings.mode === m ? 'on' : ''}
-              onClick={() => setMode(m)}
-              title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
-            >
-              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
-            </button>
-          ))}
-        </div>
-        <div className="rail-group rail-bottom">
-          <button
-            className="rail-btn rail-icon"
-            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
-            data-tip={t(THEME_LABEL[settings.theme])}
-            aria-label={t(THEME_LABEL[settings.theme])}
-          >
-            <span className="rail-badge plain" aria-hidden>
-              {THEME_ICON[settings.theme]}
-            </span>
-            <span className="rail-lbl">{t('Tema')}</span>
-          </button>
-          <button className={`rail-btn rail-chat${showChat ? ' on' : ''}`} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
-            <span className="rail-badge plain" aria-hidden>
-              💬
-            </span>
-            <span className="rail-lbl">{t('AI sohbet')}</span>
-          </button>
-          <button className="rail-btn" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
-            <span className="rail-badge plain" aria-hidden>
-              ⚙︎
-            </span>
-            <span className="rail-lbl">{t('Ayarlar')}</span>
-          </button>
-        </div>
-      </nav>
-      <header className="toolbar">
         {outers.includes('synastry') && (
-          <div className="tgroup" role="group" aria-label={t('İlişki')}>
+          <div className="rail-group rail-opts" role="group" aria-label={t('İlişki')}>
+            <span className="rail-cap">{t('Sinastri partneri')}</span>
             <select className="tg-partner" value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)} title={t('Sinastri partneri')}>
               {charts
                 .filter((c) => c.id !== working.id)
@@ -959,14 +917,16 @@ export default function App() {
             )}
           </div>
         )}
-        {!amateur && <div className="tgroup" role="group" aria-label={t('Görünüm')}>
+        {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
+        <span className="rail-cap">{t('Harmonik')}</span>
         <select className="tg-harmonic" value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
           {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
-              {n === 1 ? t('Harmonik: yok') : `${t('Harmonik')} ${n}`}
+              {n === 1 ? t('yok') : n}
             </option>
           ))}
         </select>
+        <span className="rail-cap">{t('Ev sistemi')}</span>
         <select
           className="tg-house"
           value={settings.houseSystem}
@@ -981,6 +941,51 @@ export default function App() {
         </select>
         </div>}
         <span className="grow" />
+        <div className="rail-group rail-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
+          {(['amateur', 'professional'] as const).map((m) => (
+            <button
+              key={m}
+              role="radio"
+              aria-checked={settings.mode === m}
+              className={settings.mode === m ? 'on' : ''}
+              onClick={() => setMode(m)}
+              title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
+            >
+              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <TimeControls
+        local={targetLocal}
+        target={effTarget}
+        natalLabel={working.id === NOW_ID ? t('Gökyüzü') : working.kind === 'event' ? t('Olay anı') : t('Doğum')}
+        onTarget={(tg) => {
+          // Stepping the transit date needs an outer layer: switch Transit on for it.
+          if (tg === 'event' && !outers.length) toggleOuter('transit')
+          else setTarget(tg)
+        }}
+        stepIndex={stepIndex}
+        onStepIndex={setStepIndex}
+        onStep={(d, u, n) => step(d, u, n)}
+        onSetLocal={(l) => {
+          setLive(false)
+          if (effTarget === 'natal') setWorking({ ...working, local: l })
+          else setEventJd(localToJd(l, eventTz, targetLon))
+        }}
+        onNow={goNow}
+        live={live}
+        onLive={setLive}
+        playing={playing}
+        onPlaying={(v) => {
+          setPlaying(v)
+          if (v) setLive(false)
+        }}
+        speed={speed}
+        onSpeed={setSpeed}
+        right={
+          <>
         {updateReady ? (
           <button className="update-pill" onClick={() => void window.astro.installUpdate()} title={t('İndirildi; uygulama yeniden başlayıp güncellenir')}>
             {t('v{v} hazır · Yeniden başlat', { v: updateReady })}
@@ -992,7 +997,7 @@ export default function App() {
         )}
         <div className="menu-wrap tb-zone-wrap">
           <button className="tb-zone" aria-expanded={zoneOpen} onClick={() => setZoneOpen(!zoneOpen)} title={t('Saat dilimleri')}>
-            {tzLabel(targetTz)} <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
+            <span className="tz-name">{tzLabel(targetTz)}</span> <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
           </button>
           {zoneOpen && (
             <div className="pop-menu zone-pop" onMouseLeave={() => setZoneOpen(false)}>
@@ -1038,35 +1043,26 @@ export default function App() {
             </div>
           )}
         </div>
-      </header>
-
-      <TimeControls
-        local={targetLocal}
-        target={effTarget}
-        natalLabel={working.id === NOW_ID ? t('Gökyüzü') : working.kind === 'event' ? t('Olay anı') : t('Doğum')}
-        onTarget={(tg) => {
-          // Stepping the transit date needs an outer layer: switch Transit on for it.
-          if (tg === 'event' && !outers.length) toggleOuter('transit')
-          else setTarget(tg)
-        }}
-        stepIndex={stepIndex}
-        onStepIndex={setStepIndex}
-        onStep={(d, u, n) => step(d, u, n)}
-        onSetLocal={(l) => {
-          setLive(false)
-          if (effTarget === 'natal') setWorking({ ...working, local: l })
-          else setEventJd(localToJd(l, eventTz, targetLon))
-        }}
-        onNow={goNow}
-        live={live}
-        onLive={setLive}
-        playing={playing}
-        onPlaying={(v) => {
-          setPlaying(v)
-          if (v) setLive(false)
-        }}
-        speed={speed}
-        onSpeed={setSpeed}
+        <div className="tb-app" role="group" aria-label={t('Ana menü')}>
+          <button
+            className="icon-btn tip-end"
+            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            data-tip={t(THEME_LABEL[settings.theme])}
+            aria-label={t(THEME_LABEL[settings.theme])}
+          >
+            {THEME_ICON[settings.theme]}
+          </button>
+          <button className={`toggle tb-chat${showChat ? ' on' : ''}`} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
+            <span className="toggle-dot" aria-hidden />
+            {t('AI sohbet')}
+          </button>
+          <button className="icon-btn tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
+            ⚙︎
+          </button>
+        </div>
+          </>
+        }
       />
 
       <aside className="sidebar">
