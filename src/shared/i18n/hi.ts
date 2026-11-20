@@ -1583,6 +1583,7 @@ export const hi: Locale = {
     "Harita türü": "कुंडली का प्रकार",
     "Harita yönetimi": "कुंडली प्रबंधन",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "कुंडली प्रबंधन: एक साथ संपादन, आयात/निर्यात, दोहराव",
-    "Harita yönetimi…": "कुंडली प्रबंधन…"
+    "Harita yönetimi…": "कुंडली प्रबंधन…",
+    "Yeni ekle": "नया जोड़ें"
   }
 }

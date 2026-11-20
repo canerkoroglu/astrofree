@@ -1583,6 +1583,7 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Harita türü": "Tipo de mapa",
     "Harita yönetimi": "Gestão de mapas",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestão de mapas: edição em lote, importar/exportar, duplicados",
-    "Harita yönetimi…": "Gestão de mapas…"
+    "Harita yönetimi…": "Gestão de mapas…",
+    "Yeni ekle": "Adicionar"
   }
 }

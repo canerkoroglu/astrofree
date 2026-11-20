@@ -158,6 +158,7 @@ export default function App() {
   }
   const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
   // Charts list: all, birth charts only, or event charts only (remembered).
+  const [addOpen, setAddOpen] = useState(false)
   const [listKind, setListKindState] = useState<'all' | 'person' | 'event'>(() => {
     try {
       const v = localStorage.getItem('list-kind')
@@ -1260,18 +1261,44 @@ export default function App() {
         <div className="seg list-kind" role="radiogroup" aria-label={t('Harita türü')}>
           {(
             [
-              ['all', t('Tümü'), charts.filter((c) => !c.composite).length],
-              ['person', t('Kişiler'), charts.filter((c) => !c.composite && (c.kind ?? 'person') === 'person').length],
-              ['event', t('Olaylar'), charts.filter((c) => !c.composite && c.kind === 'event').length]
+              ['all', t('Tümü')],
+              ['person', t('Kişiler')],
+              ['event', t('Olaylar')]
             ] as const
-          ).map(([k, label, count]) => (
+          ).map(([k, label]) => (
             <button key={k} role="radio" aria-checked={listKind === k} className={listKind === k ? 'on' : ''} onClick={() => setListKind(k)}>
-              {label} <span className="lk-count">{count}</span>
+              {label}
             </button>
           ))}
         </div>
         <div className="search-row">
           <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
+        </div>
+        <div className="add-new-wrap">
+          <button
+            className="add-new"
+            aria-haspopup={listKind === 'all' ? 'menu' : undefined}
+            aria-expanded={listKind === 'all' ? addOpen : undefined}
+            onClick={() =>
+              listKind === 'person' ? setEditor(blankChart(settings)) : listKind === 'event' ? setEditor(blankChart(settings, 'event')) : setAddOpen(!addOpen)
+            }
+          >
+            <Icon name="plus" size={15} />
+            {listKind === 'person' ? t('Yeni kişi') : listKind === 'event' ? t('Yeni olay') : t('Yeni ekle')}
+            {listKind === 'all' && <Icon name="chevron" size={13} />}
+          </button>
+          {addOpen && listKind === 'all' && (
+            <div className="pop-menu add-new-menu" role="menu" onMouseLeave={() => setAddOpen(false)}>
+              <button role="menuitem" onClick={() => (setAddOpen(false), setEditor(blankChart(settings)))}>
+                <strong>{t('Kişi')}</strong>
+                <span className="muted small">{t('Doğum haritası')}</span>
+              </button>
+              <button role="menuitem" onClick={() => (setAddOpen(false), setEditor(blankChart(settings, 'event')))}>
+                <strong>{t('Olay')}</strong>
+                <span className="muted small">{t('Evlilik, kuruluş, taşınma gibi bir olay haritası')}</span>
+              </button>
+            </div>
+          )}
         </div>
         {notice && <p className="small notice">{notice}</p>}
         {charts.some((c) => c.group) && (
@@ -1297,13 +1324,15 @@ export default function App() {
         <ul className="chart-list side-pane">
           {listSections.map(({ key: secKey, label, items: group }) => {
             if (!group.length) return null
+            // By kind the tabs above already separate people and events: no section heading.
+            const heads = groupBy === 'group'
             return [
-              <li key={`h-${secKey}`} className="list-head">
+              heads && <li key={`h-${secKey}`} className="list-head">
                 <button className="sec-toggle" aria-expanded={!collapsed[secKey]} onClick={() => toggleSection(secKey)}>
                   <span className="chev">{collapsed[secKey] ? '▸' : '▾'}</span> {label} <span className="muted">{group.length}</span>
                 </button>
               </li>,
-              ...group.filter((c) => !collapsed[secKey] || c.id === working.id).map((c) => {
+              ...group.filter((c) => !heads || !collapsed[secKey] || c.id === working.id).map((c) => {
                 const kind = c.kind ?? 'person'
                 return (
                 <li

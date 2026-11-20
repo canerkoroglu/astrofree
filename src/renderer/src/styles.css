@@ -7953,3 +7953,31 @@ button.night-play {
   font-weight: 500;
   opacity: 0.7;
 }
+
+/* ---- Haritalar paneli: aramanın altında "Yeni ekle" ---- */
+.add-new-wrap {
+  position: relative;
+}
+button.add-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 36px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--panel));
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+button.add-new:hover {
+  border-style: solid;
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel));
+}
+.add-new-menu {
+  left: 0;
+  right: 0;
+  min-width: 0;
+}

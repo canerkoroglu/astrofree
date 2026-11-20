@@ -1583,6 +1583,7 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Harita türü": "Type de thème",
     "Harita yönetimi": "Gestion des thèmes",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestion des thèmes : modification groupée, import/export, doublons",
-    "Harita yönetimi…": "Gestion des thèmes…"
+    "Harita yönetimi…": "Gestion des thèmes…",
+    "Yeni ekle": "Ajouter"
   }
 }
