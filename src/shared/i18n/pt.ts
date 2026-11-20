@@ -1574,6 +1574,8 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "bu harita": "este mapa",
     "{name} ile karşılaştırılacak kişiye tıklayın.": "Clique na pessoa a comparar com {name}.",
     "Harmonik ve ev sistemi": "Harmônico e sistema de casas",
-    "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Use o controle deslizante para acompanhar o céu durante a noite; norte em cima, leste à esquerda."
+    "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Use o controle deslizante para acompanhar o céu durante a noite; norte em cima, leste à esquerda.",
+    "Ara…": "Buscar…",
+    "Sonuç yok": "Nenhum resultado"
   }
 }

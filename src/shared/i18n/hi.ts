@@ -1574,6 +1574,8 @@ export const hi: Locale = {
     "bu harita": "यह कुंडली",
     "{name} ile karşılaştırılacak kişiye tıklayın.": "{name} से तुलना के लिए व्यक्ति पर क्लिक करें।",
     "Harmonik ve ev sistemi": "हार्मोनिक और भाव पद्धति",
-    "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "स्लाइडर से पूरी रात आकाश देखें; उत्तर ऊपर, पूर्व बाईं ओर।"
+    "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "स्लाइडर से पूरी रात आकाश देखें; उत्तर ऊपर, पूर्व बाईं ओर।",
+    "Ara…": "खोजें…",
+    "Sonuç yok": "कोई परिणाम नहीं"
   }
 }

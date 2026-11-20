@@ -1005,29 +1005,23 @@ export default function App() {
         )}
         {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
         <span className="rail-cap">{t('Harita')}</span>
-        <div className="chart-opts">
-          <div className="tg-house">
-            <MenuSelect
-              className="row"
-              label={t('Ev sistemi')}
-              value={settings.houseSystem}
-              display={t(HOUSE_SYSTEMS.find(([k]) => k === settings.houseSystem)?.[1] ?? '').replace(/\s*\(.*\)$/, '')}
-              options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
-              onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
-            />
-          </div>
-          <div className="tg-harmonic opt-row" role="group" aria-label={t('Harmonik harita (konumlar n ile çarpılır)')} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
-            <span className="menu-select-lbl">{t('Harmonik')}</span>
-            <div className="harm-step">
-              <button disabled={harmonic <= 1} onClick={() => setHarmonic(Math.max(1, harmonic - 1))} aria-label="−">
-                −
-              </button>
-              <span className={`harm-val${harmonic > 1 ? ' on' : ''}`}>{harmonic === 1 ? t('yok') : `H${harmonic}`}</span>
-              <button disabled={harmonic >= 16} onClick={() => setHarmonic(Math.min(16, harmonic + 1))} aria-label="+">
-                +
-              </button>
-            </div>
-          </div>
+        <span className="rail-sub">{t('Ev sistemi')}</span>
+        <div className="tg-house">
+          <MenuSelect
+            label={t('Ev sistemi')}
+            value={settings.houseSystem}
+            options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
+            onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
+          />
+        </div>
+        <span className="rail-sub">{t('Harmonik')}</span>
+        <div className="tg-harmonic">
+          <MenuSelect
+            label={t('Harmonik harita (konumlar n ile çarpılır)')}
+            value={harmonic}
+            options={Array.from({ length: 16 }, (_, i) => i + 1).map((n) => ({ value: n, label: n === 1 ? t('Harmonik: yok') : `${t('Harmonik')} ${n}` }))}
+            onChange={(v) => setHarmonic(v)}
+          />
         </div>
         </div>}
         <span className="grow" />

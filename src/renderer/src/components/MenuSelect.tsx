@@ -1,6 +1,9 @@
-// A select drawn in the app's own style: a button showing the choice and a list that opens
-// in a fixed layer (never clipped by the scrolling side menu). Arrow keys, Enter and Esc work.
-import { useEffect, useRef, useState } from 'react'
+// A select drawn in the app's own style: a full-width button showing the whole choice, and a
+// list in a fixed layer (never clipped by the scrolling side menu) with a search box on top
+// that filters as you type (accents ignored). Arrow keys, Enter and Esc work.
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { t } from '../lib/i18n'
+import { fold } from '../lib/people'
 import Icon from './Icon'
 
 export default function MenuSelect<T extends string | number>({
@@ -8,101 +11,121 @@ export default function MenuSelect<T extends string | number>({
   options,
   onChange,
   label,
-  display,
-  className = ''
+  searchable = true
 }: {
   value: T
-  options: { value: T; label: string }[]
+  options: { value: T; label: string; hint?: string }[]
   onChange: (v: T) => void
   label: string
-  /** Shorter text for the button than the option's full label. */
-  display?: string
-  className?: string
+  searchable?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const [q, setQ] = useState('')
   const [hi, setHi] = useState(0)
-  const [at, setAt] = useState({ left: 0, top: 0, width: 0 })
+  const [at, setAt] = useState({ left: 0, top: 0, width: 0, maxH: 360 })
   const btn = useRef<HTMLButtonElement>(null)
-  const list = useRef<HTMLUListElement>(null)
+  const pop = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLUListElement>(null)
   const current = options.find((o) => o.value === value)
+
+  const shown = useMemo(() => {
+    const words = fold(q).split(/\s+/).filter(Boolean)
+    return words.length ? options.filter((o) => words.every((w) => fold(`${o.label} ${o.hint ?? ''} ${o.value}`).includes(w))) : options
+  }, [options, q])
 
   const show = () => {
     const r = btn.current!.getBoundingClientRect()
-    const h = Math.min(options.length * 34 + 8, 360)
-    const top = r.bottom + 4 + h > window.innerHeight - 8 ? Math.max(8, r.top - 4 - h) : r.bottom + 4
-    setAt({ left: r.left, top, width: Math.max(r.width, 200) })
+    const want = Math.min(options.length * 34 + (searchable ? 52 : 8), 420)
+    const below = window.innerHeight - r.bottom - 12
+    const up = below < Math.min(want, 240) && r.top > below
+    const maxH = Math.max(160, Math.min(want, up ? r.top - 12 : below))
+    setAt({ left: r.left, top: up ? r.top - 4 - maxH : r.bottom + 4, width: Math.max(r.width, 220), maxH })
+    setQ('')
     setHi(Math.max(0, options.findIndex((o) => o.value === value)))
     setOpen(true)
   }
-  const pick = (v: T) => {
-    onChange(v)
+  const close = () => {
     setOpen(false)
     btn.current?.focus()
+  }
+  const pick = (v: T) => {
+    onChange(v)
+    close()
   }
 
   useEffect(() => {
     if (!open) return
-    const close = (e: Event) => {
-      if (!list.current?.contains(e.target as Node) && !btn.current?.contains(e.target as Node)) setOpen(false)
+    const off = (e: Event) => {
+      if (!pop.current?.contains(e.target as Node) && !btn.current?.contains(e.target as Node)) setOpen(false)
     }
-    window.addEventListener('mousedown', close)
-    window.addEventListener('resize', close)
-    window.addEventListener('scroll', close, true)
+    const away = () => setOpen(false)
+    window.addEventListener('mousedown', off)
+    window.addEventListener('resize', away)
     return () => {
-      window.removeEventListener('mousedown', close)
-      window.removeEventListener('resize', close)
-      window.removeEventListener('scroll', close, true)
+      window.removeEventListener('mousedown', off)
+      window.removeEventListener('resize', away)
     }
   }, [open])
+  useEffect(() => setHi(0), [q])
   useEffect(() => {
-    if (open) list.current?.querySelector<HTMLElement>(`[data-i="${hi}"]`)?.scrollIntoView({ block: 'nearest' })
+    if (open) listRef.current?.querySelector<HTMLElement>(`[data-i="${hi}"]`)?.scrollIntoView({ block: 'nearest' })
   }, [hi, open])
+
+  const keys = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') (e.preventDefault(), setHi(Math.min(hi + 1, shown.length - 1)))
+    else if (e.key === 'ArrowUp') (e.preventDefault(), setHi(Math.max(hi - 1, 0)))
+    else if (e.key === 'Enter') (e.preventDefault(), shown[hi] && pick(shown[hi].value))
+    else if (e.key === 'Escape') (e.preventDefault(), e.stopPropagation(), close())
+  }
 
   return (
     <>
       <button
         ref={btn}
         type="button"
-        className={`menu-select ${className}${open ? ' open' : ''}`}
+        className={`menu-select${open ? ' open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`${label}: ${current?.label ?? ''}`}
-        title={label}
         onClick={() => (open ? setOpen(false) : show())}
         onKeyDown={(e) => {
-          if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) return e.preventDefault(), show()
-          if (!open) return
-          if (e.key === 'ArrowDown') (e.preventDefault(), setHi(Math.min(hi + 1, options.length - 1)))
-          else if (e.key === 'ArrowUp') (e.preventDefault(), setHi(Math.max(hi - 1, 0)))
-          else if (e.key === 'Enter' || e.key === ' ') (e.preventDefault(), pick(options[hi].value))
-          else if (e.key === 'Escape') (e.preventDefault(), e.stopPropagation(), setOpen(false))
+          if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ')) (e.preventDefault(), show())
         }}
       >
-        {className.includes('row') && <span className="menu-select-lbl">{label}</span>}
-        <span className="menu-select-val" title={current?.label}>
-          {display ?? current?.label}
-        </span>
+        <span className="menu-select-val">{current?.label}</span>
         <Icon name="chevron" size={14} />
       </button>
       {open && (
-        <ul ref={list} className="menu-select-list" role="listbox" aria-label={label} style={{ left: at.left, top: at.top, minWidth: at.width }}>
-          {options.map((o, i) => (
-            <li
-              key={String(o.value)}
-              data-i={i}
-              role="option"
-              aria-selected={o.value === value}
-              className={`${i === hi ? 'hi' : ''}${o.value === value ? ' on' : ''}`}
-              onMouseEnter={() => setHi(i)}
-              onMouseDown={(e) => (e.preventDefault(), pick(o.value))}
-            >
-              <span className="menu-select-check" aria-hidden>
-                {o.value === value ? '✓' : ''}
-              </span>
-              {o.label}
-            </li>
-          ))}
-        </ul>
+        <div ref={pop} className="menu-select-pop" style={{ left: at.left, top: at.top, minWidth: at.width, maxHeight: at.maxH }} onKeyDown={keys}>
+          {searchable && (
+            <div className="menu-select-search">
+              <Icon name="search" size={14} />
+              <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Ara…')} aria-label={t('Ara…')} />
+            </div>
+          )}
+          <ul ref={listRef} className="menu-select-list" role="listbox" aria-label={label} tabIndex={searchable ? -1 : 0} autoFocus={!searchable}>
+            {shown.map((o, i) => (
+              <li
+                key={String(o.value)}
+                data-i={i}
+                role="option"
+                aria-selected={o.value === value}
+                className={`${i === hi ? 'hi' : ''}${o.value === value ? ' on' : ''}`}
+                onMouseEnter={() => setHi(i)}
+                onMouseDown={(e) => (e.preventDefault(), pick(o.value))}
+              >
+                <span className="menu-select-check" aria-hidden>
+                  {o.value === value ? '✓' : ''}
+                </span>
+                <span className="menu-select-opt">
+                  {o.label}
+                  {o.hint && <span className="muted small"> · {o.hint}</span>}
+                </span>
+              </li>
+            ))}
+            {!shown.length && <li className="menu-select-none muted small">{t('Sonuç yok')}</li>}
+          </ul>
+        </div>
       )}
     </>
   )

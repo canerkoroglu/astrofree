@@ -18,6 +18,7 @@ export const ICONS = {
   clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
   telescope: 'M3 15l12-6 2 4-12 6zM15 9l4-2 2 4-4 2M9 17l-3 4M11 16l3 5',
   close: 'M15 6l-6 6 6 6',
+  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
   sliders: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 5v4M8 15v4'
 } as const
 
