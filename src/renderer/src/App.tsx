@@ -995,7 +995,9 @@ export default function App() {
         </select>
         </div>}
         <span className="grow" />
-        <div className="rail-group rail-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
+        <span className="rail-cap rail-mode-cap">{t('Kullanım modu')}</span>
+        <div className={`rail-mode is-${settings.mode}`} role="radiogroup" aria-label={t('Kullanım modu')}>
+          <span className="rail-mode-thumb" aria-hidden />
           {(['amateur', 'professional'] as const).map((m) => (
             <button
               key={m}
