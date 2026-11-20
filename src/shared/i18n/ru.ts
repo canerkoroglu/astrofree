@@ -1551,6 +1551,8 @@ export const ru: Locale = {
     "Görülebilir": "Видно",
     "En iyi": "Лучше всего",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Каждое светило показано там, где оно находится в лучший момент.",
-    "zirvesi geçti": "пик прошёл"
+    "zirvesi geçti": "пик прошёл",
+    "IC (Gökyüzü dibi)": "IC (Надир)",
+    "MC (Gökyüzü ortası)": "MC (Середина неба)"
   }
 }

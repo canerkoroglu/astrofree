@@ -13,6 +13,7 @@ import {
   glyph,
   norm360,
   POINT,
+  rulerOf,
   SIGNS,
   signGlyph,
   splitDeg,
@@ -23,6 +24,10 @@ import {
 
 const C = 500
 const ANGLES = ['AC', 'IC', 'DC', 'MC'] as const
+// i18n-ignore-start (shown through t())
+const ANGLE_NAME = { AC: 'Yükselen', IC: 'IC (Gökyüzü dibi)', DC: 'Alçalan', MC: 'MC (Gökyüzü ortası)' } as const
+// i18n-ignore-end
+const angleName = (a: (typeof ANGLES)[number]) => t(ANGLE_NAME[a])
 const ELEMENT_COLOR = { fire: 'var(--el-fire)', earth: 'var(--el-earth)', air: 'var(--el-air)', water: 'var(--el-water)' } as const
 export const LAYER_COLOR: Record<string, string> = {
   natal: 'var(--ink)',
@@ -197,7 +202,8 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
           const [gx, gy] = pt(a0 + 15, (rZ1 + rZ2) / 2)
           const col = ELEMENT_COLOR[s.element]
           return (
-            <g key={s.name}>
+            <g key={s.name} className="w-sign">
+              <title>{`${s.name} — ${M().signs[i]?.about ?? ''} ${t('yönetici')}: ${POINT[rulerOf(i)].name}.`}</title>
               <path
                 d={`M${x1},${y1} A${rZ1},${rZ1} 0 0 0 ${x2},${y2} L${x3},${y3} A${rZ2},${rZ2} 0 0 1 ${x4},${y4} Z`}
                 style={{ fill: col, fillOpacity: 0.09 }}
@@ -240,6 +246,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
               <g key={i}>
                 <line x1={x1} y1={y1} x2={x2} y2={y2} className={isAngle ? 'w-cusp w-angle' : 'w-cusp'} />
                 <text x={hx} y={hy} className="w-house" textAnchor="middle" dominantBaseline="central">
+                  <title>{M().houses[i]?.about ?? t('{n}. ev', { n: i + 1 })}</title>
                   {i + 1}
                 </text>
                 <text
@@ -249,6 +256,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
                   textAnchor={lx < C - 60 ? 'end' : lx > C + 60 ? 'start' : 'middle'}
                   dominantBaseline="central"
                 >
+                  <title>{`${isAngle ? `${angleName(angle!)} · ` : ''}${t('{n}. ev', { n: i + 1 })}: ${fmtPos(c, true)}`}</title>
                   {isAngle ? `${angle} ` : ''}
                   {sd.deg}°<tspan className="w-glyph">{signGlyph(sd.sign)}</tspan>
                   {String(sd.min).padStart(2, '0')}'
@@ -275,6 +283,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
                 textAnchor={lx < C - 60 ? 'end' : lx > C + 60 ? 'start' : 'middle'}
                 dominantBaseline="central"
               >
+                <title>{`${angleName(a)}: ${fmtPos(lon, true)}`}</title>
                 {`${a} `}
                 {sd.deg}°<tspan className="w-glyph">{signGlyph(sd.sign)}</tspan>
                 {String(sd.min).padStart(2, '0')}'

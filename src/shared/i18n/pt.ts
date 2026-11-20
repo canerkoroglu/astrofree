@@ -1551,6 +1551,8 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Görülebilir": "Visível",
     "En iyi": "Melhor",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Cada astro aparece onde está no seu melhor momento.",
-    "zirvesi geçti": "já passou do pico"
+    "zirvesi geçti": "já passou do pico",
+    "IC (Gökyüzü dibi)": "IC (Fundo do céu)",
+    "MC (Gökyüzü ortası)": "MC (Meio do céu)"
   }
 }

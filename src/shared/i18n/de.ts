@@ -1551,6 +1551,8 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Görülebilir": "Sichtbar",
     "En iyi": "Am besten",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Jedes Gestirn ist dort eingezeichnet, wo es zur besten Zeit steht.",
-    "zirvesi geçti": "Höhepunkt vorbei"
+    "zirvesi geçti": "Höhepunkt vorbei",
+    "IC (Gökyüzü dibi)": "IC (Himmelstiefe)",
+    "MC (Gökyüzü ortası)": "MC (Himmelsmitte)"
   }
 }

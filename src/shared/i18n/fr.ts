@@ -1551,6 +1551,8 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Görülebilir": "Visible",
     "En iyi": "Idéal",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Chaque astre est placé là où il se trouve à son meilleur moment.",
-    "zirvesi geçti": "pic passé"
+    "zirvesi geçti": "pic passé",
+    "IC (Gökyüzü dibi)": "IC (Fond du ciel)",
+    "MC (Gökyüzü ortası)": "MC (Milieu du ciel)"
   }
 }

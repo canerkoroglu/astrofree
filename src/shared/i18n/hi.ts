@@ -1551,6 +1551,8 @@ export const hi: Locale = {
     "Görülebilir": "दिखाई देता है",
     "En iyi": "सबसे अच्छा",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "हर ग्रह उस जगह दिखाया गया है जहाँ वह सबसे अच्छे समय पर होता है।",
-    "zirvesi geçti": "चरम बीत गया"
+    "zirvesi geçti": "चरम बीत गया",
+    "IC (Gökyüzü dibi)": "IC (चतुर्थ भाव का आरंभ)",
+    "MC (Gökyüzü ortası)": "MC (मध्य आकाश)"
   }
 }

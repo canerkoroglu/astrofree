@@ -1551,6 +1551,8 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Görülebilir": "Visible",
     "En iyi": "Best",
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Each body is shown where it is at its best moment.",
-    "zirvesi geçti": "past its peak"
+    "zirvesi geçti": "past its peak",
+    "IC (Gökyüzü dibi)": "IC (Imum Coeli)",
+    "MC (Gökyüzü ortası)": "MC (Midheaven)"
   }
 }
