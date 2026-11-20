@@ -32,7 +32,7 @@ export default function MenuSelect<T extends string | number>({
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
   const [hi, setHi] = useState(0)
-  const [at, setAt] = useState({ left: 0, top: 0, width: 0, maxH: 360 })
+  const [at, setAt] = useState<{ left: number; top?: number; bottom?: number; width: number; maxH: number }>({ left: 0, top: 0, width: 0, maxH: 360 })
   const btn = useRef<HTMLButtonElement>(null)
   const pop = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
@@ -52,7 +52,8 @@ export default function MenuSelect<T extends string | number>({
     const below = window.innerHeight - r.bottom - 12
     const up = below < Math.min(want, 240) && r.top > below
     const maxH = Math.max(160, Math.min(want, up ? r.top - 12 : below))
-    setAt({ left: r.left, top: up ? r.top - 4 - maxH : r.bottom + 4, width: Math.max(r.width, 220), maxH })
+    // Opening upwards, the list is anchored by its bottom edge so a short list sits right above the button.
+    setAt(up ? { left: r.left, bottom: window.innerHeight - r.top + 4, width: Math.max(r.width, 220), maxH } : { left: r.left, top: r.bottom + 4, width: Math.max(r.width, 220), maxH })
     setQ('')
     setHi(Math.max(0, options.findIndex((o) => o.value === value)))
     setOpen(true)
@@ -118,7 +119,7 @@ export default function MenuSelect<T extends string | number>({
         <Icon name="chevron" size={14} />
       </button>
       {open && (
-        <div ref={pop} className="menu-select-pop" style={{ left: at.left, top: at.top, minWidth: at.width, maxHeight: at.maxH }} onKeyDown={keys}>
+        <div ref={pop} className="menu-select-pop" style={{ left: at.left, top: at.top, bottom: at.bottom, minWidth: at.width, maxHeight: at.maxH }} onKeyDown={keys}>
           {searchable && (
             <div className="menu-select-search">
               <Icon name="search" size={14} />
