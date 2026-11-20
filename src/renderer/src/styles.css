@@ -9160,3 +9160,16 @@ table.grid td.cell small {
     width: 36px;
   }
 }
+
+/* aspect grid crosshair: the row and column of the hovered cell */
+table.grid td.cell.x-hl,
+table.grid th.x-hl {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+table.grid td.cell.x-at {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+table.grid td.cell:not(.empty):hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}

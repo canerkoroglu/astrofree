@@ -187,10 +187,10 @@ function useAspects(natal: Layer, outer: Layer | null, settings: AppSettings) {
   )
 }
 
-function Cell({ a }: { a: Aspect | undefined }) {
-  if (!a) return <td className="cell" />
+function Cell({ a, cls = '', onEnter }: { a: Aspect | undefined; cls?: string; onEnter?: () => void }) {
+  if (!a) return <td className={`cell ${cls}`} onMouseEnter={onEnter} />
   return (
-    <td className={`cell asp-k-${a.aspect.key}`} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? t('yaklaşan') : t('ayrılan')}`}>
+    <td className={`cell asp-k-${a.aspect.key} ${cls}`} onMouseEnter={onEnter} title={`${ASPECT[a.aspect.key].name} · orb ${fmtOrb(a.orb)} · ${a.applying ? t('yaklaşan') : t('ayrılan')}`}>
       <span className="glyph">{a.aspect.glyph}</span>
       <small>
         {fmtOrb(a.orb).replace("'", '')}
@@ -202,6 +202,8 @@ function Cell({ a }: { a: Aspect | undefined }) {
 
 export function AspectGrid({ natal, outer, settings }: { natal: Layer; outer: Layer | null; settings: AppSettings }) {
   const aspects = useAspects(natal, outer, settings)
+  // Crosshair: the hovered cell's row and column are tinted.
+  const [hov, setHov] = useState<{ r: number; c: number } | null>(null)
   const usable = (p: ChartPoint) => POINT[p.key]?.aspects
   const cols = natal.points.filter(usable)
   const rows = (outer ?? natal).points.filter(usable)
@@ -211,12 +213,12 @@ export function AspectGrid({ natal, outer, settings }: { natal: Layer; outer: La
     if (!outer) lookup.set(`${a.b.key}|${a.a.key}`, a)
   }
   return (
-    <table className="grid">
+    <table className="grid" onMouseLeave={() => setHov(null)}>
       <thead>
         <tr>
           <th />
-          {cols.map((c) => (
-            <th key={c.key} title={POINT[c.key].name}>
+          {cols.map((c, ci) => (
+            <th key={c.key} title={POINT[c.key].name} className={hov?.c === ci ? 'x-hl' : ''}>
               <span className="glyph">{glyph(c.key)}</span>
             </th>
           ))}
@@ -225,11 +227,20 @@ export function AspectGrid({ natal, outer, settings }: { natal: Layer; outer: La
       <tbody>
         {rows.map((r, ri) => (
           <tr key={r.key}>
-            <th title={POINT[r.key].name} style={outer ? { color: LAYER_COLOR[outer.kind] } : undefined}>
+            <th title={POINT[r.key].name} style={outer ? { color: LAYER_COLOR[outer.kind] } : undefined} className={hov?.r === ri ? 'x-hl' : ''}>
               <span className="glyph">{glyph(r.key)}</span>
             </th>
             {cols.map((c, ci) =>
-              !outer && ci >= ri ? <td key={c.key} className="cell empty" /> : <Cell key={c.key} a={lookup.get(`${r.key}|${c.key}`)} />
+              !outer && ci >= ri ? (
+                <td key={c.key} className="cell empty" />
+              ) : (
+                <Cell
+                  key={c.key}
+                  a={lookup.get(`${r.key}|${c.key}`)}
+                  cls={hov && (hov.r === ri || hov.c === ci) ? (hov.r === ri && hov.c === ci ? 'x-hl x-at' : 'x-hl') : ''}
+                  onEnter={() => setHov({ r: ri, c: ci })}
+                />
+              )
             )}
           </tr>
         ))}
