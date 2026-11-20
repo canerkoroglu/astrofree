@@ -1026,6 +1026,30 @@ export default function App() {
             {t('Yeni sürüm v{v} · İndir', { v: update.version })}
           </a>
         )}
+        <div className="tb-app" role="group" aria-label={t('Ana menü')}>
+          <button
+            className="icon-btn tip-end"
+            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            data-tip={t(THEME_LABEL[settings.theme])}
+            aria-label={t(THEME_LABEL[settings.theme])}
+          >
+            {THEME_ICON[settings.theme]}
+          </button>
+          <button
+            className={`icon-btn tip-end tb-chat${showChat ? ' on' : ''}`}
+            aria-pressed={showChat}
+            onClick={() => setShowChat(!showChat)}
+            aria-label={t('AI sohbet')}
+            title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
+            data-tip={t('AI sohbet')}
+          >
+            💬
+          </button>
+          <button className="icon-btn tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
+            ⚙︎
+          </button>
+        </div>
         <div className="menu-wrap tb-zone-wrap">
           <button className="tb-zone" aria-expanded={zoneOpen} onClick={() => setZoneOpen(!zoneOpen)} title={t('Saat dilimleri')}>
             <span className="tz-name">{tzLabel(targetTz)}</span> <span className="muted">{fmtOffset(offsetAt(targetTz, targetJd, targetLon))}</span>
@@ -1073,30 +1097,6 @@ export default function App() {
               </div>
             </div>
           )}
-        </div>
-        <div className="tb-app" role="group" aria-label={t('Ana menü')}>
-          <button
-            className="icon-btn tip-end"
-            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
-            data-tip={t(THEME_LABEL[settings.theme])}
-            aria-label={t(THEME_LABEL[settings.theme])}
-          >
-            {THEME_ICON[settings.theme]}
-          </button>
-          <button
-            className={`icon-btn tip-end tb-chat${showChat ? ' on' : ''}`}
-            aria-pressed={showChat}
-            onClick={() => setShowChat(!showChat)}
-            aria-label={t('AI sohbet')}
-            title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
-            data-tip={t('AI sohbet')}
-          >
-            💬
-          </button>
-          <button className="icon-btn tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
-            ⚙︎
-          </button>
         </div>
           </>
         }
