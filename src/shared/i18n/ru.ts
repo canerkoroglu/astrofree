@@ -1567,6 +1567,11 @@ export const ru: Locale = {
     "Yapay zekâ sağlayıcısı": "Поставщик ИИ",
     "Şimdiki zaman": "Текущее время",
     "Paneli kapat": "Закрыть панель",
-    "Paneller": "Панели"
+    "Paneller": "Панели",
+    "Kişi listesinden seçin": "Выбрать из списка людей",
+    "Partner seçin": "Выберите партнёра",
+    "Sinastri partneri seçin": "Выберите партнёра для синастрии",
+    "bu harita": "эта карта",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Нажмите на человека для сравнения с {name}."
   }
 }

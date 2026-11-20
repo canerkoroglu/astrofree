@@ -1567,6 +1567,11 @@ export const hi: Locale = {
     "Yapay zekâ sağlayıcısı": "एआई प्रदाता",
     "Şimdiki zaman": "वर्तमान समय",
     "Paneli kapat": "पैनल बंद करें",
-    "Paneller": "पैनल"
+    "Paneller": "पैनल",
+    "Kişi listesinden seçin": "लोगों की सूची से चुनें",
+    "Partner seçin": "साथी चुनें",
+    "Sinastri partneri seçin": "सिनास्ट्री के लिए साथी चुनें",
+    "bu harita": "यह कुंडली",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "{name} से तुलना के लिए व्यक्ति पर क्लिक करें।"
   }
 }

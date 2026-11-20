@@ -1567,6 +1567,11 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Yapay zekâ sağlayıcısı": "AI provider",
     "Şimdiki zaman": "Current time",
     "Paneli kapat": "Close panel",
-    "Paneller": "Panels"
+    "Paneller": "Panels",
+    "Kişi listesinden seçin": "Choose from the people list",
+    "Partner seçin": "Choose a partner",
+    "Sinastri partneri seçin": "Choose the synastry partner",
+    "bu harita": "this chart",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Click the person to compare with {name}."
   }
 }

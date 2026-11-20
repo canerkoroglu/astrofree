@@ -14,7 +14,6 @@ import Rectify from './components/Rectify'
 import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
-import PartnerPicker from './components/PartnerPicker'
 import Icon from './components/Icon'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BirthdayReport from './components/BirthdayReport'
@@ -157,6 +156,19 @@ export default function App() {
     }
   }
   const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
+  // Choosing the synastry partner from the people list: the list opens in a picking mode.
+  const [pickPartner, setPickPartner] = useState(false)
+  const pickReturn = useRef<'people' | 'sky' | null>(null)
+  const startPick = () => {
+    pickReturn.current = panel
+    setPickPartner(true)
+    setPanelState('people')
+  }
+  const endPick = (id?: string) => {
+    if (id) setPartnerId(id)
+    setPickPartner(false)
+    setPanelState(pickReturn.current)
+  }
   // Side menu: full (icons and names) or narrow (icons only); remembered on this computer.
   const [railMini, setRailMini] = useState(() => {
     try {
@@ -950,7 +962,20 @@ export default function App() {
           <div className="rail-group rail-opts" role="group" aria-label={t('İlişki')}>
             <span className="rail-cap">{t('Sinastri')}</span>
             <span className="rail-sub">{t('Partner')}</span>
-            <PartnerPicker charts={charts.filter((c) => c.id !== working.id)} value={partnerId ?? null} onChange={setPartnerId} />
+            <button className={`partner-card${pickPartner ? ' picking' : ''}`} onClick={() => (pickPartner ? endPick() : startPick())} title={t('Kişi listesinden seçin')}>
+              <span className="avatar sm" aria-hidden style={{ ['--layer' as string]: LAYER_COLOR.synastry }}>
+                {partner ? initialsOf(partner.name) : '?'}
+              </span>
+              <span className="partner-text">
+                <span className="nm">{partner ? partner.name : t('Partner seçin')}</span>
+                {partner && (
+                  <span className="muted small">
+                    {fmtLocal(partner.local).split(' ')[0]} · {partner.place.name.split(',')[0]}
+                  </span>
+                )}
+              </span>
+              <span className="partner-change">{pickPartner ? t('Vazgeç') : t('Değiştir')}</span>
+            </button>
             {partner && working.id !== NOW_ID && !amateur && (
               <>
                 <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
@@ -1186,6 +1211,15 @@ export default function App() {
         </div>
         {panel === 'people' && (
           <>
+        {pickPartner && (
+          <div className="pick-banner" role="status">
+            <strong>{t('Sinastri partneri seçin')}</strong>
+            <span className="small">{t('{name} ile karşılaştırılacak kişiye tıklayın.', { name: working.name })}</span>
+            <button className="small" onClick={() => endPick()}>
+              {t('Vazgeç')}
+            </button>
+          </div>
+        )}
         <div className="search-row">
           <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
         </div>
@@ -1222,18 +1256,35 @@ export default function App() {
               ...group.filter((c) => !collapsed[secKey] || c.id === working.id).map((c) => {
                 const kind = c.kind ?? 'person'
                 return (
-                <li key={c.id} className={c.id === working.id ? 'active' : ''}>
+                <li
+                  key={c.id}
+                  className={[
+                    c.id === working.id ? 'active' : '',
+                    outers.includes('synastry') && c.id === partnerId ? 'is-partner' : '',
+                    pickPartner && c.id === working.id ? 'pick-self' : ''
+                  ].filter(Boolean).join(' ')}
+                >
                   <div className="item-row">
                     <button
                       className="item"
-                      onClick={() => openChart(c, 'natal')}
+                      disabled={pickPartner && c.id === working.id}
+                      onClick={() => (pickPartner ? endPick(c.id) : openChart(c, 'natal'))}
                       onContextMenu={(e) => {
                         e.preventDefault()
                         setItemMenu({ id: c.id, x: e.clientX + 180, y: e.clientY })
                       }} title={kind === 'person' ? t('Doğum haritasına bak') : t('Olay haritasına bak')}>
                       <span className={`avatar sm ${kind === 'event' ? 'event' : ''}`}>{kind === 'event' ? '◆' : initialsOf(c.name)}</span>
                       <span className="item-text">
-                        <span className="nm">{c.favorite ? '★ ' : ''}{c.name}</span>
+                        <span className="nm">
+                          {c.favorite ? '★ ' : ''}
+                          {c.name}
+                          {outers.includes('synastry') && c.id === partnerId && (
+                            <span className="partner-badge" style={{ ['--layer' as string]: LAYER_COLOR.synastry }} title={t('Sinastri partneri')}>
+                              S
+                            </span>
+                          )}
+                          {pickPartner && c.id === working.id && <span className="muted small"> · {t('bu harita')}</span>}
+                        </span>
                         <span className="muted small">
                           {fmtLocal(c.local).split(' ')[0]}
                           {c.timeUnknown ? '' : ' ' + fmtLocal(c.local).split(' ')[1]} · {c.place.name.split(',')[0]}

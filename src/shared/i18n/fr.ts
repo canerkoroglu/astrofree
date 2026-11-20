@@ -1567,6 +1567,11 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Yapay zekâ sağlayıcısı": "Fournisseur d’IA",
     "Şimdiki zaman": "Heure actuelle",
     "Paneli kapat": "Fermer le panneau",
-    "Paneller": "Panneaux"
+    "Paneller": "Panneaux",
+    "Kişi listesinden seçin": "Choisir dans la liste des personnes",
+    "Partner seçin": "Choisir un partenaire",
+    "Sinastri partneri seçin": "Choisir le partenaire de synastrie",
+    "bu harita": "ce thème",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Cliquez sur la personne à comparer avec {name}."
   }
 }

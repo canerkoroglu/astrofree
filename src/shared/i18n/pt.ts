@@ -1567,6 +1567,11 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Yapay zekâ sağlayıcısı": "Provedor de IA",
     "Şimdiki zaman": "Hora atual",
     "Paneli kapat": "Fechar painel",
-    "Paneller": "Painéis"
+    "Paneller": "Painéis",
+    "Kişi listesinden seçin": "Escolher na lista de pessoas",
+    "Partner seçin": "Escolha um parceiro",
+    "Sinastri partneri seçin": "Escolha o parceiro da sinastria",
+    "bu harita": "este mapa",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Clique na pessoa a comparar com {name}."
   }
 }

@@ -7006,3 +7006,100 @@ button.tb-zone .ico {
     display: none !important;
   }
 }
+
+/* ---- Sinastri partneri: menüde kart, seçim kişi listesinden ---- */
+button.partner-card {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  width: 100%;
+  min-height: 0;
+  padding: var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  text-align: left;
+  font-weight: 400;
+}
+button.partner-card:hover,
+button.partner-card.picking {
+  border-color: var(--layer-syn, #2f5fb3);
+  background: color-mix(in srgb, #2f5fb3 8%, var(--panel));
+}
+button.partner-card .avatar {
+  background: color-mix(in srgb, var(--layer) 18%, var(--panel));
+  color: var(--layer);
+  border: 1px solid color-mix(in srgb, var(--layer) 50%, transparent);
+}
+.partner-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.partner-text .nm {
+  font-weight: 600;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.partner-text .muted {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.partner-change {
+  flex: none;
+  font-size: 11px;
+  color: var(--accent);
+}
+.app.rail-mini .partner-text,
+.app.rail-mini .partner-change {
+  display: none;
+}
+.pick-banner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--s2);
+  align-items: center;
+  padding: var(--s3);
+  border: 1px solid color-mix(in srgb, #2f5fb3 45%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #2f5fb3 9%, var(--panel));
+}
+.pick-banner strong {
+  grid-column: 1;
+  font-size: 13px;
+}
+.pick-banner .small {
+  grid-column: 1;
+  color: var(--muted);
+}
+.pick-banner button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+.chart-list li.pick-self {
+  opacity: 0.5;
+}
+.chart-list li.is-partner {
+  box-shadow: inset 3px 0 0 var(--layer-syn, #2f5fb3);
+}
+.partner-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  border-radius: 5px;
+  background: var(--layer);
+  color: var(--panel);
+  font-size: 10px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+.sidebar:has(.pick-banner) .chart-list li:not(.pick-self):hover {
+  background: color-mix(in srgb, #2f5fb3 10%, transparent);
+}

@@ -1567,6 +1567,11 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Yapay zekâ sağlayıcısı": "KI-Anbieter",
     "Şimdiki zaman": "Aktuelle Zeit",
     "Paneli kapat": "Bereich schließen",
-    "Paneller": "Bereiche"
+    "Paneller": "Bereiche",
+    "Kişi listesinden seçin": "Aus der Personenliste wählen",
+    "Partner seçin": "Partner wählen",
+    "Sinastri partneri seçin": "Synastrie-Partner wählen",
+    "bu harita": "dieses Horoskop",
+    "{name} ile karşılaştırılacak kişiye tıklayın.": "Klicken Sie auf die Person, die mit {name} verglichen werden soll."
   }
 }
