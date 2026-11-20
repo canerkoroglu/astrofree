@@ -1562,6 +1562,7 @@ export const ru: Locale = {
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Встреч не запланировано. Добавляя сессию в карточке клиента, можно указать дату «Следующей встречи».",
     "Ana menü": "Главное меню",
     "Menüyü daralt": "Свернуть меню",
-    "Menüyü genişlet": "Развернуть меню"
+    "Menüyü genişlet": "Развернуть меню",
+    "Kişi ara…": "Найти человека…"
   }
 }

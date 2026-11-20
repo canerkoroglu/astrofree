@@ -1562,6 +1562,7 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Aucun rendez-vous prévu. En ajoutant une séance sur la fiche d’un client, vous pouvez saisir la date du « Prochain rendez-vous ».",
     "Ana menü": "Menu principal",
     "Menüyü daralt": "Réduire le menu",
-    "Menüyü genişlet": "Agrandir le menu"
+    "Menüyü genişlet": "Agrandir le menu",
+    "Kişi ara…": "Chercher une personne…"
   }
 }

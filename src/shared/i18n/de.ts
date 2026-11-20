@@ -1562,6 +1562,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Keine Termine geplant. Beim Hinzufügen einer Sitzung auf der Klientenkarte können Sie ein Datum für den „Nächsten Termin“ eingeben.",
     "Ana menü": "Hauptmenü",
     "Menüyü daralt": "Menü einklappen",
-    "Menüyü genişlet": "Menü ausklappen"
+    "Menüyü genişlet": "Menü ausklappen",
+    "Kişi ara…": "Personen suchen…"
   }
 }

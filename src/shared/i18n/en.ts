@@ -1562,6 +1562,7 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No meetings planned. When adding a session on a client's card you can enter a \"Next meeting\" date.",
     "Ana menü": "Main menu",
     "Menüyü daralt": "Collapse menu",
-    "Menüyü genişlet": "Expand menu"
+    "Menüyü genişlet": "Expand menu",
+    "Kişi ara…": "Search people…"
   }
 }

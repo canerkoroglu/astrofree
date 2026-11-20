@@ -1562,6 +1562,7 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Nenhuma consulta agendada. Ao adicionar uma sessão na ficha de um cliente, você pode informar a data da \"Próxima consulta\".",
     "Ana menü": "Menu principal",
     "Menüyü daralt": "Recolher menu",
-    "Menüyü genişlet": "Expandir menu"
+    "Menüyü genişlet": "Expandir menu",
+    "Kişi ara…": "Buscar pessoas…"
   }
 }

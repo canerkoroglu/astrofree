@@ -1562,6 +1562,7 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No hay citas previstas. Al añadir una sesión en la ficha de un cliente puede indicar la fecha de la «Próxima cita».",
     "Ana menü": "Menú principal",
     "Menüyü daralt": "Contraer menú",
-    "Menüyü genişlet": "Expandir menú"
+    "Menüyü genişlet": "Expandir menú",
+    "Kişi ara…": "Buscar personas…"
   }
 }

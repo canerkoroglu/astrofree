@@ -1562,6 +1562,7 @@ export const hi: Locale = {
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "कोई बैठक तय नहीं। किसी क्लाइंट के कार्ड में सत्र जोड़ते समय \"अगली बैठक\" की तिथि दे सकते हैं।",
     "Ana menü": "मुख्य मेनू",
     "Menüyü daralt": "मेनू छोटा करें",
-    "Menüyü genişlet": "मेनू बड़ा करें"
+    "Menüyü genişlet": "मेनू बड़ा करें",
+    "Kişi ara…": "व्यक्ति खोजें…"
   }
 }

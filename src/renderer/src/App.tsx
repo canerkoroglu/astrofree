@@ -14,6 +14,7 @@ import Rectify from './components/Rectify'
 import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
+import PartnerPicker from './components/PartnerPicker'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BirthdayReport from './components/BirthdayReport'
 import BasicReading from './components/BasicReading'
@@ -916,15 +917,7 @@ export default function App() {
           <div className="rail-group rail-opts" role="group" aria-label={t('İlişki')}>
             <span className="rail-cap">{t('Sinastri')}</span>
             <span className="rail-sub">{t('Partner')}</span>
-            <select className="tg-partner" value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)} title={t('Sinastri partneri')}>
-              {charts
-                .filter((c) => c.id !== working.id)
-                .map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-            </select>
+            <PartnerPicker charts={charts.filter((c) => c.id !== working.id)} value={partnerId ?? null} onChange={setPartnerId} />
             {partner && working.id !== NOW_ID && !amateur && (
               <>
                 <button onClick={() => openChart(compositeRecord(working, partner, jdToLocal), 'natal')} title={t('İki haritanın gezegen orta noktaları')}>
