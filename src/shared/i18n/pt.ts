@@ -1576,6 +1576,9 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Harmonik ve ev sistemi": "Harmônico e sistema de casas",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Use o controle deslizante para acompanhar o céu durante a noite; norte em cima, leste à esquerda.",
     "Ara…": "Buscar…",
-    "Sonuç yok": "Nenhum resultado"
+    "Sonuç yok": "Nenhum resultado",
+    "Gece boyunca yükseklik": "Altura durante a noite",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "Clique ou arraste no gráfico para escolher a hora",
+    "ufkun altında": "abaixo do horizonte"
   }
 }

@@ -182,6 +182,25 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
           </text>
         )
       })}
+      {/* The ecliptic: the band the Sun, Moon and planets move along */}
+      {n &&
+        (() => {
+          const pts = n.ecliptic[ti] ?? []
+          const segs: string[] = []
+          let cur = ''
+          pts.concat(pts[0] ? [pts[0]] : []).forEach((p) => {
+            if (!p || p.alt <= 0) {
+              if (cur) segs.push(cur)
+              cur = ''
+              return
+            }
+            const r = 100 * (1 - p.alt / 90)
+            const a = (p.az * Math.PI) / 180
+            cur += `${cur ? 'L' : 'M'}${(-Math.sin(a) * r).toFixed(1)},${(-Math.cos(a) * r).toFixed(1)} `
+          })
+          if (cur) segs.push(cur)
+          return segs.map((d, i) => <path key={i} d={d} className="dome-ecliptic" />)
+        })()}
       {/* Each body's path tonight, faint */}
       {n?.bodies.map((b) => {
         const d = b.track
@@ -199,7 +218,7 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
         const r = b.body === 1 ? 6.5 : Math.max(2.4, 4.6 - b.magnitude * 0.9)
         return (
           <g key={b.body} className={`dome-body-g${hover === b.body ? ' hl' : ''}`}>
-            <circle cx={x} cy={y} r={r * 2.2} fill={BODY_COLOR[b.body]} opacity={0.35} filter="url(#ns-glow)" />
+            <circle cx={x} cy={y} r={r * 1.8} fill={BODY_COLOR[b.body]} opacity={0.28} filter="url(#ns-glow)" />
             <circle cx={x} cy={y} r={r} fill={BODY_COLOR[b.body]} />
             {b.body === 1 && n && (
               // Moon phase: the unlit part as a dark ellipse (waxing lit on the west side).
@@ -227,6 +246,84 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
           </g>
         )
       })}
+    </svg>
+  )
+
+
+  // Altitude through the night: one line per body over the twilight-coloured background.
+  const chartRef = useRef<SVGSVGElement>(null)
+  const CW = 600
+  const CH = 170
+  const cx = (i: number) => (n && n.times.length > 1 ? (i / (n.times.length - 1)) * CW : 0)
+  const cy = (alt: number) => CH - (Math.max(0, alt) / 90) * CH
+  const seekChart = (clientX: number) => {
+    const r = chartRef.current?.getBoundingClientRect()
+    if (!r || !n) return
+    const f = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    setPlaying(false)
+    setTi(Math.round(f * (n.times.length - 1)))
+  }
+  const altChart = n && (
+    <svg
+      ref={chartRef}
+      viewBox={`0 0 ${CW} ${CH + 18}`}
+      className="night-chart"
+      role="img"
+      aria-label={t('Gece boyunca yükseklik')}
+      onPointerDown={(e) => {
+        e.currentTarget.setPointerCapture(e.pointerId)
+        seekChart(e.clientX)
+      }}
+      onPointerMove={(e) => e.buttons === 1 && seekChart(e.clientX)}
+    >
+      {n.sunAlt.map((a, i) => (
+        <rect
+          key={i}
+          x={cx(i) - CW / (n.times.length - 1) / 2}
+          y={0}
+          width={CW / (n.times.length - 1) + 0.5}
+          height={CH}
+          fill={a > -6 ? '#33507f' : a > -12 ? '#1f3260' : a > -18 ? '#152448' : '#0c1531'}
+        />
+      ))}
+      {[30, 60].map((alt) => (
+        <g key={alt}>
+          <line x1={0} x2={CW} y1={cy(alt)} y2={cy(alt)} className="chart-grid" />
+          <text x={4} y={cy(alt) - 3} className="chart-ylab">
+            {alt}°
+          </text>
+        </g>
+      ))}
+      {n.times.map((jd, i) => {
+        const l = local(jd)
+        return l.mi < 10 && i > 0 && i < n.times.length - 1 ? (
+          <g key={i}>
+            <line x1={cx(i)} x2={cx(i)} y1={CH} y2={CH + 4} className="chart-tick" />
+            <text x={cx(i)} y={CH + 15} className="chart-xlab" textAnchor="middle">
+              {String(l.h).padStart(2, '0')}
+            </text>
+          </g>
+        ) : null
+      })}
+      {n.bodies.map((b) => {
+        let d = ''
+        b.track.forEach((p, i) => {
+          if (p && p.alt > 0) d += `${d && b.track[i - 1] && b.track[i - 1]!.alt > 0 ? 'L' : 'M'}${cx(i).toFixed(1)},${cy(p.alt).toFixed(1)} `
+        })
+        return d ? (
+          <path
+            key={b.body}
+            d={d}
+            className={`chart-line${hover === b.body ? ' hl' : hover !== null ? ' dim' : ''}`}
+            style={{ stroke: BODY_COLOR[b.body] }}
+          />
+        ) : null
+      })}
+      <line x1={cx(ti)} x2={cx(ti)} y1={0} y2={CH} className="chart-cursor" />
+      {placed.map(({ b, p }) => (
+        <circle key={b.body} cx={cx(ti)} cy={cy(p.alt)} r={3.2} fill={BODY_COLOR[b.body]} className="chart-dot" />
+      ))}
+      <line x1={0} x2={CW} y1={CH} y2={CH} className="chart-horizon" />
     </svg>
   )
 
@@ -302,6 +399,13 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
             </section>
 
             <section className="night-list">
+              <div className="night-chart-box">
+                <div className="night-chart-head">
+                  <h3>{t('Gece boyunca yükseklik')}</h3>
+                  <span className="muted small">{t('Grafiğe tıklayıp sürükleyerek saati seçin')}</span>
+                </div>
+                {altChart}
+              </div>
               <ul>
                 {seen.map((b) => (
                   <li
@@ -325,6 +429,14 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
                         <span className="muted">
                           {t('En iyi')} {time(b.best)} · {dirOf(b.azimuth)}, {heightOf(b.altitude)}
                         </span>
+                        {(() => {
+                          const p = b.track[ti]
+                          return (
+                            <span className={`night-now${p && p.alt > 0 ? ' up' : ''}`}>
+                              {time(tNow)}: {p && p.alt > 0 ? `${dirOf(p.az)}, ${Math.round(p.alt)}°` : t('ufkun altında')}
+                            </span>
+                          )
+                        })()}
                       </div>
                     </div>
                   </li>

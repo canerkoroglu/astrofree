@@ -1576,6 +1576,9 @@ export const hi: Locale = {
     "Harmonik ve ev sistemi": "हार्मोनिक और भाव पद्धति",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "स्लाइडर से पूरी रात आकाश देखें; उत्तर ऊपर, पूर्व बाईं ओर।",
     "Ara…": "खोजें…",
-    "Sonuç yok": "कोई परिणाम नहीं"
+    "Sonuç yok": "कोई परिणाम नहीं",
+    "Gece boyunca yükseklik": "रात भर ऊँचाई",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "समय चुनने के लिए ग्राफ़ पर क्लिक करें या खींचें",
+    "ufkun altında": "क्षितिज के नीचे"
   }
 }

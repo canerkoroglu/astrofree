@@ -500,6 +500,8 @@ export interface NightSky {
   /** Sample times from sunset to sunrise (every 10 minutes) and the Sun's altitude at each. */
   times: number[]
   sunAlt: number[]
+  /** The ecliptic at each sample time: points every 10° of longitude, null below the horizon. */
+  ecliptic: ({ alt: number; az: number } | null)[][]
 }
 
 export interface TimingFacts {

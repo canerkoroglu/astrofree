@@ -1576,6 +1576,9 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Harmonik ve ev sistemi": "Harmonic and house system",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Use the slider to watch the sky through the night; north at the top, east on the left.",
     "Ara…": "Search…",
-    "Sonuç yok": "No results"
+    "Sonuç yok": "No results",
+    "Gece boyunca yükseklik": "Altitude through the night",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "Click or drag on the chart to choose the time",
+    "ufkun altında": "below the horizon"
   }
 }

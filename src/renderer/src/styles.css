@@ -7753,3 +7753,119 @@ button.night-play {
     animation: none;
   }
 }
+
+/* ---- Bu gece, v4: daha geniş; ekliptik, yükseklik grafiği, anlık konum ---- */
+.night-modal {
+  width: min(1560px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+}
+.night-grid {
+  grid-template-columns: minmax(320px, 440px) minmax(0, 1fr) minmax(260px, 320px);
+}
+.dome-ecliptic {
+  fill: none;
+  stroke: #e9c46a;
+  stroke-width: 0.7;
+  stroke-opacity: 0.55;
+  stroke-dasharray: 3 2;
+}
+.night-chart-box {
+  margin-bottom: var(--s3);
+  padding: var(--s3);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.night-chart-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
+}
+.night-chart-head h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.night-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: ew-resize;
+  touch-action: none;
+}
+.chart-grid {
+  stroke: #ffffff22;
+  stroke-width: 0.6;
+  stroke-dasharray: 3 3;
+}
+.chart-ylab {
+  fill: #ffffff80;
+  font-size: 9px;
+}
+.chart-xlab {
+  fill: var(--muted);
+  font-size: 9.5px;
+  font-family: var(--num-font);
+}
+.chart-tick {
+  stroke: var(--line-strong);
+}
+.chart-horizon {
+  stroke: #ffffff66;
+  stroke-width: 1;
+}
+.chart-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.15s, stroke-width 0.15s;
+}
+.chart-line.dim {
+  opacity: 0.25;
+}
+.chart-line.hl {
+  stroke-width: 3;
+}
+.chart-cursor {
+  stroke: #fff;
+  stroke-width: 1.2;
+  stroke-opacity: 0.85;
+}
+.chart-dot {
+  stroke: #0c1531;
+  stroke-width: 1.2;
+}
+.night-modal .night-list > ul {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.night-now {
+  flex-basis: 100%;
+  font-family: var(--num-font);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.night-now.up {
+  color: var(--accent);
+  font-weight: 600;
+}
+/* the range input over the coloured bar: no box of its own */
+.night-track input[type='range'] {
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+  height: 24px;
+  min-height: 0;
+  background: transparent;
+}
+.night-track input[type='range']:focus {
+  outline: none;
+  box-shadow: none;
+}
+.night-track input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.night-track-bar {
+  height: 8px;
+  margin-top: -4px;
+}

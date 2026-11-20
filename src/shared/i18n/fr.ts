@@ -1576,6 +1576,9 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Harmonik ve ev sistemi": "Harmonique et système de maisons",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Faites glisser le curseur pour suivre le ciel au fil de la nuit ; nord en haut, est à gauche.",
     "Ara…": "Rechercher…",
-    "Sonuç yok": "Aucun résultat"
+    "Sonuç yok": "Aucun résultat",
+    "Gece boyunca yükseklik": "Hauteur au fil de la nuit",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "Cliquez ou glissez sur le graphique pour choisir l’heure",
+    "ufkun altında": "sous l’horizon"
   }
 }

@@ -525,6 +525,15 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
       if (bestPair) pairs.push({ a: NIGHT_BODIES[i], b: NIGHT_BODIES[j], sep: Math.round(bestPair.sep * 10) / 10, jd: bestPair.jd })
     }
 
+  // The ecliptic across the sky at each sample (tropical ecliptic of date → horizon).
+  const ecliptic = ts.map((t) =>
+    Array.from({ length: 36 }, (_, k) => {
+      const a = swe.azalt(t, 0, geo, 0, 0, [k * 10, 0, 1])
+      const alt = a.apparentAltitude as number
+      return alt > -0.5 ? { alt: Math.round(alt * 10) / 10, az: Math.round(norm((a.azimuth as number) + 180) * 10) / 10 } : null
+    })
+  )
+
   const moonPh = phenoUt(swe, from + 0.25, 1, SEFLG_SWIEPH)
   const el = norm(swe.calc_ut(from + 0.25, 1, SEFLG_SWIEPH)[0] - swe.calc_ut(from + 0.25, 0, SEFLG_SWIEPH)[0])
 
@@ -535,7 +544,7 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
   if (lun) eclipses.push({ jd: lun.tret[0], solar: false, kind: lun.retFlag & 4 ? 'total' : lun.retFlag & 16 ? 'partial' : 'penumbral', magnitude: Math.round((lun.retFlag & 20 ? lun.attr[0] : lun.attr[1]) * 100) / 100 })
   eclipses.sort((a, b) => a.jd - b.jd)
 
-  return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses, times: ts, sunAlt: sunAlt.map((a) => Math.round(a * 10) / 10) }
+  return { sunset, dark, dawn, sunrise, moonLit: moonPh ? moonPh[1] : 0, moonWaxing: el < 180, bodies, pairs, eclipses, times: ts, sunAlt: sunAlt.map((a) => Math.round(a * 10) / 10), ecliptic }
 }
 
 // ---- Birth-time rectification ------------------------------------------------------

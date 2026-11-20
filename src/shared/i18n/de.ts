@@ -1576,6 +1576,9 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Harmonik ve ev sistemi": "Harmonik und Häusersystem",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Mit dem Schieberegler den Himmel durch die Nacht verfolgen; Norden oben, Osten links.",
     "Ara…": "Suchen…",
-    "Sonuç yok": "Keine Treffer"
+    "Sonuç yok": "Keine Treffer",
+    "Gece boyunca yükseklik": "Höhe im Lauf der Nacht",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "Zum Wählen der Uhrzeit ins Diagramm klicken oder ziehen",
+    "ufkun altında": "unter dem Horizont"
   }
 }

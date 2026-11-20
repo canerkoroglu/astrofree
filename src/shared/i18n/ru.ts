@@ -1576,6 +1576,9 @@ export const ru: Locale = {
     "Harmonik ve ev sistemi": "Гармоника и система домов",
     "Kaydırıcıyla gece boyunca gökyüzünü izleyin; kuzey üstte, doğu solda.": "Двигайте ползунок, чтобы смотреть небо в течение ночи; север вверху, восток слева.",
     "Ara…": "Поиск…",
-    "Sonuç yok": "Ничего не найдено"
+    "Sonuç yok": "Ничего не найдено",
+    "Gece boyunca yükseklik": "Высота в течение ночи",
+    "Grafiğe tıklayıp sürükleyerek saati seçin": "Щёлкните или проведите по графику, чтобы выбрать время",
+    "ufkun altında": "под горизонтом"
   }
 }
