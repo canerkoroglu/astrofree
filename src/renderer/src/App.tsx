@@ -899,8 +899,8 @@ export default function App() {
           { key: 'g:', label: t('Grupsuz'), items: visible.filter((c) => !c.group) }
         ]
       : [
-          { key: 'person', label: t('Kişiler'), items: visible.filter((c) => (c.kind ?? 'person') === 'person') },
-          { key: 'event', label: t('Olaylar'), items: visible.filter((c) => c.kind === 'event') }
+          { key: 'person', label: t('Doğum haritaları'), items: visible.filter((c) => (c.kind ?? 'person') === 'person') },
+          { key: 'event', label: t('Olay haritaları'), items: visible.filter((c) => c.kind === 'event') }
         ]
 
   return (

@@ -1583,6 +1583,8 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Harita türü": "Horoskopart",
     "Harita yönetimi": "Horoskopverwaltung",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Horoskopverwaltung: Sammelbearbeitung, Import/Export, Doppelte",
-    "Harita yönetimi…": "Horoskopverwaltung…"
+    "Harita yönetimi…": "Horoskopverwaltung…",
+    "Doğum haritaları": "Geburtshoroskope",
+    "Olay haritaları": "Ereignishoroskope"
   }
 }

@@ -1583,6 +1583,8 @@ export const ru: Locale = {
     "Harita türü": "Тип карты",
     "Harita yönetimi": "Управление картами",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Управление картами: массовое редактирование, импорт/экспорт, дубликаты",
-    "Harita yönetimi…": "Управление картами…"
+    "Harita yönetimi…": "Управление картами…",
+    "Doğum haritaları": "Натальные карты",
+    "Olay haritaları": "Карты событий"
   }
 }
