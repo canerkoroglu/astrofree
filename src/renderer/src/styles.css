@@ -8519,34 +8519,15 @@ button.soft-btn.on {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* quick actions: four low tiles, icon beside the name */
+/* quick actions: the 2×2 tinted tiles (icon above the name); columns never wider than the menu */
 .rail .rail-tiles {
-  gap: 6px;
-  padding-top: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .rail button.rail-btn.tile {
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 8px;
-  min-height: 40px;
-  padding: 4px 8px 4px 5px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--hue) 7%, var(--panel));
-  border: 1px solid color-mix(in srgb, var(--hue) 20%, var(--line));
-}
-.rail button.rail-btn.tile:hover {
-  transform: none;
-  box-shadow: none;
-  background: color-mix(in srgb, var(--hue) 14%, var(--panel));
-}
-.rail button.rail-btn.tile .rail-badge {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  min-width: 0;
 }
 .rail button.rail-btn.tile .rail-lbl {
-  font-size: 12.5px;
-  text-align: left;
+  max-width: 100%;
 }
 /* sections: same caps, same spacing; chart options sit in one calm block */
 .rail .rail-cap {
