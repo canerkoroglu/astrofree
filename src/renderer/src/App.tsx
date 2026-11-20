@@ -1010,7 +1010,7 @@ export default function App() {
           <MenuSelect
             label={t('Ev sistemi')}
             value={settings.houseSystem}
-            options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
+            options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) })).sort((a, b) => a.label.localeCompare(b.label, document.documentElement.lang || undefined))}
             onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
           />
         </div>

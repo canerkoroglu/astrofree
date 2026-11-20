@@ -7869,3 +7869,24 @@ button.night-play {
   height: 8px;
   margin-top: -4px;
 }
+
+/* side menu selects: smaller type, always one line */
+.rail-opts button.menu-select {
+  min-height: 34px;
+  padding: 5px 8px 5px 10px;
+  font-size: 12px;
+}
+.rail-opts .menu-select-val {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.menu-select-pop .menu-select-list li {
+  min-height: 30px;
+  font-size: 12.5px;
+}
+.menu-select-search input {
+  font-size: 12.5px;
+  padding: 6px 0;
+}
