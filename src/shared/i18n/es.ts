@@ -1583,8 +1583,6 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Harita türü": "Tipo de carta",
     "Harita yönetimi": "Gestión de cartas",
     "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestión de cartas: edición en bloque, importar/exportar, duplicados",
-    "Harita yönetimi…": "Gestión de cartas…",
-    "Doğum haritaları": "Cartas natales",
-    "Olay haritaları": "Cartas de acontecimientos"
+    "Harita yönetimi…": "Gestión de cartas…"
   }
 }

@@ -899,8 +899,8 @@ export default function App() {
           { key: 'g:', label: t('Grupsuz'), items: visible.filter((c) => !c.group) }
         ]
       : [
-          { key: 'person', label: t('Doğum haritaları'), items: visible.filter((c) => (c.kind ?? 'person') === 'person') },
-          { key: 'event', label: t('Olay haritaları'), items: visible.filter((c) => c.kind === 'event') }
+          { key: 'person', label: t('Kişiler'), items: visible.filter((c) => (c.kind ?? 'person') === 'person') },
+          { key: 'event', label: t('Olaylar'), items: visible.filter((c) => c.kind === 'event') }
         ]
 
   return (
@@ -1261,8 +1261,8 @@ export default function App() {
           {(
             [
               ['all', t('Tümü'), charts.filter((c) => !c.composite).length],
-              ['person', t('Doğum'), charts.filter((c) => !c.composite && (c.kind ?? 'person') === 'person').length],
-              ['event', t('Olay'), charts.filter((c) => !c.composite && c.kind === 'event').length]
+              ['person', t('Kişiler'), charts.filter((c) => !c.composite && (c.kind ?? 'person') === 'person').length],
+              ['event', t('Olaylar'), charts.filter((c) => !c.composite && c.kind === 'event').length]
             ] as const
           ).map(([k, label, count]) => (
             <button key={k} role="radio" aria-checked={listKind === k} className={listKind === k ? 'on' : ''} onClick={() => setListKind(k)}>
