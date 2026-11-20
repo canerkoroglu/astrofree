@@ -1579,6 +1579,10 @@ export const hi: Locale = {
     "Sonuç yok": "कोई परिणाम नहीं",
     "Gece boyunca yükseklik": "रात भर ऊँचाई",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "समय चुनने के लिए ग्राफ़ पर क्लिक करें या खींचें",
-    "ufkun altında": "क्षितिज के नीचे"
+    "ufkun altında": "क्षितिज के नीचे",
+    "Harita türü": "कुंडली का प्रकार",
+    "Harita yönetimi": "कुंडली प्रबंधन",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "कुंडली प्रबंधन: एक साथ संपादन, आयात/निर्यात, दोहराव",
+    "Harita yönetimi…": "कुंडली प्रबंधन…"
   }
 }

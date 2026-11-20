@@ -1579,6 +1579,10 @@ export const ru: Locale = {
     "Sonuç yok": "Ничего не найдено",
     "Gece boyunca yükseklik": "Высота в течение ночи",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "Щёлкните или проведите по графику, чтобы выбрать время",
-    "ufkun altında": "под горизонтом"
+    "ufkun altında": "под горизонтом",
+    "Harita türü": "Тип карты",
+    "Harita yönetimi": "Управление картами",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Управление картами: массовое редактирование, импорт/экспорт, дубликаты",
+    "Harita yönetimi…": "Управление картами…"
   }
 }

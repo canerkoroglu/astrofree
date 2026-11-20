@@ -7919,3 +7919,37 @@ button.night-play {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- Haritalar paneli: Tümü · Doğum · Olay ---- */
+.sidebar .seg.list-kind {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 3px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 7%, var(--panel));
+}
+.sidebar .seg.list-kind button,
+.sidebar .seg.list-kind button.on {
+  min-height: 28px;
+  padding: 3px 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.sidebar .seg.list-kind button.on {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+}
+.lk-count {
+  font-family: var(--num-font);
+  font-size: 10.5px;
+  font-weight: 500;
+  opacity: 0.7;
+}

@@ -157,6 +157,23 @@ export default function App() {
     }
   }
   const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
+  // Charts list: all, birth charts only, or event charts only (remembered).
+  const [listKind, setListKindState] = useState<'all' | 'person' | 'event'>(() => {
+    try {
+      const v = localStorage.getItem('list-kind')
+      return v === 'person' || v === 'event' ? v : 'all'
+    } catch {
+      return 'all'
+    }
+  })
+  const setListKind = (v: 'all' | 'person' | 'event') => {
+    setListKindState(v)
+    try {
+      localStorage.setItem('list-kind', v)
+    } catch {
+      /* storage unavailable */
+    }
+  }
   // Choosing the synastry partner from the people list: the list opens in a picking mode.
   const [pickPartner, setPickPartner] = useState(false)
   const pickReturn = useRef<'people' | 'sky' | null>(null)
@@ -862,7 +879,12 @@ export default function App() {
   const moon = computed?.natal.points.find((p) => p.key === 'moon')
   const allTags = [...new Set(charts.flatMap((c) => c.tags ?? []))].sort((a, b) => a.localeCompare(b, 'tr'))
   const visible = sortCharts(
-    charts.filter((c) => (!tagFilter || (c.tags ?? []).includes(tagFilter)) && (!filter.trim() || matches(c, filter))),
+    charts.filter(
+      (c) =>
+        (listKind === 'all' || pickPartner || (c.kind ?? 'person') === listKind) &&
+        (!tagFilter || (c.tags ?? []).includes(tagFilter)) &&
+        (!filter.trim() || matches(c, filter))
+    ),
     'name'
   )
   // Sidebar list sections: by kind (people / events) or by group.
@@ -898,11 +920,11 @@ export default function App() {
           </button>
         </div>
         <div className="rail-group" role="group" aria-label={t('Paneller')}>
-          <button className={`rail-btn${panel === 'people' ? ' on' : ''}`} aria-pressed={panel === 'people'} onClick={() => togglePanel('people')} title={t('Kişiler ve olaylar')}>
+          <button className={`rail-btn${panel === 'people' ? ' on' : ''}`} aria-pressed={panel === 'people'} onClick={() => togglePanel('people')} title={t('Haritalar')}>
             <span className="rail-badge plain" aria-hidden>
               <Icon name="users" size={18} />
             </span>
-            <span className="rail-lbl">{t('Kişiler ve olaylar')}</span>
+            <span className="rail-lbl">{t('Haritalar')}</span>
           </button>
           <button className={`rail-btn${panel === 'sky' ? ' on' : ''}`} aria-pressed={panel === 'sky'} onClick={() => togglePanel('sky')} title={t('Gökyüzü')}>
             <span className="rail-badge plain" aria-hidden>
@@ -1209,14 +1231,14 @@ export default function App() {
           </div>
         )}
         <div className="side-head">
-          <h2>{panel === 'sky' ? t('Gökyüzü') : t('Kişiler ve olaylar')}</h2>
+          <h2>{panel === 'sky' ? t('Gökyüzü') : t('Haritalar')}</h2>
           {panel === 'sky' && (
             <button className="ghost-icon sky-expand" title={t('Tam ekranda göster')} aria-label={t('Tam ekranda göster')} onClick={() => setSkyFull(true)}>
               ⤢
             </button>
           )}
           {panel === 'people' && (
-            <button className="ghost-icon tip-end" data-tip={t('Kişiler ve olaylar: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Kişiler ve olaylar')} onClick={() => setShowPeople(true)}>
+            <button className="ghost-icon tip-end" data-tip={t('Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar')} aria-label={t('Harita yönetimi')} onClick={() => setShowPeople(true)}>
               ☰
             </button>
           )}
@@ -1235,6 +1257,19 @@ export default function App() {
             </button>
           </div>
         )}
+        <div className="seg list-kind" role="radiogroup" aria-label={t('Harita türü')}>
+          {(
+            [
+              ['all', t('Tümü'), charts.filter((c) => !c.composite).length],
+              ['person', t('Doğum'), charts.filter((c) => !c.composite && (c.kind ?? 'person') === 'person').length],
+              ['event', t('Olay'), charts.filter((c) => !c.composite && c.kind === 'event').length]
+            ] as const
+          ).map(([k, label, count]) => (
+            <button key={k} role="radio" aria-checked={listKind === k} className={listKind === k ? 'on' : ''} onClick={() => setListKind(k)}>
+              {label} <span className="lk-count">{count}</span>
+            </button>
+          ))}
+        </div>
         <div className="search-row">
           <input className="search" placeholder={t('Ara (isim, etiket, not, yer)…')} value={filter} onChange={(e) => setFilter(e.target.value)} />
         </div>

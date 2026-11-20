@@ -1579,6 +1579,10 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Sonuç yok": "No results",
     "Gece boyunca yükseklik": "Altitude through the night",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "Click or drag on the chart to choose the time",
-    "ufkun altında": "below the horizon"
+    "ufkun altında": "below the horizon",
+    "Harita türü": "Chart type",
+    "Harita yönetimi": "Chart manager",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Chart manager: bulk editing, import/export, duplicates",
+    "Harita yönetimi…": "Chart manager…"
   }
 }

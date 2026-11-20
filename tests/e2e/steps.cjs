@@ -56,7 +56,7 @@ function steps({ ai, tmp, mock }) {
   step('sky full check', `ok('Gökyüzü tam ekran (lightbox)',!!document.querySelector('.lightbox .sky-wide .sky-hero')&&document.querySelectorAll('.lightbox .sky-col').length===3)`)
   step('sky full close', `(()=>{c('.lightbox-head button','⤡');return 1})()`, 400)
   step('sky full closed', `ok('Gökyüzü küçültme',!document.querySelector('.lightbox'))`)
-  step('people panel', `(()=>{c('.rail .rail-lbl','Kişiler ve olaylar');return 1})()`, 500)
+  step('people panel', `(()=>{c('.rail .rail-lbl','Haritalar');return 1})()`, 500)
   step('people panel check', `ok('Kişiler paneli geri geliyor',!!document.querySelector('.sidebar .chart-list'))`)
   step('reading', `c('.view-tabs button','Temel Yorum')`, 1000)
   step('reading check', `(()=>{const r=document.querySelector('.reading');if(!r)return ok('Temel yorum',false,'sayfa yok');const t=r.innerText;return ok('Temel yorum (çevrimdışı)',t.includes('Oğlak Güneşi')&&t.includes('Kova Ay')&&t.includes('Aslan Yükselen')&&r.querySelectorAll('.reading-item').length>=10&&r.querySelectorAll('.reading-disclaimer').length===2,t.slice(0,120).replace(/\\n/g,' | '))})()`)

@@ -1579,6 +1579,10 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Sonuç yok": "Aucun résultat",
     "Gece boyunca yükseklik": "Hauteur au fil de la nuit",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "Cliquez ou glissez sur le graphique pour choisir l’heure",
-    "ufkun altında": "sous l’horizon"
+    "ufkun altında": "sous l’horizon",
+    "Harita türü": "Type de thème",
+    "Harita yönetimi": "Gestion des thèmes",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestion des thèmes : modification groupée, import/export, doublons",
+    "Harita yönetimi…": "Gestion des thèmes…"
   }
 }

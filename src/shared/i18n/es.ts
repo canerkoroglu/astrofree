@@ -1579,6 +1579,10 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Sonuç yok": "Sin resultados",
     "Gece boyunca yükseklik": "Altura durante la noche",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "Haga clic o arrastre en el gráfico para elegir la hora",
-    "ufkun altında": "bajo el horizonte"
+    "ufkun altında": "bajo el horizonte",
+    "Harita türü": "Tipo de carta",
+    "Harita yönetimi": "Gestión de cartas",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Gestión de cartas: edición en bloque, importar/exportar, duplicados",
+    "Harita yönetimi…": "Gestión de cartas…"
   }
 }

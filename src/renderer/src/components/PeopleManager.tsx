@@ -163,11 +163,11 @@ export default function PeopleManager({
 
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
-      <div className="modal people-modal" role="dialog" aria-label={t('Kişiler ve olaylar')}>
+      <div className="modal people-modal" role="dialog" aria-label={t('Harita yönetimi')}>
         <ModalClose onClose={onClose} />
         <header className="pm-head">
           <div>
-            <h2>{t('Kişiler ve olaylar')}</h2>
+            <h2>{t('Harita yönetimi')}</h2>
             <p className="muted small">{t('{n} kayıt · tüm bilgiler yalnızca bu bilgisayarda tutulur', { n: all.length })}</p>
           </div>
           <div className="pm-head-actions">

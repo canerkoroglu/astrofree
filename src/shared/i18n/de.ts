@@ -1579,6 +1579,10 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Sonuç yok": "Keine Treffer",
     "Gece boyunca yükseklik": "Höhe im Lauf der Nacht",
     "Grafiğe tıklayıp sürükleyerek saati seçin": "Zum Wählen der Uhrzeit ins Diagramm klicken oder ziehen",
-    "ufkun altında": "unter dem Horizont"
+    "ufkun altında": "unter dem Horizont",
+    "Harita türü": "Horoskopart",
+    "Harita yönetimi": "Horoskopverwaltung",
+    "Harita yönetimi: toplu düzenleme, içe/dışa aktarma, kopyalar": "Horoskopverwaltung: Sammelbearbeitung, Import/Export, Doppelte",
+    "Harita yönetimi…": "Horoskopverwaltung…"
   }
 }

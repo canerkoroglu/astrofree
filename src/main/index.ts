@@ -306,7 +306,7 @@ function buildMenu(): void {
         { label: tm('Yeni harita'), accelerator: 'CmdOrCtrl+N', click: () => win?.webContents.send('menu', 'new') },
         { label: tm('Kaydet'), accelerator: 'CmdOrCtrl+S', click: () => win?.webContents.send('menu', 'save') },
         { type: 'separator' },
-        { label: tm('Kişiler ve olaylar…'), accelerator: 'CmdOrCtrl+Shift+P', click: () => win?.webContents.send('menu', 'people') },
+        { label: tm('Harita yönetimi…'), accelerator: 'CmdOrCtrl+Shift+P', click: () => win?.webContents.send('menu', 'people') },
         { label: tm('İçe aktar…'), click: () => win?.webContents.send('menu', 'import') },
         { label: tm('Dışa aktar…'), click: () => win?.webContents.send('menu', 'export') },
         { type: 'separator' },
