@@ -1553,6 +1553,12 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Jedes Gestirn ist dort eingezeichnet, wo es zur besten Zeit steht.",
     "zirvesi geçti": "Höhepunkt vorbei",
     "IC (Gökyüzü dibi)": "IC (Himmelstiefe)",
-    "MC (Gökyüzü ortası)": "MC (Himmelsmitte)"
+    "MC (Gökyüzü ortası)": "MC (Himmelsmitte)",
+    "Filtreleri temizle": "Filter zurücksetzen",
+    "Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.": "Wählen Sie einen Eintrag in der Liste, um Details zu sehen; Doppelklick öffnet das Horoskop.",
+    "{n} yaşına giriyor": "wird {n}",
+    "Önümüzdeki 30 günde doğum günü yok.": "Keine Geburtstage in den nächsten 30 Tagen.",
+    "gecikti": "überfällig",
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Keine Termine geplant. Beim Hinzufügen einer Sitzung auf der Klientenkarte können Sie ein Datum für den „Nächsten Termin“ eingeben."
   }
 }

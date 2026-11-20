@@ -1553,6 +1553,12 @@ export const ru: Locale = {
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Каждое светило показано там, где оно находится в лучший момент.",
     "zirvesi geçti": "пик прошёл",
     "IC (Gökyüzü dibi)": "IC (Надир)",
-    "MC (Gökyüzü ortası)": "MC (Середина неба)"
+    "MC (Gökyüzü ortası)": "MC (Середина неба)",
+    "Filtreleri temizle": "Сбросить фильтры",
+    "Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.": "Выберите запись в списке, чтобы увидеть подробности; двойной щелчок открывает карту.",
+    "{n} yaşına giriyor": "исполняется {n}",
+    "Önümüzdeki 30 günde doğum günü yok.": "Дней рождения в ближайшие 30 дней нет.",
+    "gecikti": "просрочено",
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Встреч не запланировано. Добавляя сессию в карточке клиента, можно указать дату «Следующей встречи»."
   }
 }

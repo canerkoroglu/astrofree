@@ -1553,6 +1553,12 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Cada astro se muestra donde está en su mejor momento.",
     "zirvesi geçti": "ya pasó su máximo",
     "IC (Gökyüzü dibi)": "IC (Fondo del cielo)",
-    "MC (Gökyüzü ortası)": "MC (Medio cielo)"
+    "MC (Gökyüzü ortası)": "MC (Medio cielo)",
+    "Filtreleri temizle": "Quitar filtros",
+    "Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.": "Elija un registro de la lista para ver sus detalles; con doble clic se abre la carta.",
+    "{n} yaşına giriyor": "cumple {n}",
+    "Önümüzdeki 30 günde doğum günü yok.": "No hay cumpleaños en los próximos 30 días.",
+    "gecikti": "atrasada",
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No hay citas previstas. Al añadir una sesión en la ficha de un cliente puede indicar la fecha de la «Próxima cita»."
   }
 }

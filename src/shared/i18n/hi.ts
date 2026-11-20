@@ -1553,6 +1553,12 @@ export const hi: Locale = {
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "हर ग्रह उस जगह दिखाया गया है जहाँ वह सबसे अच्छे समय पर होता है।",
     "zirvesi geçti": "चरम बीत गया",
     "IC (Gökyüzü dibi)": "IC (चतुर्थ भाव का आरंभ)",
-    "MC (Gökyüzü ortası)": "MC (मध्य आकाश)"
+    "MC (Gökyüzü ortası)": "MC (मध्य आकाश)",
+    "Filtreleri temizle": "फ़िल्टर हटाएँ",
+    "Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.": "विवरण देखने के लिए सूची से कोई रिकॉर्ड चुनें; डबल-क्लिक से कुंडली खुलती है।",
+    "{n} yaşına giriyor": "{n} वर्ष के होंगे",
+    "Önümüzdeki 30 günde doğum günü yok.": "अगले 30 दिनों में कोई जन्मदिन नहीं।",
+    "gecikti": "देर हो गई",
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "कोई बैठक तय नहीं। किसी क्लाइंट के कार्ड में सत्र जोड़ते समय \"अगली बैठक\" की तिथि दे सकते हैं।"
   }
 }

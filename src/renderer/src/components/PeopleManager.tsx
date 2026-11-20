@@ -20,6 +20,13 @@ const fromIso = (s: string) => {
   const [y, m, d] = s.split('-').map(Number)
   return y && m && d ? { y, m, d } : undefined
 }
+const initials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toLocaleUpperCase())
+    .join('')
 const dayNo = (d: { y: number; m: number; d: number }) => Date.UTC(d.y, d.m - 1, d.d) / 86400000
 
 export default function PeopleManager({
@@ -56,6 +63,7 @@ export default function PeopleManager({
   const [showDups, setShowDups] = useState(false)
   const [tagDraft, setTagDraft] = useState('')
   const [msg, setMsg] = useState('')
+  const [exportOpen, setExportOpen] = useState(false)
 
   const hay = useMemo(() => new Map(charts.map((c) => [c.id, haystack(c)])), [charts])
   const groups = [...GROUP_PRESETS.map(([id]) => id).filter((g) => charts.some((c) => c.group === g)), ...customGroups(charts)]
@@ -143,65 +151,74 @@ export default function PeopleManager({
     flash(t('{name} için {n} kopya birleştirildi.', { name: keep.name, n: rest.length }))
   }
 
+  const all = charts.filter((c) => !c.composite)
+  const stats = {
+    people: all.filter((c) => (c.kind ?? 'person') === 'person').length,
+    events: all.filter((c) => c.kind === 'event').length,
+    unknown: all.filter((c) => c.timeUnknown).length
+  }
+  const filtered = kind !== 'all' || !!group || !!tag || onlyUnknown || !!q.trim()
+  const clearFilters = () => (setKind('all'), setGroup(''), setTag(''), setOnlyUnknown(false), setQ(''))
+  const daysLabel = (n: number) => (n === 0 ? t('bugün') : n === 1 ? t('yarın') : n < 0 ? fmtDate(today) : t('{n} gün sonra', { n }))
+
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal people-modal" role="dialog" aria-label={t('Kişiler ve olaylar')}>
         <ModalClose onClose={onClose} />
-        <div className="gd-head">
+        <header className="pm-head">
           <div>
             <h2>{t('Kişiler ve olaylar')}</h2>
-            <p className="muted small">{t('{n} kayıt · tüm bilgiler yalnızca bu bilgisayarda tutulur', { n: charts.filter((c) => !c.composite).length })}</p>
+            <p className="muted small">{t('{n} kayıt · tüm bilgiler yalnızca bu bilgisayarda tutulur', { n: all.length })}</p>
           </div>
-          <div className="reading-actions">
-            <button onClick={onImport}>{t('İçe aktar…')}</button>
+          <div className="pm-head-actions">
             {dups.length > 0 && (
               <button className={showDups ? 'on' : ''} onClick={() => setShowDups(!showDups)}>
                 {t('Kopyalar ({n})', { n: dups.length })}
               </button>
             )}
+            <button onClick={onImport}>{t('İçe aktar…')}</button>
           </div>
-        </div>
+        </header>
 
-        {(soon.birthdays.length > 0 || (professional && soon.followUps.length > 0)) && !showDups && (
-          <div className="people-soon small">
-            {soon.birthdays.length > 0 && (
-              <div>
-                🎂 <strong>{t('Yaklaşan doğum günleri')}:</strong>{' '}
-                {soon.birthdays.slice(0, 8).map((b, i) => (
-                  <span key={b.c.id}>
-                    {i > 0 && ', '}
-                    <button className="link" onClick={() => setFocus(b.c.id)}>
-                      {b.c.name}
-                    </button>{' '}
-                    <span className="muted">({b.days === 0 ? t('bugün') : fmtDate(b.date)}, {b.age})</span>
-                  </span>
-                ))}
-              </div>
-            )}
-            {professional && soon.followUps.length > 0 && (
-              <div>
-                📋 <strong>{t('Planlanan görüşmeler')}:</strong>{' '}
-                {soon.followUps.slice(0, 8).map((f, i) => (
-                  <span key={f.s.id}>
-                    {i > 0 && ', '}
-                    <button className="link" onClick={() => setFocus(f.c.id)}>
-                      {f.c.name}
-                    </button>{' '}
-                    <span className={f.days < 0 ? 'warn' : 'muted'}>({fmtDate(f.s.next!)})</span>
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <div className="pm-stats">
+          {(
+            [
+              ['person', stats.people, t('Kişiler')],
+              ['event', stats.events, t('Olaylar')],
+              ['unknown', stats.unknown, t('Saati bilinmeyenler')],
+              ['soon', soon.birthdays.length, t('Yaklaşan doğum günleri')]
+            ] as const
+          ).map(([k, n, label]) => {
+            const on = (k === 'person' || k === 'event') ? kind === k : k === 'unknown' ? onlyUnknown : false
+            return (
+              <button
+                key={k}
+                className={`pm-stat${on ? ' on' : ''}`}
+                onClick={() => {
+                  setShowDups(false)
+                  if (k === 'person' || k === 'event') setKind(kind === k ? 'all' : k)
+                  else if (k === 'unknown') setOnlyUnknown(!onlyUnknown)
+                  else setFocus(null)
+                }}
+              >
+                <strong>{n}</strong>
+                <span>{label}</span>
+              </button>
+            )
+          })}
+        </div>
 
         {showDups ? (
           <div className="people-dups">
             <p className="small muted">{t('Aynı isim, aynı doğum günü ve yakın yer: büyük olasılıkla aynı kayıt. Birleştirince ilk girilen kayıt kalır; etiketler, notlar, olaylar ve seanslar onda toplanır.')}</p>
             <ul>
               {dups.map((g) => (
-                <li key={g[0].id} className="gd-detail">
-                  <strong>{g[0].name}</strong>
+                <li key={g[0].id} className="pm-panel">
+                  <div className="row">
+                    <strong>{g[0].name}</strong>
+                    <span className="grow" />
+                    <button className="primary" onClick={() => void merge(g)}>{t('Birleştir')}</button>
+                  </div>
                   <ul className="small">
                     {g.map((c) => (
                       <li key={c.id}>
@@ -209,131 +226,240 @@ export default function PeopleManager({
                       </li>
                     ))}
                   </ul>
-                  <button onClick={() => void merge(g)}>{t('Birleştir')}</button>
                 </li>
               ))}
             </ul>
           </div>
         ) : (
-          <>
-            <div className="people-filters">
-              <input className="search" autoFocus placeholder={t('Ara: isim, yer, yıl, not, olay, etiket…')} value={q} onChange={(e) => setQ(e.target.value)} />
-              <select value={kind} onChange={(e) => setKind(e.target.value as Kind)} aria-label={t('Tür')}>
-                <option value="all">{t('Tümü')}</option>
-                <option value="person">{t('Kişiler')}</option>
-                <option value="event">{t('Olaylar')}</option>
-              </select>
-              <select value={group} onChange={(e) => setGroup(e.target.value)} aria-label={t('Grup')}>
-                <option value="">{t('Tüm gruplar')}</option>
-                {groups.map((g) => (
-                  <option key={g} value={g}>
-                    {groupLabel(g)}
-                  </option>
-                ))}
-                <option value="-">{t('Grupsuz')}</option>
-              </select>
-              {tags.length > 0 && (
-                <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Etiket')}>
-                  <option value="">{t('Tüm etiketler')}</option>
-                  {tags.map((x) => (
-                    <option key={x} value={x}>
-                      #{x}
+          <div className="people-body">
+            <section className="pm-listpane">
+              <div className="pm-search">
+                <input className="search" autoFocus placeholder={t('Ara: isim, yer, yıl, not, olay, etiket…')} value={q} onChange={(e) => setQ(e.target.value)} />
+              </div>
+              <div className="pm-filters">
+                <div className="seg" role="radiogroup" aria-label={t('Tür')}>
+                  {(
+                    [
+                      ['all', t('Tümü')],
+                      ['person', t('Kişiler')],
+                      ['event', t('Olaylar')]
+                    ] as const
+                  ).map(([k, label]) => (
+                    <button key={k} role="radio" aria-checked={kind === k} className={kind === k ? 'on' : ''} onClick={() => setKind(k)}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <select value={group} onChange={(e) => setGroup(e.target.value)} aria-label={t('Grup')}>
+                  <option value="">{t('Tüm gruplar')}</option>
+                  {groups.map((g) => (
+                    <option key={g} value={g}>
+                      {groupLabel(g)}
                     </option>
                   ))}
+                  <option value="-">{t('Grupsuz')}</option>
                 </select>
-              )}
-              <label className="inline check small">
-                <input type="checkbox" checked={onlyUnknown} onChange={(e) => setOnlyUnknown(e.target.checked)} /> {t('Saati bilinmeyenler')}
-              </label>
-              <select value={sort} onChange={(e) => pickSort(e.target.value as SortKey)} aria-label={t('Sırala')}>
-                <option value="name">{t('İsme göre')}</option>
-                <option value="birth">{t('Doğum tarihine göre')}</option>
-                <option value="updated">{t('Son değişene göre')}</option>
-                <option value="created">{t('Son eklenene göre')}</option>
-              </select>
-            </div>
-
-            <div className="people-bulk small">
-              <label className="inline check">
-                <input
-                  type="checkbox"
-                  checked={list.length > 0 && list.every((c) => sel.has(c.id))}
-                  onChange={(e) => setSel(e.target.checked ? new Set(list.map((c) => c.id)) : new Set())}
-                />{' '}
-                {sel.size ? t('{n} seçili', { n: sel.size }) : t('{n} kayıt', { n: list.length })}
-              </label>
-              {sel.size > 0 && (
-                <>
-                  <select value="" onChange={(e) => e.target.value && void saveMany(selected.map((c) => ({ ...c, group: e.target.value === '-' ? undefined : e.target.value })))} aria-label={t('Gruba taşı')}>
-                    <option value="">{t('Gruba taşı…')}</option>
-                    {[...GROUP_PRESETS.map(([id]) => id), ...customGroups(charts)].map((g) => (
-                      <option key={g} value={g}>
-                        {groupLabel(g)}
+                {tags.length > 0 && (
+                  <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Etiket')}>
+                    <option value="">{t('Tüm etiketler')}</option>
+                    {tags.map((x) => (
+                      <option key={x} value={x}>
+                        #{x}
                       </option>
                     ))}
-                    <option value="-">{t('Gruptan çıkar')}</option>
                   </select>
-                  <input className="tag-mini" value={tagDraft} placeholder={t('etiket')} onChange={(e) => setTagDraft(e.target.value)} />
-                  <button disabled={!tagDraft.trim()} onClick={() => (void saveMany(selected.map((c) => ({ ...c, tags: [...new Set([...(c.tags ?? []), tagDraft.trim()])] }))), setTagDraft(''))}>
-                    {t('Etiket ekle')}
-                  </button>
-                  <button disabled={!tagDraft.trim()} onClick={() => (void saveMany(selected.map((c) => ({ ...c, tags: (c.tags ?? []).filter((x) => x !== tagDraft.trim()) }))), setTagDraft(''))}>
-                    {t('Etiketi kaldır')}
-                  </button>
-                  <button className="danger" onClick={() => void removeSel()}>
-                    {t('Sil')}
-                  </button>
-                </>
-              )}
-              <span className="grow" />
-              <span className="muted">{sel.size ? t('Seçilenleri dışa aktar:') : t('Listeyi dışa aktar:')}</span>
-              <button onClick={() => void exportSel('aaf')} title={t('astro.com, Solar Fire, AstroGold ve Janus okuyabilir')}>
-                AAF
-              </button>
-              <button onClick={() => void exportSel('csv')} title={t('Excel, Numbers, LibreOffice')}>
-                CSV
-              </button>
-              <button onClick={() => void exportSel('json')} title={t('AstroFree (tüm bilgilerle)')}>
-                JSON
-              </button>
-              {msg && <span>{msg}</span>}
-            </div>
+                )}
+                <span className="grow" />
+                <select value={sort} onChange={(e) => pickSort(e.target.value as SortKey)} aria-label={t('Sırala')}>
+                  <option value="name">{t('İsme göre')}</option>
+                  <option value="birth">{t('Doğum tarihine göre')}</option>
+                  <option value="updated">{t('Son değişene göre')}</option>
+                  <option value="created">{t('Son eklenene göre')}</option>
+                </select>
+              </div>
 
-            <div className="people-body">
+              <div className={`pm-bulk small${sel.size ? ' active' : ''}`}>
+                <label className="inline check">
+                  <input
+                    type="checkbox"
+                    checked={list.length > 0 && list.every((c) => sel.has(c.id))}
+                    onChange={(e) => setSel(e.target.checked ? new Set(list.map((c) => c.id)) : new Set())}
+                    aria-label={t('Tümünü seç')}
+                  />
+                  {sel.size ? <strong>{t('{n} seçili', { n: sel.size })}</strong> : <span className="muted">{t('{n} kayıt', { n: list.length })}</span>}
+                </label>
+                {filtered && !sel.size && (
+                  <button className="link small" onClick={clearFilters}>
+                    {t('Filtreleri temizle')}
+                  </button>
+                )}
+                {sel.size > 0 && (
+                  <>
+                    <select value="" onChange={(e) => e.target.value && void saveMany(selected.map((c) => ({ ...c, group: e.target.value === '-' ? undefined : e.target.value })))} aria-label={t('Gruba taşı')}>
+                      <option value="">{t('Gruba taşı…')}</option>
+                      {[...GROUP_PRESETS.map(([id]) => id), ...customGroups(charts)].map((g) => (
+                        <option key={g} value={g}>
+                          {groupLabel(g)}
+                        </option>
+                      ))}
+                      <option value="-">{t('Gruptan çıkar')}</option>
+                    </select>
+                    <input className="tag-mini" value={tagDraft} placeholder={t('etiket')} onChange={(e) => setTagDraft(e.target.value)} />
+                    <button disabled={!tagDraft.trim()} onClick={() => (void saveMany(selected.map((c) => ({ ...c, tags: [...new Set([...(c.tags ?? []), tagDraft.trim()])] }))), setTagDraft(''))}>
+                      {t('Etiket ekle')}
+                    </button>
+                    <button disabled={!tagDraft.trim()} onClick={() => (void saveMany(selected.map((c) => ({ ...c, tags: (c.tags ?? []).filter((x) => x !== tagDraft.trim()) }))), setTagDraft(''))}>
+                      {t('Etiketi kaldır')}
+                    </button>
+                    <button className="danger" onClick={() => void removeSel()}>
+                      {t('Sil')}
+                    </button>
+                  </>
+                )}
+                <span className="grow" />
+                {msg && <span className="pm-msg">{msg}</span>}
+                <div className="menu-wrap">
+                  <button aria-haspopup="menu" aria-expanded={exportOpen} onClick={() => setExportOpen(!exportOpen)} title={sel.size ? t('Seçilenleri dışa aktar:') : t('Listeyi dışa aktar:')}>
+                    {t('Dışa aktar')} ▾
+                  </button>
+                  {exportOpen && (
+                    <div className="pop-menu" role="menu" onMouseLeave={() => setExportOpen(false)}>
+                      {(
+                        [
+                          ['aaf', 'AAF', t('astro.com, Solar Fire, AstroGold ve Janus okuyabilir')],
+                          ['csv', 'CSV', t('Excel, Numbers, LibreOffice')],
+                          ['json', 'JSON', t('AstroFree (tüm bilgilerle)')]
+                        ] as const
+                      ).map(([f, label, hint]) => (
+                        <button key={f} role="menuitem" onClick={() => (setExportOpen(false), void exportSel(f))}>
+                          <strong>{label}</strong>
+                          <span className="muted small">{hint}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <ul className="people-list">
-                {list.map((c) => (
-                  <li key={c.id} className={focus === c.id ? 'on' : ''}>
-                    <input type="checkbox" checked={sel.has(c.id)} onChange={() => toggle(c.id)} aria-label={c.name} />
-                    <button
-                      className={`star${c.favorite ? ' on' : ''}`}
-                      aria-label={c.favorite ? t('Sabitlemeyi kaldır') : t('Üste sabitle')}
-                      title={c.favorite ? t('Sabitlemeyi kaldır') : t('Üste sabitle')}
-                      onClick={() => void saveMany([{ ...c, favorite: !c.favorite || undefined }])}
-                    >
-                      {c.favorite ? '★' : '☆'}
-                    </button>
-                    <button className="people-row" onClick={() => setFocus(c.id)} onDoubleClick={() => onOpen(c)}>
-                      <span className="nm">
-                        {c.kind === 'event' ? '◆ ' : ''}
-                        {c.name}
-                      </span>
-                      <span className="muted small">
-                        {c.timeUnknown ? fmtLocal(c.local).split(' ')[0] + ' ?' : fmtLocal(c.local)} · {c.place.name.split(',')[0]}
-                        {c.group ? ` · ${groupLabel(c.group)}` : ''}
-                        {(c.tags ?? []).length ? ` · ${c.tags!.map((x) => `#${x}`).join(' ')}` : ''}
-                      </span>
-                      <span className="people-counts small muted">
-                        {(c.journal?.length ?? 0) > 0 && <span title={t('Olaylarım')}>◷ {c.journal!.length}</span>}
-                        {professional && (c.sessions?.length ?? 0) > 0 && <span title={t('Seanslar')}>✎ {c.sessions!.length}</span>}
-                      </span>
-                    </button>
+                {list.map((c) => {
+                  const ev = c.kind === 'event'
+                  return (
+                    <li key={c.id} className={`${focus === c.id ? 'on' : ''}${sel.has(c.id) ? ' picked' : ''}`}>
+                      <input type="checkbox" checked={sel.has(c.id)} onChange={() => toggle(c.id)} aria-label={c.name} />
+                      <button className="people-row" onClick={() => setFocus(c.id)} onDoubleClick={() => onOpen(c)}>
+                        <span className={`avatar sm${ev ? ' event' : ''}`} aria-hidden>
+                          {ev ? '◆' : initials(c.name)}
+                        </span>
+                        <span className="pm-row-text">
+                          <span className="nm">{c.name}</span>
+                          <span className="muted small">
+                            {c.timeUnknown ? fmtLocal(c.local).split(' ')[0] + ' · ' + t('saat bilinmiyor') : fmtLocal(c.local)} · {c.place.name.split(',')[0]}
+                          </span>
+                        </span>
+                        <span className="pm-row-meta small">
+                          {c.group && <span className="pill">{groupLabel(c.group)}</span>}
+                          {(c.tags ?? []).slice(0, 2).map((x) => (
+                            <span key={x} className="pill tag">
+                              #{x}
+                            </span>
+                          ))}
+                          {(c.journal?.length ?? 0) > 0 && (
+                            <span className="muted" title={t('Olaylarım')}>
+                              ◷ {c.journal!.length}
+                            </span>
+                          )}
+                          {professional && (c.sessions?.length ?? 0) > 0 && (
+                            <span className="muted" title={t('Seanslar')}>
+                              ✎ {c.sessions!.length}
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                      <button
+                        className={`star${c.favorite ? ' on' : ''}`}
+                        aria-label={c.favorite ? t('Sabitlemeyi kaldır') : t('Üste sabitle')}
+                        title={c.favorite ? t('Sabitlemeyi kaldır') : t('Üste sabitle')}
+                        onClick={() => void saveMany([{ ...c, favorite: !c.favorite || undefined }])}
+                      >
+                        {c.favorite ? '★' : '☆'}
+                      </button>
+                    </li>
+                  )
+                })}
+                {!list.length && (
+                  <li className="pm-empty">
+                    <span className="muted">{t('Aramaya uyan kayıt yok.')}</span>
+                    {filtered && (
+                      <button className="link small" onClick={clearFilters}>
+                        {t('Filtreleri temizle')}
+                      </button>
+                    )}
                   </li>
-                ))}
-                {!list.length && <li className="muted small pad">{t('Aramaya uyan kayıt yok.')}</li>}
+                )}
               </ul>
-              {focused && <ClientCard key={focused.id} c={focused} professional={professional} onSave={(r) => void saveMany([r])} onOpen={() => onOpen(focused)} onEdit={() => onEdit(focused)} />}
-            </div>
-          </>
+            </section>
+
+            <section className="pm-detail">
+              {focused ? (
+                <ClientCard key={focused.id} c={focused} professional={professional} onSave={(r) => void saveMany([r])} onOpen={() => onOpen(focused)} onEdit={() => onEdit(focused)} />
+              ) : (
+                <div className="pm-overview">
+                  <p className="muted small">{t('Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.')}</p>
+                  <div className="pm-panel">
+                    <h4>🎂 {t('Yaklaşan doğum günleri')}</h4>
+                    {soon.birthdays.length ? (
+                      <ul className="pm-soon">
+                        {soon.birthdays.slice(0, 8).map((b) => (
+                          <li key={b.c.id}>
+                            <button className="pm-soon-row" onClick={() => setFocus(b.c.id)}>
+                              <span className="avatar sm" aria-hidden>
+                                {initials(b.c.name)}
+                              </span>
+                              <span className="pm-row-text">
+                                <span className="nm">{b.c.name}</span>
+                                <span className="muted small">
+                                  {fmtDate(b.date)} · {t('{n} yaşına giriyor', { n: b.age })}
+                                </span>
+                              </span>
+                              <span className={`pill${b.days <= 7 ? ' hot' : ''}`}>{daysLabel(b.days)}</span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="muted small">{t('Önümüzdeki 30 günde doğum günü yok.')}</p>
+                    )}
+                  </div>
+                  {professional && (
+                    <div className="pm-panel">
+                      <h4>📋 {t('Planlanan görüşmeler')}</h4>
+                      {soon.followUps.length ? (
+                        <ul className="pm-soon">
+                          {soon.followUps.slice(0, 8).map((f) => (
+                            <li key={f.s.id}>
+                              <button className="pm-soon-row" onClick={() => setFocus(f.c.id)}>
+                                <span className="avatar sm" aria-hidden>
+                                  {initials(f.c.name)}
+                                </span>
+                                <span className="pm-row-text">
+                                  <span className="nm">{f.c.name}</span>
+                                  <span className="muted small">{fmtDate(f.s.next!)}</span>
+                                </span>
+                                <span className={`pill${f.days < 0 ? ' late' : f.days <= 7 ? ' hot' : ''}`}>{f.days < 0 ? t('gecikti') : daysLabel(f.days)}</span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="muted small">{t('Planlanmış görüşme yok. Bir danışanın kartından seans eklerken "Sonraki görüşme" tarihi girebilirsiniz.')}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+          </div>
         )}
       </div>
     </div>
@@ -363,15 +489,27 @@ function ClientCard({ c, professional, onSave, onOpen, onEdit }: { c: ChartRecor
 
   return (
     <aside className="client-card">
-      <h3>
-        {c.kind === 'event' ? '◆ ' : ''}
-        {c.name}
-      </h3>
-      <p className="muted small">
-        {fmtLocal(c.local)} {c.timeUnknown ? `(${t('saat bilinmiyor')})` : ''} · {c.place.name}
-        {c.rodden ? ` · Rodden ${c.rodden}` : ''}
-      </p>
-      <div className="actions start">
+      <div className="cc-head">
+        <span className={`avatar${c.kind === 'event' ? ' event' : ''}`} aria-hidden>
+          {c.kind === 'event' ? '◆' : initials(c.name)}
+        </span>
+        <div className="cc-title">
+          <h3>{c.name}</h3>
+          <p className="muted small">
+            {fmtLocal(c.local)} {c.timeUnknown ? `(${t('saat bilinmiyor')})` : ''} · {c.place.name}
+          </p>
+          <div className="cc-pills">
+            {c.group && <span className="pill">{groupLabel(c.group)}</span>}
+            {c.rodden && <span className="pill">Rodden {c.rodden}</span>}
+            {(c.tags ?? []).map((x) => (
+              <span key={x} className="pill tag">
+                #{x}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="cc-actions">
         <button className="primary" onClick={onOpen}>
           {t('Haritayı aç')}
         </button>

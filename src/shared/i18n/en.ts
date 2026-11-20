@@ -1553,6 +1553,12 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Each body is shown where it is at its best moment.",
     "zirvesi geçti": "past its peak",
     "IC (Gökyüzü dibi)": "IC (Imum Coeli)",
-    "MC (Gökyüzü ortası)": "MC (Midheaven)"
+    "MC (Gökyüzü ortası)": "MC (Midheaven)",
+    "Filtreleri temizle": "Clear filters",
+    "Ayrıntıları görmek için listeden bir kayıt seçin; çift tıklayınca harita açılır.": "Select a record in the list to see its details; double-click to open the chart.",
+    "{n} yaşına giriyor": "turns {n}",
+    "Önümüzdeki 30 günde doğum günü yok.": "No birthdays in the next 30 days.",
+    "gecikti": "overdue",
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No meetings planned. When adding a session on a client's card you can enter a \"Next meeting\" date."
   }
 }
