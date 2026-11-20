@@ -408,6 +408,26 @@ const SEFLG_EQUATORIAL = 2048
 const NIGHT_BODIES = [1, 2, 3, 4, 5, 6] // Moon, Mercury, Venus, Mars, Jupiter, Saturn
 
 /**
+ * swe_pheno_ut with a correctly sized result buffer. The swisseph-wasm wrapper allocates
+ * 8 doubles, but the C function writes 20 (and takes an error buffer the wrapper leaves out),
+ * which corrupts the WASM heap and later fails with "memory access out of bounds".
+ * Returns [phase angle, lit fraction, elongation, apparent diameter, magnitude, …] or null.
+ */
+function phenoUt(swe: Awaited<ReturnType<typeof getSwe>>, jd: number, body: number, flags: number): Float64Array | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const M = (swe as any).SweModule
+  const attr = M._malloc(20 * 8)
+  const serr = M._malloc(256)
+  try {
+    const ret = M.ccall('swe_pheno_ut', 'number', ['number', 'number', 'number', 'pointer', 'pointer'], [jd, body, flags, attr, serr])
+    return ret < 0 ? null : new Float64Array(M.HEAPF64.buffer, attr, 20).slice()
+  } finally {
+    M._free(attr)
+    M._free(serr)
+  }
+}
+
+/**
  * Tonight's sky at a place: twilight times, when each naked-eye planet is up in a dark
  * enough sky and where to look, close pairs, and the next eclipses seen from there.
  * "Tonight" is the night after the sunset that ends the day containing `jd`
@@ -449,7 +469,7 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
   const bodies: NightBody[] = []
   const tracks = new Map<number, { t: number; alt: number; ra: number; dec: number }[]>()
   for (const body of NIGHT_BODIES) {
-    const ph = swe.pheno_ut(from, body, SEFLG_SWIEPH)
+    const ph = phenoUt(swe, from, body, SEFLG_SWIEPH)
     const mag = ph ? ph[4] : 0
     // Bright bodies show in a lighter sky.
     const sunLimit = body === 1 || mag < -1 ? -4 : mag < 1 ? -8 : -10
@@ -502,7 +522,7 @@ export async function nightSky(jd: number, lat: number, lon: number, sidMode: nu
       if (bestPair) pairs.push({ a: NIGHT_BODIES[i], b: NIGHT_BODIES[j], sep: Math.round(bestPair.sep * 10) / 10, jd: bestPair.jd })
     }
 
-  const moonPh = swe.pheno_ut(from + 0.25, 1, SEFLG_SWIEPH)
+  const moonPh = phenoUt(swe, from + 0.25, 1, SEFLG_SWIEPH)
   const el = norm(swe.calc_ut(from + 0.25, 1, SEFLG_SWIEPH)[0] - swe.calc_ut(from + 0.25, 0, SEFLG_SWIEPH)[0])
 
   const eclipses: NightSky['eclipses'] = []
