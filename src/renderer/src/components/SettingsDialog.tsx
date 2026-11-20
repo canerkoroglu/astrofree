@@ -1,3 +1,4 @@
+import ModalClose from './ModalClose'
 import ReportDialog from './ReportDialog'
 import { getLocale, LOCALES } from '@shared/i18n'
 import { allZones, fmtDate, fmtLocal, fmtOffset, isValidZone, jdToLocal, nowJd, offsetAt, systemZone } from '../lib/time'
@@ -147,6 +148,7 @@ export default function SettingsDialog({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal wide">
+        <ModalClose onClose={onClose} />
         <h2>{t('Ayarlar')}</h2>
         <div className="tabs">
           {(

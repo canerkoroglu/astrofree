@@ -1,3 +1,4 @@
+import ModalClose from './ModalClose'
 import { t } from '../lib/i18n'
 
 const isMac = navigator.platform.toLowerCase().includes('mac')
@@ -47,6 +48,7 @@ export default function Shortcuts({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal shortcuts" role="dialog" aria-label={t('Klavye kısayolları')}>
+        <ModalClose onClose={onClose} />
         <h2>{t('Klavye kısayolları')}</h2>
         <div className="sc-grid">
           {GROUPS.map(([title, rows]) => (
@@ -66,11 +68,6 @@ export default function Shortcuts({ onClose }: { onClose: () => void }) {
               </table>
             </section>
           ))}
-        </div>
-        <div className="actions">
-          <button className="primary" autoFocus onClick={onClose}>
-            {t('Kapat')}
-          </button>
         </div>
       </div>
     </div>

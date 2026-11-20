@@ -1,3 +1,4 @@
+import ModalClose from './ModalClose'
 import { getLang, t } from '../lib/i18n'
 import { useState } from 'react'
 import type { KbEntry } from '@shared/knowledge'
@@ -63,6 +64,7 @@ export default function KbEntryEditor({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal kb-edit" role="dialog" aria-label={entry ? t('Notu düzenle') : t('Yeni not')}>
+        <ModalClose onClose={onClose} />
         <h2>{entry ? t('Notu düzenle') : t('Yeni not')}</h2>
 
         <label className="field">

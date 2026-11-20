@@ -1546,6 +1546,11 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Diğer": "Autre",
     "Doğum haritası": "Thème natal",
     "Olay haritası": "Thème de l’événement",
-    "Seçenekler": "Options"
+    "Seçenekler": "Options",
+    "Kapat (Esc)": "Fermer (Échap)",
+    "Görülebilir": "Visible",
+    "En iyi": "Idéal",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Chaque astre est placé là où il se trouve à son meilleur moment.",
+    "zirvesi geçti": "pic passé"
   }
 }

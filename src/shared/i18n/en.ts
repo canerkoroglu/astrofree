@@ -1546,6 +1546,11 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Diğer": "Other",
     "Doğum haritası": "Birth chart",
     "Olay haritası": "Event chart",
-    "Seçenekler": "Options"
+    "Seçenekler": "Options",
+    "Kapat (Esc)": "Close (Esc)",
+    "Görülebilir": "Visible",
+    "En iyi": "Best",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Each body is shown where it is at its best moment.",
+    "zirvesi geçti": "past its peak"
   }
 }

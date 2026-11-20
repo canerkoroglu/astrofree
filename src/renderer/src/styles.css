@@ -5687,3 +5687,168 @@ label.inline {
 .row-menu > button.danger {
   color: var(--error);
 }
+
+/* ---- Pencere kapatma: sağ üst köşede, pencere kaydırılsa da yerinde kalır ---- */
+.modal > .modal-x {
+  position: sticky;
+  top: 0;
+  align-self: flex-end;
+  flex: none;
+  z-index: 6;
+  width: 32px;
+  height: 32px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: calc(-1 * var(--s3)) calc(-1 * var(--s3)) -32px 0;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.modal > .modal-x:hover {
+  color: var(--ink);
+  background: var(--panel-2);
+}
+/* the row under the × leaves room for it */
+.modal > .modal-x + * {
+  padding-right: 40px;
+}
+
+/* ---- Bu gece gökyüzünde: ferah düzen ---- */
+.night-modal {
+  width: min(900px, calc(100vw - 32px));
+  max-width: none;
+  gap: var(--s5);
+}
+.night-modal .gd-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+.night-modal h2 {
+  margin: 0 0 2px;
+}
+.night-times {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s3);
+  margin: 0;
+}
+.night-times > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--s3);
+  align-items: center;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+.night-times > div > span[aria-hidden] {
+  grid-row: span 3;
+  font-size: 22px;
+}
+.night-times strong {
+  font-size: 18px;
+  font-family: var(--num-font);
+}
+.night-layout {
+  grid-template-columns: minmax(240px, 320px) 1fr;
+  gap: var(--s6);
+}
+.night-fig {
+  margin: 0;
+  display: grid;
+  gap: var(--s2);
+  position: sticky;
+  top: 0;
+}
+.night-fig figcaption {
+  text-align: center;
+}
+.night-list > ul {
+  gap: var(--s3);
+}
+.night-card {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.night-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+}
+.night-card-head strong {
+  font-size: 15px;
+}
+.night-card .pill {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+}
+.night-card dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px var(--s4);
+  margin: 0;
+}
+.night-card dt {
+  color: var(--muted);
+}
+.night-card dd {
+  margin: 0;
+}
+.night-list > p {
+  margin-top: var(--s3);
+}
+.night-sec {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s4);
+}
+.night-sec h3 {
+  margin: 0 0 var(--s3);
+  font-size: 15px;
+}
+.night-sec ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s2);
+  line-height: 1.55;
+}
+.dome-name {
+  font-size: 8px;
+  paint-order: stroke;
+  stroke: #0f1630;
+  stroke-width: 2.5px;
+}
+.dome-leader {
+  stroke: #ffffff55;
+  stroke-width: 0.6;
+}
+@media (max-width: 760px) {
+  .night-layout {
+    grid-template-columns: 1fr;
+  }
+  .night-fig {
+    position: static;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .night-times {
+    grid-template-columns: 1fr;
+  }
+}

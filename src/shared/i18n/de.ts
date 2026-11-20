@@ -1546,6 +1546,11 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Diğer": "Sonstiges",
     "Doğum haritası": "Geburtshoroskop",
     "Olay haritası": "Ereignishoroskop",
-    "Seçenekler": "Optionen"
+    "Seçenekler": "Optionen",
+    "Kapat (Esc)": "Schließen (Esc)",
+    "Görülebilir": "Sichtbar",
+    "En iyi": "Am besten",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Jedes Gestirn ist dort eingezeichnet, wo es zur besten Zeit steht.",
+    "zirvesi geçti": "Höhepunkt vorbei"
   }
 }

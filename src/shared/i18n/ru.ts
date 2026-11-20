@@ -1546,6 +1546,11 @@ export const ru: Locale = {
     "Diğer": "Другое",
     "Doğum haritası": "Натальная карта",
     "Olay haritası": "Карта события",
-    "Seçenekler": "Параметры"
+    "Seçenekler": "Параметры",
+    "Kapat (Esc)": "Закрыть (Esc)",
+    "Görülebilir": "Видно",
+    "En iyi": "Лучше всего",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Каждое светило показано там, где оно находится в лучший момент.",
+    "zirvesi geçti": "пик прошёл"
   }
 }

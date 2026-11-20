@@ -1,3 +1,4 @@
+import ModalClose from './ModalClose'
 import { getLang, t } from '../lib/i18n'
 import { useState } from 'react'
 
@@ -34,6 +35,7 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
   return (
     <div className="modal-back" onClick={onClose}>
       <div className="modal wide ai-guide" role="dialog" aria-modal="true" aria-label={t('Yapay zekâ bağlantı rehberi')} onClick={(e) => e.stopPropagation()}>
+        <ModalClose onClose={onClose} />
         <h2>{t('Yapay zekâ bağlantı rehberi')}</h2>
         <p className="muted">
           {t('AstroFree’de kendi yapay zekâ modeli yok; bilgisayarınızdaki bir yapay zekâ aracına, bir API anahtarına ya da yerel bir model sunucusuna bağlanır. Size uyan yollardan birini seçin.')}
@@ -132,9 +134,6 @@ export default function AiSetupGuide({ onClose, onRecheck }: { onClose: () => vo
           </a>
           <span className="grow" />
           {onRecheck && <button onClick={onRecheck}>{t('Tekrar kontrol et')}</button>}
-          <button className="primary" onClick={onClose}>
-            {t('Kapat')}
-          </button>
         </footer>
       </div>
     </div>

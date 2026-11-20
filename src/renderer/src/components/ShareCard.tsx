@@ -1,5 +1,6 @@
 // "Paylaşım kartı": social-media sized PNGs — the chart with the big three, or an
 // upcoming sky event (retrograde, ingress, lunation, eclipse) with a hedged note.
+import ModalClose from './ModalClose'
 import { useEffect, useRef, useState } from 'react'
 import type { AppSettings, ChartRecord, SkyEvent, TzSpec } from '@shared/types'
 import { t } from '../lib/i18n'
@@ -146,6 +147,7 @@ export default function ShareCard({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal share-card" role="dialog" aria-label={t('Paylaşım kartı')}>
+        <ModalClose onClose={onClose} />
         <h2>{t('Paylaşım kartı')}</h2>
         <div className="share-layout">
           <div className="share-preview">{png ? <img src={png} alt={t('Paylaşım kartı')} /> : <div className="muted">{t('Hazırlanıyor…')}</div>}</div>
@@ -195,7 +197,6 @@ export default function ShareCard({
           </div>
         </div>
         <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
           <button disabled={!png} onClick={async () => png && (await window.astro.exporter.copyImage(png)) && flash(t('Panoya kopyalandı'))}>
             {t('Panoya kopyala')}
           </button>

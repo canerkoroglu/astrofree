@@ -2,6 +2,7 @@
 // (Olaylarım). Every candidate minute in a chosen window is scored by how closely slow
 // transits, solar-arc directions and the progressed Moon reach the angles on those dates;
 // the best few times are listed with the reasons. Approximate by nature; said so plainly.
+import ModalClose from './ModalClose'
 import { useMemo, useState } from 'react'
 import type { ChartRecord, RectifyContact, RectifyResult } from '@shared/types'
 import { SIGNS, splitDeg } from '../lib/astro'
@@ -115,6 +116,7 @@ export default function Rectify({ rec, onApply, onClose }: { rec: ChartRecord; o
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal wide rectify-modal" role="dialog" aria-label={t('Doğum saatini bul')}>
+        <ModalClose onClose={onClose} />
         <h2>🕰 {t('Doğum saatini bul')}</h2>
         <p className="muted small">
           {t('{n} olayınızın tarihleri, gün içindeki her olası doğum saatiyle karşılaştırılır: yavaş gezegenlerin ve Güneş yayı direksiyonlarının haritanın köşelerine (Yükselen, MC, Alçalan, IC) o tarihlerde ne kadar yakın olduğuna bakılır. Olay türü seçilmişse ilgili köşe daha çok sayılır.', { n: events.length })}
@@ -180,9 +182,6 @@ export default function Rectify({ rec, onApply, onClose }: { rec: ChartRecord; o
             <p className="muted small">{t('Bu yöntem yaklaşık bir sonuç verir ve kesinlik taşımaz; birbirine yakın puanlı saatler eşit derecede olası sayılmalıdır. Bulunan saati kaydederseniz saat kaynağı olarak "C — Kaynağı belirsiz, yaklaşık" seçilir.')}</p>
           </>
         )}
-        <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
-        </div>
       </div>
     </div>
   )

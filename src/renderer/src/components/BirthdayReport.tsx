@@ -1,6 +1,7 @@
 // "Doğum günü raporu": a one-page, plain reading of the year from one birthday to the next,
 // from the solar return (the moment the Sun comes back to its birth position) and the year's
 // slow transits, retrogrades and eclipses. Built-in texts only, tentative wording, no AI needed.
+import ModalClose from './ModalClose'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { AppSettings, ChartRecord, TimingFacts, TransitHit } from '@shared/types'
@@ -213,6 +214,7 @@ export default function BirthdayReport({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal bday-modal" role="dialog" aria-label={t('Doğum günü raporu')}>
+        <ModalClose onClose={onClose} />
         <div className="bday-nav">
           <button onClick={() => setYear(year - 1)} aria-label={t('Önceki yıl')}>
             ◀
@@ -226,7 +228,6 @@ export default function BirthdayReport({
         {!ready && !error && <p className="muted">{t('Hesaplanıyor…')}</p>}
         {body}
         <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
           {onAsk && ready && (
             <button
               onClick={() => {

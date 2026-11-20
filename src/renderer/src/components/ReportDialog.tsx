@@ -1,6 +1,7 @@
 // "Sorun bildir": the user describes the problem, sees exactly what will be
 // shared (version, system, recent errors) and opens a GitHub issue or copies it.
 // Nothing is sent automatically; no chart or birth data is included.
+import ModalClose from './ModalClose'
 import { useEffect, useState } from 'react'
 import { t } from '../lib/i18n'
 
@@ -21,6 +22,7 @@ export default function ReportDialog({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal report-dialog" role="dialog" aria-label={t('Sorun bildir')}>
+        <ModalClose onClose={onClose} />
         <h2>{t('Sorun bildir')}</h2>
         <label>
           {t('Ne oldu? Ne yapıyordunuz?')}
@@ -43,7 +45,6 @@ export default function ReportDialog({ onClose }: { onClose: () => void }) {
           {t('Doğum verileriniz, haritalarınız ve sohbetleriniz eklenmez; kullanıcı adı, klasör yolları, e-posta adresleri ve anahtara benzeyen metinler maskelenir. Hiçbir şey kendiliğinden gönderilmez: “GitHub’da aç” tarayıcıda yeni bir kayıt sayfası açar, siz onaylayınca gönderilir. Herkese açık kayıt istemiyorsanız metni kopyalayıp astrofree@cklabs.tr adresine e-postayla gönderin.')}
         </p>
         <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
           <button
             onClick={() => {
               void navigator.clipboard.writeText(`${title()}\n\n${body()}`)

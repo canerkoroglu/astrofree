@@ -1,3 +1,4 @@
+import ModalClose from './ModalClose'
 import { t } from '../lib/i18n'
 import { customGroups, GROUP_PRESETS, groupLabel } from '../lib/groups'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -115,6 +116,7 @@ export default function ChartEditor({
       }}
     >
       <div className="modal wide editor">
+        <ModalClose onClose={onClose} />
         <header className="ed-head">
           <h2>{t(isNew ? (isEvent ? 'Yeni olay' : 'Yeni kişi') : isEvent ? 'Olayı düzenle' : 'Kişiyi düzenle')}</h2>
           <div className="seg kind-seg">

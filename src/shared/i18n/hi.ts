@@ -1546,6 +1546,11 @@ export const hi: Locale = {
     "Diğer": "अन्य",
     "Doğum haritası": "जन्म कुंडली",
     "Olay haritası": "घटना कुंडली",
-    "Seçenekler": "विकल्प"
+    "Seçenekler": "विकल्प",
+    "Kapat (Esc)": "बंद करें (Esc)",
+    "Görülebilir": "दिखाई देता है",
+    "En iyi": "सबसे अच्छा",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "हर ग्रह उस जगह दिखाया गया है जहाँ वह सबसे अच्छे समय पर होता है।",
+    "zirvesi geçti": "चरम बीत गया"
   }
 }

@@ -2,6 +2,7 @@
 // events and sessions; filters and sorting; actions on many at once (group, tags, export,
 // delete); merging copies; and for astrologers a client card with contact details,
 // a consultation log, follow-ups and upcoming birthdays.
+import ModalClose from './ModalClose'
 import { useMemo, useState } from 'react'
 import type { ChartRecord, ClientSession } from '@shared/types'
 import { customGroups, GROUP_PRESETS, groupLabel } from '../lib/groups'
@@ -145,6 +146,7 @@ export default function PeopleManager({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal people-modal" role="dialog" aria-label={t('Kişiler ve olaylar')}>
+        <ModalClose onClose={onClose} />
         <div className="gd-head">
           <div>
             <h2>{t('Kişiler ve olaylar')}</h2>
@@ -333,9 +335,6 @@ export default function PeopleManager({
             </div>
           </>
         )}
-        <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
-        </div>
       </div>
     </div>
   )

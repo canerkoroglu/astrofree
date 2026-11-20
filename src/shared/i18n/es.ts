@@ -1546,6 +1546,11 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Diğer": "Otro",
     "Doğum haritası": "Carta natal",
     "Olay haritası": "Carta del acontecimiento",
-    "Seçenekler": "Opciones"
+    "Seçenekler": "Opciones",
+    "Kapat (Esc)": "Cerrar (Esc)",
+    "Görülebilir": "Visible",
+    "En iyi": "Mejor",
+    "Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.": "Cada astro se muestra donde está en su mejor momento.",
+    "zirvesi geçti": "ya pasó su máximo"
   }
 }

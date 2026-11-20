@@ -1,4 +1,5 @@
 // Shown once after an update: what changed since the version the user last saw.
+import ModalClose from './ModalClose'
 import type { WhatsNew } from '@shared/whatsnew'
 import { getLang, t } from '../lib/i18n'
 
@@ -7,6 +8,7 @@ export default function WhatsNewDialog({ version, notes, onClose }: { version: s
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal whats-new" role="dialog" aria-label={t('Yenilikler')}>
+        <ModalClose onClose={onClose} />
         <h2>{t('AstroFree {v} ile gelen yenilikler', { v: version })}</h2>
         {notes.map((n) => (
           <section key={n.version}>

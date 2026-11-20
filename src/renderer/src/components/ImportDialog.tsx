@@ -1,6 +1,7 @@
 // Charts from another program (AAF from astro.com, Solar Fire, AstroGold, Janus; or CSV):
 // a preview before anything is saved. Charts already in the list are marked and left out,
 // rows that could not be read are counted, and all can go into one group at once.
+import ModalClose from './ModalClose'
 import { useMemo, useState } from 'react'
 import type { ChartRecord, ImportResult } from '@shared/types'
 import { customGroups, GROUP_PRESETS, groupLabel } from '../lib/groups'
@@ -66,6 +67,7 @@ export default function ImportDialog({
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal wide import-dialog" role="dialog" aria-label={t('Harita içe aktar')}>
+        <ModalClose onClose={onClose} />
         <h2>{t('Harita içe aktar')}</h2>
         {!preview ? (
           <>

@@ -2,6 +2,7 @@
 // when each planet is up in a dark enough sky and where to look, the Moon, close pairs,
 // meteor showers and the next eclipses seen from there. Astronomy first, with the sign
 // each body is in as a bridge to the chart.
+import ModalClose from './ModalClose'
 import { useEffect, useState } from 'react'
 import type { NightBody, NightSky as Night, Place, TzSpec } from '@shared/types'
 import { SIGNS, splitDeg } from '../lib/astro'
@@ -94,27 +95,46 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
           </text>
         )
       })}
-      {seen.map((b) => {
-        const r = 100 * (1 - b.altitude / 90)
-        const a = (b.azimuth * Math.PI) / 180
-        // Drawn as seen looking up: north at the top, east on the left (as on star charts).
-        const x = -Math.sin(a) * r
-        const y = -Math.cos(a) * r
+      {(() => {
+        // Each body at its best moment; names that would overlap are pushed apart vertically.
+        const pts = seen
+          .map((b) => {
+            const r = 100 * (1 - b.altitude / 90)
+            const a = (b.azimuth * Math.PI) / 180
+            // Drawn as seen looking up: north at the top, east on the left (as on star charts).
+            return { b, x: -Math.sin(a) * r, y: -Math.cos(a) * r, ly: -Math.cos(a) * r + 3 }
+          })
+          .sort((p, q) => p.y - q.y)
+        for (let i = 1; i < pts.length; i++)
+          for (let j = 0; j < i; j++)
+            if (Math.abs(pts[i].x - pts[j].x) < 46 && pts[i].ly - pts[j].ly < 11) pts[i].ly = pts[j].ly + 11
         return (
-          <g key={b.body}>
-            <circle cx={x} cy={y} r={b.body === 1 ? 6 : Math.max(2.5, 5 - b.magnitude)} className={`dome-body b${b.body}`} />
-            <text x={x + 8} y={y + 3} className="dome-name">
-              {bodyName(b.body)}
-            </text>
-          </g>
+          <>
+            {pts.map(({ b, x, y }) => (
+              <circle key={b.body} cx={x} cy={y} r={b.body === 1 ? 6 : Math.max(2.5, 5 - b.magnitude)} className={`dome-body b${b.body}`} />
+            ))}
+            {pts.map(({ b, x, y, ly }) => {
+              const left = x > 40
+              const tx = left ? x - 9 : x + 9
+              return (
+                <g key={b.body}>
+                  {Math.abs(ly - 3 - y) > 4 && <line x1={x} y1={y} x2={tx} y2={ly - 3} className="dome-leader" />}
+                  <text x={tx} y={ly} className="dome-name" textAnchor={left ? 'end' : 'start'}>
+                    {bodyName(b.body)}
+                  </text>
+                </g>
+              )
+            })}
+          </>
         )
-      })}
+      })()}
     </svg>
   )
 
   return (
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="modal wide night-modal" role="dialog" aria-label={t('Bu gece gökyüzünde')}>
+        <ModalClose onClose={onClose} />
         <div className="gd-head">
           <div>
             <h2>🔭 {t('Bu gece gökyüzünde')}</h2>
@@ -138,22 +158,51 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
 
         {n && (
           <>
-            <p className="small night-times">
-              🌇 {t('Gün batımı')} {time(n.sunset)} · 🌌 {t('Tam karanlık')} {n.dark ? time(n.dark) : t('olmuyor (aydınlık gece)')} · 🌅 {t('Gün doğumu')} {time(n.sunrise)}
-            </p>
+            <div className="night-times">
+              <div>
+                <span aria-hidden>🌇</span>
+                <span className="muted small">{t('Gün batımı')}</span>
+                <strong>{time(n.sunset)}</strong>
+              </div>
+              <div>
+                <span aria-hidden>🌌</span>
+                <span className="muted small">{t('Tam karanlık')}</span>
+                <strong>{n.dark ? time(n.dark) : '—'}</strong>
+                {!n.dark && <span className="muted small">{t('olmuyor (aydınlık gece)')}</span>}
+              </div>
+              <div>
+                <span aria-hidden>🌅</span>
+                <span className="muted small">{t('Gün doğumu')}</span>
+                <strong>{time(n.sunrise)}</strong>
+              </div>
+            </div>
             <div className="night-layout">
-              {dome}
+              <figure className="night-fig">
+                {dome}
+                <figcaption className="muted small">{t('Her gökcismi en iyi görüldüğü andaki yerinde gösterilir.')}</figcaption>
+              </figure>
               <div className="night-list">
                 <ul>
                   {seen.map((b) => (
-                    <li key={b.body}>
-                      <strong>{bodyName(b.body)}</strong> <span className="muted small">· {sign(b.lon)}</span>
-                      <div className="small">
-                        {t('{from} – {to} arası görülebilir', { from: time(b.from), to: time(b.to) })}; {t('en iyi {time} civarı', { time: time(b.best) })}, {where(b)}.{' '}
-                        <span className="muted">
+                    <li key={b.body} className="night-card">
+                      <div className="night-card-head">
+                        <strong>{bodyName(b.body)}</strong>
+                        <span className="pill">{sign(b.lon)}</span>
+                        <span className="grow" />
+                        <span className="muted small">
                           {b.body === 1 ? t('Ay’ın %{p} kadarı aydınlık', { p: Math.round(n.moonLit * 100) }) : bright(b.magnitude)}
                         </span>
                       </div>
+                      <dl className="small">
+                        <dt>{t('Görülebilir')}</dt>
+                        <dd>
+                          {time(b.from)} – {time(b.to)}
+                        </dd>
+                        <dt>{t('En iyi')}</dt>
+                        <dd>
+                          {time(b.best)} · {where(b)}
+                        </dd>
+                      </dl>
                     </li>
                   ))}
                 </ul>
@@ -166,7 +215,7 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
             </div>
 
             {n.pairs.length > 0 && (
-              <div className="gd-detail">
+              <section className="night-sec">
                 <h3>{t('Yakın görünenler')}</h3>
                 <ul className="small">
                   {n.pairs.map((p) => (
@@ -180,18 +229,19 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
                     </li>
                   ))}
                 </ul>
-              </div>
+              </section>
             )}
 
             {n.moonLit > 0.6 && seen.some((b) => b.body === 1) && <p className="small muted">{t('Ay parlak olduğu için soluk yıldızlar ve meteorlar daha zor görülebilir.')}</p>}
 
             {(showers.length > 0 || n.eclipses.length > 0) && (
-              <div className="gd-detail">
+              <section className="night-sec">
                 <h3>{t('Yaklaşan gökyüzü olayları')}</h3>
                 <ul className="small">
                   {showers.map((s) => (
                     <li key={s.name + s.jd}>
-                      ☄️ {t('{name} meteor yağmuru', { name: t(s.name) })}: {dateLabel(s.jd)} · {t('karanlık bir yerde saatte {n} meteora kadar', { n: s.rate })}
+                      ☄️ {t('{name} meteor yağmuru', { name: t(s.name) })}: {dateLabel(s.jd)}
+                      {s.jd < (n.sunset ?? at) && <span className="muted"> ({t('zirvesi geçti')})</span>} · {t('karanlık bir yerde saatte {n} meteora kadar', { n: s.rate })}
                     </li>
                   ))}
                   {n.eclipses.map((e) => (
@@ -201,14 +251,11 @@ export default function NightSky({ place, tz, sidMode, onClose }: { place: Place
                     </li>
                   ))}
                 </ul>
-              </div>
+              </section>
             )}
             <p className="muted small">{t('Saatler yaklaşıktır; dağlar, binalar ve hava durumu görüşü etkileyebilir.')}</p>
           </>
         )}
-        <div className="actions">
-          <button onClick={onClose}>{t('Kapat')}</button>
-        </div>
       </div>
     </div>
   )
