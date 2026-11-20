@@ -10,6 +10,9 @@ import '@fontsource/noto-sans-symbols/400.css'
 import '@fontsource/noto-sans-symbols-2/400.css'
 import './styles.css'
 import App from './App'
+import { installTooltips } from './lib/tooltip'
+
+installTooltips()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
