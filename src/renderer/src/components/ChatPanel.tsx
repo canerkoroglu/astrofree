@@ -544,20 +544,32 @@ export default function ChatPanel({ chatKey, context, live = false, layers, sett
             }}
           />
           <div className="composer-row">
-            <label className={`chip-check${attach ? ' on' : ''}`} title={t('Harita verisini ekle')}>
+            <label
+              className={`chip-check${attach ? ' on' : ''}`}
+              data-tip={attach ? t('Harita verisi ekleniyor · kapatmak için tıklayın') : t('Harita verisi eklenmiyor · eklemek için tıklayın')}
+            >
               <input type="checkbox" checked={attach} onChange={(e) => setAttach(e.target.checked)} />
-              <Icon name="wheel" size={14} />
+              <Icon name="clip" size={14} />
               <span className="chip-lbl">{t('Harita verisi')}</span>
             </label>
             {knowledgeCount > 0 && (
-              <label className={`chip-check${settings.ai.useKnowledge && attach ? ' on' : ''}`} title={t('Haritayla ve sorunuzla eşleşen bilgi bankası kayıtları da gönderilir')}>
+              <label
+                className={`chip-check${settings.ai.useKnowledge && attach ? ' on' : ''}`}
+                data-tip={
+                  !attach
+                    ? t('Bilgi bankası yalnızca harita verisiyle birlikte gönderilir')
+                    : settings.ai.useKnowledge
+                      ? t('Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın')
+                      : t('Bilgi bankası eklenmiyor · eklemek için tıklayın')
+                }
+              >
                 <input
                   type="checkbox"
                   checked={settings.ai.useKnowledge}
                   disabled={!attach}
                   onChange={(e) => onSettings({ ...settings, ai: { ...settings.ai, useKnowledge: e.target.checked } })}
                 />
-                <Icon name="book" size={14} />
+                <Icon name="library" size={14} />
                 <span className="chip-lbl">{t('Bilgi bankası')}</span>
               </label>
             )}

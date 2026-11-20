@@ -1602,6 +1602,11 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Haritada gösterilen açılar": "Aspectos mostrados en la carta",
     "Ana açılar": "Aspectos mayores",
     "Zorlayıcı": "Tensos",
-    "Uyumlu": "Armónicos"
+    "Uyumlu": "Armónicos",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Se adjuntan los datos de la carta · haga clic para quitarlos",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "No se adjuntan los datos de la carta · haga clic para adjuntarlos",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Se adjuntan entradas de la base de conocimiento · haga clic para quitarlas",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "No se adjunta la base de conocimiento · haga clic para adjuntarla",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "La base de conocimiento solo se envía junto con los datos de la carta"
   }
 }

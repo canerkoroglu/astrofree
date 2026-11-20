@@ -42,6 +42,11 @@ export function installTooltips(): void {
   })
   document.addEventListener('focusout', hide)
   document.addEventListener('mousedown', hide)
+  // A toggle's text changes on click: show the new text while the pointer stays on it.
+  document.addEventListener('click', (e) => {
+    const el = find(e)
+    if (el) window.setTimeout(() => el.matches(':hover') && show(el), 0)
+  })
   window.addEventListener('scroll', hide, true)
   window.addEventListener('blur', hide)
 }

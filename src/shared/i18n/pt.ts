@@ -1602,6 +1602,11 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Haritada gösterilen açılar": "Aspectos mostrados no mapa",
     "Ana açılar": "Aspectos maiores",
     "Zorlayıcı": "Tensos",
-    "Uyumlu": "Harmônicos"
+    "Uyumlu": "Harmônicos",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Os dados do mapa são anexados · clique para desligar",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "Os dados do mapa não são anexados · clique para anexar",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Entradas da base de conhecimento são anexadas · clique para desligar",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "A base de conhecimento não é anexada · clique para anexar",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "A base de conhecimento só é enviada junto com os dados do mapa"
   }
 }

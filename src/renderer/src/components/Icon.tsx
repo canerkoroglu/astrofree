@@ -29,6 +29,8 @@ export const ICONS = {
   expand: 'M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7',
   send: 'M12 19V5M6 11l6-6 6 6',
   book: 'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10',
+  clip: 'M20.5 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8',
+  library: 'M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z',
   sliders: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 5v4M8 15v4'
 } as const
 

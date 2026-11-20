@@ -1602,6 +1602,11 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Haritada gösterilen açılar": "Im Horoskop gezeigte Aspekte",
     "Ana açılar": "Hauptaspekte",
     "Zorlayıcı": "Spannungsaspekte",
-    "Uyumlu": "Harmonische"
+    "Uyumlu": "Harmonische",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Horoskopdaten werden angehängt · zum Ausschalten klicken",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "Horoskopdaten werden nicht angehängt · zum Anhängen klicken",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Einträge der Wissensbasis werden angehängt · zum Ausschalten klicken",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "Wissensbasis wird nicht angehängt · zum Anhängen klicken",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "Die Wissensbasis wird nur zusammen mit den Horoskopdaten gesendet"
   }
 }

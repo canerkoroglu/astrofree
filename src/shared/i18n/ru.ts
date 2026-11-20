@@ -1602,6 +1602,11 @@ export const ru: Locale = {
     "Haritada gösterilen açılar": "Аспекты на карте",
     "Ana açılar": "Мажорные аспекты",
     "Zorlayıcı": "Напряжённые",
-    "Uyumlu": "Гармоничные"
+    "Uyumlu": "Гармоничные",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Данные карты прикрепляются · нажмите, чтобы отключить",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "Данные карты не прикрепляются · нажмите, чтобы прикрепить",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Записи базы знаний прикрепляются · нажмите, чтобы отключить",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "База знаний не прикрепляется · нажмите, чтобы прикрепить",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "База знаний отправляется только вместе с данными карты"
   }
 }

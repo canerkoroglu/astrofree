@@ -1602,6 +1602,11 @@ export const hi: Locale = {
     "Haritada gösterilen açılar": "कुंडली पर दिखाए गए दृष्टि-योग",
     "Ana açılar": "प्रमुख दृष्टि-योग",
     "Zorlayıcı": "चुनौतीपूर्ण",
-    "Uyumlu": "सामंजस्यपूर्ण"
+    "Uyumlu": "सामंजस्यपूर्ण",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "कुंडली डेटा जोड़ा जा रहा है · बंद करने के लिए क्लिक करें",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "कुंडली डेटा नहीं जोड़ा जा रहा · जोड़ने के लिए क्लिक करें",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "ज्ञान-कोश प्रविष्टियाँ जोड़ी जा रही हैं · बंद करने के लिए क्लिक करें",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "ज्ञान-कोश नहीं जोड़ा जा रहा · जोड़ने के लिए क्लिक करें",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "ज्ञान-कोश केवल कुंडली डेटा के साथ भेजा जाता है"
   }
 }

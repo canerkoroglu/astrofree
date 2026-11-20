@@ -1602,6 +1602,11 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Haritada gösterilen açılar": "Aspects shown on the chart",
     "Ana açılar": "Major aspects",
     "Zorlayıcı": "Challenging",
-    "Uyumlu": "Harmonious"
+    "Uyumlu": "Harmonious",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Chart data is attached · click to turn off",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "Chart data is not attached · click to attach",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Knowledge base entries are attached · click to turn off",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "Knowledge base is not attached · click to attach",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "The knowledge base is only sent together with the chart data"
   }
 }

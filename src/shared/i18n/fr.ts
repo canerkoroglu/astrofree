@@ -1602,6 +1602,11 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Haritada gösterilen açılar": "Aspects affichés sur le thème",
     "Ana açılar": "Aspects majeurs",
     "Zorlayıcı": "Tendus",
-    "Uyumlu": "Harmonieux"
+    "Uyumlu": "Harmonieux",
+    "Harita verisi ekleniyor · kapatmak için tıklayın": "Les données du thème sont jointes · cliquez pour désactiver",
+    "Harita verisi eklenmiyor · eklemek için tıklayın": "Les données du thème ne sont pas jointes · cliquez pour les joindre",
+    "Bilgi bankası kayıtları ekleniyor · kapatmak için tıklayın": "Les fiches de la base de connaissances sont jointes · cliquez pour désactiver",
+    "Bilgi bankası eklenmiyor · eklemek için tıklayın": "La base de connaissances n’est pas jointe · cliquez pour la joindre",
+    "Bilgi bankası yalnızca harita verisiyle birlikte gönderilir": "La base de connaissances n’est envoyée qu’avec les données du thème"
   }
 }
