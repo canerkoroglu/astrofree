@@ -1559,6 +1559,7 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "{n} yaşına giriyor": "faz {n} anos",
     "Önümüzdeki 30 günde doğum günü yok.": "Nenhum aniversário nos próximos 30 dias.",
     "gecikti": "atrasada",
-    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Nenhuma consulta agendada. Ao adicionar uma sessão na ficha de um cliente, você pode informar a data da \"Próxima consulta\"."
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Nenhuma consulta agendada. Ao adicionar uma sessão na ficha de um cliente, você pode informar a data da \"Próxima consulta\".",
+    "Ana menü": "Menu principal"
   }
 }

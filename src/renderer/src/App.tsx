@@ -111,6 +111,10 @@ const TIMING_BODIES = [0, 2, 3, 4, 5, 6, 7, 8, 9]
 const FAST_BODIES = [0, 2, 3]
 const TIMING_ASPECTS = (['conjunction', 'opposition', 'square', 'trine', 'sextile'] as AspectKey[]).map((k) => ({ key: k, angle: ASPECT[k].angle, orb: 1 }))
 
+// i18n-ignore-start (layer abbreviations, as on the wheel)
+const RAIL_ABBR: Record<OuterKind, string> = { transit: 'T', progressed: 'P', solarArc: 'SA', solarReturn: 'GD', lunarReturn: 'AD', synastry: 'S' }
+// i18n-ignore-end
+
 export default function App() {
   const [settings, setSettings] = useState<AppSettings | null>(null)
   const [charts, setCharts] = useState<ChartRecord[]>([])
@@ -856,16 +860,18 @@ export default function App() {
 
   return (
     <div className={showChat ? 'app' : 'app no-chat'}>
-      <header className="toolbar">
-        <div className="brand" title="AstroFree">
+      <nav className="rail" aria-label={t('Ana menü')}>
+        <div className="brand rail-brand" title="AstroFree">
           <Logo size={18} className="brand-logo" /> <span className="brand-name">AstroFree</span>
         </div>
-        <div className="seg tgroup tg-layers" role="group" aria-label={t('Katmanlar')}>
+        <div className="rail-group rail-layers" role="group" aria-label={t('Katmanlar')}>
+          <span className="rail-cap">{t('Katmanlar')}</span>
           {(['transit', 'progressed', 'solarArc', 'solarReturn', 'lunarReturn', 'synastry'] as OuterKind[]).filter((k) => !amateur || AMATEUR_LAYERS.includes(k)).map((k) => (
             <button
               key={k}
-              className={outers.includes(k) ? 'on' : ''}
-              style={outers.includes(k) ? { borderColor: LAYER_COLOR[k], color: LAYER_COLOR[k] } : undefined}
+              className={outers.includes(k) ? 'rail-btn on' : 'rail-btn'}
+              aria-pressed={outers.includes(k)}
+              style={{ ['--layer' as string]: LAYER_COLOR[k] }}
               onClick={() => toggleOuter(k)}
               disabled={
                 (k === 'synastry' && charts.filter((c) => c.id !== working.id).length === 0) ||
@@ -873,10 +879,56 @@ export default function App() {
               }
               title={t(OUTER_HELP[k]) + (working.id === NOW_ID && k !== 'transit' && k !== 'synastry' ? t(' — önce soldan bir kişi seçin') : '')}
             >
-              {t(OUTER_LABEL[k])}
+              <span className="rail-badge" aria-hidden>
+                {RAIL_ABBR[k]}
+              </span>
+              <span className="rail-lbl">{t(OUTER_LABEL[k])}</span>
             </button>
           ))}
         </div>
+        <span className="grow" />
+        <div className="rail-group rail-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
+          {(['amateur', 'professional'] as const).map((m) => (
+            <button
+              key={m}
+              role="radio"
+              aria-checked={settings.mode === m}
+              className={settings.mode === m ? 'on' : ''}
+              onClick={() => setMode(m)}
+              title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
+            >
+              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
+            </button>
+          ))}
+        </div>
+        <div className="rail-group rail-bottom">
+          <button
+            className="rail-btn rail-icon"
+            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
+            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
+            data-tip={t(THEME_LABEL[settings.theme])}
+            aria-label={t(THEME_LABEL[settings.theme])}
+          >
+            <span className="rail-badge plain" aria-hidden>
+              {THEME_ICON[settings.theme]}
+            </span>
+            <span className="rail-lbl">{t('Tema')}</span>
+          </button>
+          <button className={`rail-btn rail-chat${showChat ? ' on' : ''}`} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
+            <span className="rail-badge plain" aria-hidden>
+              💬
+            </span>
+            <span className="rail-lbl">{t('AI sohbet')}</span>
+          </button>
+          <button className="rail-btn" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
+            <span className="rail-badge plain" aria-hidden>
+              ⚙︎
+            </span>
+            <span className="rail-lbl">{t('Ayarlar')}</span>
+          </button>
+        </div>
+      </nav>
+      <header className="toolbar">
         {outers.includes('synastry') && (
           <div className="tgroup" role="group" aria-label={t('İlişki')}>
             <select className="tg-partner" value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)} title={t('Sinastri partneri')}>
@@ -985,42 +1037,6 @@ export default function App() {
               </div>
             </div>
           )}
-        </div>
-        <div className="seg tgroup tg-mode" role="radiogroup" aria-label={t('Kullanım modu')}>
-          {(['amateur', 'professional'] as const).map((m) => (
-            <button
-              key={m}
-              role="radio"
-              aria-checked={settings.mode === m}
-              className={settings.mode === m ? 'on' : ''}
-              onClick={() => setMode(m)}
-              title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
-            >
-              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
-            </button>
-          ))}
-        </div>
-        <div className="tgroup">
-          <button
-            className="icon-btn tip-end"
-            onClick={() => saveSettings({ ...settings, theme: THEME_NEXT[settings.theme] })}
-            title={`${t(THEME_LABEL[settings.theme])} — ${t('Tema: sistem → açık → koyu')}`}
-            data-tip={t(THEME_LABEL[settings.theme])}
-            aria-label={t(THEME_LABEL[settings.theme])}
-          >
-            {THEME_ICON[settings.theme]}
-          </button>
-          <button className={`toggle${showChat ? ' on' : ''}`} aria-pressed={showChat} aria-label={t('AI sohbet')} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
-            <span className="toggle-dot" aria-hidden />
-            <span className="chat-ico" aria-hidden>💬</span>
-            <span className="chat-lbl">{t('AI sohbet')}</span>
-          </button>
-          <button onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
-            <span className="lbl-icon" aria-hidden>
-              ⚙︎
-            </span>
-            <span className="lbl-text">{t('Ayarlar')}</span>
-          </button>
         </div>
       </header>
 

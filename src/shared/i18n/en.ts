@@ -1559,6 +1559,7 @@ The person asking knows astrology. Use technical terms without explaining them a
     "{n} yaşına giriyor": "turns {n}",
     "Önümüzdeki 30 günde doğum günü yok.": "No birthdays in the next 30 days.",
     "gecikti": "overdue",
-    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No meetings planned. When adding a session on a client's card you can enter a \"Next meeting\" date."
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No meetings planned. When adding a session on a client's card you can enter a \"Next meeting\" date.",
+    "Ana menü": "Main menu"
   }
 }

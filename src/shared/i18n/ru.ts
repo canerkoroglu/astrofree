@@ -1559,6 +1559,7 @@ export const ru: Locale = {
     "{n} yaşına giriyor": "исполняется {n}",
     "Önümüzdeki 30 günde doğum günü yok.": "Дней рождения в ближайшие 30 дней нет.",
     "gecikti": "просрочено",
-    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Встреч не запланировано. Добавляя сессию в карточке клиента, можно указать дату «Следующей встречи»."
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Встреч не запланировано. Добавляя сессию в карточке клиента, можно указать дату «Следующей встречи».",
+    "Ana menü": "Главное меню"
   }
 }

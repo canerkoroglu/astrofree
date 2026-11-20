@@ -1559,6 +1559,7 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "{n} yaşına giriyor": "wird {n}",
     "Önümüzdeki 30 günde doğum günü yok.": "Keine Geburtstage in den nächsten 30 Tagen.",
     "gecikti": "überfällig",
-    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Keine Termine geplant. Beim Hinzufügen einer Sitzung auf der Klientenkarte können Sie ein Datum für den „Nächsten Termin“ eingeben."
+    "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Keine Termine geplant. Beim Hinzufügen einer Sitzung auf der Klientenkarte können Sie ein Datum für den „Nächsten Termin“ eingeben.",
+    "Ana menü": "Hauptmenü"
   }
 }

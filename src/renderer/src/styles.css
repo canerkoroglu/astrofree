@@ -6157,3 +6157,149 @@ button.pm-soon-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---- Sol dikey menü: katmanlar, kullanım modu, tema, sohbet ve ayarlar ---- */
+.app,
+.app.no-chat {
+  grid-template-areas:
+    'rail tool tool tool'
+    'rail time time time'
+    'rail side center chat';
+}
+.app {
+  grid-template-columns: 84px clamp(220px, 17vw, 264px) minmax(0, 1fr) clamp(300px, 27vw, 400px);
+}
+.app.no-chat {
+  grid-template-columns: 84px clamp(220px, 17vw, 264px) minmax(0, 1fr) 0;
+}
+.rail {
+  grid-area: rail;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s3);
+  padding: var(--s3) var(--s2);
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.rail .grow {
+  flex: 1;
+}
+.rail-brand {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: var(--s2) 0 var(--s1);
+}
+.rail-brand .brand-name {
+  display: none;
+}
+.rail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rail-cap {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-align: center;
+  padding: var(--s1) 0;
+}
+button.rail-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 0;
+  padding: var(--s2) 2px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: normal;
+}
+button.rail-btn:hover:not(:disabled) {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+button.rail-btn:disabled {
+  opacity: 0.4;
+}
+.rail-badge {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1.5px solid color-mix(in srgb, var(--layer, var(--muted)) 55%, transparent);
+  color: var(--layer, var(--muted));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+.rail-badge.plain {
+  border-color: transparent;
+  font-size: 18px;
+  font-weight: 400;
+  color: inherit;
+}
+.rail-lbl {
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+button.rail-btn.on {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--layer, var(--accent)) 14%, transparent);
+  border-color: color-mix(in srgb, var(--layer, var(--accent)) 40%, transparent);
+}
+button.rail-btn.on .rail-badge:not(.plain) {
+  background: var(--layer);
+  border-color: var(--layer);
+  color: var(--panel);
+}
+button.rail-chat.on .rail-badge {
+  filter: none;
+}
+.rail-mode {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 2px;
+}
+.rail-mode button {
+  width: 100%;
+  min-height: 0;
+  padding: 5px 2px;
+  font-size: 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  white-space: normal;
+}
+.rail-mode button.on {
+  background: var(--panel-2);
+  color: var(--ink);
+  font-weight: 700;
+}
+.rail-bottom {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s2);
+}
+/* the top bar now holds only the chart options and the time zone */
+.toolbar {
+  min-height: 48px;
+}
