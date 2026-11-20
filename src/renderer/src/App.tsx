@@ -15,6 +15,7 @@ import { matches, sortCharts } from './lib/people'
 import Journal from './components/Journal'
 import GraphicEphemeris from './components/GraphicEphemeris'
 import Icon from './components/Icon'
+import MenuSelect from './components/MenuSelect'
 import ChartWheel, { LAYER_COLOR } from './components/ChartWheel'
 import BirthdayReport from './components/BirthdayReport'
 import BasicReading from './components/BasicReading'
@@ -1005,26 +1006,31 @@ export default function App() {
         {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
         <span className="rail-cap">{t('Harita')}</span>
         <span className="rail-sub">{t('Harmonik')}</span>
-        <select className="tg-harmonic" value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
-          {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
-            <option key={n} value={n}>
-              {n === 1 ? t('yok') : n}
-            </option>
-          ))}
-        </select>
+        <div className="tg-harmonic harm-step" role="group" aria-label={t('Harmonik harita (konumlar n ile çarpılır)')}>
+          <button className="ghost-icon" disabled={harmonic <= 1} onClick={() => setHarmonic(Math.max(1, harmonic - 1))} aria-label="−">
+            ‹
+          </button>
+          <span className={`harm-val${harmonic > 1 ? ' on' : ''}`} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
+            {harmonic === 1 ? t('yok') : `H${harmonic}`}
+          </span>
+          <button className="ghost-icon" disabled={harmonic >= 16} onClick={() => setHarmonic(Math.min(16, harmonic + 1))} aria-label="+">
+            ›
+          </button>
+          {harmonic > 1 && (
+            <button className="ghost-icon harm-reset" onClick={() => setHarmonic(1)} aria-label={t('Harmonik: yok')} title={t('Harmonik: yok')}>
+              ×
+            </button>
+          )}
+        </div>
         <span className="rail-sub">{t('Ev sistemi')}</span>
-        <select
-          className="tg-house"
-          value={settings.houseSystem}
-          onChange={(e) => saveSettings({ ...settings, houseSystem: e.target.value })}
-          title={t('Ev sistemi')}
-        >
-          {HOUSE_SYSTEMS.map(([k, n]) => (
-            <option key={k} value={k}>
-              {t(n)}
-            </option>
-          ))}
-        </select>
+        <div className="tg-house">
+          <MenuSelect
+            label={t('Ev sistemi')}
+            value={settings.houseSystem}
+            options={HOUSE_SYSTEMS.map(([k, n]) => ({ value: k, label: t(n) }))}
+            onChange={(v) => saveSettings({ ...settings, houseSystem: v })}
+          />
+        </div>
         </div>}
         <span className="grow" />
         <button
