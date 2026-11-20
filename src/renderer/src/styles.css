@@ -8575,3 +8575,17 @@ button.soft-btn.on {
 .side-menu > button:disabled {
   opacity: 0.45;
 }
+
+/* menu and panel read as one unit: same top line, same surface, a softer seam between them */
+.app:not(.no-side) .rail {
+  border-right-color: color-mix(in srgb, var(--line) 55%, transparent);
+}
+.sidebar {
+  padding-top: var(--s3);
+  background:
+    radial-gradient(120% 40% at 0% 0%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 70%),
+    var(--panel);
+}
+.side-head {
+  min-height: 36px;
+}
