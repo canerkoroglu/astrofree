@@ -9025,3 +9025,35 @@ table.data tr.asp-hidden td {
 table.data tr.asp-hidden .glyph {
   color: var(--muted) !important;
 }
+
+/* ---- Açı tablosu: alanı dolduran, daha büyük hücreler ---- */
+table.grid {
+  width: 100%;
+  max-width: 1100px;
+  table-layout: fixed;
+}
+table.grid th,
+table.grid td {
+  height: 62px;
+  padding: 4px 2px;
+}
+table.grid thead th {
+  height: 52px;
+}
+table.grid th .glyph {
+  font-size: 22px;
+}
+table.grid tbody th {
+  width: 64px;
+}
+table.grid td.cell .glyph {
+  font-size: 22px;
+  line-height: 1.1;
+}
+table.grid td.cell small {
+  font-size: 12px;
+  font-family: var(--num-font);
+}
+table.grid td.cell:not(.empty):hover {
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
