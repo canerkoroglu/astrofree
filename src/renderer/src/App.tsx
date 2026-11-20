@@ -1027,6 +1027,16 @@ export default function App() {
         </select>
         </div>}
         <span className="grow" />
+        <button
+          className="rail-btn rail-mode-mini"
+          onClick={() => setMode(settings.mode === 'amateur' ? 'professional' : 'amateur')}
+          title={`${t('Kullanım modu')}: ${settings.mode === 'amateur' ? t('Amatör') : t('Profesyonel')} — ${settings.mode === 'amateur' ? t('Profesyonel') : t('Amatör')}`}
+          aria-label={`${t('Kullanım modu')}: ${settings.mode === 'amateur' ? t('Amatör') : t('Profesyonel')}`}
+        >
+          <span className="rail-badge" aria-hidden>
+            {(settings.mode === 'amateur' ? t('Amatör') : t('Profesyonel')).charAt(0)}
+          </span>
+        </button>
         <span className="rail-cap rail-mode-cap">{t('Kullanım modu')}</span>
         <div className={`rail-mode is-${settings.mode}`} role="radiogroup" aria-label={t('Kullanım modu')}>
           <span className="rail-mode-thumb" aria-hidden />

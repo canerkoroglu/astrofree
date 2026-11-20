@@ -7115,3 +7115,20 @@ button.partner-card .avatar {
 .app:not(.rail-mini) .rail-opts-mini {
   display: none;
 }
+
+/* narrow menu: the mode is one round button (A or P) that switches on click */
+.rail-mode-mini {
+  display: none !important;
+}
+.app.rail-mini .rail-mode-mini {
+  display: flex !important;
+}
+.app.rail-mini .rail .rail-mode {
+  display: none;
+}
+.rail-mode-mini .rail-badge {
+  border-radius: 999px;
+  border-color: var(--line-strong);
+  color: var(--ink);
+  font-size: 13px;
+}
