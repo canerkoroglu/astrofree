@@ -8930,3 +8930,13 @@ label.check > .ui-select {
 .timebar .ui-select > button.menu-select {
   min-height: 34px;
 }
+
+/* the list keeps the app's own type, whatever its button inherits */
+.menu-select-pop {
+  max-width: calc(100vw - 16px);
+  font-family: var(--ui-font);
+}
+.conn-model .menu-select-pop .menu-select-opt {
+  font-family: var(--num-font);
+  font-size: 12.5px;
+}

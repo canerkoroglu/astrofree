@@ -1,7 +1,7 @@
 // A select drawn in the app's own style: a full-width button showing the whole choice, and a
 // list in a fixed layer (never clipped by the scrolling side menu) with a search box on top
 // that filters as you type (accents ignored). Arrow keys, Enter and Esc work.
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { t } from '../lib/i18n'
 import { fold } from '../lib/people'
 import Icon from './Icon'
@@ -79,6 +79,13 @@ export default function MenuSelect<T extends string | number>({
       window.removeEventListener('resize', away)
     }
   }, [open])
+  // Keep the list inside the window: measured after it opens, moved left if it would spill.
+  useLayoutEffect(() => {
+    if (!open || !pop.current) return
+    const r = pop.current.getBoundingClientRect()
+    const over = r.right - (window.innerWidth - 8)
+    if (over > 0) setAt((a) => ({ ...a, left: Math.max(8, a.left - over) }))
+  }, [open, at.left, shown.length])
   useEffect(() => setHi(0), [q])
   useEffect(() => {
     if (open) listRef.current?.querySelector<HTMLElement>(`[data-i="${hi}"]`)?.scrollIntoView({ block: 'nearest' })
