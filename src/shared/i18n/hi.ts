@@ -1596,6 +1596,12 @@ export const hi: Locale = {
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "इस भाव में कोई ग्रह नहीं; इसके विषय मुख्यतः इसके स्वामी से पढ़े जा सकते हैं।",
     "Harita verisi": "कुंडली डेटा",
     "bağlı değil": "जुड़ा नहीं",
-    "bunu kullan": "यही उपयोग करें"
+    "bunu kullan": "यही उपयोग करें",
+    "Haritada gizle": "कुंडली पर छिपाएँ",
+    "Haritada göster": "कुंडली पर दिखाएँ",
+    "Haritada gösterilen açılar": "कुंडली पर दिखाए गए दृष्टि-योग",
+    "Ana açılar": "प्रमुख दृष्टि-योग",
+    "Zorlayıcı": "चुनौतीपूर्ण",
+    "Uyumlu": "सामंजस्यपूर्ण"
   }
 }

@@ -160,6 +160,22 @@ export default function App() {
   const togglePanel = (v: 'people' | 'sky') => setPanel(panel === v ? null : v)
   // Charts list: all, birth charts only, or event charts only (remembered).
   const [addOpen, setAddOpen] = useState(false)
+  // Aspect kinds whose lines are hidden on the wheel (all shown by default; remembered).
+  const [hiddenAspects, setHiddenAspectsState] = useState<Set<string>>(() => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem('hidden-aspects') || '[]') as string[])
+    } catch {
+      return new Set()
+    }
+  })
+  const setHiddenAspects = (next: Set<string>) => {
+    setHiddenAspectsState(next)
+    try {
+      localStorage.setItem('hidden-aspects', JSON.stringify([...next]))
+    } catch {
+      /* storage unavailable */
+    }
+  }
   const [sideMenu, setSideMenu] = useState(false)
   const [listKind, setListKindState] = useState<'all' | 'person' | 'event'>(() => {
     try {
@@ -1661,7 +1677,7 @@ export default function App() {
         )}
         {view === 'kb' && <Knowledge files={kbFiles} entries={kbEntries} matches={kbMatches} starNames={starPos.map((st) => st.name)} onReload={reloadKb} onAsk={ask} />}
         {view === 'chart' && computed && (
-          <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} timeKnown={!working.timeUnknown} />
+          <ChartWheel natal={shown!.natal} outers={shown!.outers} settings={settings} aspectLayer={aspectLayer} onWheel={onWheel} onAsk={ask} timeKnown={!working.timeUnknown} hiddenAspects={hiddenAspects} />
         )}
 
         {view === 'chart' && <div className="bottom">
@@ -1696,7 +1712,7 @@ export default function App() {
           {computed && (
             <div className="table-wrap">
               {tab === 'positions' && <PositionsTable natal={shown!.natal} outers={shown!.outers} />}
-              {tab === 'aspects' && <AspectList natal={computed.natal} outer={aspectLayer >= 0 ? computed.outers[aspectLayer] ?? null : null} settings={settings} />}
+              {tab === 'aspects' && <AspectList natal={computed.natal} outer={aspectLayer >= 0 ? computed.outers[aspectLayer] ?? null : null} settings={settings} hidden={hiddenAspects} onHidden={setHiddenAspects} />}
               {tab === 'grid' && <AspectGrid natal={computed.natal} outer={aspectLayer >= 0 ? computed.outers[aspectLayer] ?? null : null} settings={settings} />}
               {tab === 'houses' && <HousesTable natal={computed.natal} />}
             </div>

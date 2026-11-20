@@ -1596,6 +1596,12 @@ Die fragende Person kennt sich mit Astrologie aus. Verwende Fachbegriffe ohne Er
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Keine Planeten in diesem Haus; seine Themen lassen sich vor allem über den Herrscher lesen.",
     "Harita verisi": "Horoskopdaten",
     "bağlı değil": "nicht verbunden",
-    "bunu kullan": "diesen verwenden"
+    "bunu kullan": "diesen verwenden",
+    "Haritada gizle": "Im Horoskop ausblenden",
+    "Haritada göster": "Im Horoskop zeigen",
+    "Haritada gösterilen açılar": "Im Horoskop gezeigte Aspekte",
+    "Ana açılar": "Hauptaspekte",
+    "Zorlayıcı": "Spannungsaspekte",
+    "Uyumlu": "Harmonische"
   }
 }

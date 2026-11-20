@@ -3,6 +3,7 @@ import { houseText, M } from '../lib/meanings'
 import { useMemo, useState } from 'react'
 import type { AppSettings } from '@shared/types'
 import {
+  ASPECTS,
   ASPECT,
   dignity,
   findAspects,
@@ -228,11 +229,87 @@ export function AspectGrid({ natal, outer, settings }: { natal: Layer; outer: La
   )
 }
 
-export function AspectList({ natal, outer, settings }: { natal: Layer; outer: Layer | null; settings: AppSettings }) {
+// i18n-ignore-start (preset names go through t())
+const ASPECT_PRESETS: [string, string[] | null][] = [
+  ['Tümü', null],
+  ['Ana açılar', ['conjunction', 'opposition', 'trine', 'square', 'sextile']],
+  ['Zorlayıcı', ['conjunction', 'opposition', 'square', 'semisquare', 'sesquiquadrate']],
+  ['Uyumlu', ['conjunction', 'trine', 'sextile']]
+]
+// i18n-ignore-end
+
+export function AspectList({
+  natal,
+  outer,
+  settings,
+  hidden,
+  onHidden
+}: {
+  natal: Layer
+  outer: Layer | null
+  settings: AppSettings
+  /** Aspect kinds whose lines are hidden on the wheel. */
+  hidden?: ReadonlySet<string>
+  onHidden?: (next: Set<string>) => void
+}) {
   const aspects = useAspects(natal, outer, settings)
+  const kinds = ASPECTS.filter((d) => settings.aspects[d.key]?.enabled)
+  const count = (k: string) => aspects.filter((a) => a.aspect.key === k).length
+  const filterBar = hidden && onHidden && (
+    <div className="asp-filter">
+      <div className="asp-filter-head">
+        <strong className="small">{t('Haritada gösterilen açılar')}</strong>
+        <span className="grow" />
+        {ASPECT_PRESETS.map(([name, keys]) => {
+          const on = keys === null ? hidden.size === 0 : kinds.every((d) => keys.includes(d.key) !== hidden.has(d.key))
+          return (
+            <button
+              key={name}
+              className={`asp-preset${on ? ' on' : ''}`}
+              onClick={() => onHidden(new Set(keys === null ? [] : kinds.map((d) => d.key).filter((k) => !keys.includes(k))))}
+            >
+              {t(name)}
+            </button>
+          )
+        })}
+      </div>
+      <div className="asp-chips">
+        {kinds.map((d) => {
+          const shown = !hidden.has(d.key)
+          const n = count(d.key)
+          return (
+            <button
+              key={d.key}
+              className={`asp-chip${shown ? ' on' : ''}`}
+              aria-pressed={shown}
+              onClick={() => {
+                const next = new Set(hidden)
+                if (shown) next.add(d.key)
+                else next.delete(d.key)
+                onHidden(next)
+              }}
+              title={shown ? t('Haritada gizle') : t('Haritada göster')}
+            >
+              <span className={`glyph asp-k-${d.key}`}>{d.glyph}</span>
+              {d.name}
+              <span className="asp-count">{n}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
   const pre = outer ? { transit: 'T.', progressed: 'P.', solarArc: 'SA.', synastry: 'S.' }[outer.kind as string] ?? '' : ''
-  if (!aspects.length) return <p className="muted pad">{t('Seçili orb sınırları içinde açı yok.')}</p>
+  if (!aspects.length)
+    return (
+      <>
+        {filterBar}
+        <p className="muted pad">{t('Seçili orb sınırları içinde açı yok.')}</p>
+      </>
+    )
   return (
+    <>
+    {filterBar}
     <table className="data">
       <thead>
         <tr>
@@ -243,7 +320,7 @@ export function AspectList({ natal, outer, settings }: { natal: Layer; outer: La
       </thead>
       <tbody>
         {aspects.map((a, i) => (
-          <tr key={i}>
+          <tr key={i} className={hidden?.has(a.aspect.key) ? 'asp-hidden' : ''}>
             <td>
               <span className="glyph" style={outer ? { color: LAYER_COLOR[outer.kind] } : undefined}>
                 {glyph(a.a.key)}
@@ -259,5 +336,6 @@ export function AspectList({ natal, outer, settings }: { natal: Layer; outer: La
         ))}
       </tbody>
     </table>
+    </>
   )
 }

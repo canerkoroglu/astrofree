@@ -1596,6 +1596,12 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Aucune planète dans cette maison ; ses thèmes peuvent surtout se lire par son maître.",
     "Harita verisi": "Données du thème",
     "bağlı değil": "non connecté",
-    "bunu kullan": "utiliser celui-ci"
+    "bunu kullan": "utiliser celui-ci",
+    "Haritada gizle": "Masquer sur le thème",
+    "Haritada göster": "Afficher sur le thème",
+    "Haritada gösterilen açılar": "Aspects affichés sur le thème",
+    "Ana açılar": "Aspects majeurs",
+    "Zorlayıcı": "Tendus",
+    "Uyumlu": "Harmonieux"
   }
 }

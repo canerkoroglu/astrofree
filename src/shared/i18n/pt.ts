@@ -1596,6 +1596,12 @@ Quem pergunta conhece astrologia. Use os termos técnicos sem explicá-los e sus
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "Não há planetas nesta casa; seus temas podem ser lidos sobretudo pelo regente.",
     "Harita verisi": "Dados do mapa",
     "bağlı değil": "não conectado",
-    "bunu kullan": "usar este"
+    "bunu kullan": "usar este",
+    "Haritada gizle": "Ocultar no mapa",
+    "Haritada göster": "Mostrar no mapa",
+    "Haritada gösterilen açılar": "Aspectos mostrados no mapa",
+    "Ana açılar": "Aspectos maiores",
+    "Zorlayıcı": "Tensos",
+    "Uyumlu": "Harmônicos"
   }
 }

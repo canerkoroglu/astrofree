@@ -1596,6 +1596,12 @@ The person asking knows astrology. Use technical terms without explaining them a
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No planets in this house; its topics may be read mainly through its ruler.",
     "Harita verisi": "Chart data",
     "bağlı değil": "not connected",
-    "bunu kullan": "use this"
+    "bunu kullan": "use this",
+    "Haritada gizle": "Hide on the chart",
+    "Haritada göster": "Show on the chart",
+    "Haritada gösterilen açılar": "Aspects shown on the chart",
+    "Ana açılar": "Major aspects",
+    "Zorlayıcı": "Challenging",
+    "Uyumlu": "Harmonious"
   }
 }

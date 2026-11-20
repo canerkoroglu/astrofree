@@ -1596,6 +1596,12 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "No hay planetas en esta casa; sus temas pueden leerse sobre todo a través de su regente.",
     "Harita verisi": "Datos de la carta",
     "bağlı değil": "sin conexión",
-    "bunu kullan": "usar este"
+    "bunu kullan": "usar este",
+    "Haritada gizle": "Ocultar en la carta",
+    "Haritada göster": "Mostrar en la carta",
+    "Haritada gösterilen açılar": "Aspectos mostrados en la carta",
+    "Ana açılar": "Aspectos mayores",
+    "Zorlayıcı": "Tensos",
+    "Uyumlu": "Armónicos"
   }
 }

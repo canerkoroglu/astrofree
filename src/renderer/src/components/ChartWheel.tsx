@@ -49,6 +49,8 @@ interface Props {
   onAsk?: (prompt: string) => void
   /** False when the birth time is unknown: house texts are left out. */
   timeKnown?: boolean
+  /** Aspect kinds whose lines are not drawn (chosen in the aspect list). */
+  hiddenAspects?: ReadonlySet<string>
 }
 
 interface Ring {
@@ -111,7 +113,7 @@ function spread(points: ChartPoint[], minSep: number): Placed[] {
   return out
 }
 
-export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel, onAsk, timeKnown = true }: Props) {
+export default function ChartWheel({ natal, outers, settings, aspectLayer, onWheel, onAsk, timeKnown = true, hiddenAspects }: Props) {
   const [selected, setSelected] = useState<{ ring: number; key: string } | null>(null)
   const [hoverAspect, setHoverAspect] = useState<number | null>(null)
   // Plain wheel scrolls the page; Alt/Option + wheel steps time. A native
@@ -295,7 +297,7 @@ export default function ChartWheel({ natal, outers, settings, aspectLayer, onWhe
         {/* Aspect lines */}
         <g>
           {aspects.map((x, i) => {
-            if (x.aspect.key === 'conjunction') return null
+            if (x.aspect.key === 'conjunction' || hiddenAspects?.has(x.aspect.key)) return null
             const [x1, y1] = pt(x.a.lon, aspectR)
             const [x2, y2] = pt(x.b.lon, aspectR)
             const def = ASPECT[x.aspect.key]

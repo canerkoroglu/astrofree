@@ -1596,6 +1596,12 @@ export const ru: Locale = {
     "Bu evde gezegen yok; konuları daha çok yöneticisi üzerinden okunabilir.": "В этом доме нет планет; его темы можно читать в основном через управителя.",
     "Harita verisi": "Данные карты",
     "bağlı değil": "не подключено",
-    "bunu kullan": "использовать"
+    "bunu kullan": "использовать",
+    "Haritada gizle": "Скрыть на карте",
+    "Haritada göster": "Показать на карте",
+    "Haritada gösterilen açılar": "Аспекты на карте",
+    "Ana açılar": "Мажорные аспекты",
+    "Zorlayıcı": "Напряжённые",
+    "Uyumlu": "Гармоничные"
   }
 }
