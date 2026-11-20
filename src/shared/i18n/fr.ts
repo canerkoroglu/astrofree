@@ -1560,6 +1560,8 @@ La personne connaît l'astrologie. Utilise les termes techniques sans les expliq
     "Önümüzdeki 30 günde doğum günü yok.": "Aucun anniversaire dans les 30 prochains jours.",
     "gecikti": "en retard",
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "Aucun rendez-vous prévu. En ajoutant une séance sur la fiche d’un client, vous pouvez saisir la date du « Prochain rendez-vous ».",
-    "Ana menü": "Menu principal"
+    "Ana menü": "Menu principal",
+    "Menüyü daralt": "Réduire le menu",
+    "Menüyü genişlet": "Agrandir le menu"
   }
 }

@@ -1560,6 +1560,8 @@ export const hi: Locale = {
     "Önümüzdeki 30 günde doğum günü yok.": "अगले 30 दिनों में कोई जन्मदिन नहीं।",
     "gecikti": "देर हो गई",
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "कोई बैठक तय नहीं। किसी क्लाइंट के कार्ड में सत्र जोड़ते समय \"अगली बैठक\" की तिथि दे सकते हैं।",
-    "Ana menü": "मुख्य मेनू"
+    "Ana menü": "मुख्य मेनू",
+    "Menüyü daralt": "मेनू छोटा करें",
+    "Menüyü genişlet": "मेनू बड़ा करें"
   }
 }

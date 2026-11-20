@@ -6394,3 +6394,152 @@ button.rail-chat.on .rail-badge {
 .rail-opts .rail-cap {
   padding-bottom: 0;
 }
+
+/* ---- Sol menü, ferah sürüm: satır düğmeleri, başlıklı bölümler; daraltılabilir ---- */
+.app {
+  --rail-w: 184px;
+  grid-template-columns: var(--rail-w) clamp(220px, 17vw, 264px) minmax(0, 1fr) clamp(300px, 27vw, 400px);
+}
+.app.no-chat {
+  grid-template-columns: var(--rail-w) clamp(220px, 17vw, 264px) minmax(0, 1fr) 0;
+}
+.app.rail-mini {
+  --rail-w: 64px;
+}
+.rail {
+  gap: var(--s4);
+  padding: var(--s3) var(--s3) var(--s4);
+}
+.rail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-height: 36px;
+}
+.rail-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 0 var(--s1);
+}
+.rail .rail-brand .brand-name {
+  display: inline;
+  font-weight: 700;
+  font-size: 14px;
+}
+button.rail-fold {
+  min-width: 0;
+  min-height: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1;
+}
+button.rail-fold:hover {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.rail-group {
+  gap: 2px;
+}
+.rail-cap {
+  text-align: left;
+  padding: 0 var(--s2) var(--s1);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.rail-sub {
+  font-size: 11px;
+  color: var(--muted);
+  padding: var(--s1) var(--s2) 0;
+}
+button.rail-btn {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--s3);
+  padding: 5px var(--s2);
+  border-radius: 9px;
+  text-align: left;
+  font-size: 13px;
+}
+.rail-badge {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+.rail-lbl {
+  font-size: 13px;
+  text-align: left;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.rail-opts {
+  gap: var(--s1);
+  padding-top: var(--s3);
+}
+.rail-opts select {
+  font-size: 12px;
+  padding: 6px 22px 6px 8px;
+  background-position: right 7px center;
+}
+.rail-opts button {
+  font-size: 12px;
+  padding: 5px var(--s2);
+}
+.rail-mode {
+  flex-direction: row;
+  gap: 2px;
+}
+.rail-mode button {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11.5px;
+}
+.rail-mode .mode-short {
+  display: none;
+}
+
+/* narrow: icons only; names and chart options come back when widened */
+.app.rail-mini .rail {
+  padding-left: var(--s2);
+  padding-right: var(--s2);
+  align-items: center;
+}
+.app.rail-mini .rail-top {
+  flex-direction: column;
+}
+.app.rail-mini .rail-brand .brand-name,
+.app.rail-mini .rail-lbl,
+.app.rail-mini .rail-cap,
+.app.rail-mini .rail-opts,
+.app.rail-mini .rail-mode .mode-full {
+  display: none;
+}
+.app.rail-mini button.rail-btn {
+  justify-content: center;
+  padding: 5px;
+}
+.app.rail-mini .rail-mode {
+  flex-direction: column;
+}
+.app.rail-mini .rail-mode .mode-short {
+  display: inline;
+}
+
+/* chat: an icon among the three app buttons */
+.tb-chat.on {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}

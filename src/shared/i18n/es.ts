@@ -1560,6 +1560,8 @@ Quien pregunta sabe astrología. Usa los términos técnicos sin explicarlos y r
     "Önümüzdeki 30 günde doğum günü yok.": "No hay cumpleaños en los próximos 30 días.",
     "gecikti": "atrasada",
     "Planlanmış görüşme yok. Bir danışanın kartından seans eklerken \"Sonraki görüşme\" tarihi girebilirsiniz.": "No hay citas previstas. Al añadir una sesión en la ficha de un cliente puede indicar la fecha de la «Próxima cita».",
-    "Ana menü": "Menú principal"
+    "Ana menü": "Menú principal",
+    "Menüyü daralt": "Contraer menú",
+    "Menüyü genişlet": "Expandir menú"
   }
 }

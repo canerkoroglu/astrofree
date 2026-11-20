@@ -137,6 +137,22 @@ export default function App() {
   const [settingsFocus, setSettingsFocus] = useState<SettingsFocus | undefined>()
   const [exportOpen, setExportOpen] = useState(false)
   const [zoneOpen, setZoneOpen] = useState(false)
+  // Side menu: full (icons and names) or narrow (icons only); remembered on this computer.
+  const [railMini, setRailMini] = useState(() => {
+    try {
+      return localStorage.getItem('rail-mini') === '1'
+    } catch {
+      return false
+    }
+  })
+  const toggleRailMini = () => {
+    setRailMini(!railMini)
+    try {
+      localStorage.setItem('rail-mini', railMini ? '0' : '1')
+    } catch {
+      /* storage unavailable */
+    }
+  }
   // The list row menu (⋯ or right-click): opened at a screen point so the scrolling list never clips it.
   const [itemMenu, setItemMenu] = useState<{ id: string; x: number; y: number } | null>(null)
   useEffect(() => {
@@ -859,10 +875,20 @@ export default function App() {
         ]
 
   return (
-    <div className={showChat ? 'app' : 'app no-chat'}>
+    <div className={`app${showChat ? '' : ' no-chat'}${railMini ? ' rail-mini' : ''}`}>
       <nav className="rail" aria-label={t('Ana menü')}>
-        <div className="brand rail-brand" title="AstroFree">
-          <Logo size={18} className="brand-logo" /> <span className="brand-name">AstroFree</span>
+        <div className="rail-top">
+          <div className="brand rail-brand" title="AstroFree">
+            <Logo size={20} className="brand-logo" /> <span className="brand-name">AstroFree</span>
+          </div>
+          <button
+            className="rail-fold"
+            onClick={() => toggleRailMini()}
+            aria-label={railMini ? t('Menüyü genişlet') : t('Menüyü daralt')}
+            title={railMini ? t('Menüyü genişlet') : t('Menüyü daralt')}
+          >
+            {railMini ? '»' : '«'}
+          </button>
         </div>
         <div className="rail-group rail-layers" role="group" aria-label={t('Katmanlar')}>
           <span className="rail-cap">{t('Katmanlar')}</span>
@@ -888,7 +914,8 @@ export default function App() {
         </div>
         {outers.includes('synastry') && (
           <div className="rail-group rail-opts" role="group" aria-label={t('İlişki')}>
-            <span className="rail-cap">{t('Sinastri partneri')}</span>
+            <span className="rail-cap">{t('Sinastri')}</span>
+            <span className="rail-sub">{t('Partner')}</span>
             <select className="tg-partner" value={partnerId ?? ''} onChange={(e) => setPartnerId(e.target.value)} title={t('Sinastri partneri')}>
               {charts
                 .filter((c) => c.id !== working.id)
@@ -918,7 +945,8 @@ export default function App() {
           </div>
         )}
         {!amateur && <div className="rail-group rail-opts" role="group" aria-label={t('Görünüm')}>
-        <span className="rail-cap">{t('Harmonik')}</span>
+        <span className="rail-cap">{t('Harita')}</span>
+        <span className="rail-sub">{t('Harmonik')}</span>
         <select className="tg-harmonic" value={harmonic} onChange={(e) => setHarmonic(+e.target.value)} title={t('Harmonik harita (konumlar n ile çarpılır)')}>
           {Array.from({ length: 16 }, (_, i) => i + 1).map((n) => (
             <option key={n} value={n}>
@@ -926,7 +954,7 @@ export default function App() {
             </option>
           ))}
         </select>
-        <span className="rail-cap">{t('Ev sistemi')}</span>
+        <span className="rail-sub">{t('Ev sistemi')}</span>
         <select
           className="tg-house"
           value={settings.houseSystem}
@@ -951,7 +979,10 @@ export default function App() {
               onClick={() => setMode(m)}
               title={m === 'amateur' ? t('Amatör: sade görünüm ve gündelik yanıtlar') : t('Profesyonel: tüm araçlar ve teknik yanıtlar')}
             >
-              {m === 'amateur' ? t('Amatör') : t('Profesyonel')}
+              <span className="mode-full">{m === 'amateur' ? t('Amatör') : t('Profesyonel')}</span>
+              <span className="mode-short" aria-hidden>
+                {(m === 'amateur' ? t('Amatör') : t('Profesyonel')).charAt(0)}
+              </span>
             </button>
           ))}
         </div>
@@ -1053,9 +1084,15 @@ export default function App() {
           >
             {THEME_ICON[settings.theme]}
           </button>
-          <button className={`toggle tb-chat${showChat ? ' on' : ''}`} aria-pressed={showChat} onClick={() => setShowChat(!showChat)} title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}>
-            <span className="toggle-dot" aria-hidden />
-            {t('AI sohbet')}
+          <button
+            className={`icon-btn tip-end tb-chat${showChat ? ' on' : ''}`}
+            aria-pressed={showChat}
+            onClick={() => setShowChat(!showChat)}
+            aria-label={t('AI sohbet')}
+            title={showChat ? t('Sohbeti gizle') : t('Sohbeti göster')}
+            data-tip={t('AI sohbet')}
+          >
+            💬
           </button>
           <button className="icon-btn tip-end" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')} data-tip={t('Ayarlar')}>
             ⚙︎
