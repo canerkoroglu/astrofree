@@ -8997,15 +8997,14 @@ button.asp-chip.on {
 }
 button.asp-chip .glyph {
   font-size: 15px;
-  opacity: 0.5;
+}
+button.asp-chip:not(.on) .glyph {
+  color: var(--muted) !important;
 }
 button.asp-chip.on {
   border-color: var(--line-strong);
   background: var(--panel-2);
   color: var(--ink);
-}
-button.asp-chip.on .glyph {
-  opacity: 1;
 }
 button.asp-chip:not(.on) {
   text-decoration: line-through;
@@ -9024,5 +9023,5 @@ table.data tr.asp-hidden td {
   color: var(--muted);
 }
 table.data tr.asp-hidden .glyph {
-  opacity: 0.5;
+  color: var(--muted) !important;
 }
