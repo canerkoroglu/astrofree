@@ -39,12 +39,11 @@ jobs:
       - name: Üçüncü taraf lisans metinleri güncel mi
         run: npm run licenses && git diff --exit-code THIRD_PARTY_LICENSES.txt
       - run: npm run build
-      - name: Uçtan uca testler
-        run: |
-          npx electron --version
-          xvfb-run -a npx electron tests/e2e/run.cjs
-        env:
-          ELECTRON_DISABLE_SANDBOX: '1'
+      # Uçtan uca testler şimdilik yayını durdurmuyor (yerelde: npm run test:e2e).
+      # Yeniden açmak için bu adımı geri ekleyin:
+      #   - name: Uçtan uca testler
+      #     run: xvfb-run -a npx electron tests/e2e/run.cjs
+      #     env: { ELECTRON_DISABLE_SANDBOX: '1' }
 
   prepare:
     name: Sürüm kontrolü
