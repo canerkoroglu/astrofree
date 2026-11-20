@@ -8,7 +8,7 @@ export interface WhatsNew {
 // i18n-ignore-start (each entry carries its own translations)
 export const WHATS_NEW: WhatsNew[] = [
   {
-    version: '0.6.0',
+    version: '0.7.0',
     items: {
       tr: [
         'Yeni düzen: solda ana menü (katmanlar, harita ayarları, kullanım modu), yanında açılıp kapanan Haritalar ve Gökyüzü paneli; zaman çubuğu en üstte.',
@@ -17,7 +17,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Daha kolay tarih seçimi: yıl ve ay ızgarası, ▲▼ saat ve dakika; kişi ekleme penceresi sadeleştirildi.',
         'Haritada burç, ev ve köşe etiketlerinin üzerine gelince açıklama.',
         'Düzeltme: Bu gece penceresinin bazı bilgisayarlarda hesaplamaları bozan bellek hatası giderildi; Şimdi ve Canlı kayıtlı haritada transit zamanını şu ana getiriyor.',
-        'Evler tablosunda her evin konusu; satıra tıklayınca evin açıklaması, yöneticisi ve içindeki gezegenlerin yorumu.'
+        'Evler tablosunda her evin konusu; satıra tıklayınca evin açıklaması, yöneticisi ve içindeki gezegenlerin yorumu.',
+        'Açı listesinden haritada gösterilecek açı türleri seçilebiliyor (ör. yalnız ana açılar ya da kareler gizli); açı tablosunda satır ve sütun vurgusu.',
+        'Bütün açılır listeler yeni ve aramalı tasarımda; sohbetin yazma alanı ve sağlayıcı seçimi sadeleştirildi.'
       ],
       en: [
         'New layout: a main menu on the left (layers, chart settings, usage mode) with a Charts and Sky panel that opens and closes beside it; the time bar is at the top.',
@@ -26,7 +28,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Easier date picking: year and month grids, ▲▼ hours and minutes; a simpler window for adding a person.',
         'Hover over sign, house and angle labels on the wheel for an explanation.',
         'Fix: a memory error in In tonight’s sky that could break calculations on some computers; Now and Live bring the transit time to now on a saved chart.',
-        'Houses table: each house’s topics, and a click on a row shows what the house is about, its ruler and the reading for each planet in it.'
+        'Houses table: each house’s topics, and a click on a row shows what the house is about, its ruler and the reading for each planet in it.',
+        'Choose which aspect kinds are drawn on the wheel from the aspect list (e.g. major aspects only, or squares hidden); row and column highlight in the aspect grid.',
+        'All dropdowns have a new, searchable design; the chat input and provider choice are simpler.'
       ],
       es: [
         'Nuevo diseño: un menú principal a la izquierda (capas, ajustes de la carta, modo de uso) con un panel de Cartas y Cielo que se abre y se cierra a su lado; la barra de tiempo está arriba.',
@@ -35,7 +39,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Elegir fechas es más fácil: cuadrículas de años y meses, ▲▼ para horas y minutos; una ventana más sencilla para añadir una persona.',
         'Al pasar sobre los signos, las casas y los ángulos de la rueda aparece una explicación.',
         'Corrección: un error de memoria en En el cielo esta noche que podía romper los cálculos en algunos equipos; Ahora y En vivo llevan la hora del tránsito al momento actual en una carta guardada.',
-        'Tabla de casas: los temas de cada casa; al hacer clic en una fila se ve qué trata la casa, su regente y la lectura de cada planeta en ella.'
+        'Tabla de casas: los temas de cada casa; al hacer clic en una fila se ve qué trata la casa, su regente y la lectura de cada planeta en ella.',
+        'Desde la lista de aspectos se eligen los tipos que se dibujan en la rueda (p. ej. solo los mayores, o sin cuadraturas); resaltado de fila y columna en la tabla de aspectos.',
+        'Todas las listas desplegables tienen un diseño nuevo con búsqueda; el campo del chat y la elección de proveedor son más sencillos.'
       ],
       pt: [
         'Novo layout: um menu principal à esquerda (camadas, ajustes do mapa, modo de uso) com um painel de Mapas e Céu que abre e fecha ao lado; a barra de tempo fica no topo.',
@@ -44,7 +50,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Escolher datas ficou mais fácil: grades de anos e meses, ▲▼ para horas e minutos; uma janela mais simples para adicionar uma pessoa.',
         'Passe o mouse sobre signos, casas e ângulos da roda para ver uma explicação.',
         'Correção: um erro de memória em No céu esta noite que podia quebrar os cálculos em alguns computadores; Agora e Ao vivo trazem a hora do trânsito para agora num mapa salvo.',
-        'Tabela de casas: os temas de cada casa; um clique na linha mostra do que trata a casa, seu regente e a leitura de cada planeta nela.'
+        'Tabela de casas: os temas de cada casa; um clique na linha mostra do que trata a casa, seu regente e a leitura de cada planeta nela.',
+        'Na lista de aspectos escolhem-se os tipos desenhados na roda (ex.: só os maiores, ou sem quadraturas); destaque de linha e coluna na tabela de aspectos.',
+        'Todas as listas suspensas têm um novo design com busca; o campo do chat e a escolha do provedor ficaram mais simples.'
       ],
       de: [
         'Neues Layout: links ein Hauptmenü (Ebenen, Horoskop-Einstellungen, Nutzungsmodus), daneben ein auf- und zuklappbarer Bereich für Horoskope und Himmel; die Zeitleiste steht oben.',
@@ -53,7 +61,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Einfachere Datumswahl: Jahres- und Monatsraster, ▲▼ für Stunden und Minuten; ein schlichteres Fenster zum Hinzufügen einer Person.',
         'Zeichen, Häuser und Achsen im Rad zeigen beim Darüberfahren eine Erklärung.',
         'Korrektur: ein Speicherfehler in Heute am Himmel, der auf manchen Rechnern die Berechnungen stören konnte; Jetzt und Live setzen bei einem gespeicherten Horoskop die Transitzeit auf jetzt.',
-        'Häusertabelle: die Themen jedes Hauses; ein Klick auf eine Zeile zeigt, worum es im Haus geht, seinen Herrscher und die Deutung jedes Planeten darin.'
+        'Häusertabelle: die Themen jedes Hauses; ein Klick auf eine Zeile zeigt, worum es im Haus geht, seinen Herrscher und die Deutung jedes Planeten darin.',
+        'In der Aspektliste lässt sich wählen, welche Aspektarten im Rad gezeigt werden (z. B. nur Hauptaspekte oder ohne Quadrate); Zeilen- und Spaltenhervorhebung in der Aspekttabelle.',
+        'Alle Auswahllisten haben ein neues Design mit Suche; Chat-Eingabe und Anbieterwahl sind schlichter.'
       ],
       fr: [
         'Nouvelle disposition : un menu principal à gauche (couches, réglages du thème, mode d’utilisation) avec à côté un panneau Thèmes et Ciel qui s’ouvre et se ferme ; la barre de temps est en haut.',
@@ -62,7 +72,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Choix des dates plus simple : grilles des années et des mois, ▲▼ pour les heures et les minutes ; une fenêtre plus simple pour ajouter une personne.',
         'Survolez les signes, les maisons et les angles de la roue pour voir une explication.',
         'Correction : une erreur de mémoire dans Dans le ciel ce soir qui pouvait fausser les calculs sur certains ordinateurs ; Maintenant et En direct ramènent l’heure du transit à maintenant sur un thème enregistré.',
-        'Tableau des maisons : les thèmes de chaque maison ; un clic sur une ligne montre ce dont parle la maison, son maître et la lecture de chaque planète qui s’y trouve.'
+        'Tableau des maisons : les thèmes de chaque maison ; un clic sur une ligne montre ce dont parle la maison, son maître et la lecture de chaque planète qui s’y trouve.',
+        'Dans la liste des aspects, on choisit les types tracés sur la roue (ex. seulement les majeurs, ou sans carrés) ; surlignage de ligne et de colonne dans le tableau des aspects.',
+        'Toutes les listes déroulantes ont un nouveau design avec recherche ; la saisie du chat et le choix du fournisseur sont plus simples.'
       ],
       ru: [
         'Новый интерфейс: слева главное меню (слои, настройки карты, режим), рядом раскрывающаяся панель «Карты» и «Небо»; панель времени вверху.',
@@ -71,7 +83,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'Выбирать даты проще: сетки лет и месяцев, ▲▼ для часов и минут; окно добавления человека стало проще.',
         'При наведении на знаки, дома и углы карты появляется пояснение.',
         'Исправление: ошибка памяти в окне «На небе сегодня ночью», которая на некоторых компьютерах могла нарушать расчёты; «Сейчас» и «В реальном времени» переводят время транзита на текущий момент в сохранённой карте.',
-        'Таблица домов: темы каждого дома; по щелчку на строке — описание дома, его управитель и толкование каждой планеты в нём.'
+        'Таблица домов: темы каждого дома; по щелчку на строке — описание дома, его управитель и толкование каждой планеты в нём.',
+        'В списке аспектов можно выбрать, какие виды аспектов рисовать на карте (например, только мажорные или без квадратов); подсветка строки и столбца в таблице аспектов.',
+        'Все выпадающие списки получили новый вид с поиском; поле ввода чата и выбор поставщика стали проще.'
       ],
       hi: [
         'नया रूप: बाईं ओर मुख्य मेनू (परतें, कुंडली सेटिंग, उपयोग मोड) और उसके बगल में खुलने-बंद होने वाला कुंडलियाँ और आकाश पैनल; समय पट्टी सबसे ऊपर।',
@@ -80,7 +94,9 @@ export const WHATS_NEW: WhatsNew[] = [
         'तिथि चुनना आसान: वर्ष और महीने की ग्रिड, घंटे और मिनट के लिए ▲▼; व्यक्ति जोड़ने की विंडो सरल हुई।',
         'चक्र पर राशि, भाव और कोण लेबल पर माउस ले जाने से विवरण दिखता है।',
         'सुधार: आज रात आकाश में एक मेमोरी त्रुटि जो कुछ कंप्यूटरों पर गणना बिगाड़ सकती थी; सहेजी गई कुंडली में अभी और लाइव ट्रांज़िट समय को अभी पर ले आते हैं।',
-        'भाव तालिका: हर भाव के विषय; पंक्ति पर क्लिक करने से भाव का अर्थ, उसका स्वामी और उसमें हर ग्रह की व्याख्या दिखती है।'
+        'भाव तालिका: हर भाव के विषय; पंक्ति पर क्लिक करने से भाव का अर्थ, उसका स्वामी और उसमें हर ग्रह की व्याख्या दिखती है।',
+        'दृष्टि-योग सूची से चुनें कि चक्र पर कौन-से प्रकार दिखें (जैसे केवल प्रमुख, या वर्ग छिपे); दृष्टि-योग तालिका में पंक्ति और स्तंभ हाइलाइट।',
+        'सभी ड्रॉपडाउन नए, खोज वाले रूप में; चैट इनपुट और प्रदाता चयन सरल हुए।'
       ]
     }
   },
